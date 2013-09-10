@@ -1,22 +1,22 @@
-<script  >
-		{codeJavascriptReturnNewElementAjoute}
+<script>
+        {codeJavascriptReturnNewElementAjoute}
 </script>
-
+<meta charset="UTF-8" />
 <br>
 Type de source :
 <form action='{formAction}' name='formSource' id='formSource' method='POST' enctype='multipart/form-data'>
 <table cellspacing=0 cellpadding=0 border=0>
 <tr>
 <td width=250>
-	<select name="archiTypeSource" id='archiTypeSource' onchange='submit();'>
-	<option value="0"><?_("Toutes")?></option>
-	<!-- BEGIN typeSources -->
-	<option value="{typeSources.id}" {typeSources.selected}>{typeSources.nom}</option>
-	<!-- END typeSources -->
-	</select>
+    <select name="archiTypeSource" id='archiTypeSource' onchange='submit();'>
+    <option value="0"><?_("Toutes")?></option>
+    <!-- BEGIN typeSources -->
+    <option value="{typeSources.id}" {typeSources.selected}>{typeSources.nom}</option>
+    <!-- END typeSources -->
+    </select>
 </td>
 <td>
-	<nobr> <span style='font-size:12px;'><?_("Recherche :")?></span> <input style='width:70px;' type='text' name='archiMotCleRechercheSource' id='archiMotCleRechercheSource' value="{motCleRechercheSource}" onkeypress="if(event.keyCode==13){this.form.action+='&motCle='+document.getElementById('archiMotCleRechercheSource').value;this.form.submit();}"><input type='button' name='buttonRechercheMotCleSource' id='buttonRechercheMotCleSource' value='Ok' onclick="this.form.action+='&motCle='+document.getElementById('archiMotCleRechercheSource').value;this.form.submit();"></nobr>
+    <nobr> <span style='font-size:12px;'><?_("Recherche :")?></span> <input style='width:70px;' type='text' name='archiMotCleRechercheSource' id='archiMotCleRechercheSource' value="{motCleRechercheSource}" onkeypress="if(event.keyCode==13){this.form.action+='&motCle='+document.getElementById('archiMotCleRechercheSource').value;this.form.submit();}"><input type='button' name='buttonRechercheMotCleSource' id='buttonRechercheMotCleSource' value='Ok' onclick="this.form.action+='&motCle='+document.getElementById('archiMotCleRechercheSource').value;this.form.submit();"></nobr>
 </td>
 </tr>
 </table>

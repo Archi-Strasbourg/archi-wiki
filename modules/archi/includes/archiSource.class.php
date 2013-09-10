@@ -564,7 +564,7 @@ class ArchiSource extends config
                                 'nom'=>stripslashes($fetchSource['nom']), 
                                 'typeSource'=>"(".stripslashes($fetchSource['nomTypeSource']).")", 
                                 'url'=>'#', 
-                                'onclick'=>"parent.document.getElementById(parent.document.getElementById('paramChampsAppelantSource').value).value='".$fetchSource['idSource']."';parent.document.getElementById(parent.document.getElementById('paramChampsAppelantSource').value+'txt').value='".str_replace(array("\"", "'"), array("&quot;", "\'"), stripslashes($fetchSource['nom']))." (".$fetchSource['nomTypeSource'].")';parent.document.getElementById('calqueSource').style.display='none';"
+                                'onclick'=>"parent.bbcode_ajout_source(".$fetchSource['idSource'].");parent.document.getElementById('calqueSource').style.display='none';"
                         )
                     );
                     break;

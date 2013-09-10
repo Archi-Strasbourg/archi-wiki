@@ -176,6 +176,19 @@ class BBCodeObject extends config
                                     }</script>");
     }
     
+    /**
+     * Ajoute un lien vers une source si [source] est présent dans le BBcode
+     * 
+     * @param array $matches Occurences de [source]
+     * 
+     * @return string
+     * */
+    private static function _includeSource ($matches)
+    {
+        include_once __DIR__.'/../../../modules/archi/includes/archiSource.class.php';
+        $source= new ArchiSource();
+        return '<sup><a title="'.$source->getSourceLibelle($matches[1]).'" href="index.php?archiAffichage=listeAdressesFromSource&source='.$matches[1].'&submit=Rechercher">[?]</a></sup>';
+    }
     
     /**
      * Convertir le BBcode en HTML
@@ -228,6 +241,7 @@ class BBCodeObject extends config
             $description = preg_replace("#\\[urlExterne=\\](.+)\\[/urlExterne\\]#isU", "<a href=\"\" target=\"_blank\">\\1</a>", $description);
             $description = preg_replace("#\\[iframe\\=(.+)\\](.+)\\[/iframe\\]#isU", "<iframe src=\"\\1\" width='425' height='349'>\\2</iframe>", $description);
             $description = preg_replace("#\\[lang\\=(.+)\\](.+)\\[/lang\\]#isU", "<span lang=\"\\1\">\\2</span>",  $description);
+            $description = preg_replace_callback("#\\[source\\=(.+)\\]\\[/source\\]#isU", 'BBCodeObject::_includeSource',  $description);
             $description = ($description);
         } else {
             echo "<br>attention le parametre 'text' n'est pas defini dans la fonction convertToDisplay.<br>";

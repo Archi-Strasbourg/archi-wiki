@@ -213,6 +213,7 @@ function affichePopupAttente()
     <input type="button" value="url interne"  style="width:75px" onclick="bbcode_ajout_balise('url',  'formAjoutDossier', 'description');bbcode_keyup(this,'apercu');" title="{msgUrl}" onMouseOut="closeContextHelp();" onkeyup="bbcode_keyup(this,'apercu');"/>
     <input type="button" value="url externe"  style="width:80px" onclick="bbcode_ajout_balise('urlExterne',  'formAjoutDossier', 'description');bbcode_keyup(this,'apercu');" title="{msgUrl}" onMouseOut="closeContextHelp();" onkeyup="bbcode_keyup(this,'apercu');"/>
     <input type="button" value="iframe"  style="width:80px" onclick="bbcode_ajout_balise('iframe',  'formAjoutDossier', 'description');bbcode_keyup(this,'apercu');" title="{msgIFrame}" onMouseOut="closeContextHelp();" onkeyup="bbcode_keyup(this,'apercu');"/>
+    <input type="button" value="source"  style="width:80px" onclick="bbcode_select_source();bbcode_keyup(this,'apercu');" title="Ajouter une source" onkeyup="bbcode_keyup(this,'apercu');"/>
     </td>
 </tr>
 <tr title="{msgDescription}" onMouseOut="closeContextHelp();">
@@ -244,7 +245,8 @@ function affichePopupAttente()
 <tr title="{msgSource}" onMouseOut="closeContextHelp();">
 <td class='enteteFormulaireDossier'><?_("Source")?></td><td>
 <input type="hidden" value="{source}" name="source" id='source'>
-<input type="text" value="{sourcetxt}" name="sourcetxt" id="sourcetxt" readonly><input type='button' value="choisir" name="choisir" onclick="{onClickBoutonChoisirSource}">
+<input type="text" value="{sourcetxt}" name="sourcetxt" id="sourcetxt" readonly>
+<input type='button' value="choisir" class="none" name="choisir" onclick="{onClickBoutonChoisirSource}">
 <input type='button' name='razSource' value='Aucune source' onclick="document.getElementById('source').value='0'; document.getElementById('sourcetxt').value='';">
 </td><td></td>
 </tr>

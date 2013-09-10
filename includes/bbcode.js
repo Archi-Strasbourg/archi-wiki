@@ -1,11 +1,16 @@
+/*global getScrollHeight*/
 /*jslint browser: true */
 var isMozilla = (navigator.userAgent.toLowerCase().indexOf('gecko') !== -1) ? true : false;
 var regexp = new RegExp("[\r]", "gi");
 
-function bbcode_ajout_balise(selec, nomForm, nomTextarea) {
+
+function bbcode_ajout_balise(selec, nomForm, nomTextarea, value) {
     "use strict";
     var oField, objectValue, objectValueDeb, objectValueFin, objectSelected, str, sel, bidon, orig, i, r, n, pos, selec2;
-    selec2 = (selec === "url" || selec === "urlExterne") ? selec + "=" : selec;
+    selec2 = (selec === "url" || selec === "urlExterne" || selec === "source") ? selec + "=" : selec;
+    if (value) {
+        selec2 += value;
+    }
     if (isMozilla) {
         // Si on est sur Mozilla
         oField = document.forms[nomForm].elements[nomTextarea];
@@ -63,6 +68,19 @@ function bbcode_ajout_balise(selec, nomForm, nomTextarea) {
     }
 }
 
+function bbcode_select_source() {
+    "use strict";
+    document.getElementById('paramChampsAppelantSource').value = 'bbcode';
+    document.getElementById('calqueSource').style.top = (getScrollHeight() + 150) + 'px';
+    document.getElementById('calqueSource').style.display = 'block';
+}
+
+function bbcode_ajout_source(id) {
+    "use strict";
+    bbcode_ajout_balise('source',  'formAjoutDossier', 'description', id);
+}
+
+
 function bbcode_apercu(str) {
     "use strict";
     var i, tab;
@@ -88,6 +106,7 @@ function bbcode_apercu(str) {
         ["\\[i\\]([\\s\\S]*?)\\[/i\\]", "<em>$1</em>"],
         ["\\[quote\\](.*?)\\[/quote\\]", "\"$1\""],
         ["\\[iframe=(.*?)\\](.*?)\\[/iframe\\]", "<iframe src=\"$1\" width='425' height='349'>$2</iframe>"],
+        ["\\[source=(.*?)\\]\\[/source\\]", "<sup><a title='Source' href=\"index.php?archiAffichage=listeAdressesFromSource&source=$1&submit=Rechercher\">[?]</a></sup>"],
         ["\\n", "<br />"]
     ];
     for (i = 0; i < tab.length; i += 1) {
