@@ -43,11 +43,11 @@ class BBCodeObject extends config
         parent::__construct();
         
         if (!in_array('noPEAR', $params)) {
-            $config                  = parse_ini_file('BBCodeParser.ini',  true);
+            $config = parse_ini_file('BBCodeParser.ini',  true);
             $pear = new PEAR();
-            $options                 = $pear->getStaticProperty('HTML_BBCodeParser',  '_options');
-            $options                 = $config['HTML_BBCodeParser'];
-            $this->parserBB         = new HTML_BBCodeParser2($options);
+            $options = $pear->getStaticProperty('HTML_BBCodeParser',  '_options');
+            $options = $config['HTML_BBCodeParser'];
+            $this->parserBB = new HTML_BBCodeParser2($options);
         }
         
         
@@ -62,9 +62,9 @@ class BBCodeObject extends config
      * */
     public function bBversHTML ($string = '')
     {
-                $this->parserBB->setText($string);
-                $this->parserBB->parse();
-                return $this->parserBB->getParsed();
+        $this->parserBB->setText($string);
+        $this->parserBB->parse();
+        return $this->parserBB->getParsed();
     }
     
     
@@ -136,44 +136,90 @@ class BBCodeObject extends config
         }
         
         $idDivApercu = "apercu";
-        if (isset($params['idDivPrevisualisation']) && $params['idDivPrevisualisation']!='') {
+        if (isset($params['idDivPrevisualisation'])
+            && $params['idDivPrevisualisation']!=''
+        ) {
             $idDivApercu = $params['idDivPrevisualisation'];
         }
         
         
         
         $boutonsHTML = "<div style=''>";
-        $gras = "<input type=\"button\" value=\"b\" style=\"width:50px;font-weight:bold\" onclick=\"bbcode_ajout_balise('b',  '$formName',  '$fieldName');bbcode_keyup(this, '$idDivApercu');\" onMouseOver=\"$mouseOverGras\" onMouseOut=\"$mouseOutGras\"/>";
+        $gras = "<input type=\"button\" value=\"b\"
+        style=\"width:50px;font-weight:bold\"
+        onclick=\"bbcode_ajout_balise('b',  '$formName',  '$fieldName');".
+            "bbcode_keyup(this, '$idDivApercu');\"
+        onMouseOver=\"$mouseOverGras\" onMouseOut=\"$mouseOutGras\"/>";
         $boutonsHTML.=$gras;
         $italic = "
-    <input type=\"button\" value=\"i\" style=\"width:50px;font-style:italic\" onclick=\"bbcode_ajout_balise('i',  '$formName',  '$fieldName');bbcode_keyup(this, '$idDivApercu');\" onMouseOver=\"$mouseOverItalic\" onMouseOut=\"$mouseOutItalic\"/>";
+    <input type=\"button\" value=\"i\"
+    style=\"width:50px;font-style:italic\"
+    onclick=\"bbcode_ajout_balise('i',  '$formName',  '$fieldName');".
+        "bbcode_keyup(this, '$idDivApercu');\"
+    onMouseOver=\"$mouseOverItalic\" onMouseOut=\"$mouseOutItalic\"/>";
         $boutonsHTML.=$italic;
         $underline = "
-    <input type=\"button\" value=\"u\" style=\"width:50px;text-decoration:underline;\" onclick=\"bbcode_ajout_balise('u',  '$formName',  '$fieldName');bbcode_keyup(this, '$idDivApercu');\" onMouseOver=\"$mouseOverUnderline\" onMouseOut=\"$mouseOutUnderline\"/>";
+    <input type=\"button\" value=\"u\"
+    style=\"width:50px;text-decoration:underline;\"
+    onclick=\"bbcode_ajout_balise('u',  '$formName',  '$fieldName');".
+        "bbcode_keyup(this, '$idDivApercu');\"
+    onMouseOver=\"$mouseOverUnderline\" onMouseOut=\"$mouseOutUnderline\"/>";
         $boutonsHTML.=$underline;
         $quote = "
-    <input type=\"button\" value=\"quote\" style=\"width:50px\" onclick=\"bbcode_ajout_balise('quote',  '$formName',  '$fieldName');bbcode_keyup(this, '$idDivApercu');\" onMouseOver=\"$mouseOverQuote\" onMouseOut=\"$mouseOutQuote\"/>";
+    <input type=\"button\" value=\"quote\" style=\"width:50px\"
+    onclick=\"bbcode_ajout_balise('quote',  '$formName',  '$fieldName');".
+        "bbcode_keyup(this, '$idDivApercu');\"
+    onMouseOver=\"$mouseOverQuote\" onMouseOut=\"$mouseOutQuote\"/>";
         $boutonsHTML.=$quote;
-        //<!--<input type=\"button\" value=\"code\" style=\"width:50px\" onclick=\"bbcode_ajout_balise('code',  'formAjoutCommentaire',  'commentaire');bbcode_keyup(this, 'apercu');\" onMouseOver=\"getContextHelp('{msgCode}');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this, 'apercu');\"/>-->
+        /*
+         * <!--<input type=\"button\" value=\"code\" style=\"width:50px\" 
+         * onclick=\"bbcode_ajout_balise('code',  'formAjoutCommentaire',
+         * 'commentaire');bbcode_keyup(this, 'apercu');\"
+         * onMouseOver=\"getContextHelp('{msgCode}');\"
+         * onMouseOut=\"closeContextHelp();\"
+         * onkeyup=\"bbcode_keyup(this, 'apercu');\"/>-->
+         * */
         
-        if (!isset($params['noUrlInterneButton']) || $params['noUrlInterneButton']==false) {
-            $urlInterne = "<input type=\"button\" value=\"url interne\"  style=\"width:75px\" onclick=\"bbcode_ajout_balise('url',   '$formName',  '$fieldName');bbcode_keyup(this, '$idDivApercu');\" onMouseOver=\"$mouseOverUrlInterne\" onMouseOut=\"$mouseOutUrlInterne\" onkeyup=\"bbcode_keyup(this, '$idDivApercu');\"/>";
+        if (!isset($params['noUrlInterneButton'])
+            || $params['noUrlInterneButton']==false
+        ) {
+            $urlInterne = "<input type=\"button\" value=\"url interne\"
+            style=\"width:75px\"
+            onclick=\"bbcode_ajout_balise('url',   '$formName',  '$fieldName');".
+                "bbcode_keyup(this, '$idDivApercu');\"
+            onMouseOver=\"$mouseOverUrlInterne\"onMouseOut=\"$mouseOutUrlInterne\" 
+            onkeyup=\"bbcode_keyup(this, '$idDivApercu');\"/>";
             $boutonsHTML.=$urlInterne;
         }
         
-        $urlExterne = "<input type=\"button\" value=\"url externe\"  style=\"width:80px\" onclick=\"bbcode_ajout_balise('urlExterne',   '$formName',  '$fieldName');bbcode_keyup(this, '$idDivApercu');\" onMouseOver=\"$mouseOverUrlExterne\" onMouseOut=\"$mouseOutUrlExterne\" onkeyup=\"bbcode_keyup(this, '$idDivApercu');\"/>";
+        $urlExterne = "<input type=\"button\" value=\"url externe\"
+        style=\"width:80px\"
+        onclick=\"bbcode_ajout_balise('urlExterne',  '$formName',  '$fieldName');".
+            "bbcode_keyup(this, '$idDivApercu');\"
+        onMouseOver=\"$mouseOverUrlExterne\" onMouseOut=\"$mouseOutUrlExterne\"
+        onkeyup=\"bbcode_keyup(this, '$idDivApercu');\"/>";
         $boutonsHTML.=$urlExterne;
         
 
         $boutonsHTML.="</div>";
     
-        return array('boutonsHTML'=>$boutonsHTML, 'divAndJsAfterForm'=>"<div id='$idDivApercu'></div><div id='helpCalque' style='background-color:#FFFFFF; border:2px solid #000000;padding:10px;float:left;display:none;'><img src='images/aide.jpg' style='float:left;padding-right:3px;' valign='middle'><div id='helpCalqueTxt' style='padding-top:7px;'></div></div><script type='text/javascript' >
-                                    bbcode_keyup(document.forms['$formName'].elements['$fieldName'],  '$idDivApercu');setTimeout('majDescription()', 1000);
-                                    function majDescription()
-                                    {
-                                        bbcode_keyup(document.forms['$formName'].elements['$fieldName'],  '$idDivApercu');
-                                        setTimeout('majDescription()', 500);
-                                    }</script>");
+        return array(
+        'boutonsHTML'=>$boutonsHTML,
+        'divAndJsAfterForm'=>"<div id='$idDivApercu'></div>
+        <div id='helpCalque' style='background-color:#FFFFFF;
+        border:2px solid #000000;padding:10px;float:left;display:none;'>
+        <img src='images/aide.jpg'
+        style='float:left;padding-right:3px;' valign='middle'>
+        <div id='helpCalqueTxt' style='padding-top:7px;'></div></div>
+        <script type='text/javascript'>
+        bbcode_keyup(document.forms['$formName'].elements['$fieldName'],
+        '$idDivApercu');setTimeout('majDescription()', 1000);
+        function majDescription()
+        {
+            bbcode_keyup(document.forms['$formName'].elements['$fieldName'], 
+            '$idDivApercu');
+            setTimeout('majDescription()', 500);
+        }</script>");
     }
     
     /**
@@ -185,9 +231,13 @@ class BBCodeObject extends config
      * */
     private static function _includeSource ($matches)
     {
-        include_once __DIR__.'/../../../modules/archi/includes/archiSource.class.php';
+        include_once __DIR__.'/../../../modules/archi/includes/'.
+            'archiSource.class.php';
         $source= new ArchiSource();
-        return '<sup><a title="'.$source->getSourceLibelle($matches[1]).'" href="index.php?archiAffichage=listeAdressesFromSource&source='.$matches[1].'&submit=Rechercher">[?]</a></sup>';
+        $linkText = isset($matches[2]) ? $matches[2] : '?';
+        return '<sup><a title="'.$source->getSourceLibelle($matches[1]).
+            '" href="index.php?archiAffichage=listeAdressesFromSource&source='.
+            $matches[1].'&submit=Rechercher">['.$linkText.']</a></sup>';
     }
     
     /**
@@ -203,48 +253,124 @@ class BBCodeObject extends config
         if (isset($params['text'])) {
             $description = $params['text'];
             
-            $description = stripslashes($this->BBversHTML(htmlspecialchars($description)));//nl2br
+            $description = stripslashes(
+                $this->BBversHTML(htmlspecialchars($description))
+            );
+            //nl2br
             
-            //$description = str_replace(array("\n\r", "\r\n", "\r", "\n"), "<br>", $description);
-            /*$description = str_replace("\n\r", "--hop1--", $description);
+            /*$description = str_replace(array("\n\r", "\r\n", "\r", "\n"),
+             * "<br>", $description);
+            $description = str_replace("\n\r", "--hop1--", $description);
             $description = str_replace("\r\n", "--hop2--", $description);
             $description = str_replace("\r", "--hop3--", $description);
             $description = str_replace("\n", "--hop4--", $description);*/
             
             $description = nl2br($description);
             
-            $description = str_replace("###serveur###",  $this->getNomServeur(),  $description);
+            $description = str_replace(
+                "###serveur###",  $this->getNomServeur(),  $description
+            );
 
-            $description = preg_replace("#\\[url=\"http\\://(.+)\"\\](.+)\\[/url\\]#isU", "<a href=\"http://\\1\">\\2</a>", $description);
-            $description = preg_replace("#\\[url=\\'http\\://(.+)\\'\\](.+)\\[/url\\]#isU", "<a href=\"http://\\1\">\\2</a>", $description);
-            $description = preg_replace("#\\[url\=http\\://(.+)\\](.+)\\[/url\\]#isU", "<a href=\"http://\\1\">\\2</a>", $description);
+            $description = preg_replace(
+                "#\\[url=\"http\\://(.+)\"\\](.+)\\[/url\\]#isU",
+                "<a href=\"http://\\1\">\\2</a>", $description
+            );
+            $description = preg_replace(
+                "#\\[url=\\'http\\://(.+)\\'\\](.+)\\[/url\\]#isU",
+                "<a href=\"http://\\1\">\\2</a>", $description
+            );
+            $description = preg_replace(
+                "#\\[url\=http\\://(.+)\\](.+)\\[/url\\]#isU",
+                "<a href=\"http://\\1\">\\2</a>", $description
+            );
 
 
-            $description = preg_replace("#\\[url=\"(.+)\"\\](.+)\\[/url\\]#isU", "<a href=\"\\1\">\\2</a>", $description);
-            $description = preg_replace("#\\[url=\\'(.+)\\'\\](.+)\\[/url\\]#isU", "<a href=\"\\1\">\\2</a>", $description);
-            $description = preg_replace("#\\[url=(.+)\\](.+)\\[/url\\]#isU", "<a href=\"\\1\">\\2</a>", $description);
+            $description = preg_replace(
+                "#\\[url=\"(.+)\"\\](.+)\\[/url\\]#isU",
+                "<a href=\"\\1\">\\2</a>", $description
+            );
+            $description = preg_replace(
+                "#\\[url=\\'(.+)\\'\\](.+)\\[/url\\]#isU",
+                "<a href=\"\\1\">\\2</a>", $description
+            );
+            $description = preg_replace(
+                "#\\[url=(.+)\\](.+)\\[/url\\]#isU",
+                "<a href=\"\\1\">\\2</a>", $description
+            );
 
-            //$description = preg_replace("#\\[url=\"(.+)\"\\](.+)\\[/url\\]#isU", "<a href='\\1'>\\2</a>", $description);
-            $description = preg_replace("#\\[url\\](.+)\\[/url\\]#isU", "<a href=\"\">\\1</a>", $description);
-            $description = preg_replace("#\\[url=\\](.+)\\[/url\\]#isU", "<a href=\"\">\\1</a>", $description);
+            /*
+             * $description = preg_replace("#\\[url=\"(.+)\"\\](.+)\\[/url\\]#isU",
+             * "<a href='\\1'>\\2</a>", $description);
+             * */
+            $description = preg_replace(
+                "#\\[url\\](.+)\\[/url\\]#isU",
+                "<a href=\"\">\\1</a>", $description
+            );
+            $description = preg_replace(
+                "#\\[url=\\](.+)\\[/url\\]#isU",
+                "<a href=\"\">\\1</a>", $description
+            );
 
 
-            $description = preg_replace("#\\[urlExterne\\=\"http\\:\\/\\/(.+)\"\\](.+)\\[\\/urlExterne\\]#isU", "<a href=\"http://\\1\" target=\"_blank\" id='debug1'>\\2</a>", $description);
-            $description = preg_replace("#\\[urlExterne\\=\\'http\\://(.+)\\'\\](.+)\\[/urlExterne\\]#isU", "<a href=\"http://\\1\" target=\"_blank\" id='debug2'>\\2</a>", $description);
-            $description = preg_replace("#\\[urlExterne\\=http\\:\\/\\/(.+)\\](.+)\\[\\/urlExterne\\]#isU", "<a href=\"http://\\1\" target=\"_blank\" id='debug3'>\\2</a>", $description);
+            $description = preg_replace(
+                "#\\[urlExterne\\=\"http\\:\\/\\/(.+)\"\\](.+)".
+                "\\[\\/urlExterne\\]#isU",
+                "<a href=\"http://\\1\" target=\"_blank\" id='debug1'>\\2</a>",
+                $description
+            );
+            $description = preg_replace(
+                "#\\[urlExterne\\=\\'http\\://(.+)\\'\\](.+)\\[/urlExterne\\]#isU",
+                "<a href=\"http://\\1\" target=\"_blank\" id='debug2'>\\2</a>",
+                $description
+            );
+            $description = preg_replace(
+                "#\\[urlExterne\\=http\\:\\/\\/(.+)\\](.+)\\[\\/urlExterne\\]#isU",
+                "<a href=\"http://\\1\" target=\"_blank\" id='debug3'>\\2</a>",
+                $description
+            );
 
-            $description = preg_replace("#\\[urlExterne\\=\"(.+)\"\\](.+)\\[/urlExterne\\]#isU", "<a href=\"\\1\" target=\"_blank\">\\2</a>", $description);
-            $description = preg_replace("#\\[urlExterne\\=\\'(.+)\\'\\](.+)\\[/urlExterne\\]#isU", "<a href=\"\\1\" target=\"_blank\">\\2</a>", $description);
-            $description = preg_replace("#\\[urlExterne\\=(.+)\\](.+)\\[/urlExterne\\]#isU", "<a href=\"\\1\" target=\"_blank\">\\2</a>", $description);
+            $description = preg_replace(
+                "#\\[urlExterne\\=\"(.+)\"\\](.+)\\[/urlExterne\\]#isU",
+                "<a href=\"\\1\" target=\"_blank\">\\2</a>", $description
+            );
+            $description = preg_replace(
+                "#\\[urlExterne\\=\\'(.+)\\'\\](.+)\\[/urlExterne\\]#isU",
+                "<a href=\"\\1\" target=\"_blank\">\\2</a>", $description
+            );
+            $description = preg_replace(
+                "#\\[urlExterne\\=(.+)\\](.+)\\[/urlExterne\\]#isU",
+                "<a href=\"\\1\" target=\"_blank\">\\2</a>", $description
+            );
 
-            $description = preg_replace("#\\[urlExterne\\](.+)\\[/urlExterne\\]#isU", "<a href=\"\" target=\"_blank\">\\1</a>", $description);
-            $description = preg_replace("#\\[urlExterne=\\](.+)\\[/urlExterne\\]#isU", "<a href=\"\" target=\"_blank\">\\1</a>", $description);
-            $description = preg_replace("#\\[iframe\\=(.+)\\](.+)\\[/iframe\\]#isU", "<iframe src=\"\\1\" width='425' height='349'>\\2</iframe>", $description);
-            $description = preg_replace("#\\[lang\\=(.+)\\](.+)\\[/lang\\]#isU", "<span lang=\"\\1\">\\2</span>",  $description);
-            $description = preg_replace_callback("#\\[source\\=(.+)\\]\\[/source\\]#isU", 'BBCodeObject::_includeSource',  $description);
+            $description = preg_replace(
+                "#\\[urlExterne\\](.+)\\[/urlExterne\\]#isU",
+                "<a href=\"\" target=\"_blank\">\\1</a>", $description
+            );
+            $description = preg_replace(
+                "#\\[urlExterne=\\](.+)\\[/urlExterne\\]#isU",
+                "<a href=\"\" target=\"_blank\">\\1</a>", $description
+            );
+            $description = preg_replace(
+                "#\\[iframe\\=(.+)\\](.+)\\[/iframe\\]#isU",
+                "<iframe src=\"\\1\" width='425' height='349'>\\2</iframe>",
+                $description
+            );
+            $description = preg_replace(
+                "#\\[lang\\=(.+)\\](.+)\\[/lang\\]#isU",
+                "<span lang=\"\\1\">\\2</span>",  $description
+            );
+            $description = preg_replace_callback(
+                "#\\[source\\=(\d+)\\]\\[/source\\]#isU",
+                'BBCodeObject::_includeSource',  $description
+            );
+            $description = preg_replace_callback(
+                "#\\[source\\=(\d+)\\](\w+)\\[/source\\]#isU",
+                'BBCodeObject::_includeSource',  $description
+            );
             $description = ($description);
         } else {
-            echo "<br>attention le parametre 'text' n'est pas defini dans la fonction convertToDisplay.<br>";
+            echo "<br>attention le parametre 'text' n'est pas defini".
+                " dans la fonction convertToDisplay.<br>";
         }
         
         

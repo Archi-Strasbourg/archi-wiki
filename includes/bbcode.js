@@ -107,6 +107,7 @@ function bbcode_apercu(str) {
         ["\\[quote\\](.*?)\\[/quote\\]", "\"$1\""],
         ["\\[iframe=(.*?)\\](.*?)\\[/iframe\\]", "<iframe src=\"$1\" width='425' height='349'>$2</iframe>"],
         ["\\[source=(.*?)\\]\\[/source\\]", "<sup><a title='Source' href=\"index.php?archiAffichage=listeAdressesFromSource&source=$1&submit=Rechercher\">[?]</a></sup>"],
+        ["\\[source=(.*?)\\](.*?)\\[/source\\]", "<sup><a title='Source' href=\"index.php?archiAffichage=listeAdressesFromSource&source=$1&submit=Rechercher\">[$2]</a></sup>"],
         ["\\n", "<br />"]
     ];
     for (i = 0; i < tab.length; i += 1) {
