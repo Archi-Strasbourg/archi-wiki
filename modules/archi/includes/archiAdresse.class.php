@@ -7197,8 +7197,8 @@ class archiAdresse extends ArchiContenu
                         ));
                         $pointMarkerHTML = "
                         <script  >
-                            point = new GLatLng(".$coordonnees['latitude'].", ".$coordonnees['longitude'].");
-                            marker = new GMarker(point);
+                            point = L.latLng(".$coordonnees['latitude'].", ".$coordonnees['longitude'].");
+                            marker = L.marker(point);
                             map.addOverlay(marker);
                         </script>";
                         
@@ -11321,53 +11321,43 @@ class archiAdresse extends ArchiContenu
             $html.=$gm->getMap(array('listeCoordonnees'=>$listeCoords,'urlImageIcon'=>$this->getUrlImage()."pointGM.png",'pathImageIcon'=>$this->getCheminPhysique()."images/pointGM.png"));
             
             // on ajoute le markeur central a la main
-            $html.="<script  >
-                var iconHome = new GIcon();
-                iconHome.image = \"".$this->getUrlImage()."placeMarker.png\";
-                //iconHome.shadow = \"https://labs.google.com/ridefinder/images/mm_20_shadow.png\";
-                iconHome.iconSize = new GSize(19, 32);
-                iconHome.shadowSize = new GSize(22, 20);
-                iconHome.iconAnchor = new GPoint(5, 26);
-                iconHome.infoWindowAnchor = new GPoint(5, 1);
-                
-                //var iconMarkerHome = new GIcon(iconHome);
+            $html.="<script>
+                //var iconMarkerHome = new L.marker({icon: iconHome});
                 ";
             
             
             
             if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']=='popupDetailAdresse' && $isAuthorizedToDrag)
             {
-                $html.="markerHome = new GMarker(new GLatLng(".$latitude.",".$longitude."),{icon:iconHome, draggable: true});";
+                $html.="markerHome = L.marker(L.latLng(".$latitude.",".$longitude."),{draggable: true});";
             }
             else
             {           
-                $html.="markerHome = new GMarker(new GLatLng(".$latitude.",".$longitude."),{icon:iconHome});";
+                $html.="markerHome = L.marker(L.latLng(".$latitude.",".$longitude."));";
             }
             
-            $html.="map.addOverlay(markerHome);";
+            $html.="markerHome.addTo(markers); markerHome.bindPopup('".addslashes($this->getIntituleAdresseFrom($this->variablesGet['archiIdAdresse'],'idAdresse', array('noQuartier'=>true, 'noSousQuartier'=>true, 'noVille'=>true)))."').openPopup();";
             
             if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']=='popupDetailAdresse' && $isAuthorizedToDrag)
             {
-                $html.="markerHome.enableDragging();";
+                $html.="markerHome.draggable=true;";
             }
             
             if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']=='popupDetailAdresse' && $isAuthorizedToDrag)
             {
-                $html.="GEvent.addListener(markerHome,'drag',function(){parent.window.document.getElementById('latitudeUser').value=markerHome.getPoint().lat();parent.window.document.getElementById('longitudeUser').value=markerHome.getPoint().lng();parent.window.document.getElementById('validationCoordonnees').style.display='';});
+                $html.="markerHome.addEventListener('drag',function(){parent.window.document.getElementById('latitudeUser').value=markerHome.getLatLng().lat;parent.window.document.getElementById('longitudeUser').value=markerHome.getLatLng().lng;parent.window.document.getElementById('validationCoordonnees').style.display='';});
                 ";
                 
-                $html.="GEvent.addListener(
-                            map,
+                $html.="map.addEventListener(
                             'dragend',
-                            function(){appelAjaxReturnJs('".html_entity_decode($this->creerUrl('','majGoogleMapNewCenter',array('noRefresh'=>1,'noHTMLHeaderFooter'=>1,'noHeaderNoFooter'=>1,'latitudeHome'=>$latitude,'longitudeHome'=>$longitude)))."&longitudeCenter='+map.getCenter().lng()+'&latitudeCenter='+map.getCenter().lat(),'divListeAdressesAjax')}
+                            function(){appelAjaxReturnJs('".html_entity_decode($this->creerUrl('','majGoogleMapNewCenter',array('noRefresh'=>1,'noHTMLHeaderFooter'=>1,'noHeaderNoFooter'=>1,'latitudeHome'=>$latitude,'longitudeHome'=>$longitude)))."&longitudeCenter='+map.getCenter().lng+'&latitudeCenter='+map.getCenter().lat,'divListeAdressesAjax')}
                             );";
             }
             else
             {
-                    $html.="GEvent.addListener(
-                            map,
+                    $html.="map.addEventListener(
                             'dragend',
-                            function(){appelAjaxReturnJs('".html_entity_decode($this->creerUrl('','majGoogleMapNewCenter',array('noHTMLHeaderFooter'=>1,'noHeaderNoFooter'=>1,'latitudeHome'=>$latitude,'longitudeHome'=>$longitude)))."&longitudeCenter='+map.getCenter().lng()+'&latitudeCenter='+map.getCenter().lat(),'divListeAdressesAjax')}
+                            function(){appelAjaxReturnJs('".html_entity_decode($this->creerUrl('','majGoogleMapNewCenter',array('noHTMLHeaderFooter'=>1,'noHeaderNoFooter'=>1,'latitudeHome'=>$latitude,'longitudeHome'=>$longitude)))."&longitudeCenter='+map.getCenter().lng+'&latitudeCenter='+map.getCenter().lat,'divListeAdressesAjax')}
                             );";
                     //$html.="GEvent.addListener(map,'dragend',function(){document.getElementById('iFrameMajCenter').src='".$this->creerUrl('','majGoogleMapNewCenter',array('noHeaderNoFooter'=>1,'latitudeHome'=>$latitude,'longitudeHome'=>$longitude))."&longitudeCenter='+map.getCenter().lng()+'&latitudeCenter='+map.getCenter().lat();});";
             }           
@@ -13461,7 +13451,7 @@ class archiAdresse extends ArchiContenu
         }
         else
         {
-            $retour .="map.clearOverlays();";
+            $retour .="markers.clearLayers();";
         }
         
         
@@ -13477,61 +13467,30 @@ class archiAdresse extends ArchiContenu
             {
                 $retour.="
                 
-                var iconHome = new GIcon();
-                    
-                iconHome.image = \"".$this->getUrlImage()."placeMarker.png\";
-                //iconHome.shadow = \"http://labs.google.com/ridefinder/images/mm_20_shadow.png\";
-                iconHome.iconSize = new GSize(19, 32);
-                iconHome.shadowSize = new GSize(22, 20);
-                iconHome.iconAnchor = new GPoint(5, 26);
-                iconHome.infoWindowAnchor = new GPoint(5, 1);
-                
-                markerHome = new GMarker(new GLatLng(".$this->variablesGet['latitudeHome'].",".$this->variablesGet['longitudeHome']."),{icon:iconHome});
-                map.addOverlay(markerHome);
+                markerHome = L.marker(L.latLng(".$this->variablesGet['latitudeHome'].",".$this->variablesGet['longitudeHome']."));
+                markerHome.addTo(markers);
                 ";
                 
             }
         }
         
         $retour.="
-                var icon = new GIcon();
-                //icon.image = image;
-                
-            
-                icon.image = '".$this->getUrlImage()."pointGM.png';
-                icon.shadow = '';
-                icon.iconSize = new GSize(9, 9);
-                icon.shadowSize = new GSize(22, 20);
-                icon.iconAnchor = new GPoint(0, 0); // 2,24
-                icon.infoWindowAnchor = new GPoint(5, 1);
-                var iconMarker = new GIcon(icon);"
+
+                var iconMarker = L.marker();"
                 ;
         foreach($arrayConfigCoordonnees['arrayConfigCoordonnees'] as $indice => $values)
         {
             $retour.="
-                    point$indice = new GLatLng(".$values['latitude'].",".$values['longitude'].");
-                    marker$indice = new GMarker(point$indice,iconMarker);
-                    overlay$indice = map.addOverlay(marker$indice);";
-            $retour.="                  var eLabel$indice = new ELabel(point$indice,\"".str_replace("\"","&quot;",$values['label'])."\",\"styleLabelGoogleMap\");
-                    eLabel$indice.pixelOffset = new GSize(20,-10);
-                    map.addOverlay(eLabel$indice);
-                    eLabel$indice.hide();";
-            $retour.="function onClickFunction$indice(overlay, point){currentMarker = marker$indice; currentLabel=eLabel$indice; ".$values['jsCodeOnClickMarker']."}";
-                    $retour.="GEvent.addListener(marker$indice, 'click', onClickFunction$indice);";
-                
-                
-                if(isset($values['jsCodeOnMouseOverMarker']))
-                {
-                    $retour.="function onMouseOverFunction$indice(overlay,point){currentMarker = marker$indice; currentLabel = eLabel$indice; ".$values['jsCodeOnMouseOverMarker']."}";
-                    $retour.="GEvent.addListener(marker$indice,'mouseover',onMouseOverFunction$indice);";
-                
+                    point$indice = L.latLng(".$values['latitude'].",".$values['longitude'].");
+                    marker$indice = L.marker(point$indice, {icon: icon, title: '".addSlashes(strip_tags($values['label']))."'});
+                    marker$indice.addTo(markers);
+                    ";
+                    
+                if (isset($values['jsCodeOnClickMarker'])) {
+                    $retour.="function onClickFunction$indice(overlay,  point){currentMarker = marker$indice;  ".$values['jsCodeOnClickMarker']."}";
+                    $retour.="marker$indice.addEventListener('click',  onClickFunction$indice);";
                 }
-                
-                if(isset($values['jsCodeOnMouseOutMarker']))
-                {
-                    $retour.="function onMouseOutFunction$indice(overlay,point){currentMarker = marker$indice; currentLabel = eLabel$indice; ".$values['jsCodeOnMouseOutMarker']."}";
-                    $retour.="GEvent.addListener(marker$indice,'mouseout',onMouseOutFunction$indice);";
-                }
+               
         }
         
         return $retour;

@@ -301,7 +301,7 @@ class GoogleMap extends config
      * */
     public function getHtmlFromAdressesNoPauseWithGeoLocalization()
     {   
-        $html="<div id='".$this->googleMapNameId."' style='width: ".$this->googleMapWidth."px; height: ".$this->googleMapHeight."px;'>Veuillez patienter pendant le chargement de la carte...</div>";
+        $html="<div id='".$this->googleMapNameId."' style='width: ".$this->googleMapWidth."px; height: ".$this->googleMapHeight."px;'></div>";
     
         $html.="<script  >";
 
@@ -383,25 +383,16 @@ class GoogleMap extends config
                 }
                     
                 $html.="
-                    var icon = new GIcon();
-                    //icon.image = image;
-                    
-                
-                    icon.image = \"$urlImage\";
-                    //icon.shadow = \"https://labs.google.com/ridefinder/images/mm_20_shadow.png\";
-                    icon.iconSize = new GSize($imageSizeX,  $imageSizeY);
-                    icon.shadowSize = new GSize(22,  20);
-                    icon.iconAnchor = new GPoint(2,  24);
-                    icon.infoWindowAnchor = new GPoint(5,  1);
-                    var iconMarker = new GIcon(icon);";
+                  
+                    var iconMarker = L.marker();";
             
             
             
                 $html.="
                     
-                    point$indice = new GLatLng(".$values['latitude'].", ".$values['longitude'].");
-                    marker$indice = new GMarker(point$indice, iconMarker);
-                    overlay$indice = map.addOverlay(marker$indice);
+                    point$indice = L.latLng(".$values['latitude'].", ".$values['longitude'].");
+                    marker$indice = L.marker(point$indice, {icon: icon});
+                    marker$indice.addTo(markers);
                     //marker$indice.openInfoWindowHtml(\"".$values['link']."\");
                     
                     ";
@@ -409,7 +400,7 @@ class GoogleMap extends config
                 $html.="
                             function onClickFunction$indice(overlay,  point){marker$indice.openInfoWindowHtml(\"".$values['link']."\");}";
                 
-                $html.="GEvent.addListener(marker$indice,  'click',  onClickFunction$indice);";
+                $html.="marker$indice.addEventListener('click',  onClickFunction$indice);";
             }
 
                 
@@ -524,30 +515,14 @@ class GoogleMap extends config
             list($imageSizeX,  $imageSizeY,  $typeImage,  $attrImage) = getimagesize($params['pathImageIcon']);
             
             $html.="
-                var icon = new GIcon();
-                //icon.image = image;
-                
-            
-                icon.image = \"$urlImage\";
-                //icon.shadow = \"https://labs.google.com/ridefinder/images/mm_20_shadow.png\";
-                icon.iconSize = new GSize($imageSizeX,  $imageSizeY);
-                icon.shadowSize = new GSize(22,  20);
-                icon.iconAnchor = new GPoint(2,  24);
-                icon.infoWindowAnchor = new GPoint(5,  1);
-                var iconMarker = new GIcon(icon);
+                var icon = L.icon();
+               
+                var iconMarker = L.marker();
             ";
         } else {
             $html.="
-                var icon = new GIcon();
-                //icon.image = image;
-                var iconMarker = new GIcon(icon);
-                  
-                icon.image = \"https://labs.google.com/ridefinder/images/mm_20_red.png\";
-                //icon.shadow = \"https://labs.google.com/ridefinder/images/mm_20_shadow.png\";
-                icon.iconSize = new GSize(30,  24);
-                icon.shadowSize = new GSize(22,  20);
-                icon.iconAnchor = new GPoint(2,  24);
-                icon.infoWindowAnchor = new GPoint(5,  1);
+               
+                icon.infoWindowAnchor = L.marker();
             ";
         }
         $html.="</script>";
@@ -557,8 +532,8 @@ class GoogleMap extends config
             foreach ($params['listeCoordonnees'] as $indice => $values) {
                 $html.="
                 
-                    point$indice = new GLatLng(".$values['latitude'].", ".$values['longitude'].");
-                    marker$indice = new GMarker(point$indice, iconMarker);
+                    point$indice = L.latLng(".$values['latitude'].", ".$values['longitude'].");
+                    marker$indice = L.marker(point$indice, {icon: icon});
                     overlay$indice = map.addOverlay(marker$indice);
                     //marker$indice.openInfoWindowHtml(\"".$values['libelle']."\");
                     
@@ -568,20 +543,10 @@ class GoogleMap extends config
                     $html.="
                             function onClickFunction$indice(overlay,  point){".$values['jsCodeOnClickMarker']."}";
                 
-                    $html.="GEvent.addListener(marker$indice,  'click',  onClickFunction$indice);";
+                    $html.="marker$indice.addListener('click',  onClickFunction$indice);";
                 }
                 
-                if (isset($values['jsCodeOnMouseOverMarker'])) {
-                    $html.="function onMouseOverFunction$indice(overlay, point){".$values['jsOnMouseOverMarker']."}";
-                    $html.="GEvent.addListener(marker$indice, 'mouseover', onMouseOverFunction$indice);";
-                
-                }
-                
-                if (isset($values['jsCodeOnMouseOutMarker'])) {
-                    $html.="function onMouseOutFunction$indice(overlay, point){".$values['jsCodeOnMouseOutMarker']."}";
-                    $html.="GEvent.addListener(marker$indice, 'mouseout', onMouseOutFunction$indice);";
-                
-                }
+               
                 
             }
             $html.="</script>";
@@ -607,21 +572,14 @@ class GoogleMap extends config
         $imageSizeX = "24";
         $imageSizeY = "30";
 
-        // pour preciser que l'on veut une version stable : v=2.s
-        // la derniere version v=2.x
-        // version chaipakoi v=2   
-        $html.="<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=".$this->googleMapKeyProperty."\" type=\"text/javascript\"></script>";
-        $html.="<script>
-                var map;
+        $html.="
+        <link rel='stylesheet' href='js/leaflet/leaflet.css' />
+        <script src='js/leaflet/leaflet.js'></script>
+        <script>
+                var map, markers, icon = L.icon({iconUrl: 'images/pointGM.png'});
                 var geocoder;
-                var icon = new GIcon();
                 var tabAdresses = new Array();
-                icon.image = \"$urlImage\";
-                //icon.shadow = \"https://labs.google.com/ridefinder/images/mm_20_shadow.png\";
-                icon.iconSize = new GSize($imageSizeX,  $imageSizeY);
-                icon.shadowSize = new GSize(22,  20);
-                icon.iconAnchor = new GPoint(2,  24);
-                icon.infoWindowAnchor = new GPoint(5,  1);
+                
 
                 // addAddressToMap() is called when the geocoder returns an
                 // answer.  It adds a marker to the map with an open info window
@@ -633,8 +591,8 @@ class GoogleMap extends config
                     } 
                     else {
                         place = response.Placemark[0];
-                        point = new GLatLng(place.Point.coordinates[1],  place.Point.coordinates[0]);
-                        marker = new GMarker(point);
+                        point = L.latLng(place.Point.coordinates[1],  place.Point.coordinates[0]);
+                        marker = L.marker(point);
                         map.addOverlay(marker);
                         marker.openInfoWindowHtml(place.address + '<br>' + '<b>Country code:</b> ' + place.AddressDetails.Country.CountryNameCode);
                     }
@@ -660,9 +618,9 @@ class GoogleMap extends config
 
                   var letter = String.fromCharCode(\"A\".charCodeAt(0) + index);
                   icon.image = image;
-                  var iconMarker = new GIcon(icon);
+                  var iconMarker = L.marker(icon);
                   
-                  var marker = new GMarker(point,  iconMarker);
+                  var marker = new L.marker(point,  {icon: iconMarker});
                     
                   GEvent.addListener(marker, \"click\", function(){
                     
@@ -670,7 +628,7 @@ class GoogleMap extends config
                     
                   });
                   /*
-                  GEvent.addListener(marker,  \"click\",  function() {
+                  marker.addEventListener(\"click\",  function() {
                 ";  
         switch($this->markerOnClickType) {
         case 'alert':
@@ -737,7 +695,7 @@ class GoogleMap extends config
     if (oCallbacks == null) {oCallbacks={}};
     GZoomControl.G.callbacks=oCallbacks;
 }
-
+/*
 GZoomControl.prototype = new GControl();
 
 //class globals
@@ -910,7 +868,7 @@ GZoomControl.prototype.mouseup_=function(e){
       jslog.error(\"error adding zoomarea overlay:\"+e.message);
     }
 
-    oBounds=new GLatLngBounds(sw, ne);
+    oBounds=L.latLngBounds(sw, ne);
     nZoom=G.oMap.getBoundsZoomLevel(oBounds);
     oCenter=oBounds.getCenter();
     G.oMap.setCenter(oCenter,  nZoom);
@@ -992,7 +950,7 @@ GZoomControl.prototype.resetDragZoom_=function() {
     G.oOutline.style.display='none';    
     GZoomControl.prototype.setButtonMode_('normal');
   //debug(\"done with reset drag zoom\");
-};
+};*/
 
 /* alias get element by id */
 function \$id(sId) { return document.getElementById(sId); }
@@ -1051,10 +1009,14 @@ acl.getManyElements=function(s){
         function load() {
         //if (GBrowserIsCompatible()) {\n
         
-            map = new GMap2(document.getElementById(\"".$this->googleMapNameId."\"));//, {size:new GSize(".$this->googleMapWidth.", ".$this->googleMapHeight.")}              
+            map = new L.map('".$this->googleMapNameId."').setView(L.latLng(".$this->centerLat.", ".$this->centerLong."),  ".$this->googleMapZoom.");
+            markers = L.layerGroup().addTo(map);
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href=\'http://osm.org/copyright\'>OpenStreetMap</a>'
+            }).addTo(map);
             ";
 
-        if ($this->mapType!='')
+        /*if ($this->mapType!='')
             $html.="map.setMapType(".$this->mapType.");";
         
         
@@ -1074,10 +1036,10 @@ acl.getManyElements=function(s){
         if (!$this->noDisplayZoomSelectionSquare)
             $html.="map.addControl(new GZoomControl(), new GControlPosition(G_ANCHOR_TOP_LEFT, new GSize(50, 7)));";
             
-            $html.="map.setCenter(new GLatLng(".$this->centerLat.", ".$this->centerLong."),  ".$this->googleMapZoom.");
+            $html.="
             //map.addControl(new GLargeMapControl());
-            geocoder = new GClientGeocoder();
-            ";
+            //geocoder = new GClientGeocoder();
+            ";*/
         if (isset($params['jsOnLoad']))
             $html.=$params['jsOnLoad'];
         $html.="
@@ -1085,7 +1047,7 @@ acl.getManyElements=function(s){
         }</script>";    
         
         // objet elabel permettant d'ajouter des labels sur la carte google map
-        $html.="<script  >
+        /*$html.="<script  >
         // ELabel.js 
         //
         //   This Javascript is provided by Mike Williams
@@ -1219,7 +1181,7 @@ acl.getManyElements=function(s){
               ELabel.prototype.getPoint = function() {
                 return this.point;
               }
-              </script>";
+              </script>";*/
         
         
         
@@ -1242,7 +1204,7 @@ acl.getManyElements=function(s){
         
         if (isset($params['jsCode'])) {
             //$html.="function onClickFunction(overlay,  point)";
-            $html.="GEvent.addListener(map,  'click',  function(overlay,  point){if (point){".$params['jsCode']."}});";
+            $html.="map.addEventListener('click',  function(overlay,  point){if (point){".$params['jsCode']."}});";
         } else {
             // fonctions permettant de renvoyer l'adresse a partir du point cliqué sur la carte,  on enleve le numero de l'adresse par javascript pour n'avoir que la rue
             $html.=" 
@@ -1277,8 +1239,8 @@ acl.getManyElements=function(s){
                     alert('Status Code:' + response.Status.code);
                   } else {
                     place = response.Placemark[0];
-                    point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
-                    marker = new GMarker(point);
+                    point = L.latLng(place.Point.coordinates[1], place.Point.coordinates[0]);
+                    marker = new L.marker(point);
                     map.addOverlay(marker);
                     marker.openInfoWindowHtml(
                         '<b>orig latlng:</b>' + response.name + '<br/>' + 
@@ -1306,7 +1268,7 @@ acl.getManyElements=function(s){
                 GEvent.addListener(map,  'click',  function(overlay,  point){\n
                 map.clearOverlays();\n
                 if (point) {\n
-                map.addOverlay(new GMarker(point));\n
+                L.marker(point).addTo(markers);\n
                 map.panTo(point);\n
                 document.getElementById('debug').value = point.lat() + ' ' + point.lng();\n
                 geocoder.getLocations(point,  showAddress);
@@ -1502,23 +1464,8 @@ acl.getManyElements=function(s){
     {
         $html = "
             function addPoint(longitude, latitude, labelText, onClick) {
-                
-                var icon = new GIcon();
-                
-                
-                  
-                icon.image = \"https://labs.google.com/ridefinder/images/mm_20_red.png\";
-                //icon.shadow = '';//\"https://labs.google.com/ridefinder/images/mm_20_shadow.png\";
-                icon.iconSize = new GSize(30,  24);
-                icon.shadowSize = new GSize(22,  20);
-                icon.iconAnchor = new GPoint(0, 0); //2, 24
-                icon.infoWindowAnchor = new GPoint(5,  1);
-                
-                var iconMarker = new GIcon(icon);
-                
-                point = new GLatLng(latitude, longitude);
-                marker = new GMarker(point, iconMarker);
-                overlay = map.addOverlay(marker);
+                   
+                var iconMarker = L.marker(L.latLng(latitude, longitude).addTo(markers);
             
                 //var eLabel = new ELabel(point, labelText, \"styleLabelGoogleMap\");
                 //eLabel.pixelOffset = new GSize(20, -10);
@@ -1569,7 +1516,7 @@ acl.getManyElements=function(s){
             // la carte est deja affichee
             // on se contente de rajouter des points
         } else {
-            $html.="<div id='".$this->googleMapNameId."' style='padding:0px;margin:0px;width: ".$this->googleMapWidth."px; height: ".$this->googleMapHeight."px; background-color:lime;".$this->divStyle."'>Veuillez patienter pendant le chargement de la carte...</div>";
+            $html.="<div id='".$this->googleMapNameId."' style='padding:0px;margin:0px;width: ".$this->googleMapWidth."px; height: ".$this->googleMapHeight."px; ".$this->divStyle."'></div>";
             // dans le cas d'un parcours de type 'walking' ,  a pied ,  il faut preciser le div avec l'affichage des informations du chemin,  sinon le parcours ne s'affichera pas
             if (isset($params['idDivDisplayEtapesText']) && $params['idDivDisplayEtapesText']!='') {
                 $html.="<div id='".$params['idDivDisplayEtapesText']."' style=''></div>";
@@ -1588,30 +1535,9 @@ acl.getManyElements=function(s){
             list($imageSizeX,  $imageSizeY,  $typeImage,  $attrImage) = getimagesize($params['pathImageIcon']);
             
             $html.="
-                var icon = new GIcon();
-                //icon.image = image;
-                
-            
-                icon.image = \"$urlImage\";
-                //icon.shadow = \"https://labs.google.com/ridefinder/images/mm_20_shadow.png\";
-                icon.iconSize = new GSize($imageSizeX,  $imageSizeY);
-                icon.shadowSize = new GSize(22,  20);
-                icon.iconAnchor = new GPoint(0,  0); // 2, 24
-                icon.infoWindowAnchor = new GPoint(5,  1);
-                var iconMarker = new GIcon(icon);
+                var iconMarker = L.marker();
             ";
         } else {
-            $html.="
-                var icon = new GIcon();
-                //icon.image = image;
-                var iconMarker = new GIcon(icon);
-                  
-                icon.image = \"https://labs.google.com/ridefinder/images/mm_20_red.png\";
-                //icon.shadow = \"https://labs.google.com/ridefinder/images/mm_20_shadow.png\";
-                icon.iconSize = new GSize(30,  24);
-                icon.shadowSize = new GSize(22,  20);
-                icon.iconAnchor = new GPoint(0, 0); //2, 24
-                icon.infoWindowAnchor = new GPoint(5,  1);";
         }
         
         if (isset($params['noScriptBalises']) && $params['noScriptBalises']==true) {
@@ -1636,7 +1562,7 @@ acl.getManyElements=function(s){
             if (isset($params['noScriptBalises']) && $params['noScriptBalises']==true) {
                 // pas de balise de script
             } else {
-                $html.="<script  >";
+                $html.="<script>";
             }
             
             $Ymax = 0;
@@ -1645,48 +1571,19 @@ acl.getManyElements=function(s){
             $Xmin = 0;
             $i = 0;
             foreach ($params['listeCoordonnees'] as $indice => $values) {
-                if (isset($values['urlIcon']) && $values['urlIcon']!='') {
-                    $dimX = 19;
-                    $dimY = 32;
-                    
-                    if (isset($values['dimIconX']))
-                        $dimX = $values['dimIconX'];
-                    if (isset($values['dimIconY']))
-                        $dimY = $values['dimIconY'];
-                    
-                    
-                    $html.="
-                    
-                        var icon = new GIcon();
-                        icon.image = \"".$values['urlIcon']."\";
-                        icon.shadow = '';
-                        icon.iconSize = new GSize($dimX,  $dimY);
-                        icon.shadowSize = new GSize(22,  20);
-                        icon.iconAnchor = new GPoint(0,  0); // 2, 24
-                        icon.infoWindowAnchor = new GPoint(5,  1);
-                        var iconMarker = new GIcon(icon);
-                    
-                    
-                    ";
-                }
                 $html.="
                 
-                    point$indice = new GLatLng(".$values['latitude'].", ".$values['longitude'].");
-                    marker$indice = new GMarker(point$indice, iconMarker);
-                    overlay$indice = map.addOverlay(marker$indice);
-                    //marker$indice.openInfoWindowHtml(\"".$values['libelle']."\");
+                    point$indice = L.latLng(".$values['latitude'].", ".$values['longitude'].");
+                    marker$indice = L.marker(point$indice, {icon: icon, title: '".addslashes(strip_tags($values['label']))."'}).addTo(markers);
+                    //overlay$indice = map.addOverlay(marker$indice);
+                    //marker$indice.bindPopup(\"".$values['libelle']."\");
                 ";
                 
-                if (isset($values['label'])) {
-                    $html.="
-                    var eLabel$indice = new ELabel(point$indice, \"".str_replace("\"", "&quot;", $values['label'])."\", \"styleLabelGoogleMap\");
-                    eLabel$indice.pixelOffset = new GSize(20, -10);
-                    map.addOverlay(eLabel$indice);
-                    eLabel$indice.hide();
-                    ";
-                } else {
-                    $html.= "var eLabel$indice = null; ";
+                if (isset($values['jsCodeOnClickMarker'])) {
+                    $html.="function onClickFunction$indice(overlay,  point){currentMarker = marker$indice;  ".$values['jsCodeOnClickMarker']."}";
+                    $html.="marker$indice.addEventListener('click',  onClickFunction$indice);";
                 }
+
                 
                 if (isset($params['setAutomaticCentering']) && $params['setAutomaticCentering']==true) {
                     // verif pour que l'on reste a peu pres dans les coordonnees de la france ( verif a retirer si besoin)
@@ -1717,22 +1614,6 @@ acl.getManyElements=function(s){
                 }
                 
                 
-                if (isset($values['jsCodeOnClickMarker'])) {
-                    $html.="function onClickFunction$indice(overlay,  point){currentMarker = marker$indice; currentLabel=eLabel$indice; ".$values['jsCodeOnClickMarker']."}";
-                    $html.="GEvent.addListener(marker$indice,  'click',  onClickFunction$indice);";
-                }
-                
-                if (isset($values['jsCodeOnMouseOverMarker'])) {
-                    $html.="function onMouseOverFunction$indice(overlay, point){currentMarker = marker$indice; currentLabel = eLabel$indice; ".$values['jsCodeOnMouseOverMarker']."}";
-                    $html.="GEvent.addListener(marker$indice, 'mouseover', onMouseOverFunction$indice);";
-                
-                }
-                
-                if (isset($values['jsCodeOnMouseOutMarker'])) {
-                    $html.="function onMouseOutFunction$indice(overlay, point){currentMarker = marker$indice; currentLabel = eLabel$indice; ".$values['jsCodeOnMouseOutMarker']."}";
-                    $html.="GEvent.addListener(marker$indice, 'mouseout', onMouseOutFunction$indice);";
-                
-                }
                 
             }
             
@@ -1743,15 +1624,15 @@ acl.getManyElements=function(s){
                     var max_lon = $xMax;
                     var min_lon = $xMin;
                     // calcul du zoom
-                    var bounds = new GLatLngBounds;
-                    bounds.extend(new GLatLng(min_lon,  min_lat));
-                    bounds.extend(new GLatLng(max_lon,  max_lat));
+                    var bounds = L.latLngBounds;
+                    bounds.extend(L.latLng(min_lon,  min_lat));
+                    bounds.extend(L.latLng(max_lon,  max_lat));
                     var zoom = map.getBoundsZoomLevel(bounds); 
                 
                     // calcul du centre
                     var centreLat = (min_lat+max_lat)/2;
                     var centreLong = (min_lon+max_lon)/2;
-                    map.setCenter(new GLatLng(centreLat, centreLong), zoom); 
+                    map.setCenter(L.latLng(centreLat, centreLong), zoom); 
                     //alert(max_lat+' '+min_lat+' '+max_lon+' '+min_lon);
 
                     
@@ -1834,24 +1715,16 @@ acl.getManyElements=function(s){
                     
                     
                     $html.="
-                    
-                        var icon = new GIcon();
-                        icon.image = \"".$values['urlIcon']."\";
-                        icon.shadow = '';
-                        icon.iconSize = new GSize($dimX,  $dimY);
-                        icon.shadowSize = new GSize(22,  20);
-                        icon.iconAnchor = new GPoint(0,  0); // 2, 24
-                        icon.infoWindowAnchor = new GPoint(5,  1);
-                        var iconMarker = new GIcon(icon);
+                        var iconMarker = L.marker();
                     
                     
                     ";
                 }
                 $html.="
                 
-                    point$indice = new GLatLng(".$values['latitude'].", ".$values['longitude'].");
-                    marker$indice = new GMarker(point$indice, iconMarker);
-                    overlay$indice = map.addOverlay(marker$indice);
+                    point$indice = L.latLng(".$values['latitude'].", ".$values['longitude'].");
+                    marker$indice = L.marker(point$indice, {icon: icon});
+                    marker$indice.addTo(markers);
                     //marker$indice.openInfoWindowHtml(\"".$values['libelle']."\");
                 ";
                 
@@ -1876,23 +1749,7 @@ acl.getManyElements=function(s){
                 
                 
                 
-                
-                if (isset($values['jsCodeOnClickMarker'])) {
-                    $html.="function onClickFunction$indice(overlay,  point){currentMarker = marker$indice; currentLabel=eLabel$indice; ".$values['jsCodeOnClickMarker']."}";
-                    $html.="GEvent.addListener(marker$indice,  'click',  onClickFunction$indice);";
-                }
-                
-                if (isset($values['jsCodeOnMouseOverMarker'])) {
-                    $html.="function onMouseOverFunction$indice(overlay, point){currentMarker = marker$indice; currentLabel = eLabel$indice; ".$values['jsCodeOnMouseOverMarker']."}";
-                    $html.="GEvent.addListener(marker$indice, 'mouseover', onMouseOverFunction$indice);";
-                
-                }
-                
-                if (isset($values['jsCodeOnMouseOutMarker'])) {
-                    $html.="function onMouseOutFunction$indice(overlay, point){currentMarker = marker$indice; currentLabel = eLabel$indice; ".$values['jsCodeOnMouseOutMarker']."}";
-                    $html.="GEvent.addListener(marker$indice, 'mouseout', onMouseOutFunction$indice);";
-                
-                }
+               
                 
             }
             
@@ -1907,7 +1764,7 @@ acl.getManyElements=function(s){
                         zoomFactor: 32, 
                         numLevels: 4
                     });
-                    map.setCenter(new GLatLng(".$lastPoint['latitude'].', '.$lastPoint['longitude']."),  14);
+                    map.setCenter(L.latLng(".$lastPoint['latitude'].', '.$lastPoint['longitude']."),  14);
                     map.addOverlay(encodedPolyline);";
             
             

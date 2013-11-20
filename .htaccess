@@ -15,9 +15,10 @@ RewriteEngine on
 RewriteBase /archi-strasbourg.org/
 
 ########################################
-# Exemples 							   #
+# Exemples                             #
 ########################################
 
+RewriteRule js/leaflet/images/(.+) js/leaflet/images/$1 [L,QSA]
 RewriteRule images/(.+) images/$1 [L,QSA]
 
 RewriteRule css/(.+) css/$1 [L,QSA]
