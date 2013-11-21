@@ -510,7 +510,7 @@ class GoogleMap extends config
                 function addAddressToMap(response) {
 
                     if (!response || response.Status.code != 200) {
-                        alert('L'adresse n'est pas correcte.'
+                        alert('L\'adresse n'est pas correcte.'
                         + 'Exemple : 22 rue de bâle strasbourg,  france');
                     } 
                     else {
