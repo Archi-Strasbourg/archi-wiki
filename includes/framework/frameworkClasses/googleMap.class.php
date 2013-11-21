@@ -575,6 +575,7 @@ class GoogleMap extends config
         $html.="
         <link rel='stylesheet' href='js/leaflet/leaflet.css' />
         <script src='js/leaflet/leaflet.js'></script>
+        <script src='js/leaflet/Polyline.encoded.js'></script>
         <script>
                 var map, markers, icon = L.icon({iconUrl: 'images/pointGM.png'});
                 var geocoder;
@@ -1668,7 +1669,7 @@ acl.getManyElements=function(s){
             
             $html.="var options = {};";
             
-            if (isset($params['travelMode']) && $params['travelMode']!='') {
+            /*if (isset($params['travelMode']) && $params['travelMode']!='') {
                 switch($params['travelMode']) {
                 case 'walking':
                     // attention ici le div est apparement obligatoire dans ce cas
@@ -1686,11 +1687,11 @@ acl.getManyElements=function(s){
                     $html.="options.avoidHighways=true; ";
                     break;
                 }
-            }
+            }*/
             
             
             $html.="
-                gdir = new GDirections(map, directionsDiv);
+                //gdir = new GDirections(map, directionsDiv);
             ";
             if (isset($params['getCoordonneesParcours']) && $params['getCoordonneesParcours']==true) {
                 $html.="
@@ -1738,10 +1739,7 @@ acl.getManyElements=function(s){
                 
                 if (isset($values['label'])) {
                     $html.="
-                    var eLabel$indice = new ELabel(point$indice, \"".str_replace("\"", "&quot;", $values['label'])."\", \"styleLabelGoogleMap\");
-                    eLabel$indice.pixelOffset = new GSize(20, -10);
-                    map.addOverlay(eLabel$indice);
-                    eLabel$indice.hide();
+                    marker$indice.bindPopup('".addslashes($values['label'])."');
                     ";
                 } else {
                     $html.= "var eLabel$indice = null; ";
@@ -1758,14 +1756,19 @@ acl.getManyElements=function(s){
 
             //$html.="gdir.loadFromWaypoints(wp, options); ";
             $lastPoint=end($params['listeCoordonneesParcours']);
-            $html.="var encodedPolyline = new GPolyline.fromEncoded({
-                        points: '".$params['polyline']."', 
-                        levels: '".$params['levels']."', 
-                        zoomFactor: 32, 
-                        numLevels: 4
-                    });
-                    map.setCenter(L.latLng(".$lastPoint['latitude'].', '.$lastPoint['longitude']."),  14);
-                    map.addOverlay(encodedPolyline);";
+            $html.="
+                var encodedPolyline = L.polyline(L.PolylineUtil.decode('".$params['polyline']."'));
+                /*var encodedPolyline = new GPolyline.fromEncoded({
+                            points: '".$params['polyline']."', 
+                            levels: '".$params['levels']."', 
+                            zoomFactor: 32, 
+                            numLevels: 4
+                        });*/
+                map.addLayer(encodedPolyline);
+                var bounds = encodedPolyline.getBounds();
+                map.setView(bounds.getCenter(), map.getBoundsZoom(bounds), true);
+            ";
+            
             
             
             // récuperation des coordonnées du tracé
