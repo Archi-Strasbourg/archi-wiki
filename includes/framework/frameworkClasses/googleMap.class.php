@@ -735,7 +735,9 @@ acl.getManyElements=function(s){
         $html.="
         //}\n
         }</script>";    
-       
+        $html.= '<script src="js/jquery-ui/js/jquery-1.7.2.min.js"></script>';
+        $html.= '<script src="js/osm_geojson.js"></script>';
+        $html.= '<script src="js/osminfo.js"></script>';
         
         
         
