@@ -498,6 +498,8 @@ class GoogleMap extends config
         $html.="
         <link rel='stylesheet' href='js/leaflet/leaflet.css' />
         <script src='js/leaflet/leaflet.js'></script>
+	 <script src='http://maps.google.com/maps/api/js?v=3.2&sensor=false'></script>
+	<script src='js/leaflet-google.js'></script>
         <script src='js/leaflet/Polyline.encoded.js'></script>
         <script>
                 var map, markers, icon = L.icon({iconUrl: 'images/pointGM.png'});
@@ -719,15 +721,15 @@ acl.getManyElements=function(s){
             map = new L.map('".$this->googleMapNameId.
             "').setView(L.latLng(".$this->centerLat.", ".$this->centerLong.
             "),  ".$this->googleMapZoom.");
+	    var googleLayer = new L.Google('HYBRID', { attribution : '&copy; <a href=\"http://maps.google.fr/\">Google Maps</a>'});
+	    map.addLayer(googleLayer);
             markers = L.layerGroup().addTo(map);
-            bing.addTo(map);
             var OSM = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                 attribution:
                 '&copy; <a href=\'http://osm.org/copyright\'>OpenStreetMap</a>'
             });
-
-            L.control.layers({'Vue aérienne': bing, 'Plan': OSM}).addTo(map);
-            ";
+            L.control.layers({'Vue aérienne': googleLayer, 'Plan': OSM}).addTo(map);
+	";
 
         if (isset($params['jsOnLoad'])) {
             $html.=$params['jsOnLoad'];
