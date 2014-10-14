@@ -508,6 +508,12 @@ class ArchiAccueil extends config
         // affiche du template regroupant les 4 encarts
 
         $t->assign_vars(array('infos'=>"<a href='".$this->creerUrl('', 'statistiquesAccueil')."'>".$infos."</a>"));
+        //Bandeau
+        $reqBandeau = $this->connexionBdd->requete("SELECT nom, valeur FROM options WHERE nom LIKE 'bandeau_%';");
+        while ($row = mysql_fetch_object($reqBandeau)) {
+           $bandeau[$row->nom] = $row->valeur;
+        }
+        $t->assign_vars(array('bandeau_lien'=>$bandeau['bandeau_lien']));
 
         
         ob_start();

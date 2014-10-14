@@ -1,4 +1,5 @@
-﻿<div style='display:table;'>
+<a href="{bandeau_lien}"><img src="images/bandeau/bandeau_archi_wiki" /></a>
+<div style='display:table;'>
 <!--
 <div class="pub">
     <strong><a href="http://m.archi-strasbourg.org/"><?_("Découvrez la version smartphone de notre site sur ")?><i>m.archi-strasbourg.org</i></a></strong><br/><br/>

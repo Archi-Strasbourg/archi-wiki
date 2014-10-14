@@ -64,6 +64,9 @@ class ArchiAdministration extends config
         if ($u->isAuthorized('admin_actualites', $idUtilisateur)) {
             $menu = array_merge($menu, array(_("Compteur de dons")=>$this->creerUrl('', 'adminCompteur')));
         }
+        if ($u->isAuthorized('admin_actualites', $idUtilisateur)) {
+            $menu = array_merge($menu, array(_("Bandeau")=>$this->creerUrl('', 'adminBandeau')));
+        }
         if ($u->isAuthorized('admin_sources', $idUtilisateur)) {
             $menu = array_merge($menu, array(_("Sources")=>$this->creerUrl('', 'administration', array('tableName'=>'source'))));
         }
@@ -1351,6 +1354,25 @@ class ArchiAdministration extends config
             <label for="compteur_lien">Lien</label>&nbsp;:<br/><input name="compteur_lien" id="compteur_lien" type="url" value="', $compteur['compteur_lien'], '" /><br/><br/>
             <label for="compteur_projet">Projet</label>&nbsp;:<br/><input name="compteur_projet" id="compteur_projet" type="text" value="', $compteur['compteur_projet'], '" /><br/><br/>
             <label for="compteur_label">Label</label>&nbsp;:<br/><input name="compteur_label" id="compteur_label" type="text" value="', $compteur['compteur_label'], '" /><br/>
+            <br/><input type="submit" />
+        </form>';
+    }
+    public function adminBandeau() {
+        global $config;
+        if (!empty($_POST)) {
+            $config->connexionBdd->requete("REPLACE INTO options (nom, valeur) VALUES ('bandeau_lien', '".mysql_real_escape_string($_POST['bandeau_lien'])."');");
+            if (isset($_FILES['bandeau_img'])) {
+                move_uploaded_file($_FILES['bandeau_img']['tmp_name'], __DIR__.'/../../../images/bandeau/bandeau_archi_wiki');
+            }
+        }
+        $reqBandeau = $config->connexionBdd->requete("SELECT nom, valeur FROM options WHERE nom LIKE 'bandeau_%';");
+        while ($row = mysql_fetch_object($reqBandeau)) {
+           $bandeau[$row->nom] = $row->valeur;
+        }
+        echo '<form enctype="multipart/form-data" action="index.php?archiAffichage=adminBandeau" method="post">
+            <h2>Bandeau</h2>
+            <label for="bandeau_lien">Lien</label>&nbsp;:<br/><input name="bandeau_lien" id="bandeau_lien" type="url" value="', $bandeau['bandeau_lien'], '" /><br/><br/>
+            <label for="bandeau_img">Image</label>&nbsp;:<br/><input name="bandeau_img" id="bandeau_img" type="file" accept="image/jpeg,image/png" /><br/><br/>
             <br/><input type="submit" />
         </form>';
     }

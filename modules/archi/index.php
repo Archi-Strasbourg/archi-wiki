@@ -1443,6 +1443,10 @@ if (isset($_GET['archiAffichage'])) {
             $admin = new archiAdministration();
             echo $admin->adminCompteur();
             break;
+        case 'adminBandeau':
+            $admin = new archiAdministration();
+            echo $admin->adminBandeau();
+            break;
         case "previsualisationActualite":
             $admin = new archiAdministration();
             echo $admin->previsualisationActualitePopup();
