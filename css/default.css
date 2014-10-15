@@ -827,6 +827,7 @@ img {
     position: absolute;
     right: 2.4em;
     color: #222;
+    top:1px;
 }
 
 .progressbar {
