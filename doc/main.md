@@ -96,11 +96,14 @@ Les templates en eux-mêmes sont des fichiers ```.tpl``` contenant du HTML. On p
 
 
 Il est également possible de rendre certains blocs conditionnels comme ceci :
-    <!-- BEGIN nomDuBloc -->
+
+    < !-- BEGIN nomDuBloc -->
     <div>
         Lorem ipsum
     </div>
-    <!-- END nomDuBloc -->
+    < !-- END nomDuBloc -->
+
+(Un espace a été ajouté entre ```<``` et ```!``` pour des questions d'affichage, mais il s'agit bien de commentaires HTML classiques.)
 
 Par défaut le bloc ne sera pas affiché. Pour l'activer depuis PHP, il faut utiliser la fonction [assign_block_vars](@ref Template::assign_block_vars) :
     
