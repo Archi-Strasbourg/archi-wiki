@@ -1,6 +1,6 @@
 #! /usr/bin/php
 <?php
-/**
+/** @file
  * Affiche les fichiers de logs de manière plus lisible
  * 
  * PHP version 5.4.4

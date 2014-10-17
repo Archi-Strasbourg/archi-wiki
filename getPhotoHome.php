@@ -1,5 +1,5 @@
 <?php
-/**
+/**@file
  * Redimenssionne une photo en 640x340 px pour la page d'accueil de la version mobile
  * 
  * PHP Version 5.3.3

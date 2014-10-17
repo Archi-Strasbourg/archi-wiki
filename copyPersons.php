@@ -1,5 +1,5 @@
 <?php
-/**
+/** @file
  * Script pour copier des personnes de l'ancien systèmes vers le nouveau
  * 
  * PHP Version 5.3.3

@@ -1,5 +1,5 @@
 <?php
-/**
+/** @file
  * Classe ArchiSource
  * 
  * PHP Version 5.3.3
@@ -9,7 +9,8 @@
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     https://archi-strasbourg.org/
- * 
+ * @addtogroup Classes
+ * @{
  * */
  
 /**

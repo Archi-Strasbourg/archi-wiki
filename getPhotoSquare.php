@@ -1,5 +1,5 @@
 <?php
-/**
+/** @file
  * Redimenssionne une photo en 130x130 px pour la version mobile
  * 
  * PHP Version 5.3.3

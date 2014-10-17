@@ -1,5 +1,5 @@
 <?php
-/**
+/** @file
  * Charge le template de l'en-tête
  * 
  * PHP Version 5.3.3

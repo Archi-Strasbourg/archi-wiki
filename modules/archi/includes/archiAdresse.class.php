@@ -1,7 +1,33 @@
 <?php
+/** @file
+ * Classe archiAdresse
+ * 
+ * PHP Version 5.3.3
+ * 
+ * @category General
+ * @package  ArchiWiki
+ * @author   Pierre Rudloff <contact@rudloff.pro>
+ * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
+ * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
+ * @link     https://archi-strasbourg.org/
+ * @addtogroup Classes
+ * @{
+ * */
 require_once __DIR__."/ArchiContenu.class.php";
-
-class archiAdresse extends ArchiContenu
+/**
+ * Gère les adresses
+ * 
+ * PHP Version 5.3.3
+ * 
+ * @category General
+ * @package  ArchiWiki
+ * @author   Pierre Rudloff <contact@rudloff.pro>
+ * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
+ * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
+ * @link     https://archi-strasbourg.org/
+ * 
+ * */
+class ArchiAdresse extends ArchiContenu
 {
     
     private $description = '';

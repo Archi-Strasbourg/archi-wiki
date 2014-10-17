@@ -1,5 +1,5 @@
 <?php
-/**
+/** @file
  * Fichier d'index
  * 
  * Appelle les autres fichiers

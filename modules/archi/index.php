@@ -1,5 +1,5 @@
 <?php
-/**
+/** @file
  * Charge les différents modules
  * 
  * PHP Version 5.3.3

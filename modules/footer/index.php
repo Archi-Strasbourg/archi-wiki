@@ -1,5 +1,5 @@
 <?php
-/**
+/** @file
  * Charge le template du pied-de-page
  * 
  * PHP Version 5.3.3

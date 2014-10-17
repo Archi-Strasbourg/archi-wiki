@@ -1,6 +1,6 @@
 <?php
-/**
- * Paramètres du site
+/** @file
+ * Exemple de fichier de configuration
  * 
  * PHP Version 5.3.3
  * 

@@ -1,5 +1,5 @@
 <?php
-/**
+/** @file
  * Classe ArchiAccueil
  * 
  * PHP Version 5.3.3
@@ -10,7 +10,8 @@
  * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     https://archi-strasbourg.org/
- * 
+ * @addtogroup Classes
+ * @{
  * */
 
 /**

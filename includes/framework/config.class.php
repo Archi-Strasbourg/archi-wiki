@@ -1,5 +1,5 @@
 <?php
-/**
+/** @file
  * Classe Config
  * 
  * PHP Version 5.3.3
@@ -18,7 +18,7 @@ date_default_timezone_set('Europe/Paris');
 require_once "includesFramework.php";
 require_once "debug.php";
 
-/**
+/** @class Config
  * Configuration du framework
  * 
  * PHP Version 5.3.3

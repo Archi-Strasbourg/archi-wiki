@@ -1,6 +1,33 @@
 <?php
+/** @file
+ * Classe ArchiImage
+ * 
+ * PHP Version 5.3.3
+ * 
+ * @category General
+ * @package  ArchiWiki
+ * @author   Pierre Rudloff <contact@rudloff.pro>
+ * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
+ * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
+ * @link     https://archi-strasbourg.org/
+ * @addtogroup Classes
+ * @{
+ * */
 
-class archiImage extends config
+/**
+ * Gère les images
+ * 
+ * PHP Version 5.3.3
+ * 
+ * @category General
+ * @package  ArchiWiki
+ * @author   Pierre Rudloff <contact@rudloff.pro>
+ * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
+ * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
+ * @link     https://archi-strasbourg.org/
+ * 
+ * */
+class ArchiImage extends config
 {
     private $nom;
     private $dateUpload;

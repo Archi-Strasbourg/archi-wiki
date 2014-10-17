@@ -6,4 +6,4 @@ includes/framework/config.php
 images/*
 cache/
 mobile
-doc/
+doxygen/

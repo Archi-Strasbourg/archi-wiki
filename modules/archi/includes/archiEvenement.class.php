@@ -1,6 +1,33 @@
 <?php
+/** @file
+ * Classe ArchiEvenement
+ * 
+ * PHP Version 5.3.3
+ * 
+ * @category General
+ * @package  ArchiWiki
+ * @author   Pierre Rudloff <contact@rudloff.pro>
+ * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
+ * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
+ * @link     https://archi-strasbourg.org/
+ * @addtogroup Classes
+ * @{
+ * */
 
-class archiEvenement extends config
+/**
+ * Gère les événements
+ * 
+ * PHP Version 5.3.3
+ * 
+ * @category General
+ * @package  ArchiWiki
+ * @author   Pierre Rudloff <contact@rudloff.pro>
+ * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
+ * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
+ * @link     https://archi-strasbourg.org/
+ * 
+ * */
+class ArchiEvenement extends config
 {
     private $intitule;
     private $dateDebut;

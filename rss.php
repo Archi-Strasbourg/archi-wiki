@@ -1,6 +1,6 @@
 <?php
-/**
- * Paramètres du site
+/** @file
+ * Flux RSS
  * 
  * PHP Version 5.3.3
  * 

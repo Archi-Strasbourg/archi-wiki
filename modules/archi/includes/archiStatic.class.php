@@ -1,5 +1,5 @@
 <?php
-/**
+/** @file
  * Classe ArchiStatic
  * 
  * PHP Version 5.3.3
@@ -11,7 +11,8 @@
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     https://archi-strasbourg.org/
- * 
+ * @addtogroup Classes
+ * @{
  * */
  
 /**
