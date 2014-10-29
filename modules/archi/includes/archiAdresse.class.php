@@ -9575,7 +9575,7 @@ class ArchiAdresse extends ArchiContenu
                         {
                             $message = "Un utilisateur a ajouté un commentaire sur une adresse sur laquelle vous avez participé&nbsp;:<br/>";
                             $message.= stripslashes(strip_tags($this->variablesPost['commentaire']));
-                            $message.= "Pour vous rendre sur l'adresse : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$this->variablesPost['idEvenementGroupeAdresse']))."'>".$intituleAdresse."</a><br>";
+                            $message.= "<br/><br/>Pour vous rendre sur l'adresse : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$this->variablesPost['idEvenementGroupeAdresse']))."'>".$intituleAdresse."</a><br>";
                             $message.= $this->getMessageDesabonnerAlerteMail();
                             $mail->sendMail($mail->getSiteMail(),$infosUtilisateur['mail'],'Ajout d\'un commentaire sur une adresse sur laquelle vous avez participé.',$message,true);
                         }
