@@ -9545,39 +9545,7 @@ class ArchiAdresse extends ArchiContenu
             // retour a l'affichage de l'adresse
             $idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($this->variablesPost['idEvenementGroupeAdresse']);
 
-
-            
-            // ************************************************************************************************************************************************
-            // envoi d'un mail a tous les participants pour le groupe d'adresse
-            // ************************************************************************************************************************************************
-            $mail = new mailObject();
-            $utilisateur = new archiUtilisateur();
-            $arrayUtilisateurs = $utilisateur->getParticipantsCommentaires($this->variablesPost['idEvenementGroupeAdresse']);
-            $arrayCreatorAdresse = $utilisateur->getCreatorsFromAdresseFrom($this->variablesPost['idEvenementGroupeAdresse'],'idEvenementGroupeAdresse');
-            $arrayUtilisateurs = array_merge($arrayUtilisateurs,$arrayCreatorAdresse);
-            $arrayUtilisateurs = array_unique($arrayUtilisateurs);
-            $intituleAdresse = $this->getIntituleAdresseFrom($idAdresse,'idAdresse');
-            foreach($arrayUtilisateurs as $indice => $idUtilisateurAdresse)
-            {
-                if($idUtilisateurAdresse != $auth->getIdUtilisateur())
-                {
-                    $infosUtilisateur = $utilisateur->getArrayInfosFromUtilisateur($idUtilisateurAdresse);
-                    if($infosUtilisateur['alerteCommentaires']=='1' && $infosUtilisateur['compteActif']=='1' && $infosUtilisateur['idProfil']!='4')
-                    {
-                        $message = "Un utilisateur a ajouté un commentaire sur une adresse ou vous avez participé.";
-                        $message.= "Pour vous rendre sur l'adresse : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$this->variablesPost['idEvenementGroupeAdresse']))."'>".$intituleAdresse."</a><br>";
-                        $message.= $this->getMessageDesabonnerAlerteMail();
-                        $mail->sendMail($mail->getSiteMail(),$infosUtilisateur['mail'],'Ajout d\'un commentaire sur une adresse sur laquelle vous avez participé.',$message,true);
-                        
-                    }
-                }
-            }
-            // ************************************************************************************************************************************************
-            
-            
-            
-            
-            // envoi d'un mail aux administrateur pour la moderation
+            // envoi d'un mail pour la moderation
             $message="Merci d'avoir laissé un commentaire sur Archi-Strasbourg.<br>";
             $message .= "Afin qu'il soit publié, merci de le valider en cliquant sur ";
             $message .="<a href='".$this->getUrlRacine()."script/validateEmail.php?uniqid=".urlencode($uniqid)."'>ce lien</a>.<br>";
@@ -9590,6 +9558,30 @@ class ArchiAdresse extends ArchiContenu
             if (!$CommentaireValide) {
                 $mail->sendMail($envoyeur['envoyeur'], $this->variablesPost['email'], 'Votre commentaire sur Archi-Strasbourg', $message, true);
             } else {
+                // envoi d'un mail a tous les participants pour le groupe d'adresse
+                $mail = new mailObject();
+                $utilisateur = new archiUtilisateur();
+                $arrayUtilisateurs = $utilisateur->getParticipantsCommentaires($this->variablesPost['idEvenementGroupeAdresse']);
+                $arrayCreatorAdresse = $utilisateur->getCreatorsFromAdresseFrom($this->variablesPost['idEvenementGroupeAdresse'],'idEvenementGroupeAdresse');
+                $arrayUtilisateurs = array_merge($arrayUtilisateurs,$arrayCreatorAdresse);
+                $arrayUtilisateurs = array_unique($arrayUtilisateurs);
+                $intituleAdresse = $this->getIntituleAdresseFrom($idAdresse,'idAdresse');
+                foreach($arrayUtilisateurs as $indice => $idUtilisateurAdresse)
+                {
+                    if($idUtilisateurAdresse != $auth->getIdUtilisateur())
+                    {
+                        $infosUtilisateur = $utilisateur->getArrayInfosFromUtilisateur($idUtilisateurAdresse);
+                        if($infosUtilisateur['alerteCommentaires']=='1' && $infosUtilisateur['compteActif']=='1' && $infosUtilisateur['idProfil']!='4')
+                        {
+                            $message = "Un utilisateur a ajouté un commentaire sur une adresse sur laquelle vous avez participé&nbsp;:<br/>";
+                            $message.= stripslashes(strip_tags($this->variablesPost['commentaire']));
+                            $message.= "Pour vous rendre sur l'adresse : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$this->variablesPost['idEvenementGroupeAdresse']))."'>".$intituleAdresse."</a><br>";
+                            $message.= $this->getMessageDesabonnerAlerteMail();
+                            $mail->sendMail($mail->getSiteMail(),$infosUtilisateur['mail'],'Ajout d\'un commentaire sur une adresse sur laquelle vous avez participé.',$message,true);
+                        }
+                    }
+                }
+                //Mail aux administrateurs
                 $message="Un utilisateur a ajouté un commentaire sur archiV2 : <br>";
                 $message .= "nom ou pseudo : ".strip_tags($this->variablesPost['nom'])."<br>";
                 $message .= "prenom : ".strip_tags($this->variablesPost['prenom'])."<br>";
