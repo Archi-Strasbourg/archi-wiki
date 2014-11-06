@@ -10875,7 +10875,7 @@ class ArchiAdresse extends ArchiContenu
                         ha1.idIndicatif as idIndicatif
                     FROM historiqueAdresse ha2, historiqueAdresse ha1
                     
-                    LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = '".$id."'
+                    LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = '".mysql_real_escape_string($id)."'
                     LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
                     
                     LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
