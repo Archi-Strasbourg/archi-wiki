@@ -581,7 +581,12 @@ class ArchiAdresse extends ArchiContenu
         // si le groupe d'adresse est precisé dans l'url , on ne va afficher que celui ci
         if(isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!='') 
         {
-            $retourEvenement = $evenement->afficher($this->variablesGet['archiIdEvenementGroupeAdresse'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
+            if (isset($address)) {
+                $modeAffichage = '';
+            } else {
+                $modeAffichage = 'simple';
+            }
+            $retourEvenement = $evenement->afficher($this->variablesGet['archiIdEvenementGroupeAdresse'], $modeAffichage,null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
             $html.=$retourEvenement['html'];
             $html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
             $html.=$this->getFormulaireCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields());
