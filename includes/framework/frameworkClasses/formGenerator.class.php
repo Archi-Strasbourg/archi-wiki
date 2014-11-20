@@ -872,11 +872,11 @@ class formGenerator extends config
                     if ((pia_ereg("/", $this->variablesPost[$fetchFields['Field']]) || pia_strlen($this->variablesPost[$fetchFields['Field']])>3) && !pia_ereg("-", $this->variablesPost[$fetchFields['Field']] ))
                     {// on admet que s'il y a des / ,  c'est le format francais,  donc on convertis
                         $date = new dateObject();
-                        $arrayModification[]=$fetchFields['Field']."=\"".$date->toBdd($date->convertYears($this->variablesPost[$fetchFields['Field']]))."\"";
+                        $arrayModification[]=$fetchFields['Field']."=\"".mysql_real_escape_string($date->toBdd($date->convertYears($this->variablesPost[$fetchFields['Field']])))."\"";
                     }
                     else
                     {// sinon format anglais
-                        $arrayModification[]=$fetchFields['Field']."=\"".$this->variablesPost[$fetchFields['Field']]."\"";
+                        $arrayModification[]=$fetchFields['Field']."=\"".mysql_real_escape_string($this->variablesPost[$fetchFields['Field']])."\"";
                     }
                 }
                 else
