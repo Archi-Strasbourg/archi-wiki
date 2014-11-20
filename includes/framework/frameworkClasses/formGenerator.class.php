@@ -257,8 +257,7 @@ class formGenerator extends config
             $objetDeLaRecherche="";
             // gestion de la recherche
             if (isset($this->variablesPost['validationFormulaireAdministration']) && $this->variablesPost['validationFormulaireAdministration']=='rechercheAdministration') {
-                $sqlRecherche=" AND LOWER(CONCAT_WS(' ', ".implode(", ", $champsDeRecherche).")) LIKE \"%".pia_strtolower($this->variablesPost['rechercheFormulaireAdministration'])."%\" ";
-                
+                $sqlRecherche=" AND LOWER(CONCAT_WS(' ', ".implode(", ", $champsDeRecherche).")) LIKE \"%".mysql_real_escape_string($this->variablesPost['rechercheFormulaireAdministration'])."%\" ";
                 $objetDeLaRecherche = $this->variablesPost['rechercheFormulaireAdministration'];
             }
             elseif (isset($this->variablesPost['validationFormulaireAdministration']) && $this->variablesPost['validationFormulaireAdministration']=='suppression') {
