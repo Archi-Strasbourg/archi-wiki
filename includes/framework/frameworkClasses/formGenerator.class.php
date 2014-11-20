@@ -882,7 +882,7 @@ class formGenerator extends config
                 }
                 else
                 {
-                    $arrayModification[]=$fetchFields['Field']."=\"".$this->variablesPost[$fetchFields['Field']]."\"";
+                    $arrayModification[]=$fetchFields['Field']."=\"".mysql_real_escape_string($this->variablesPost[$fetchFields['Field']])."\"";
                 }
             }
             else
@@ -1875,8 +1875,8 @@ class formGenerator extends config
                 }
             }
         }
-	if (isset($param["recaptcha_challenge_field"])) {
-	$resp = recaptcha_check_answer(
+    if (isset($param["recaptcha_challenge_field"])) {
+    $resp = recaptcha_check_answer(
             $config->captchakey,
             $_SERVER["REMOTE_ADDR"],
             $param["recaptcha_challenge_field"],
