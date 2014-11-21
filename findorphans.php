@@ -40,7 +40,7 @@ while ($event=mysql_fetch_object($res)) {
         }
         echo '<li><a href="index.php?archiAffichage=adresseDetail'.
         '&archiIdEvenementGroupeAdresse='.
-        $event->idEvenement.'">'.$titre.'</a></li>';
+        $event->idEvenement.'&modeAffichage=simple">'.$titre.'</a></li>';
     }
 }
 ?>
