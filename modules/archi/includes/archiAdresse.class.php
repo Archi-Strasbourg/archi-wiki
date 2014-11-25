@@ -6416,7 +6416,7 @@ class ArchiAdresse extends ArchiContenu
                     $infosPersonne = $personneObj->getInfosPersonne($this->variablesGet['id']);
                     $titre="";
                     if (isset($infosPersonne['nomMetier']) && $infosPersonne['nomMetier']!="") {
-                        $titre = "<span itemprop='jobTitle'>".ucwords(stripslashes($infosPersonne['nomMetier']))."</span> : ";
+                        $titre = "<span itemprop='jobTitle'>".stripslashes($infosPersonne['nomMetier'])."</span> : ";
                     }
                     $titre.="<span itemprop='name'><span itemprop='familyName'>".ucwords(stripslashes($infosPersonne['nom']))."</span> <span itemprop='givenName'>".ucwords(stripslashes($infosPersonne['prenom']))."</span></span>";
                     
