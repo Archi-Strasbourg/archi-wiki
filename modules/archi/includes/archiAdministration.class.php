@@ -1361,6 +1361,12 @@ class ArchiAdministration extends config
     public function adminBandeau() {
         global $config;
         if (!empty($_POST)) {
+            if (isset($_POST['bandeau_actif'])) {
+                $actif = true;
+            } else {
+                $actif = false;
+            }
+            $config->connexionBdd->requete("REPLACE INTO options (nom, valeur) VALUES ('bandeau_actif', '".mysql_real_escape_string($actif)."');");
             $config->connexionBdd->requete("REPLACE INTO options (nom, valeur) VALUES ('bandeau_lien', '".mysql_real_escape_string($_POST['bandeau_lien'])."');");
             if (isset($_FILES['bandeau_img'])) {
                 move_uploaded_file($_FILES['bandeau_img']['tmp_name'], __DIR__.'/../../../images/bandeau/bandeau_archi_wiki');
@@ -1372,6 +1378,11 @@ class ArchiAdministration extends config
         }
         echo '<form enctype="multipart/form-data" action="index.php?archiAffichage=adminBandeau" method="post">
             <h2>Bandeau</h2>
+            <input name="bandeau_actif" id="bandeau_actif" type="checkbox"';
+        if ($bandeau['bandeau_actif']) {
+            echo ' checked ';
+        }
+        echo ' /><label for="compteur_actif">Actif</label><br/><br/>
             <label for="bandeau_lien">Lien</label>&nbsp;:<br/><input name="bandeau_lien" id="bandeau_lien" type="url" value="', $bandeau['bandeau_lien'], '" /><br/><br/>
             <label for="bandeau_img">Image</label>&nbsp;:<br/><input name="bandeau_img" id="bandeau_img" type="file" accept="image/jpeg,image/png" /><br/><br/>
             <br/><input type="submit" />

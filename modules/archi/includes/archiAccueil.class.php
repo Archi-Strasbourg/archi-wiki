@@ -514,7 +514,10 @@ class ArchiAccueil extends config
         while ($row = mysql_fetch_object($reqBandeau)) {
            $bandeau[$row->nom] = $row->valeur;
         }
-        $t->assign_vars(array('bandeau_lien'=>$bandeau['bandeau_lien']));
+        if ($bandeau['bandeau_actif']) {
+            $t->assign_block_vars("bandeauActif", array());
+            $t->assign_vars(array('bandeau_lien'=>$bandeau['bandeau_lien']));
+        }
 
         
         ob_start();

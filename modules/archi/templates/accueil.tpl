@@ -1,4 +1,6 @@
+<!-- BEGIN bandeauActif -->
 <a href="{bandeau_lien}"><img src="images/bandeau/bandeau_archi_wiki" /></a>
+<!-- END bandeauActif -->
 <div style='display:table;'>
 <!--
 <div class="pub">
