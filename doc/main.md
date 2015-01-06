@@ -1,6 +1,6 @@
 Documentation {#mainpage}
 =======
-Cette page a pour but d'expliquer le minimum du connaissances du code nécessaire pour contribuer à ArchiWiki.
+Cette page a pour but d'apporter le minimum de connaissances du code nécessaires pour contribuer à ArchiWiki.
 Des connaissances de base en PHP, MySQL et HTML sont requises.
 
 Une description d'ArchiWiki est disponible sur [cette page](md_README.html).
