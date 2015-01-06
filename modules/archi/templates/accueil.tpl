@@ -1,7 +1,7 @@
 <!-- BEGIN bandeauActif -->
 <a href="{bandeau_lien}"><img src="images/bandeau/bandeau_archi_wiki" /></a>
 <!-- END bandeauActif -->
-<div style='display:table;'>
+<div class="home">
 <!--
 <div class="pub">
     <strong><a href="http://m.archi-strasbourg.org/"><?_("Découvrez la version smartphone de notre site sur ")?><i>m.archi-strasbourg.org</i></a></strong><br/><br/>

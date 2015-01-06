@@ -1520,3 +1520,8 @@ li:empty {
     position:relative;
     padding:0.1em;
 }
+
+.home {
+    clear: right;
+    display: table;
+}
