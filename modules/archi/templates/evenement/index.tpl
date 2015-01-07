@@ -85,8 +85,8 @@
 		</div>
 		<!-- END menuAction -->
 		<div style='min-height: 150px;'>
-			<h3 itemprop="titre">{evenement.titre}</h3> - {evenement.txtEnvoi} par {evenement.utilisateur} {evenement.dateEnvoi}
-			<a href="{evenement.lienHistoriqueEvenementCourant}">(Consulter l'historique)</a>
+			<h3 itemprop="titre">{evenement.titre}</h3>{evenement.infoTitre}
+			<a href="{evenement.lienHistoriqueEvenementCourant}">{evenement.labelLienHistorique}</a>
 			<div class="event">
 				<p>
 				<ul>

@@ -5199,5 +5199,168 @@ class archiImage extends config
             return array("nom"=>$auteur["prenom"]." ".$auteur["nom"],  "id"=>$idAuteur["idUtilisateur"]);
         }
     }
+    
+    
+    /**
+     * Get an array of idImage corresponding to image vueSur belonging to idEvntGA in param
+     * 
+     * @param unknown $idEvenementGroupeAdresse
+     * @return array of idImage
+     */
+    function getIdImageVueSur($idEvenementGroupeAdresse){
+    	$idArray = array();
+    	
+    	$requete="SELECT idImage
+		FROM `_adresseImage`
+		WHERE idImage in 
+		(
+			SELECT idImage
+			FROM `_adresseImage`
+			WHERE `idEvenementGroupeAdresse` =$idEvenementGroupeAdresse
+			AND `prisDepuis` =1
+		)
+		AND `vueSur` =1";
+
+    	$result=$this->connexionBdd->requete($requete);
+		while ($fetch = mysql_fetch_assoc($result)){
+			$idArray[]=$fetch['idImage'];
+		}    	
+		return $idArray;    	
+    }
+    
+    /**
+     * Get an array of idImage corresponding to image prisDepuis belonging to idEvntGA in param
+     * 
+     * @param unknown $idEvenementGroupeAdresse
+     * @return array of idImage
+     */
+    function getidImagePrisDepuis($idEvenementGroupeAdresse){
+    	$idArray = array();
+    	 
+    	$requete="SELECT idImage
+		FROM `_adresseImage`
+		WHERE idImage in 
+		(
+			SELECT idImage
+			FROM `_adresseImage`
+			WHERE `idEvenementGroupeAdresse` =$idEvenementGroupeAdresse
+			AND `vueSur` =1
+		)
+		AND `prisDepuis` =1";
+    	debug($requete);
+
+    	$result=$this->connexionBdd->requete($requete);
+    	while ($fetch = mysql_fetch_assoc($result)){
+    		debug($fetch['idImage']);
+    		$idArray[]=$fetch['idImage'];
+    	}
+		return $idArray;
+    }
+    
+    function getEventInfosMiscImage($idVueSur , $idAdresseCible, $label){
+    	$adresse = new archiAdresse();
+    	$string = new stringObject();
+    	
+    	$imageHTML="";
+    	foreach ($idVueSur as $idImage){
+    		
+    		//Requete SQL sur l'id de l'image pour récupérer les infos relatives a l'image (description, id, date upload)
+    		$requeteInfoImage = "
+    				SELECT hi1.idHistoriqueImage , hi1.description,hi1.dateUpload
+    				FROM historiqueImage hi1 , historiqueImage hi2
+    				WHERE hi1.idImage = $idImage
+    				AND hi2.idImage = hi1.idImage
+    				HAVING hi1.idHistoriqueImage = max(hi2.idHistoriqueImage)
+    				";
+    		$resultInfoImage = $this->connexionBdd->requete($requeteInfoImage);
+    		$valuesImage = mysql_fetch_assoc($resultInfoImage);
+    		
+    		
+    		$hrefImage = $this->creerUrl('',  'imageDetail',  array('archiIdImage' => $idImage,  'archiRetourAffichage'=>'evenement',  'archiRetourIdName'=>'idEvenement',  'archiRetourIdValue'=>$idEvenement))."'";
+    		
+    		//OnClickImage
+    		
+    		//divePAramIdGroupeAdresseAffiche lolilol
+    		
+    		//alt
+    		$reqAdresse = "    SELECT ha1.numero as numero,
+                                    r.nom as nomRue,
+                                    sq.nom as nomSousQuartier,
+                                    q.nom as nomQuartier,
+                                    v.nom as nomVille,
+                                    p.nom as nomPays,
+                                    ha1.numero as numeroAdresse,
+                                    ha1.idRue,
+                                    r.prefixe as prefixeRue,
+                                    IF (ha1.idSousQuartier != 0,  ha1.idSousQuartier,  r.idSousQuartier) AS idSousQuartier,
+                                    IF (ha1.idQuartier != 0,  ha1.idQuartier,  sq.idQuartier) AS idQuartier,
+                                    IF (ha1.idVille != 0,  ha1.idVille,  q.idVille) AS idVille,
+                                    IF (ha1.idPays != 0,  ha1.idPays,  v.idPays) AS idPays
+    		
+    		
+                            FROM historiqueAdresse ha2,  historiqueAdresse ha1
+    		
+                            LEFT JOIN _evenementImage ei ON ei.idImage = '".$idImage."'
+                            LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = ei.idEvenement
+                            LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+    		
+    		
+    		
+                            LEFT JOIN rue r ON r.idRue = ha1.idRue
+                            LEFT JOIN sousQuartier sq ON sq.idSousQuartier = if (ha1.idRue='0' and ha1.idSousQuartier!='0' , ha1.idSousQuartier , r.idSousQuartier )
+                            LEFT JOIN quartier q ON q.idQuartier = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' , ha1.idQuartier , sq.idQuartier )
+                            LEFT JOIN ville v ON v.idVille = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' , ha1.idVille , q.idVille )
+                            LEFT JOIN pays p ON p.idPays = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' , ha1.idPays , v.idPays )
+    		
+    		
+                            WHERE ha2.idAdresse = ha1.idAdresse
+    		
+                            AND ha1.idAdresse = ae.idAdresse
+                            GROUP BY ha1.idAdresse,  ha1.idHistoriqueAdresse
+                            HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
+                            LIMIT 1
+            ";
+    		
+    		$resAdresse = $this->connexionBdd->requete($reqAdresse);
+    		$fetchAdresse = mysql_fetch_assoc($resAdresse);
+    		
+    		$intituleAdresse = trim($adresse->getIntituleAdresse($fetchAdresse));
+    		$intituleAdresseAlt = trim(strip_tags(str_replace("'",  " ",  $intituleAdresse)));
+    		
+    		$title = trim($string->sansBalises(strip_tags(stripslashes($valuesImage['description']))).' '.$intituleAdresseAlt);
+    		$alt = trim($string->sansBalises(strip_tags(stripslashes($valuesImage['description']))).' '.$intituleAdresseAlt);
+    		
+    		
+    		
+    		//bbcode init
+    		$bbCode = new BBCodeObject();
+    		
+    		
+    		$imageHTML .= '
+    				<div class="inline-div">
+	    				<a class="imgResultGrp" 
+	    					href=\' '.$hrefImage.'\'>
+		    				<div class="imgResultHover">
+			    				<img 
+			    						itemprop="image" 
+			    						onclick="'.$onClickImage.'" 
+			    						id="image'.$valuesImage['idHistoriqueImage'].$divParamIdGroupeAdresseAffiche.'"  
+			    						alt="'.htmlspecialchars($alt).'"  
+			    						src="'.'photos--'.$valuesImage['dateUpload'].'-'.$valuesImage['idHistoriqueImage'].'-moyen.jpg'.'" 
+			    						class="eventImage" />
+			    				<p>'.strip_tags($bbCode->convertToDisplay(array('text'=>$valuesImage['description']))).'</p>
+		    				</div>
+	    				</a>
+	    				<div class="imgDesc">'.$bbCode->convertToDisplay(array('text'=>$valuesImage['description'])).'</div>
+    				</div>		
+    						';
+    	}
+    	
+
+    	return array(
+    			'titre'=>$label." ".$adresse->getIntituleAdresseFrom($idAdresseCible,'idAdresse'),
+    			'imagesLiees'=> $imageHTML
+    	);
+    }
 }
 ?>

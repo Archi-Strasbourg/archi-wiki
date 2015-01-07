@@ -6861,6 +6861,11 @@ class archiEvenement extends config
 			$description = $bbCode->convertToDisplay(array('text'=>$fetch['description'],'idEvenement'=>$idEvenement));
 			$description = empty($description)?"":"<div itemprop='description' class='desc'>".$description."</div>";
 		}
+		
+		//User
+		$idUtilisateur = $fetch['idUtilisateur'];
+		$utilisateur = "<a href='".$this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$idUtilisateur,'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroupeAdresse))."'>".$fetch['prenomUtilisateur']." ".$fetch['nomUtilisateur']."</a>";
+		
 
 		//Info used for menu display
 		$cityId = $fetch['idVille'];
@@ -6899,10 +6904,12 @@ class archiEvenement extends config
 		*/
 		$evenementData = array(
 				'titre' => $fetch['titre'],
+				'infoTitre'=> " - ".$txtEnvoi." par $utilisateur " .$fetch['dateCreationEvenement'],
 				'txtEnvoi' => $txtEnvoi,
 				'utilisateur' => $fetch['prenomUtilisateur'].' '.$fetch['nomUtilisateur'],
 				'dateEnvoi' =>$fetch['dateCreationEvenement'],
 				'lienHistoriqueEvenementCourant' => $lienHistoriqueEvenementCourant,
+				'labelLienHistorique'=>'(Consulter l\'historique)',
 				'dates'=>$dateTxt,
 				'sources'=>$fetch['nomSource'],
 				'typeStructure'=>$fetch['nomTypeStructure'],

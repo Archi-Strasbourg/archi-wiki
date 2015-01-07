@@ -231,7 +231,6 @@ class BBCodeObject extends config
             $description = ($description);
         } else {
             echo "<br>attention le parametre 'text' n'est pas defini dans la fonction convertToDisplay.<br>";
-            debug($params);
         }
         
         

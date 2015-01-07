@@ -654,12 +654,25 @@ class archiAdresse extends ArchiContenu
 		
 		
 		//Getting all the miscellaneous images (vueSur / prisDepuis)
+		$image = new archiImage();
+		$idVueSur = $image->getIdImageVueSur($idEvenementGroupeAdresse);
+		$idPrisDepuis = $image->getidImagePrisDepuis($idEvenementGroupeAdresse);
+		
+		$evenementVueSur = $image->getEventInfosMiscImage($idVueSur,$idAdresse,"Autres vues sur");
+		$evenementPrisDepuis = $image->getEventInfosMiscImage($idPrisDepuis,$idAdresse,"Vues prise depuis");
+		
+		$t->assign_block_vars('evenement', $evenementVueSur);
+		$t->assign_block_vars('evenement', $evenementPrisDepuis);
+		
+		
+		/*
 		$idVueSur = array();
 		$requeteVueSur = "SELECT idImage FROM _adresseImage WHERE idAdresse = $idAdresse AND vueSur = 1";
 		$result = $this->connexionBdd->requete($requeteVueSur);
 		while($fetch = mysql_fetch_assoc($result)){
 			$idVueSur[]=$fetch['idImage'];
 		}
+		debug($idVueSur);
 		
 		$idPrisDepuis = array();
 		$requetePrisDepuis = "SELECT idImage FROM _adresseImage WHERE idAdresse = $idAdresse AND prisDepuis = 1";
@@ -667,6 +680,12 @@ class archiAdresse extends ArchiContenu
 		while($fetch = mysql_fetch_assoc($result)){
 			$idPrisDepuis[]=$fetch['idImage'];
 		}
+		debug($idPrisDepuis);
+		*/
+		
+		
+		
+		
 		
 		
 		$t->assign_vars(array(
@@ -11085,7 +11104,6 @@ class archiAdresse extends ArchiContenu
     
     public function getIntituleAdresseFrom($id=0,$type='',$params=array())
     {
-        
         switch($type)
         {
             case 'idEvenement':
