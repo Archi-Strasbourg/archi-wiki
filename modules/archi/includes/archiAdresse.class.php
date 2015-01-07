@@ -650,7 +650,6 @@ class archiAdresse extends ArchiContenu
 			));
 				
 		}
-
 		
 		
 		//Getting all the miscellaneous images (vueSur / prisDepuis)
@@ -659,7 +658,7 @@ class archiAdresse extends ArchiContenu
 		$idPrisDepuis = $image->getidImagePrisDepuis($idEvenementGroupeAdresse);
 		
 		$evenementVueSur = $image->getEventInfosMiscImage($idVueSur,$idAdresse,"Autres vues sur");
-		$evenementPrisDepuis = $image->getEventInfosMiscImage($idPrisDepuis,$idAdresse,"Vues prise depuis");
+		$evenementPrisDepuis = $image->getEventInfosMiscImage($idPrisDepuis,$idAdresse,"Vues prises depuis");
 		
 		$t->assign_block_vars('evenement', $evenementVueSur);
 		$t->assign_block_vars('evenement', $evenementPrisDepuis);

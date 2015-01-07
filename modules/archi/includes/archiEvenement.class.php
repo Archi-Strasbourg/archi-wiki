@@ -6866,6 +6866,11 @@ class archiEvenement extends config
 		$idUtilisateur = $fetch['idUtilisateur'];
 		$utilisateur = "<a href='".$this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$idUtilisateur,'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroupeAdresse))."'>".$fetch['prenomUtilisateur']." ".$fetch['nomUtilisateur']."</a>";
 		
+		//Event type
+		$urlTypeEvenement = $this->creerUrl('', 'evenementListe', array('selection' => 'typeEvenement', 'id' => $fetch['idTypeEvenement']));
+		$nomTypeEvenement = $fetch['nomTypeEvenement'];
+		$lienTypeEvenement = "<a href=$urlTypeEvenement>$nomTypeEvenement</a>";
+		
 
 		//Info used for menu display
 		$cityId = $fetch['idVille'];
@@ -6912,8 +6917,11 @@ class archiEvenement extends config
 				'labelLienHistorique'=>'(Consulter l\'historique)',
 				'dates'=>$dateTxt,
 				'sources'=>$fetch['nomSource'],
+				'labelStructure' =>"Structure  : ",
 				'typeStructure'=>$fetch['nomTypeStructure'],
+				'labelTypeEvenement' => 'Type d\'Évènement : ',
 				'urlTypeEvenement'=>$this->creerUrl('', 'evenementListe', array('selection' => 'typeEvenement', 'id' => $fetch['idTypeEvenement'])),
+				'lienTypeEvenement'=> $lienTypeEvenement,
 				'typeEvenement'=>$fetch['nomTypeEvenement'],
 				'numeroArchive'=>$fetch['numeroArchive'],
 				'description'=>$description,

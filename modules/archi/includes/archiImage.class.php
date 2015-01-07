@@ -5247,11 +5247,9 @@ class archiImage extends config
 			AND `vueSur` =1
 		)
 		AND `prisDepuis` =1";
-    	debug($requete);
 
     	$result=$this->connexionBdd->requete($requete);
     	while ($fetch = mysql_fetch_assoc($result)){
-    		debug($fetch['idImage']);
     		$idArray[]=$fetch['idImage'];
     	}
 		return $idArray;
@@ -5270,6 +5268,7 @@ class archiImage extends config
     				FROM historiqueImage hi1 , historiqueImage hi2
     				WHERE hi1.idImage = $idImage
     				AND hi2.idImage = hi1.idImage
+    				GROUP BY hi1.idImage,  hi1.idHistoriqueImage
     				HAVING hi1.idHistoriqueImage = max(hi2.idHistoriqueImage)
     				";
     		$resultInfoImage = $this->connexionBdd->requete($requeteInfoImage);
@@ -5280,7 +5279,7 @@ class archiImage extends config
     		
     		//OnClickImage
     		
-    		//divePAramIdGroupeAdresseAffiche lolilol
+    		//divePAramIdGroupeAdresseAffiche 
     		
     		//alt
     		$reqAdresse = "    SELECT ha1.numero as numero,
@@ -5331,10 +5330,8 @@ class archiImage extends config
     		$alt = trim($string->sansBalises(strip_tags(stripslashes($valuesImage['description']))).' '.$intituleAdresseAlt);
     		
     		
-    		
     		//bbcode init
     		$bbCode = new BBCodeObject();
-    		
     		
     		$imageHTML .= '
     				<div class="inline-div">

@@ -92,9 +92,8 @@
 				<ul>
 					<li>{evenement.dates}</li>
 					<li>{evenement.source}</li>
-					<li>Structure  : {evenement.typeStructure}</li>
-					<li><?_("Type d'Évènement :")?> <a href="{evenement.urlTypeEvenement}">{evenement.typeEvenement}</a>
-					</li>
+					<li>{evenement.labelStructure}{evenement.typeStructure}</li>
+					<li>{evenement.labelTypeEvenement}{evenement.lienTypeEvenement}</li>
 				</ul>
 				{evenement.numeroArchive}
 				<!-- BEGIN pers -->
