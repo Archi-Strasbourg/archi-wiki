@@ -71,7 +71,7 @@
 			</ul>
 		</nav>
         <div id="primaryContentContainer" class="inline-block">
-            <div id="secondaryContent" class="secondaryContent">
+            <div id="secondaryContent" class="secondaryContent inline-block">
                 <div class="box">
                 <nav class="boxContent">
 	                <ul>
@@ -123,7 +123,7 @@
                 
                 </div>
             </div>
-            <div id="primaryContent" class="primaryContent" {microdata}>
+            <div id="primaryContent" class="primaryContent inline-block" {microdata}>
             {GeoCoordinates}
             {bandeauPublicite}
             <div class="title breadcrumbs">{urlCheminSite}</div>

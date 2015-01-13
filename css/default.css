@@ -275,7 +275,7 @@ nav.push-menu-left li {
     display: block;
     border-bottom: solid 1px black;
     border-top: solid 1px black;
-    padding-left: 20px;
+    padding-left: 10px;
 }
 nav.push-menu-left li:hover{
 	background-color: #4E5F66;
@@ -289,7 +289,7 @@ nav.push-menu-left li:last-child {
 nav.push-menu-left a {
     display: block;
     padding: 10px;
-    font-size: 18px;
+    font-size: 14px;
 }
 nav.push-menu-left button.close-menu {
     margin: 10px 0;
@@ -298,15 +298,25 @@ nav.push-menu-left button.close-menu {
     color: #fff;
 }
 nav.push-menu-left {
-	display:none;
+	display: none;
+/* 	visibility: hidden; */
 }
 body.pml-open nav.push-menu-left {
 	display: table-cell;
-	width: 300px;
+	width: 200px;
+/* 	visibility: visible; */
 }
 body.pml-open #primaryContentContainer {
 	display: table-cell;
-    left: 300px
+    left: 200px;
+}
+
+body .primaryContent{
+	max-width: 800px;
+}
+
+body.pml-open .primaryContent{
+	max-width: 700px;
 }
 
 
@@ -480,10 +490,10 @@ body.pml-open #primaryContentContainer {
 }
 
 .primaryContent {
-	margin: 0 0 0 200px;
-	margin-right: 25px;
-	padding: 0 0 0 5px;
-	margin-left: 220px;
+/* 	margin: 0 0 0 200px; */
+/* 	margin-right: 25px; */
+/* 	padding: 0 0 0 5px; */
+/* 	margin-left: 220px; */
 }
 
 .primaryContent h2 {
@@ -497,7 +507,6 @@ body.pml-open #primaryContentContainer {
 	float: left;
 	/*padding: 2.5em 2.5em 1.5em 2.5em;*/
 	/*max-width: 130px;*/
-	padding: 0.1em;
 }
 
 /* Footer */
