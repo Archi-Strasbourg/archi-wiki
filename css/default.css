@@ -7,6 +7,11 @@
 /*Modifié par Pierre Rudloff (http://rudloff.pro) en mai 2012 puis en octobre 2012*/
 
 /* Basic */
+
+* { 
+	margin:0; 
+	padding:0; 
+}
 body {
 	background-color: #8FA3A4;
 }
@@ -94,41 +99,49 @@ a:hover {
 	color: #2288BB;
 }
 
-/* Outer */
 .outer {
 	width: 100%;
 	margin: 0 auto 0 auto;
 	background-image: url("../images/Advisa/fond.jpg");
 	background-repeat: repeat-x;
 	background-color: #8FA3A4;
-	background-position: 400px 66px;
+	    position: relative;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+	/*background-position: 400px 66px;*/
 }
 
 /* Header */
-.header {
-	margin: 0;
-	padding: 44px 0 0 0;
-	background-color: #111;
-	background-color: rgba(10, 10, 10, 0.6);
-	padding-bottom: 1em;
+#header {
+	height: 100px;
+	width: 1100px;
+	margin: auto;
+	/*
+	background: url('images/Advisa/fond.jpg') ;
+	background-color: green;
+	*/
+	background-color: rgba(46, 56, 60 , 0.6);
 }
 
-.header .title {
-	padding-left: 30px;
+#header .title {
 	font-size: 1.2em;
 	color: #EEE;
 }
 
-.header img {
-	vertical-align: -6px;
-	margin-right: 0.7em;
+#header img {
 }
 
-.header .homeTitle {
+#header .homeTitle {
 	margin-top: 3em;
 }
 
-.header .h2 {
+#header .h2 {
 	display: inline;
 	padding-left: 0.5em;
 	font-size: 0.8em;
@@ -136,20 +149,25 @@ a:hover {
 	color: #949494;
 }
 
-.header .h1 {
-	display: inline;
+#header .h1 {
 	font-size: 1.9em;
 	letter-spacing: -0.05em;
 	color: #EEE;
 	border-bottom: none;
 }
 
-.header .h1 a {
+#header .h1 a {
 	text-decoration: none;
 	color: #343434;
 }
+#header .menu-button{
+	width: 100px;
+	height: 100px;
+	text-align: center;
+}
 
 /* Menu */
+/* Old menu in the content */
 .menu {
 	position: absolute;
 	top: 0;
@@ -201,13 +219,99 @@ a:hover {
 	border-top: thin solid #686C6D;
 }
 
+
+
+/* Related to menu push back */
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 15;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/*
+	Generic menu classes
+*/
+
+nav.menu-new{
+/*     position: fixed; */
+    background-color: #2A3335;
+    overflow: hidden;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;	
+/*     left:s -300px; */
+}
+
+nav.menu-new ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav.menu-new a{
+    font-weight: 300;
+    color: #fff;	
+}
+
+/*
+	Push left menu classes 
+	Hacked from http://callmenick.com/2014/03/26/slide-and-push-menus-with-css3-transitions/
+	Modification from example : Menu pop in a container, and push container's content
+	Displaying now work 
+*/
+
+nav.push-menu-left {
+    top: 0;
+    height: 100%;
+	vertical-align: top;
+}
+nav.push-menu-left li {
+    display: block;
+    border-bottom: solid 1px black;
+    border-top: solid 1px black;
+    padding-left: 20px;
+}
+nav.push-menu-left li:hover{
+	background-color: #4E5F66;
+}
+nav.push-menu-left li:first-child {
+    border-top: none
+}
+nav.push-menu-left li:last-child {
+    border-bottom: none
+}
+nav.push-menu-left a {
+    display: block;
+    padding: 10px;
+    font-size: 18px;
+}
+nav.push-menu-left button.close-menu {
+    margin: 10px 0;
+    padding: 10px 30px;
+    background-color: #3184a1;
+    color: #fff;
+}
+nav.push-menu-left {
+	display:none;
+}
+body.pml-open nav.push-menu-left {
+	display: table-cell;
+	width: 300px;
+}
+body.pml-open #primaryContentContainer {
+	display: table-cell;
+    left: 300px
+}
+
+
 /* Content */
 
-/*.content
-{
-    padding-left: 2em;
-    padding-right: 2em;
-}*/
 .box {
 	margin-bottom: 1.25em;
 }
@@ -295,6 +399,11 @@ a:hover {
 }
 
 /** Content **/
+.content{
+	width: 1100px;
+	margin: auto;
+}
+
 .content p {
 	margin-bottom: 1em;
 	text-align: justify;
@@ -366,7 +475,7 @@ a:hover {
 }
 
 /* Primary Content */
-.primaryContentContainer {
+#primaryContentContainer {
 	margin: auto;
 }
 
@@ -1118,7 +1227,7 @@ li:empty {
 	border-bottom: none;
 }
 
-.header .infos {
+#header .infos {
 	float: right;
 	color: white;
 	margin-top: 50px;
@@ -1126,11 +1235,11 @@ li:empty {
 	text-align: center;
 }
 
-.header .infos a {
+#header .infos a {
 	color: #EEE;
 }
 
-.header .infos a:hover {
+#header .infos a:hover {
 	color: #111;
 }
 
@@ -1232,7 +1341,7 @@ li:empty {
 	margin: auto;
 }
 
-.header,.menu,.outer {
+#header,.menu,.outer {
 	min-width: 1000px;
 }
 
@@ -1252,9 +1361,10 @@ li:empty {
 	color: black;
 }
 
-.primaryContentContainer,.header2 {
-	width: 1100px;
-	max-width: 98%;
+#primaryContentContainer,.header2 {
+/* 	width: 1100px; */
+/* 	max-width: 98%; */
+	vertical-align:top;
 }
 
 .calendar {
@@ -1533,4 +1643,15 @@ li:empty {
 
 .ajouterFavoris{
 	display: inline-block;
+}
+
+
+.toggle-push-left{
+	border: none;
+	height: 100%;
+	width: 100%;
+}
+
+.menu-button , .toggle-push-left{
+		background: none repeat scroll 0% 0% #FC802C;
 }

@@ -658,7 +658,6 @@ class archiAdresse extends ArchiContenu
 		$idPrisDepuis = $image->getidImagePrisDepuis($idEvenementGroupeAdresse);
 		
 		
-		
 		if(!empty($idVueSur)){
 			$evenementVueSur = $image->getEventInfosMiscImage($idVueSur,$idAdresse,"Autres vues sur");
 			$t->assign_block_vars('evenement', $evenementVueSur);
@@ -668,29 +667,6 @@ class archiAdresse extends ArchiContenu
 			$evenementPrisDepuis = $image->getEventInfosMiscImage($idPrisDepuis,$idAdresse,"Vues prises depuis");
 			$t->assign_block_vars('evenement', $evenementPrisDepuis);
 		}
-		
-		
-		/*
-		$idVueSur = array();
-		$requeteVueSur = "SELECT idImage FROM _adresseImage WHERE idAdresse = $idAdresse AND vueSur = 1";
-		$result = $this->connexionBdd->requete($requeteVueSur);
-		while($fetch = mysql_fetch_assoc($result)){
-			$idVueSur[]=$fetch['idImage'];
-		}
-		debug($idVueSur);
-		
-		$idPrisDepuis = array();
-		$requetePrisDepuis = "SELECT idImage FROM _adresseImage WHERE idAdresse = $idAdresse AND prisDepuis = 1";
-		$result = $this->connexionBdd->requete($requetePrisDepuis);
-		while($fetch = mysql_fetch_assoc($result)){
-			$idPrisDepuis[]=$fetch['idImage'];
-		}
-		debug($idPrisDepuis);
-		*/
-		
-		
-		
-		
 		
 		
 		$t->assign_vars(array(

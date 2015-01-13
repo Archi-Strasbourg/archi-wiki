@@ -59,7 +59,6 @@
 </div>
 {jsFooter}
 
-
 {googleAnalytics}
 
 </body>
