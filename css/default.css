@@ -302,12 +302,13 @@ nav.push-menu-left {
 /* 	visibility: hidden; */
 }
 body.pml-open nav.push-menu-left {
-	display: table-cell;
+/* 	display: table-cell; */
+	display: inline-block;
 	width: 200px;
-/* 	visibility: visible; */
 }
 body.pml-open #primaryContentContainer {
-	display: table-cell;
+/* 	display: table-cell; */
+	display: inline-block;
     left: 200px;
 }
 
@@ -316,7 +317,7 @@ body .primaryContent{
 }
 
 body.pml-open .primaryContent{
-	max-width: 700px;
+	max-width: 600px;
 }
 
 
@@ -505,6 +506,7 @@ body.pml-open .primaryContent{
 /* menu de gauche */
 .secondaryContent {
 	float: left;
+	margin-right: 20px;
 	/*padding: 2.5em 2.5em 1.5em 2.5em;*/
 	/*max-width: 130px;*/
 }
@@ -978,12 +980,11 @@ img {
 	/*background-image:url(../images/Advisa/btn_gauche.png);*/
 	background-repeat: no-repeat;
 	list-style-type: none;
-	width: 190px;
+	width: 250px;
 	height: 27px;
-	margin-bottom: 0.5em;
+	margin-top: 0.5em;
 	background-color: #829395;
-	border-radius: 25px;
-	box-shadow: 1px 1px #3E484B, -1px -1px #C1C9CA;
+	border-radius: 5px;
 }
 
 .paypal a,.boxContent li a {
@@ -1000,7 +1001,7 @@ img {
 .paypal {
 	/*background-image:url(../images/Advisa/btn_don.png);*/
 	/*margin-left:2em;*/
-	background-color: #FF8800;
+	background-color: #2A3335;
 }
 
 .paypal a {
@@ -1022,7 +1023,7 @@ img {
 }
 */
 .homeComment,.titreEncartCommentaire {
-	width: 190px;
+	width: 250px;
 }
 /*
 .homeComment {
@@ -1659,8 +1660,37 @@ li:empty {
 	border: none;
 	height: 100%;
 	width: 100%;
+	font-size: 25px;
 }
 
 .menu-button , .toggle-push-left{
-		background: none repeat scroll 0% 0% #FC802C;
+	background: none repeat scroll 0% 0% #FC802C;
 }
+
+.logo_header{
+	position: absolute;
+	line-height: 175px;
+	margin-left: 20px;
+}
+.logo_header a{
+	background: url('images/logo_archi_wiki.png')  no-repeat scroll left center transparent;
+	display: block;
+	height: 100px;
+	top: 0px;
+	text-indent: 300px;
+	color: white;
+}
+
+
+/*
+	PUB
+*/
+.emplacementPub{
+	background-color: grey;	
+}
+.pubSecondaryContent{
+	height: 250px;
+	width: 250px;
+	margin-top: 20px;
+}
+

@@ -49,8 +49,11 @@
 <div class="outer">
 	
 	<div id="header">
-		<div class="menu-button">
+		<div class="menu-button inline-block">
 			<button id="menu-button" class="toggle-push-left">&#9776;</button>
+		</div>
+		<div class="logo_header inline-block">
+		<a href="">Architecture et histoire des bâtiments et des lieux</a>
 		</div>
 	</div>
 
@@ -59,35 +62,23 @@
     	<nav  class="menu-new push-menu-left inline-block">
 			<ul>
 				<li><a href="">Accueil</a></li>
-				<li><a href="">Présentation du site</a></li>
-				<li><a href="">Revue de presse</a></li>
-				<li><a href="">Qui sommes-nous ?</a></li>
-				<li><a href="">Adresses</a></li>
-				<li><a href="">Parcours</a></li>
-				<li><a href="">Ajouter une adresse</a></li>
-				<li><a href="">Ajouter une personne</a></li>
-				<li><a href="">Nos sources</a></li>
-				<li><a href="">Nos donateurs</a></li>
+				<li><a href="index.php?archiAffichage=page&idPage=7">Présentation du site</a></li>
+				<li><a href="index.php?archiAffichage=page&idPage=7">Revue de presse</a></li>
+				<li><a href="{quiSommesNous}">Qui sommes-nous ?</a></li>
+				<li><a href="{listeDossiers}">Adresses</a></li>
+				<!-- BEGIN isParcours -->
+				<li><a href="{parcours}">Parcours</a></li>
+				<!-- END isParcours -->
+				<li><a href="{ajoutNouveauDossier}">Ajouter une adresse</a></li>
+				<li><a href="{ajoutNouvellePersonne}">Ajouter une personne</a></li>
+				<li><a href="{nosSources}">Nos sources</a></li>
+				<li><a href="index.php?archiAffichage=donateurs">Nos donateurs</a></li>
 			</ul>
 		</nav>
         <div id="primaryContentContainer" class="inline-block">
             <div id="secondaryContent" class="secondaryContent inline-block">
                 <div class="box">
-                <nav class="boxContent">
-	                <ul>
-	                    {listPages}
-	                    <li><a href="{quiSommesNous}"><?_("Qui sommes nous ?")?></a></li>
-	                    <li><a href="{listeDossiers}"><?_("Adresses")?></a></li>
-	                    <!-- BEGIN isParcours -->
-	                    <li><a href="{parcours}" title="parcours"><?_("Parcours")?></a></li>
-	                    <!-- END isParcours -->
-	                    <li style='white-space:nowrap;'><a href="{ajoutNouveauDossier}"><?_("Ajouter une adresse")?></a></li>
-	                    <li style='white-space:nowrap;'><a href="{ajoutNouvellePersonne}"><?_("Ajouter une personne")?></a></li>
-	                    <li style='white-space:nowrap;'><a href="{nosSources}"><?_("Nos sources")?></a></li>
-	                    <!--<li><a href="{publiciteMedias}"><?_("Les médias parlent de nous...")?></a></li>-->
-	                    <li><a href="index.php?archiAffichage=donateurs"><?_("Nos donateurs")?></a></li>
-	                </ul>
-                </nav>
+
                 <div class="subbox paypal">
 	                <a href='index.php?archiAffichage=membership' >
 	                <?_("Devenir membre")?>
@@ -100,11 +91,15 @@
 	                <!--">-->
 	                </a>
                 </div>
-                <br/>
-                <div class="fb-like-box reseauSocial" data-href="https://www.facebook.com/pages/Association-Archi-Strasbourg/215793091822502" data-width="190" data-stream="false" data-header="true"></div>
+
+                <div class="emplacementPub pubSecondaryContent">
+                
+                </div>
+                
+                <div class="fb-like-box reseauSocial" data-href="https://www.facebook.com/pages/Association-Archi-Strasbourg/215793091822502" data-width="250" data-stream="false" data-header="true"></div>
                 <br/>
                 <div class="reseauSocial">
-	                <a data-chrome="nofooter noscrollbar" width="190" height="170" data-link-color="#6D89A1" class="twitter-timeline"  href="https://twitter.com/ArchiStrasbourg"  data-widget-id="339535482302119936">Tweets de @ArchiStrasbourg</a>
+	                <a data-chrome="nofooter noscrollbar" width="250" height="170" data-link-color="#6D89A1" class="twitter-timeline"  href="https://twitter.com/ArchiStrasbourg"  data-widget-id="339535482302119936">Tweets de @ArchiStrasbourg</a>
 	                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
                 </div>
                 <!--<A HREF="http://www.archi-strasbourg.org/?archiAffichage=faireUnDon"><IMG SRC="images/20120326appeldons/bandeau_pub_vertical.jpg" width="174" alt="<?_("Pour continuer à lire du contenu gratuit et de qualité, faites un don.")?>"></A>-->
