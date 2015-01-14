@@ -50,10 +50,33 @@
 	
 	<div id="header">
 		<div class="menu-button-div inline-block">
-			<button id="menu-button" class="toggle-push-left menu-button"><div>&#9776;</div><div>Menu</div></button>
+			<button id="menu-button" class="toggle-push-left menu-button"><div>&#9776;&#x2715;</div><div>Menu</div></button>
 		</div>
 		<div class="logo_header inline-block">
 		<a href="">Architecture et histoire des bâtiments et des lieux</a>
+		</div>
+		<div class="left-div-header">
+			<!-- BEGIN informations -->
+			<div class="stats inline-block">
+				<div class="stats-wrap">
+					<p>Évènements : {informations.evenement}<br/>
+					Adresses : {informations.adresse}<br/>
+					Photos : {informations.photo}</p>
+				</div>
+			</div>
+			<!-- END informations -->
+			<div class=" inline-block">
+				<button class="left-buttons-header menu-button">
+					<div><span><img id="logoSearch" alt="" src="images/logo_loupe.png"></span><span id="crossSearch">&#x2715;</span></div>
+					<div class="label-menu-buttons-left">Recherche</div>
+				</button>
+			</div>
+			<div class="inline-block">
+				<button class="left-buttons-header menu-button">
+					<div><span id="logoConnexion"><img alt="" src="images/logo_connexion.png"></span><span id="crossConnexion">&#x2715;</span></div>
+					<div class="label-menu-buttons-left">Connexion</div>
+				</button>			
+			</div>
 		</div>
 	</div>
 

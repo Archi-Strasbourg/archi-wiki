@@ -164,6 +164,40 @@ a:hover {
 	width: 100px;
 	height: 100px;
 	text-align: center;
+	color: white;
+	vertical-align: top;
+}
+.left-div-header{
+	float: right;
+}
+
+.left-buttons-header{
+	vertical-align: bottom;
+	background-color: transparent;
+}
+
+.left-buttons-header div.label-menu-buttons-left {
+	font-size: 14px;	
+}
+
+.left-buttons-header img{
+	vertical-align: bottom;
+}
+
+
+.stats{
+/* 	height: 100px; */
+/* 	line-height:100px; */
+}
+.stats-wrap{
+	display: table;
+	height: 100px;
+	width: 150px;	
+}
+.stats-wrap p{
+	display: table-cell;
+	vertical-align: middle; 	
+	color: white;
 }
 
 /* Menu */
@@ -1656,12 +1690,18 @@ li:empty {
 }
 
 
-.toggle-push-left{
+.menu-button{
 	border: none;
 	height: 100%;
 	width: 100px;
 	font-size: 25px;
+	color: white;
 }
+
+body.pml-open .toggle-push-left{
+	
+}
+
 
 .menu-button-div , .toggle-push-left{
 	background: none repeat scroll 0% 0% #FC802C;
@@ -1705,4 +1745,15 @@ li:empty {
 }
 .pubPrimaryOne,.pubPrimaryTwo{
 	height: 90px;
+}
+
+
+.hidden{
+	visibility: hidden;
+	display: none;
+}
+
+.visible{
+	visibility: visible;
+	display: initial;
 }

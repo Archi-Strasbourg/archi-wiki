@@ -283,30 +283,36 @@ if (isset($_GET['archiAffichage']) && $_GET['archiAffichage']=='adresseDetail') 
         )
     );
 }
+$informations =array();
 
-$infos = "";
 // recherche du nombre d'evenements
 $reqEvenements = "SELECT DISTINCT idEvenement as nbEvenements FROM historiqueEvenement;";
 $resEvenements = $config->connexionBdd->requete($reqEvenements);
-$infos .= "<b>"._("Évènements :")."</b> ".mysql_num_rows($resEvenements).'<br/>';
+//$infos .= "<b>"._("Évènements :")."</b> ".mysql_num_rows($resEvenements).'<br/>';
+$informations['evenement'] = mysql_num_rows($resEvenements);
 
 // recherche du nombre d'adresses
 $reqAdresses = "SELECT DISTINCT idAdresse as nbAdresses FROM historiqueAdresse;";
 $resAdresses = $config->connexionBdd->requete($reqAdresses);
-$infos .= "<b>"._("Adresses :")."</b> ".mysql_num_rows($resAdresses).'<br/>';
+//$infos .= "<b>"._("Adresses :")."</b> ".mysql_num_rows($resAdresses).'<br/>';
+$informations['adresse'] = mysql_num_rows($resAdresses);
+
 
 // recherche du nombre de photos
 $reqPhotos = "SELECT DISTINCT idImage as nbImages FROM historiqueImage;";
 $resPhotos = $config->connexionBdd->requete($reqPhotos);
-$infos .= "<b>"._("Photos :")."</b> ".mysql_num_rows($resPhotos);
+//$infos .= "<b>"._("Photos :")."</b> ".mysql_num_rows($resPhotos);
+$informations['photo'] = mysql_num_rows($resPhotos);
+
+$t->assign_block_vars('informations', $informations);
+
 
 $reqCompteur = $config->connexionBdd->requete("SELECT nom, valeur FROM options WHERE nom LIKE 'compteur_%';");
 while ($row = mysql_fetch_object($reqCompteur)) {
    $compteur[$row->nom] = $row->valeur;
 }
 $t->assign_vars(
-    array("mailContact"=>$config->mail, "authorLink"=>$config->authorLink,
-    "infos"=>$infos)
+    array("mailContact"=>$config->mail, "authorLink"=>$config->authorLink)
 );
 if (empty($compteur['compteur_actif'])) {
     $compteur['compteur_actif'] = 0;
