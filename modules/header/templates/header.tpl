@@ -49,14 +49,13 @@
 <div class="outer">
 	
 	<div id="header">
-		<div class="menu-button inline-block">
-			<button id="menu-button" class="toggle-push-left">&#9776;</button>
+		<div class="menu-button-div inline-block">
+			<button id="menu-button" class="toggle-push-left menu-button"><div>&#9776;</div><div>Menu</div></button>
 		</div>
 		<div class="logo_header inline-block">
 		<a href="">Architecture et histoire des bâtiments et des lieux</a>
 		</div>
 	</div>
-
 
     <div id="content" class="content">
     	<nav  class="menu-new push-menu-left inline-block">
@@ -119,6 +118,15 @@
                 </div>
             </div>
             <div id="primaryContent" class="primaryContent inline-block" {microdata}>
+            <div class="pubPrimaryContent">
+            	<div class="emplacementPub pubPrimaryOne inline-block">
+            	
+            	</div>
+            	<div class="emplacementPub pubPrimaryTwo inline-block">
+            	
+            	</div>
+            	
+            </div>
             {GeoCoordinates}
             {bandeauPublicite}
             <div class="title breadcrumbs">{urlCheminSite}</div>

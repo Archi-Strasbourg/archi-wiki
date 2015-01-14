@@ -120,7 +120,7 @@ a:hover {
 /* Header */
 #header {
 	height: 100px;
-	width: 1100px;
+	width: 1200px;
 	margin: auto;
 	/*
 	background: url('images/Advisa/fond.jpg') ;
@@ -160,7 +160,7 @@ a:hover {
 	text-decoration: none;
 	color: #343434;
 }
-#header .menu-button{
+#header .menu-button-div{
 	width: 100px;
 	height: 100px;
 	text-align: center;
@@ -313,11 +313,11 @@ body.pml-open #primaryContentContainer {
 }
 
 body .primaryContent{
-	max-width: 800px;
+	max-width: 900px;
 }
 
 body.pml-open .primaryContent{
-	max-width: 600px;
+	max-width: 100px;
 }
 
 
@@ -411,7 +411,7 @@ body.pml-open .primaryContent{
 
 /** Content **/
 .content{
-	width: 1100px;
+	width: 1200px;
 	margin: auto;
 }
 
@@ -1372,7 +1372,7 @@ li:empty {
 }
 
 #primaryContentContainer,.header2 {
-/* 	width: 1100px; */
+/* 	width: 1200px; */
 /* 	max-width: 98%; */
 	vertical-align:top;
 }
@@ -1659,11 +1659,11 @@ li:empty {
 .toggle-push-left{
 	border: none;
 	height: 100%;
-	width: 100%;
+	width: 100px;
 	font-size: 25px;
 }
 
-.menu-button , .toggle-push-left{
+.menu-button-div , .toggle-push-left{
 	background: none repeat scroll 0% 0% #FC802C;
 }
 
@@ -1693,4 +1693,16 @@ li:empty {
 	width: 250px;
 	margin-top: 20px;
 }
-
+.pubPrimaryContent{
+	height: 90px;
+	margin-top: 20px;
+}
+.pubPrimaryOne{
+	width: 728px;	
+}
+.pubPrimaryTwo{
+	width: 120px;
+}
+.pubPrimaryOne,.pubPrimaryTwo{
+	height: 90px;
+}
