@@ -138,19 +138,51 @@ function newMenuAction(){
     $('#menu-button').on('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        $('body').toggleClass('pml-open');
-
+        
+        $('body').removeClass('pmt-open-search pmt-open-connexion').toggleClass('pml-open');
         //Add event listener on click on body (so, on all the page)
         $('body').on('click', function(e){
         	//If the zone clicked is not the menu
         	if (!$(e.target).closest('.push-menu-left').length) {
         	    // Hide the menus.
                 $('body').removeClass('pml-open');
-
         	  }
         });
     });
     
+    $('#searchButton').on('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        $('body').removeClass('pmt-open-connexion pml-open').toggleClass('pmt-open-search');
+
+        //Add event listener on click on body (so, on all the page)
+        $('body').on('click', function(e){
+        	//If the zone clicked is not the menu
+        	if (!$(e.target).closest('.push-menu-top-search').length) {
+        	    // Hide the menus.
+                $('body').removeClass('pmt-open-search');
+        	  }
+        });
+        
+    });
+    
+    $('#connexionButton').on('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        $('body').removeClass('pml-open pmt-open-search').toggleClass('pmt-open-connexion');
+
+        //Add event listener on click on body (so, on all the page)
+        $('body').on('click', function(e){
+        	//If the zone clicked is not the menu
+        	if (!$(e.target).closest('.push-menu-top-connexion').length) {
+        	    // Hide the menus.
+                $('body').removeClass('pmt-open-connexion');
+        	  }
+        });
+        
+    });
 //    /* push menu right */
 //    togglePushRight.addEventListener( "click", function(){
 //        classie.add( body, "pmr-open" );

@@ -1748,6 +1748,16 @@ body.pml-open .toggle-push-left{
 }
 
 
+#logoMenu , body.pml-open #crossMenu, #logoSearch,body.pmt-open-search #crossSearch, #logoConnexion , body.pmt-open-connexion #crossConnexion{
+	visibility: visible;
+	display: initial;
+}
+
+#crossMenu , body.pml-open #logoMenu, body.pmt-open-search #logoSearch, #crossSearch,body.pmt-open-connexion #logoConnexion ,#crossConnexion{
+	visibility: hidden;
+	display: none
+}
+
 .hidden{
 	visibility: hidden;
 	display: none;
