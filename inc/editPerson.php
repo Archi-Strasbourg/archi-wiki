@@ -9,7 +9,6 @@
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     https://archi-strasbourg.org/
- * 
  * */
 if (isset($_POST["evenementGroupeAdresse"])) {
     $personne = new archiPersonne();

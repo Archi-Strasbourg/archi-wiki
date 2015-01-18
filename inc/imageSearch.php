@@ -9,9 +9,8 @@
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     https://archi-strasbourg.org/
- * 
  * */
- ?>
+    ?>
 <h2>Recherche d'images</h2>
 <a 
 <?php
