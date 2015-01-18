@@ -129,8 +129,7 @@ class ArchiSource extends config
                 
                 $mail = new mailObject();
                 $message = _("Une nouvelle source a été ajoutée :")." <br>";
-                $message .= $nom." : ".$description."<br><br>";
-                $message.="<a href='".$this->creerUrl('', 'administrationAfficheModification', array('tableName'=>'source', 'idModification'=>$newIdSource))."'>".$this->creerUrl('', 'administrationAfficheModification', array('tableName'=>'source', 'idModification'=>$newIdSource))."</a>";
+                $message .= "<a href='".$this->getUrlRacine()."index.php?archiAffichage=listeAdressesFromSource&source=".$newIdSource."&submit=Rechercher'>".$nom."</a> : ".$description."<br><br>";
                 $mail->sendMailToAdministrators($mail->getSiteMail(), "archi-strasbourg.org : "._("un utilisateur ajouté une source"), $message, " and alerteMail='1' ", true);
                 $u = new archiUtilisateur();                
                 $u->ajouteMailEnvoiRegroupesAdministrateurs(array('contenu'=>$message, 'idTypeMailRegroupement'=>9, 'criteres'=>" and alerteMail='1' "));
