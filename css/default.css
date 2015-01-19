@@ -200,6 +200,94 @@ a:hover {
 	color: white;
 }
 
+
+.push-menu-top-search{
+	height: 130px;
+	width: 1200px;
+	margin: auto;
+	background-color: #2A3335;
+}
+
+.push-menu-top-connexion{
+	height: 130px;
+	width: 1200px;
+	margin: auto;
+	background-color: #2A3335;
+	color: white;
+}
+
+#archiLogin,#archiMdp , .authFormSubmit{
+	border-radius: 4px;
+	border: none;
+	height: 26px;
+	width: 130px;
+	margin-right: 20px;
+}
+.authFormSubmit{
+	background-color: #FC802C;
+	color: white;
+	margin-right: 0px;
+}
+.stayConnectedWrapper{
+	width: 100%;
+	margin-top: 20px;
+}
+.stayConnected{
+	float: right;
+}
+
+.authLinkOneClass{
+	margin-top: 20px;
+	margin-right: 30px;
+	
+}
+
+.authLinkOneClass,.authLinkTwoClass{
+	color: #C1722E;
+}
+
+a.forgetPasswordLabel{
+	color: #5A6064;
+}
+
+a.subscribeLabel{
+	color: #C1722E;
+}
+
+.connectedAuthLink{
+	margin-top: 20px;
+}
+
+.push-menu-top-search,.push-menu-top-connexion{
+	width: 1200px;
+	margin: auto;
+	background-color: #2A3335;
+}
+
+.formConnexion{
+	width: 800px;
+	margin: auto;
+	vertical-align: middle;
+}
+.formConnexion form{
+	display: table;
+}
+.authFormInput{
+	display: table-cell;
+}
+
+.formConnexion , .fastConnect{
+/* 	display: inline-block; */
+}
+.classicConnexion{
+	width: 650px;
+	display: inline-block;
+}
+.fastConnect{
+	width: 100px;
+	display: inline-block	
+}
+
 /* Menu */
 /* Old menu in the content */
 .menu {
@@ -1748,12 +1836,35 @@ body.pml-open .toggle-push-left{
 }
 
 
-#logoMenu , body.pml-open #crossMenu, #logoSearch,body.pmt-open-search #crossSearch, #logoConnexion , body.pmt-open-connexion #crossConnexion{
+body.pmt-open-search .push-menu-top-search,
+body.pmt-open-connexion .push-menu-top-connexion{
+	display: block;	
+}
+
+.push-menu-top-search,
+.push-menu-top-connexion{
+	display: none;
+}
+
+#logoMenu , 
+body.pml-open #crossMenu, 
+#logoSearch,
+body.pmt-open-search #crossSearch, 
+#logoConnexion , 
+body.pmt-open-connexion #crossConnexion
+{
 	visibility: visible;
 	display: initial;
 }
 
-#crossMenu , body.pml-open #logoMenu, body.pmt-open-search #logoSearch, #crossSearch,body.pmt-open-connexion #logoConnexion ,#crossConnexion{
+#crossMenu , 
+body.pml-open #logoMenu, 
+body.pmt-open-search #logoSearch, 
+#crossSearch,
+body.pmt-open-connexion #logoConnexion ,
+#crossConnexion
+
+{
 	visibility: hidden;
 	display: none
 }

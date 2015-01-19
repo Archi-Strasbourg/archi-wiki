@@ -223,14 +223,22 @@ if ($authentification->estConnecte() !== true) {
             'inscriptionDeconnexion' => _("Inscrivez-vous !"),
             'urlInscriptDeconnexion' => $config->creerUrl('', 'inscription'),
             'urlAccueil'=>$config->creerUrl('', 'afficheAccueil'),
-            'txtAccueil'=>'Accueil'
+            'txtAccueil'=>'Accueil',
+        	'authLinkOneLabel'=>'Mot de passe oublié ?',
+        	'authLinkOneUrl'=>$config->creerUrl('', 'formulaireMotDePasseOublie'),
+        	'authLinkOneClass'=>'forgetPasswordLabel',
+        	'authLinkTwoLabel'=> 'Inscrivez-vous !',
+        	'authLinkTwoUrl'=>$config->creerUrl('', 'inscription'),
+        	'authLinkTwoClass'=>'subscribeLabel'
         )
     );
-} else {
+} 
+else {
     if ($authentification->estAdmin()) {
         $t->assign_block_vars('isAdmin', array());
     }
     // utilisateur connecté
+    $classFastConnect="hidden";
     $t->assign_block_vars('utilisateurConnecte', array());
     $t->assign_vars(
         array(
@@ -242,7 +250,13 @@ if ($authentification->estConnecte() !== true) {
             'urlMonProfil'=>$config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'profil')),
             'txtMonProfil'=> _("Mon Profil"),
             'urlMonArchi'=>$config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'monArchi')),
-            'txtMonArchi'=>_("Mon Archi")
+            'txtMonArchi'=>_("Mon Archi"),
+        	'authLinkOneLabel'=>'Mon profil',
+        	'authLinkOneUrl'=>$config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'profil')),
+        	'classAuthLinkWrapper'=>'connectedAuthLink',
+        	'authLinkTwoLabel'=> 'Déconnexion',
+        	'authLinkTwoUrl'=>$config->creerUrl('deconnexion', 'authentification'),
+        	'classFastConnect' =>$classFastConnect
         )
     );
     

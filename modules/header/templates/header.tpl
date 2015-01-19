@@ -53,7 +53,7 @@
 			<button id="menu-button" class="toggle-push-left menu-button"><div><span id="logoMenu" class="visible">&#9776;</span><span id="crossMenu" class="hidden">&#x2715;</span></div><div>Menu</div></button>
 		</div>
 		<div class="logo_header inline-block">
-		<a href="">Architecture et histoire des bâtiments et des lieux</a>
+		<a href="./">Architecture et histoire des bâtiments et des lieux</a>
 		</div>
 		<div class="left-div-header">
 			<!-- BEGIN informations -->
@@ -78,8 +78,31 @@
 				</button>			
 			</div>
 		</div>
+		
 	</div>
-
+		<div class="push-menu-top-search">
+		
+		</div>
+		<div class="push-menu-top-connexion">
+			<div>
+				<div class="formConnexion">
+				
+					<div class="classicConnexion">
+					{formulaireConnexion}
+					<hr/>
+					<div class="linksConnexion {classAuthLinkWrapper}">
+						<a class="authLinkOneClass {authLinkOneClass}" href="{authLinkOneUrl}">{authLinkOneLabel}</a>
+						<a class="authLinkTwoClass {authLinkTwoClass}" href="{authLinkTwoUrl}">{authLinkTwoLabel}</a>
+					</div>
+					</div>
+					<div class="fastConnect {classFastConnect}">
+						<div>Connexion rapide</div>
+				        <div><a class="persona-button dark" id="browserid" title="<?_("Se connecter avec BrowserID")?>" title="<?_("Se connecter avec BrowserID")?>" ><span><?_("Connexion")?></span></a></div> 
+					</div>
+				</div>
+				
+			</div>
+		</div>
     <div id="content" class="content">
     	<nav  class="menu-new push-menu-left inline-block">
 			<ul>

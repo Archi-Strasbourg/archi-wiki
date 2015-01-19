@@ -22,15 +22,17 @@
 <!-- END noCompact -->
 
 
-
-
-
-
 <!-- BEGIN compact -->
-<label class="enteteAuthentificationCompact" for="archiLogin" style='color:#FFFFFF;'><?_("Login (mail) :")?></label> <input type='text' size="10" name='archiLogin' id="archiLogin" value='' />
-<label class="enteteAuthentificationCompact" for="archiMdp" style='color:#FFFFFF;'><?_("Mot de passe :")?></label> <input type='password' name='archiMdp' id="archiMdp" value='' size="10" />
-<input type='checkbox' name='cookie' id="cookie" /><label for="cookie" ><?_("Rester connecté")?></label>
-<input type='submit' name='validAuthentification' value='<?_("Se connecter")?>' />
+<div class="authFormInput">
+	<label class="enteteAuthentificationCompact" for="archiLogin" style='color:#FFFFFF;'><?_("Login (mail) :")?></label> <input type='text' size="10" name='archiLogin' id="archiLogin" value='' />
+	<label class="enteteAuthentificationCompact" for="archiMdp" style='color:#FFFFFF;'><?_("Mot de passe :")?></label> <input type='password' name='archiMdp' id="archiMdp" value='' size="10" />
+		<input class="authFormSubmit" type='submit' name='validAuthentification' value='<?_("Connexion")?>' />
+	<div class="stayConnectedWrapper">
+		<div class="stayConnected">
+			<input type='checkbox' name='cookie' id="cookie" /><label for="cookie" ><?_("Rester connecté")?></label>
+		</div>
+	</div>
+</div>
 
 
 <!-- END compact -->
