@@ -1,7 +1,7 @@
 <!Doctype HTML>
 <html lang="{lang_short}">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <title>{titrePage}</title>
 <meta name="description" content="{descriptionPage}" />
 <meta name="robots" content="index follow, all" />
