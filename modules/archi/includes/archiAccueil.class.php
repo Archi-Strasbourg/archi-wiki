@@ -484,6 +484,7 @@ class ArchiAccueil extends config
             
             foreach ($categories as $category){ //Category is the array containing the whole category content
 	            $categoryContent = $this->getIndexitem($category);
+	            debug($categoryContent);
 				foreach ($categoryContent as $singleContent){ //$singleContent contains a news, an address etc...
 					$t->assign_block_vars('item', $singleContent);
 				}
@@ -491,8 +492,6 @@ class ArchiAccueil extends config
             
 
           /*  $tabInfosAccueil = $adresses->getDerniersEvenementsParCategorie(5, $params); // on affichera un maximum de 5 evenements par encart
-            
-
             $encarts =  $this->getEncarts($tabInfosAccueil);
             $t->assign_block_vars('afficheEncarts', array());
             $t->assign_vars(
@@ -1780,7 +1779,8 @@ class ArchiAccueil extends config
 					$item['titreItem'] =$new['titre'];
 					$item['imgUrl'] = $this->getUrlRacine().'getPhotoSquare.php?id='.$new['photoIllustration'];;
 					$item['urlItem'] = $this->creerUrl('', 'afficherActualite', array('archiIdActualite'=>$new['idActualite']));;
-					$item['textItem'] = $new['texte'];
+					$item['textItem'] = strip_tags($new['texte']);
+					//debug($item);
 					
 					$itemContent[]=$item;
 				}
@@ -1894,7 +1894,7 @@ class ArchiAccueil extends config
     			$userId=$auth->getIdUtilisateur();
     			
     			/*
-    			 * Boucle pour faire les sous requete
+    			 * Boucle pour faire les sous requetes
     			 */
     			
     			$subRequest = array();
@@ -1937,7 +1937,7 @@ class ArchiAccueil extends config
     							LIMIT 5 ";
     			$result = $this->connexionBdd->requete($request);
     			while($fetch = mysql_fetch_assoc($result)){
-    				$item['CSSClassWrapper'] = 'lastAdd';
+    				$item['CSSClassWrapper'] = 'interest';
     				$item['titreItem'] =$fetch['nom'];
     				$item['imgUrl'] = $this->getUrlRacine().'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'];
     				$item['urlItem'] = $this->creerUrl('', '',

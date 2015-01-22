@@ -81,7 +81,7 @@
 		
 	</div>
 		<div class="push-menu-top-search">
-		
+		{formulaireRecherche}
 		</div>
 		<div class="push-menu-top-connexion">
 			<div>
@@ -91,8 +91,9 @@
 					{formulaireConnexion}
 					<hr/>
 					<div class="linksConnexion {classAuthLinkWrapper}">
-						<a class="authLinkOneClass {authLinkOneClass}" href="{authLinkOneUrl}">{authLinkOneLabel}</a>
-						<a class="authLinkTwoClass {authLinkTwoClass}" href="{authLinkTwoUrl}">{authLinkTwoLabel}</a>
+					<!-- BEGIN linkConnected -->
+						<a class="authLinkOneClass {linkConnected.authLinkClass}" href="{linkConnected.authLinkUrl}">{linkConnected.authLinkLabel}</a>
+					<!-- END linkConnected -->
 					</div>
 					</div>
 					<div class="fastConnect {classFastConnect}">

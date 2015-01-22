@@ -223,15 +223,21 @@ if ($authentification->estConnecte() !== true) {
             'inscriptionDeconnexion' => _("Inscrivez-vous !"),
             'urlInscriptDeconnexion' => $config->creerUrl('', 'inscription'),
             'urlAccueil'=>$config->creerUrl('', 'afficheAccueil'),
-            'txtAccueil'=>'Accueil',
-        	'authLinkOneLabel'=>'Mot de passe oublié ?',
-        	'authLinkOneUrl'=>$config->creerUrl('', 'formulaireMotDePasseOublie'),
-        	'authLinkOneClass'=>'forgetPasswordLabel',
-        	'authLinkTwoLabel'=> 'Inscrivez-vous !',
-        	'authLinkTwoUrl'=>$config->creerUrl('', 'inscription'),
-        	'authLinkTwoClass'=>'subscribeLabel'
-        )
+            'txtAccueil'=>'Accueil'
+        		
+    )
     );
+    $t->assign_block_vars('linkConnected', array(
+    		'authLinkOneClass'=> ' authLinkOneClass forgetPasswordLabel',
+    		'authLinkUrl'=> $config->creerUrl('', 'formulaireMotDePasseOublie'),
+    		'authLinkLabel' => 'Mot de passe oublié ?'
+    ));
+    $t->assign_block_vars('linkConnected', array(
+    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
+    		'authLinkUrl'=> $config->creerUrl('', 'inscription'),
+    		'authLinkLabel' => 'Inscrivez-vous !'
+    ));
+    
 } 
 else {
     if ($authentification->estAdmin()) {
@@ -247,18 +253,29 @@ else {
             'urlInscriptDeconnexion' => $config->creerUrl('deconnexion', 'authentification'),
             'urlAccueil'=>$config->creerUrl('', 'afficheAccueil'),
             'txtAccueil'=>_("Accueil"),
-            'urlMonProfil'=>$config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'profil')),
-            'txtMonProfil'=> _("Mon Profil"),
             'urlMonArchi'=>$config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'monArchi')),
             'txtMonArchi'=>_("Mon Archi"),
-        	'authLinkOneLabel'=>'Mon profil',
         	'authLinkOneUrl'=>$config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'profil')),
         	'classAuthLinkWrapper'=>'connectedAuthLink',
-        	'authLinkTwoLabel'=> 'Déconnexion',
-        	'authLinkTwoUrl'=>$config->creerUrl('deconnexion', 'authentification'),
         	'classFastConnect' =>$classFastConnect
         )
     );
+    $t->assign_block_vars('linkConnected', array(
+    		'authLinkOneClass'=> ' authLinkOneClass forgetPasswordLabel',
+    		'authLinkUrl'=> $config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'profil')),
+    		'authLinkLabel' => 'Mon profil'
+    ));
+    $t->assign_block_vars('linkConnected', array(
+    		'authLinkOneClass'=> ' authLinkOneClass forgetPasswordLabel',
+    		'authLinkUrl'=> $config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'monArchi')),
+    		'authLinkLabel' => 'Mon Archi'
+    ));
+    
+    $t->assign_block_vars('linkConnected', array(
+    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
+    		'authLinkUrl'=> $config->creerUrl('deconnexion', 'authentification'),
+    		'authLinkLabel' => 'Déconnexion'
+    ));
     
     if ($utilisateur->isAuthorized('affiche_menu_admin', $authentification->getIdUtilisateur())) {
         $t->assign_block_vars('afficheAdministrationMenu', array());
