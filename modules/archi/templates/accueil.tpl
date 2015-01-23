@@ -31,6 +31,15 @@
 
 
 
+<div class="divAccueil">
+	{news}
+	{commentaires}
+	{dernieresModifs}
+	{favoris}
+</div>
+
+
+
 <div class="news_content">
 <!-- BEGIN item -->
 <div class="indexItemWrapper {item.CSSClassWrapper}">

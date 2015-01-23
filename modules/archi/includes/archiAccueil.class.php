@@ -479,40 +479,102 @@ class ArchiAccueil extends config
                 
             }
 
-            
+            /*
             $categories=array('news','lastAdded','interest'); //Liste des catégories à afficher
             
             foreach ($categories as $category){ //Category is the array containing the whole category content
 	            $categoryContent = $this->getIndexitem($category);
-	            debug($categoryContent);
 				foreach ($categoryContent as $singleContent){ //$singleContent contains a news, an address etc...
 					$t->assign_block_vars('item', $singleContent);
 				}
+            }*/
+			
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            /*
+             * 
+  // Deuxième modèle
+  $template->set_filenames(array(
+      'body2' => 'template2.tpl'
+  ));
+
+  //
+  // On assigne les variables que l'on veut à notre modèle
+  //
+
+  //
+  // On insère le résultat du modèle 'body2' dans le premier modèle
+  //
+  $template->assign_var_from_handle('RESULTAT_BODY2', 'body2');
+
+             */
+            
+            $news = $this->getLatestNewsInfo(1);
+			
+            //Simple templates
+            $t->set_filenames(array('news' => 'accueil/news.tpl'));
+            $t->set_filenames(array('derniereModfis' => 'accueil/lastmodifs.tpl'));
+            $t->set_filenames(array('commentaire' => 'accueil/commentaire.tpl'));
+            $t->set_filenames(array('favoris' => 'accueil/favoris.tpl'));
+            
+            
+            $news['titreCategory'] = 'Actualité de l\'association';
+            $news['urlNewsList'] = $this->creerUrl('', 'toutesLesActualites', array());
+            $t->assign_block_vars('newsAccueil', $news);
+  
+            
+            
+            
+            $t->assign_vars(array(
+            		'lastModifContent'=>'LAST MODIFS',
+            		'newsContent' => 'COUCOU LES NEWS',
+            		'commentaireContent' => 'TEST COMMENTAIRES',
+            		'favorisContent' => 'FAVORIS CONTENT CAPS LOCK'
+            		
+            ));
+            
+            $latestComments = $this->getLatestComments(2);
+            
+            $t->assign_vars(array(
+            		'commentaireSectionTitle'=>'Commentaires récents'
+            ));
+
+            foreach ($latestComments as $com){
+            	$e = new archiEvenement();
+            	debug($com);
+            	$txtAdresse = $e->getArrayAdresse($com['idEvenement']);
+            	$commentaire = array(
+            			'date'=> $com['date'],
+            			'nom' =>  $com['nom'],
+            			'prenom' => $com['prenom'],
+            			'adresse' => $com['adresse'],
+            			'urlAdresse' => $com['urlAdresse'],
+            			'urlPersonne' => $com['urlPersonne'] ,
+            			'commentaire' => $com['commentaire']
+            	);
+            	$t->assign_block_vars('commentaire', $commentaire);
             }
             
-
-          /*  $tabInfosAccueil = $adresses->getDerniersEvenementsParCategorie(5, $params); // on affichera un maximum de 5 evenements par encart
-            $encarts =  $this->getEncarts($tabInfosAccueil);
-            $t->assign_block_vars('afficheEncarts', array());
-            $t->assign_vars(
-                array(
-                    'encart1'=>$encarts['actualites'], 
-                    'encart2'=>$encarts['dernieresAdresses'], 
-                    'encart3'=>$encarts['demolitions'], 
-                    'encart4'=>$encarts['culturel'], 
-                    'encart5'=>$encarts['travaux'], 
-                    'encart6'=>$encarts['dernieresVues']
-                )
-            );
-            */
-          
+            //Associate template to the general template
+            $t->assign_var_from_handle('news', 'news');
+            $t->assign_var_from_handle('dernieresModifs', 'derniereModfis');
+            $t->assign_var_from_handle('commentaires', 'commentaire');
+            $t->assign_var_from_handle('favoris', 'favoris');
+            
             break;
         
         }
         
         // affiche du template regroupant les 4 encarts
 
-        $t->assign_vars(array('infos'=>"<a href='".$this->creerUrl('', 'statistiquesAccueil')."'>".$infos."</a>"));
+       // $t->assign_vars(array('infos'=>"<a href='".$this->creerUrl('', 'statistiquesAccueil')."'>".$infos."</a>"));
 
         
         ob_start();
@@ -1633,7 +1695,6 @@ class ArchiAccueil extends config
                 
                 $html.="<br>";
                 $html.=str_replace("###cheminImages###", $this->getUrlImage()."actualites/".$fetch['idActualite']."/", stripslashes($fetch['texte']));
-                
             }
         }
     
@@ -1960,6 +2021,92 @@ class ArchiAccueil extends config
     	}
     	
 		return $itemContent;
+    }
+    
+    
+    
+    public function getLatestNewsInfo($nbNews=1){
+    	$requete = '
+    			SELECT titre, sousTitre,date,photoIllustration,idActualite, texte
+    			FROM actualites
+    			ORDER BY idActualite DESC
+    			LIMIT '.$nbNews.'
+    			';
+    	
+    	$result = $this->connexionBdd->requete($requete);
+    	$fetch = mysql_fetch_assoc($result);
+    	//$url = $this->getUrlRacine().'images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
+    	$url = 'http://www.archi-strasbourg.org/images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
+    	$description = strip_tags($fetch['texte']);
+    	$news=array(
+    			'urlMiniature'=>$url,
+    			'titre' => $fetch['titre'],
+    			'date' => $fetch['date'],
+    			'description' => mb_substr($description, 1,100,'UTF-8')
+    	);
+    	
+   		return $news;
+    }
+    public function getLatestComments($nbComment){
+    	$requete ="
+    			SELECT 
+    			date_format(c.date,"._('"%e/%m/%Y"').") as date,
+    			c.idUtilisateur,
+    			c.idEvenement, 
+    			c.commentaire, 
+    			c.nom, 
+    			c.prenom,
+    			ha.numero,
+    			r.prefixe,
+    			r.nom as nomRue
+    			
+    			FROM commentairesEvenement c
+    			LEFT JOIN utilisateur u on u.idUtilisateur = c.idUtilisateur
+    			LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie= c.idEvenement
+    			LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
+    			LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
+    			LEFT JOIN rue r on r.idRue = ha.idRue
+    			LIMIT $nbComment
+    			";
+    	$result = $this->connexionBdd->requete($requete);
+    	$arrayComment = array();
+    	while($latestComment = mysql_fetch_assoc($result)){
+    		$idEvernement = $latestComment['idEvenement'];
+    		$e = new archiEvenement();
+    		$adresseArray = $e->getArrayAdresse($idEvernement);
+    		$adresse = '';
+    		if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
+    			$adresse.=$adresseArray['numero'];
+    		}
+    		if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
+    			$adresse.=' '.$adresseArray['prefixe'];
+    		}
+    		if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
+    			$adresse.=' '.$adresseArray['nomRue'];
+    		}
+
+    		$idEvenementGroup = $e->getIdGroupeEvenement($latestComment['idEvenement']);
+    		$idAdresse = $e->getIdAdresse($latestComment['idEvenement']);
+    		$url = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail',"archiIdAdresse"=>$idAdresse,"archiIdEvenementGroupeAdresse"=>$idEvenementGroup));
+    		$urlPersonne = $this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$latestComment['idUtilisateur'],'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroup));
+    		
+    		debug($latestComment);
+    		
+    		$latestComment['urlAdresse'] = $url;
+    		$latestComment['urlPersonne'] = $urlPersonne;
+    		$latestComment['adresse']=$adresse;
+    		$arrayComment[] = $latestComment;
+    	}
+    	return $arrayComment;
+    }
+    
+    
+    public function getLatestModification($nbElts){
+    	
+    }
+    
+    public function getLatestFav($nbElts){
+    	
     }
     
 }

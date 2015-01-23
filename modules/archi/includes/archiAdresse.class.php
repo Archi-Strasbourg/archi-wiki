@@ -14880,7 +14880,6 @@ class archiAdresse extends ArchiContenu
 			$idAdresse = $this->variablesGet['archiIdAdresse'];
 			
 			$idEvenementGroupeAdresse = $this->getIdEvenementGroupeAdresseFromIdAdresse($idAdresse);
-			//$idEvenementGroupeAdresse = $this->getIdEvenementGroupeAdresseFromIdAdresse($idAdresse);
 			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
 		}
 	}

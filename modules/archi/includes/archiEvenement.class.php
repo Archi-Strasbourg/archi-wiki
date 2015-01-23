@@ -5010,13 +5010,13 @@ class archiEvenement extends config
 		$fieldsCommentaires=$this->getCommentairesFields();
 		$formulaire = new formGenerator();
 
-
+		debug($error);
 		if($auth->estConnecte())
 		{
 			unset($fieldsCommentaires['captcha']);
 		}
 		$error = $formulaire->getArrayFromPost($fieldsCommentaires);
-		//var_dump($this->variablesPost);
+		debug($error);
 		if(count($error)==0)
 		{
 
@@ -5041,8 +5041,8 @@ class archiEvenement extends config
 			$prenom=$auth->estConnecte()?$userInfos["prenom"]:$this->variablesPost['prenom'];
 			$email=$auth->estConnecte()?$user->getMailUtilisateur($idUtilisateur):$this->variablesPost['email'];
 			$uniqid = uniqid(null, true);
-
-			$req = "INSERT INTO commentairesEvenement (commentaire, idHistoriqueEvenement, date, idUtilisateur, CommentaireValide) VALUES ('".mysql_real_escape_string(strip_tags($this->variablesPost['commentaire']))."', '".mysql_real_escape_string($this->variablesPost['idEvenementGroupeAdresse'])."', now(), '".mysql_real_escape_string($idUtilisateur). "'," . mysql_real_escape_string($CommentaireValide).")";
+			//$req = "insert into commentaires (nom,prenom,email,commentaire,idEvenementGroupeAdresse,date,idUtilisateur) values (\"".addslashes(strip_tags($this->variablesPost['nom']))."\",\"".addslashes(strip_tags($this->variablesPost['prenom']))."\",\"".addslashes(strip_tags($this->variablesPost['email']))."\",\"".addslashes(strip_tags($this->variablesPost['commentaire']))."\",'".$this->variablesPost['idEvenementGroupeAdresse']."',now(),'".$idUtilisateur."')";
+			$req = "INSERT INTO commentairesEvenement (nom,prenom,email,commentaire, idEvenement, date, idUtilisateur, CommentaireValide) VALUES (\"".addslashes(strip_tags($this->variablesPost['nom']))."\",\"".addslashes(strip_tags($this->variablesPost['prenom']))."\",\"".addslashes(strip_tags($this->variablesPost['email']))."\",'".mysql_real_escape_string(strip_tags($this->variablesPost['commentaire']))."', '".mysql_real_escape_string($this->variablesPost['idEvenementGroupeAdresse'])."', now(), '".mysql_real_escape_string($idUtilisateur). "'," . mysql_real_escape_string($CommentaireValide).")";
 			$res = $this->connexionBdd->requete($req);
 			// retour a l'affichage de l'adresse
 			$idAdresse = $this->variablesPost['idEvenementGroupeAdresse'];
@@ -5129,7 +5129,6 @@ class archiEvenement extends config
 			$idGroupeEvenement = $this->getIdEvenementGroupeAdresseFromIdEvenement($this->variablesPost['idEvenementGroupeAdresse']);
 			$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idGroupeEvenement);
 			//$this->variablesGet['archiIdEvenementGroupeAdresse'] = $this->variablesPost['idEvenementGroupeAdresse'];
-			debug(array($this->variablesGet , $this->variablesPost,$idGroupeEvenement,$idAdresse));
 				
 			$adresse = new archiAdresse();
 			
@@ -5141,12 +5140,12 @@ class archiEvenement extends config
 		}
 		else
 		{
-			debug(array($this->variablesGet , $this->variablesPost));
-				
+			//header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false));
+			
 			$this->erreurs->ajouter('Il y a une erreur dans le formulaire.');
 			echo $this->erreurs->afficher();
-			echo $this->getListeCommentaires($this->variablesPost['idEvenementGroupeAdresse']);
-			echo $this->getFormulaireCommentaires($this->variablesPost['idEvenementGroupeAdresse'],$fieldsCommentaires);
+			echo $this->getListCommentairesEvenements($this->variablesPost['idEvenementGroupeAdresse']);
+			echo $this->getFormulaireCommentairesHistorique($this->variablesPost['idEvenementGroupeAdresse'],$fieldsCommentaires);
 		}
 	}
 
@@ -5168,10 +5167,10 @@ class archiEvenement extends config
 						";
 		*/
 		
-		$req = "SELECT c.idCommentairesEvenement as idCommentaire,u.nom as nom,u.prenom as prenom,u.mail as email,DATE_FORMAT(c.date,'"._("%d/%m/%Y à %kh%i")."') as dateF,c.commentaire as commentaire,c.idUtilisateur as idUtilisateur, u.urlSiteWeb as urlSiteWeb
+		$req = "SELECT c.idCommentairesEvenement as idCommentaire,c.nom as nom,c.prenom as prenom,c.email as email,DATE_FORMAT(c.date,'"._("%d/%m/%Y à %kh%i")."') as dateF,c.commentaire as commentaire,c.idUtilisateur as idUtilisateur
 				FROM commentairesEvenement c
 				LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
-				WHERE c.idHistoriqueEvenement = '".$idCommentaireAdresse."'
+				WHERE c.idEvenement = '".$idCommentaireAdresse."'
 						AND CommentaireValide=1
 						ORDER BY date DESC
 						";
@@ -5203,11 +5202,12 @@ class archiEvenement extends config
 			$adresseMail = "";
 			$boutonSupprimer="";
 			$urlSiteWeb = "";
+			/*
 			if($fetch['urlSiteWeb']!='')
 			{
 				$urlSiteWeb = "<br><a itemprop='url' href='".$fetch['urlSiteWeb']."' target='_blank'><span style='font-size:9px;color:#FFFFFF;'>".$fetch['urlSiteWeb']."</span></a>";
 			}
-
+*/
 			if($isAdmin)
 			{
 				$archiIdAdresse='';
@@ -6597,7 +6597,7 @@ class archiEvenement extends config
 	// ************************************************************************************************************************
 	public function deleteCommentairesFromIdHistoriqueEvenement($idHistoriqueEvenement=0)
 	{
-		$req = "DELETE FROM commentairesEvenement WHERE idHistoriqueEvenement='".$idHistoriqueEvenement."'";
+		$req = "DELETE FROM commentairesEvenement WHERE idEvenement='".$idHistoriqueEvenement."'";
 		$res = $this->connexionBdd->requete($req);
 	}
 	
@@ -7027,6 +7027,70 @@ class archiEvenement extends config
 	}
 	
 	
+	/**
+	 * Get an array of all the string composing an adresse
+	 * 
+	 * @param unknown $idEvenement related to the address
+	 * @return multitype:array of string composing the address
+	 */
+	public function getArrayAdresse($idEvenement){
+		$requete = "SELECT ha.numero, 
+				r.nom as nomRue,
+				r.prefixe,
+				sq.nom as nomSousQuartier , 
+				q.nom as nomQuartier, 
+				v.codepostal as codepostal , 
+				v.nom as nomVille,
+				p.nom as nomPays
+				FROM evenements evt
+				LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+				LEFT JOIN _adresseEvenement ae  on ae.idEvenement = ee.idEvenement
+				LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse  
+				LEFT JOIN rue r on r.idRue = ha.idRue
+				LEFT JOIN sousQuartier sq on sq.idSousQuartier = ha.idSousQuartier
+				LEFT JOIN quartier q on q.idQuartier = ha.idQuartier
+				LEFT JOIN ville v on v.idVille = ha.idVille
+				LEFT JOIN pays p on p.idPays = ha.idPays
+				WHERE evt.idEvenement = ".$idEvenement."
+				LIMIT 1
+				";
+		$result = $this->connexionBdd->requete($requete);
+		$fetch = mysql_fetch_assoc($result);
+		return $fetch;
+	}
+	
+	
+	/**
+	 * Get idEvenement of the group of evenement with a regular idEvenement
+	 * 
+	 * @param unknown $idEvenement : id of the regular evenement
+	 * @return idEvenement of the groupe evenement corresponding
+	 */
+	public function getIdGroupeEvenement($idEvenement){
+		$requete = "
+				SELECT idEvenement 
+				FROM _evenementEvenement
+				WHERE idEvenementAssocie = $idEvenement
+				ORDER BY idEvenement DESC
+				LIMIT 1
+				";
+		$result =  $this->connexionBdd->requete($requete);
+		$res = mysql_fetch_assoc($result);
+		return $res['idEvenement'];
+	}
+
+	
+	public function getIdAdresse($idEvenement){
+		$idEvenementGroup = $this->getIdGroupeEvenement($idEvenement);
+		$requete ="
+				SELECT idAdresse 
+				FROM _adresseEvenement
+				WHERE  idEvenement = $idEvenementGroup
+				";
+		$result = $this->connexionBdd->requete($requete);
+		$res = mysql_fetch_assoc($result);
+		return $res['idAdresse'];		
+	}
 }
 
 

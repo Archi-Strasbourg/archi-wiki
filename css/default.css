@@ -1866,3 +1866,64 @@ body.pmt-open-connexion #logoConnexion ,
 	visibility: visible;
 	display: initial;
 }
+
+
+
+/*
+Page d'accueil
+*/
+.lastModifsAccueil{
+	width: 900px;
+	background: red;
+}
+
+.favorisAccueil{
+	width: 900px;
+	background: green;
+}
+
+.commentairesAccueil{
+	width:200px;
+	vertical-align: top;
+}
+
+.commentairesAccueil h2{
+	margin-top: 0; 
+}
+.commentDate , .commentAuthor{
+	color: white;	
+}
+
+.commentAdresse , .commentAdresse a{
+	color: #C1722E;
+}
+.commentBody{
+	color:#2E3D40;
+}
+.newsAccueil{
+	width: 700px;
+	background: purple;
+}
+.newsTitle{
+	height: 30px;
+}
+.newsTitle a{
+	float: right;
+}
+.newsTitle h2{
+	margin: 0;
+	border-bottom: none;
+	float: left;
+}
+.singleComment{
+	margin-top: 15px;
+}
+
+.newsTitle h2 , .newsTitle a{
+	display: inline-block;
+}
+
+.newsAccueil , .commentairesAccueil{
+	display: inline-block;
+	
+}
