@@ -5,16 +5,19 @@
 		<a href="{newsAccueil.urlNewsList}">>Toutes les actualités</a>
 	</div>
 	
-	<div class="newsContent">	<a href="{newsAccueil.urlNews}">
-	<div>
-		<img alt="" class="miniature" src="{newsAccueil.urlMiniature}">
-		<span class="dateMiniature">{newsAccueil.date}</span>
-	</div>
+	<div class="newsContent">	
+	<a class="linkNews" href="{newsAccueil.urlNews}">
+		<div class="miniatureWrapper">
+			<img alt="" class="miniature" src="{newsAccueil.urlMiniature}">
+			<span class="miniatureLabel"><span class="miniatureLabelLeft"></span><span class="miniatureLabelRight">{newsAccueil.date}</span></span>
+		</div>
 	</a>
-	<a href="{newsAccueil.urlNews}">
-	<div>{newsAccueil.titre}</div>
-		<div>{newsAccueil.description}</div>
-	</a></div>
+		<div class="textNews">
+			<div><a class="" href="{newsAccueil.urlNews}">{newsAccueil.titre}</a></div>
+			<div><a class="" href="{newsAccueil.urlNews}">{newsAccueil.description}</a></div>
+			<div><a href="{newsAccueil.urlNews}">Lire la suite</a></div>
+		</div>
+	</div>
 
 </div>
 <!-- END newsAccueil -->

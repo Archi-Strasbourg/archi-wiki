@@ -1874,7 +1874,6 @@ Page d'accueil
 */
 .lastModifsAccueil{
 	width: 900px;
-	background: red;
 }
 
 .favorisAccueil{
@@ -1885,6 +1884,7 @@ Page d'accueil
 .commentairesAccueil{
 	width:200px;
 	vertical-align: top;
+	margin-bottom: 10px;
 }
 
 .commentairesAccueil h2{
@@ -1902,7 +1902,9 @@ Page d'accueil
 }
 .newsAccueil{
 	width: 700px;
-	background: purple;
+	//background: purple;
+	margin-bottom: 10px;
+	padding-right: 10px;
 }
 .newsTitle{
 	height: 30px;
@@ -1923,7 +1925,78 @@ Page d'accueil
 	display: inline-block;
 }
 
-.newsAccueil , .commentairesAccueil{
+.newsAccueil , .commentairesAccueil,.textNews,.linkNews{
 	display: inline-block;
-	
+}
+
+.linkNews{
+	vertical-align: top;
+}
+
+.textNews div:first-child a{
+	color: #273638;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.textNews div:last-child a{
+	color: black;
+	text-decoration: underline;
+}
+
+.newsTitle a{
+	color: black;
+}
+
+.miniatureWrapper{
+	position: relative;
+	width: 200px;
+	height: 200px;
+}
+.miniature{
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: none;
+}
+.miniatureLabel{
+	position: absolute;
+	bottom: 0px;
+	right: 0;
+	width: 100%;
+}
+.lastModifElement:hover .miniatureLabel{
+	background-color: #2A3335;
+}
+.lastModifElement:hover .miniatureLabelLeft{
+	display: block;
+	visibility: visible;
+}
+
+.miniatureLabel .miniatureLabelLeft{
+	float:left;
+	display: none;
+	visibility: hidden;
+}
+.miniatureLabel .miniatureLabelRight{
+	float: right;	
+	background-color: #2A3335;
+}
+
+.lastModifElement{
+	display: inline-block;
+	vertical-align: top;
+}
+
+.lastModifElement:hover .description{
+	//display: inline-block;
+	visibility: visible;
+}
+.lastModifElement .description{
+	//display: none;
+	visibility: hidden;
+}
+
+.textLastModif{
+	width: 200px;
 }

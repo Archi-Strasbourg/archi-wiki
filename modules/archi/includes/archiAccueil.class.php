@@ -498,24 +498,6 @@ class ArchiAccueil extends config
             
             
             
-            /*
-             * 
-  // Deuxième modèle
-  $template->set_filenames(array(
-      'body2' => 'template2.tpl'
-  ));
-
-  //
-  // On assigne les variables que l'on veut à notre modèle
-  //
-
-  //
-  // On insère le résultat du modèle 'body2' dans le premier modèle
-  //
-  $template->assign_var_from_handle('RESULTAT_BODY2', 'body2');
-
-             */
-            
             $news = $this->getLatestNewsInfo(1);
 			
             //Simple templates
@@ -527,10 +509,10 @@ class ArchiAccueil extends config
             
             $news['titreCategory'] = 'Actualité de l\'association';
             $news['urlNewsList'] = $this->creerUrl('', 'toutesLesActualites', array());
+            debug($news);
             $t->assign_block_vars('newsAccueil', $news);
-  
-            
-            
+  			
+            /*
             
             $t->assign_vars(array(
             		'lastModifContent'=>'LAST MODIFS',
@@ -539,7 +521,7 @@ class ArchiAccueil extends config
             		'favorisContent' => 'FAVORIS CONTENT CAPS LOCK'
             		
             ));
-            
+            */
             $latestComments = $this->getLatestComments(2);
             
             $t->assign_vars(array(
@@ -548,7 +530,6 @@ class ArchiAccueil extends config
 
             foreach ($latestComments as $com){
             	$e = new archiEvenement();
-            	debug($com);
             	$txtAdresse = $e->getArrayAdresse($com['idEvenement']);
             	$commentaire = array(
             			'date'=> $com['date'],
@@ -562,6 +543,65 @@ class ArchiAccueil extends config
             	$t->assign_block_vars('commentaire', $commentaire);
             }
             
+
+            
+            $lastModifs = $this->getLatestModification(8);
+            
+            foreach ($lastModifs as $modif){
+            	$e = new archiEvenement();
+            	$adresseArray = $e->getArrayAdresse($modif['idEvenement']);
+            	
+            	//Adresse
+            	$adresse = '';
+            	if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
+            		$adresse.=$adresseArray['numero'];
+            	}
+            	if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
+            		$adresse.=' '.$adresseArray['prefixe'];
+            	}
+            	if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
+            		$adresse.=' '.$adresseArray['nomRue'];
+            	}
+            	 
+            	//Image
+            	$i=new archiImage();
+            	$infoImage = $i->getImagePrincipale($modif['idEvenement']);
+            	//$urlImage = $this->getUrlRacine().$infoImage['dateUpload'].'-'.$infoImage['idHistoriqueImage'].'-moyen.jpg';
+            	$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
+            	
+            	//Url Evenement
+            	$idAdresse = $e->getIdAdresse($modif['idEvenement']);
+            	$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($modif['idEvenement']);
+            	$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
+            	
+            	
+            	//Description
+            	$so = new StringObject();
+            	$description = $so->sansBalises($modif['description']);
+            	$description = stripslashes($description);
+            	$description = mb_substr($description, 1,130);;
+            	
+            	$t->assign_block_vars('lastModif', array(
+            			'miniatureLabelLeft'=>$modif['typeEvenement'],
+            			'miniatureLabelRight' => $modif['dateCreationEvenement'],
+            			'adresse' => $adresse,
+            			'urlMiniature' => $urlImage,
+            			'urlEvenement' => $urlEvenement,
+            			'description' => $description
+            	));
+            }
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             //Associate template to the general template
             $t->assign_var_from_handle('news', 'news');
             $t->assign_var_from_handle('dernieresModifs', 'derniereModfis');
@@ -571,11 +611,6 @@ class ArchiAccueil extends config
             break;
         
         }
-        
-        // affiche du template regroupant les 4 encarts
-
-       // $t->assign_vars(array('infos'=>"<a href='".$this->creerUrl('', 'statistiquesAccueil')."'>".$infos."</a>"));
-
         
         ob_start();
         $t->pparse('accueil');
@@ -2037,14 +2072,15 @@ class ArchiAccueil extends config
     	$fetch = mysql_fetch_assoc($result);
     	//$url = $this->getUrlRacine().'images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
     	$url = 'http://www.archi-strasbourg.org/images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
+    	$urlNews = 'http://archi-strasbourg.org/actualites-archi-strasbourg-'.$fetch['idActualite'].'.html';
     	$description = strip_tags($fetch['texte']);
     	$news=array(
     			'urlMiniature'=>$url,
     			'titre' => $fetch['titre'],
     			'date' => $fetch['date'],
-    			'description' => mb_substr($description, 1,100,'UTF-8')
+    			'description' => mb_substr($description, 1,100,'UTF-8'),
+    			'urlNews' => $urlNews
     	);
-    	
    		return $news;
     }
     public function getLatestComments($nbComment){
@@ -2102,7 +2138,46 @@ class ArchiAccueil extends config
     
     
     public function getLatestModification($nbElts){
+    	$requete ="
+	    		SELECT 
+	    		evt.idEvenement AS idEvenement, 
+	    		evt.idEvenementRecuperationTitre , 
+	    		evt.idImagePrincipale AS idHistoriqueImage, 
+	    		ee.idEvenement AS idEvenementGroupeAdresse, 
+	    		ae.idAdresse AS idAdresse,
+	    		te.nom as typeEvenement,
+	    		date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
+	    		evt.description				FROM evenements evt
+				LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
+				LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+				LEFT JOIN historiqueAdresse ha ON ha.idAdresse = ae.idAdresse
+				LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
+				WHERE ee.idEvenementAssocie IS NOT NULL
+				AND ae.idAdresse IS NOT NULL
+				GROUP BY ae.idAdresse
+    			LIMIT $nbElts 
+    			";
+    	$result = $this->connexionBdd->requete($requete);
+    	$arrayLastModif = array();
+    	while($lastModif = mysql_fetch_assoc($result)){
+    		$tmp = $lastModif;
+    		
+    		$requeteTitre = "SELECT titre
+    				FROM evenements 
+    				WHERE idEvenement = ".$lastModif['idEvenementRecuperationTitre']."";
+    		$restitre = $this->connexionBdd->requete($requeteTitre);
+			$titreArray = mysql_fetch_assoc($restitre);
+    		
+			$tmp['titre'] = $titreArray['titre'];
+			
+    		$arrayLastModif[]=$tmp;
+    	}
     	
+    	
+    	/*
+    	 * Requte pour récuperer le titre
+    	 */
+    	return $arrayLastModif;
     }
     
     public function getLatestFav($nbElts){

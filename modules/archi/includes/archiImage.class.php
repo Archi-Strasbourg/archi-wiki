@@ -4392,8 +4392,6 @@ class archiImage extends config
             $res = $this->connexionBdd->requete($req);
         }
         
-        
-        
         return $res;        
     }
     
@@ -5358,6 +5356,24 @@ class archiImage extends config
     			'titre'=>$label." ".$adresse->getIntituleAdresseFrom($idAdresseCible,'idAdresse'),
     			'imagesLiees'=> $imageHTML
     	);
+    }
+    
+    
+    public function getImagePrincipale($idEvenement){
+    	$a = new archiAdresse();
+    	$imageInfo = $a->getFirstImageFromEvenement($idEvenement);
+    	if(empty($imageInfo)){
+    		$a = new archiAdresse();
+    		$requeteIdAdresse = $a->getIdAdressesFromIdEvenement($idEvenement);
+    		$resourceIdAdresse = $this->connexionBdd->requete($requeteIdAdresse);
+    		$arrayIdAdresse = mysql_fetch_assoc($resourceIdAdresse);
+    		$idAdresse = $arrayIdAdresse['idAdresse'];
+    		$resourceImage = $this->getImagesEvenementsFromAdresse($idAdresse);
+    		while($img = mysql_fetch_assoc($resourceImage)){
+    			$imageInfo = $img;
+       		}
+    	}
+    	return $imageInfo;
     }
 }
 ?>
