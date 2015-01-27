@@ -219,7 +219,7 @@ if ($authentification->estConnecte() !== true) {
     $t->assign_vars(
         array(
             'formulaireConnexion' => $authentification->afficheFormulaireAuthentification('compact'),
-            'formulaireRecherche' => $recherche->afficheFormulaire(array(), 0, array('noDisplayRechercheAvancee'=>true, 'noDisplayCheckBoxResultatsCarte'=>true)),
+            'formulaireRecherche' => $recherche->afficheFormulaire(array(), 0, array('noDisplayRechercheAvancee'=>false, 'noDisplayCheckBoxResultatsCarte'=>false)),
             'inscriptionDeconnexion' => _("Inscrivez-vous !"),
             'urlInscriptDeconnexion' => $config->creerUrl('', 'inscription'),
             'urlAccueil'=>$config->creerUrl('', 'afficheAccueil'),
@@ -249,7 +249,7 @@ else {
     $t->assign_vars(
         array(
             'inscriptionDeconnexion' => _("Déconnexion"),
-            'formulaireRecherche'    => $recherche->afficheFormulaire(array(), 0, array('noDisplayRechercheAvancee'=>true, 'noDisplayCheckBoxResultatsCarte'=>true)),
+            'formulaireRecherche'    => $recherche->afficheFormulaire(array(), 0, array('noDisplayRechercheAvancee'=>false, 'noDisplayCheckBoxResultatsCarte'=>false)),
             'urlInscriptDeconnexion' => $config->creerUrl('deconnexion', 'authentification'),
             'urlAccueil'=>$config->creerUrl('', 'afficheAccueil'),
             'txtAccueil'=>_("Accueil"),

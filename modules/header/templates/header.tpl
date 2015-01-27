@@ -53,8 +53,8 @@
 			<button id="menu-button" class="toggle-push-left menu-button"><div><span id="logoMenu" class="visible">&#9776;</span><span id="crossMenu" class="hidden">&#x2715;</span></div><div>Menu</div></button>
 		</div>
 		<div class="logo_header inline-block">
-		<a href="./">Architecture et histoire des bâtiments et des lieux</a>
-		</div>
+		<a href="./">Tous architectes ! Partageons la ville, ses batiments, ses lieux</a>
+				</div>
 		<div class="left-div-header">
 			<!-- BEGIN informations -->
 			<div class="stats inline-block">
@@ -87,10 +87,6 @@
 						</button>			
 					</div>
 				</div>
-				
-				
-				
-				
 			</div>
 		</div>
 		
@@ -154,7 +150,7 @@
                 </div>
 
                 <div class="emplacementPub pubSecondaryContent">
-                
+                	<img alt="" src="images/pub/mobile.jpg">
                 </div>
                 
                 <div class="fb-like-box reseauSocial" data-href="https://www.facebook.com/pages/Association-Archi-Strasbourg/215793091822502" data-width="250" data-stream="false" data-header="true"></div>

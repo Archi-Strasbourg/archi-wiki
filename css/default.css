@@ -1115,6 +1115,12 @@ img {
 
 .loupe {
 	vertical-align: bottom;
+	color: white;
+	background-color: #FC802C;
+	border-radius: 10px;
+	border: none;
+	width: 30px;
+	height: 30px;
 }
 
 .paypal,.boxContent li {
@@ -2061,20 +2067,76 @@ Page d'accueil
 }
 
 .favorisTextWrapper{
-	
+	width: 200px;
 }
 
 .favorisTextWrapper , .favorisMiniatureWrapper{
-	display: inline-block;
+	display: block;
+	float: left;
+	
 }
 .listeFavoris{
 	
 }
 .favorisElement{
-	width: 33.33%;
-    width: calc(100% / 3);
-	display:inline-block;
+	width: 300px;
+	display:block;
+	float: left;
 }
 
 .linkListCommentaire{
 	text-decoration: underline;
+}
+
+
+.push-menu-top-search .switchSearch , .push-menu-top-search form{
+	float:left;
+	margin-right: 10px;
+}
+
+.push-menu-top-search .switchSearch {
+	height: 100px;
+	
+}
+
+.push-menu-top-search .searchInput{
+	height: 30px;
+	border-radius: 10px;
+	border: none;
+	background-color: white;
+	color: #AAA;
+	width: 500px;	
+}
+
+
+.rechercheBottomElements{
+	margin-top: 10px;
+}
+
+.rechercheBlock{
+	width: 650px;	
+	height: 100px;
+	margin: auto;
+}
+
+.rechercheBottomElements > span:nth-child(1){
+	float: left;
+}
+
+.lienRechercheAvancee{
+	float: right;
+} 
+
+.push-menu-top-search form #afficheResultatsSurCarte{
+	color: white;
+}
+
+
+.customNewsFeed{
+	float: right;
+}
+
+.customNewsFeed ,.customNewsFeed h2{
+	border: none;
+	color: orange;
+}

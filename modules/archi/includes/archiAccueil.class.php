@@ -479,23 +479,6 @@ class ArchiAccueil extends config
                 
             }
 
-            /*
-            $categories=array('news','lastAdded','interest'); //Liste des catégories à afficher
-            
-            foreach ($categories as $category){ //Category is the array containing the whole category content
-	            $categoryContent = $this->getIndexitem($category);
-				foreach ($categoryContent as $singleContent){ //$singleContent contains a news, an address etc...
-					$t->assign_block_vars('item', $singleContent);
-				}
-            }*/
-			
-            
-            
-            
-            
-            
-            
-            
             
             
             $news = $this->getLatestNewsInfo(1);
@@ -585,6 +568,7 @@ class ArchiAccueil extends config
 
             
             //Gestion des derniers favoris
+            $t->assign_var('urlCustomNewsFeed',$this->creerUrl('', 'mesInterets', array()) );
             $latestFav = $this->getLatestFav(3);
             foreach ($latestFav as $fav){
             	$e = new archiEvenement();
@@ -648,13 +632,7 @@ class ArchiAccueil extends config
             			'description' => 'BLABLA'
             	);
             	$t->assign_block_vars('favoris', $favoris);
-	            //debug($fav);
             }
-            
-            
-            
-            
-            
             
             
             
