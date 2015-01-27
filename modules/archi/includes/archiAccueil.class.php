@@ -517,7 +517,8 @@ class ArchiAccueil extends config
             //Gestion pour les commentaires
             $latestComments = $this->getLatestComments(2);
             $t->assign_vars(array(
-            		'commentaireSectionTitle'=>'Commentaires récents'
+            		'commentaireSectionTitle'=>'Commentaires récents',
+            		'urlListCommentaire' => $this->creerUrl('','tousLesCommentaires')
             ));
 
             foreach ($latestComments as $com){
@@ -585,7 +586,6 @@ class ArchiAccueil extends config
             
             //Gestion des derniers favoris
             $latestFav = $this->getLatestFav(3);
-            debug(array('lastModif'=>$lastModifs[0],'lastFav'=>$latestFav[0]));
             foreach ($latestFav as $fav){
             	$e = new archiEvenement();
             	$adresseArray = $e->getArrayAdresse($fav['idEvenement']);
@@ -635,15 +635,12 @@ class ArchiAccueil extends config
             	}
             	
             	$favoris = array(
-            		//	'miniatureLabelLeft'=>$fav['typeEvenement'],
-            			//'miniatureLabelRight' => $fav['dateCreationEvenement'],
             			'adresse' => $adresse,
             			'urlMiniature' => $urlImage,
             			'urlEvenement' => $urlEvenement,
             			'description' => $description,
             			'titre' => $titre
             	);
-            	debug($favoris);
             	$favorits=array(
             			'urlEvenement' => 'BLOBLO',
             			'urlMiniature'=> 'BLUBLU',

@@ -8,4 +8,5 @@
 		<div class="commentBody">{commentaire.commentaire}</div> 
 	</div>
 <!-- END commentaire -->
+	<a class="linkListCommentaire" href="{urlListCommentaire}">Tous les commentaires</a>
 </div>
