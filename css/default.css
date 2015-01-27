@@ -7,7 +7,17 @@
 /*Modifié par Pierre Rudloff (http://rudloff.pro) en mai 2012 puis en octobre 2012*/
 
 /* Basic */
-
+.clearfix:before,
+.clearfix:after {
+  content:"";
+  display:table;
+}
+.clearfix:after {
+  clear:both;
+}
+.clearfix {
+  zoom:1; /* For IE 6/7 (trigger hasLayout) */
+}
 * { 
 	margin:0; 
 	padding:0; 
@@ -1437,6 +1447,26 @@ li:empty {
 	color: #111;
 }
 
+/*
+HR style
+*/
+hr.plain{
+	 border: 0; 
+	 height: 1px;
+}
+
+hr.edgeFade { 
+	border: 0; 
+	height: 1px; 
+    background-image: -webkit-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));       
+    background-image: -moz-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));       
+    background-image: -ms-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));       
+    background-image: -o-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));       
+    background-image: linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));      
+}
+
+
+
 .menu .home img {
 	vertical-align: bottom;
 }
@@ -1878,7 +1908,6 @@ Page d'accueil
 
 .favorisAccueil{
 	width: 900px;
-	background: green;
 }
 
 .commentairesAccueil{
@@ -1899,6 +1928,11 @@ Page d'accueil
 }
 .commentBody{
 	color:#2E3D40;
+}
+
+
+.newsContent{
+	margin-top: 10px;
 }
 .newsAccueil{
 	width: 700px;
@@ -1933,9 +1967,11 @@ Page d'accueil
 	vertical-align: top;
 }
 
-.textNews div:first-child a{
+.textNews div:first-child a , .favorisTextWrapper div:first-child a{
 	color: #273638;
 	font-size: 14px;
+}
+.textNews div:first-child a {
 	font-weight: bold;
 }
 
@@ -1999,4 +2035,27 @@ Page d'accueil
 
 .textLastModif{
 	width: 200px;
+}
+
+
+.favorisMiniatureWrapper{
+	//position: absolute;
+	width: 100px;
+	height: 100px;
+}
+
+.favorisTextWrapper{
+	
+}
+
+.favorisTextWrapper , .favorisMiniatureWrapper{
+	display: inline-block;
+}
+.listeFavoris{
+	
+}
+.favorisElement{
+	width: 33.33%;
+    width: calc(100% / 3);
+	display:inline-block;
 }

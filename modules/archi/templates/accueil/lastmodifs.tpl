@@ -1,4 +1,6 @@
 <div class="lastModifsAccueil">
+<h2>Dernières modifications</h2>
+<hr class="plain"/>
 <!-- BEGIN lastModif -->
 <div class="lastModifElement">
 	<div class="miniatureWrapper">

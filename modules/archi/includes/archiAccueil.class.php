@@ -509,21 +509,13 @@ class ArchiAccueil extends config
             
             $news['titreCategory'] = 'Actualité de l\'association';
             $news['urlNewsList'] = $this->creerUrl('', 'toutesLesActualites', array());
-            debug($news);
             $t->assign_block_vars('newsAccueil', $news);
   			
-            /*
+
             
-            $t->assign_vars(array(
-            		'lastModifContent'=>'LAST MODIFS',
-            		'newsContent' => 'COUCOU LES NEWS',
-            		'commentaireContent' => 'TEST COMMENTAIRES',
-            		'favorisContent' => 'FAVORIS CONTENT CAPS LOCK'
-            		
-            ));
-            */
+            
+            //Gestion pour les commentaires
             $latestComments = $this->getLatestComments(2);
-            
             $t->assign_vars(array(
             		'commentaireSectionTitle'=>'Commentaires récents'
             ));
@@ -544,9 +536,8 @@ class ArchiAccueil extends config
             }
             
 
-            
+            //Gestion des dernieres modifs
             $lastModifs = $this->getLatestModification(8);
-            
             foreach ($lastModifs as $modif){
             	$e = new archiEvenement();
             	$adresseArray = $e->getArrayAdresse($modif['idEvenement']);
@@ -592,8 +583,76 @@ class ArchiAccueil extends config
             }
 
             
-            
-            
+            //Gestion des derniers favoris
+            $latestFav = $this->getLatestFav(3);
+            debug(array('lastModif'=>$lastModifs[0],'lastFav'=>$latestFav[0]));
+            foreach ($latestFav as $fav){
+            	$e = new archiEvenement();
+            	$adresseArray = $e->getArrayAdresse($fav['idEvenement']);
+            	 
+            	//Adresse
+            	$adresse = '';
+            	if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
+            		$adresse.=$adresseArray['numero'];
+            	}
+            	if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
+            		$adresse.=' '.$adresseArray['prefixe'];
+            	}
+            	if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
+            		$adresse.=' '.$adresseArray['nomRue'];
+            	}
+            	
+            	//Image
+            	$i=new archiImage();
+            	$infoImage = $i->getImagePrincipale($fav['idEvenement']);
+            	//$urlImage = $this->getUrlRacine().$infoImage['dateUpload'].'-'.$infoImage['idHistoriqueImage'].'-moyen.jpg';
+            	$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
+            	 
+            	//Url Evenement
+            	$idAdresse = $e->getIdAdresse($fav['idEvenement']);
+            	$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($fav['idEvenement']);
+            	$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
+            	
+            	//Description
+            	$so = new StringObject();
+            	$description = $so->sansBalises($fav['description']);
+            	$description = stripslashes($description);
+            	$description = mb_substr($description, 1,130);
+            	
+            	//Titre
+            	$requeteTitre = "
+            			SELECT evt.titre
+            			FROM evenements evt
+            			WHERE evt.idEvenement = ".$fav['idEvenementRecuperationTitre']."
+            			";
+            	$resTitre = $this->connexionBdd->requete($requeteTitre);
+            	$titreArray = mysql_fetch_array($resTitre);
+            	if($titreArray['titre'] == ''){
+            		$titre = $adresse;
+            	}
+            	else{
+            		$titre = $titreArray['titre'];
+            	}
+            	
+            	$favoris = array(
+            		//	'miniatureLabelLeft'=>$fav['typeEvenement'],
+            			//'miniatureLabelRight' => $fav['dateCreationEvenement'],
+            			'adresse' => $adresse,
+            			'urlMiniature' => $urlImage,
+            			'urlEvenement' => $urlEvenement,
+            			'description' => $description,
+            			'titre' => $titre
+            	);
+            	debug($favoris);
+            	$favorits=array(
+            			'urlEvenement' => 'BLOBLO',
+            			'urlMiniature'=> 'BLUBLU',
+            			'titre' => 'blibli',
+            			'description' => 'BLABLA'
+            	);
+            	$t->assign_block_vars('favoris', $favoris);
+	            //debug($fav);
+            }
             
             
             
@@ -2126,8 +2185,6 @@ class ArchiAccueil extends config
     		$url = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail',"archiIdAdresse"=>$idAdresse,"archiIdEvenementGroupeAdresse"=>$idEvenementGroup));
     		$urlPersonne = $this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$latestComment['idUtilisateur'],'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroup));
     		
-    		debug($latestComment);
-    		
     		$latestComment['urlAdresse'] = $url;
     		$latestComment['urlPersonne'] = $urlPersonne;
     		$latestComment['adresse']=$adresse;
@@ -2181,7 +2238,110 @@ class ArchiAccueil extends config
     }
     
     public function getLatestFav($nbElts){
-    	
+    	/*
+    	 * Initialisation des variables :
+    	* Tableau avec les champs pour remplir la requete
+    	*/
+    	$requestField = array(
+    			array(
+    					'table'=>'_interetRue',
+    					'id'=> 'idRue'
+    			),
+    			array(
+    					'table'=>'_interetSousQuartier',
+    					'id'=> 'idSousQuartier'
+    			),
+    			array(
+    					'table'=>'_interetVille',
+    					'id'=> 'idVille'
+    			),
+    			array(
+    					'table'=>'_interetAdresse',
+    					'id'=> 'idHistoriqueAdresse'
+    			),
+    			array(
+    					'table'=>'_interetPays',
+    					'id'=> 'idPays'
+    			),
+    			array(
+    					'table'=>'_interetQuartier',
+    					'id'=> 'idQuartier'
+    			)
+    	);
+    	$auth = new ArchiAuthentification();
+    	$userId=$auth->getIdUtilisateur();
+    	 
+    	/*
+    	 * Boucle pour faire les sous requetes
+    	*/
+    	 
+    	$subRequest = array();
+    	$request ="";
+    	$i=0;
+    	foreach ($requestField as $fields){
+    		$request.="
+    						(
+							SELECT 
+    						
+    						evt.idEvenement AS idEvenement,
+    						evt.idEvenementRecuperationTitre, 
+		    				evt.idImagePrincipale AS idHistoriqueImage, 
+    						ee.idEvenement AS idEvenementGroupeAdresse, 
+		    				ae.idAdresse AS idAdresse,
+		    				ha.nom , 
+    				   		date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
+		    				i.created as created,
+    						evt.description,
+							evt.titre AS titre 
+    				   				
+    				
+							FROM evenements evt
+							INNER JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
+							INNER JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+							INNER JOIN historiqueAdresse ha ON ha.idAdresse = ae.idAdresse
+							INNER JOIN ".$fields['table']." i ON i.".$fields['id']." = ha.".$fields['id']."
+							WHERE i.idUtilisateur =".$userId."
+							GROUP BY idEvenement DESC
+							ORDER BY i.created
+							LIMIT $nbElts
+							)
+    						";
+    		if($i++<count($requestField)-1){
+    			$request.=" UNION ";
+    		}
+    		else{
+    			/*$request.=" ORDER BY created
+    			 LIMIT 5";
+    			*/
+    		}
+    	}
+    	/*
+    	 * Data processing
+    	*/
+    	 
+    	//Strange request wrapping to avoid redundancy, might not be accepted by MySQL
+    	$request = "SELECT * FROM
+    					(".$request.")
+    							AS tmp
+    							GROUP BY idEvenementGroupeAdresse
+    							ORDER BY created
+    							LIMIT $nbElts ";
+    	$result = $this->connexionBdd->requete($request);
+    	while($fetch = mysql_fetch_assoc($result)){
+    		$item['CSSClassWrapper'] = 'interest';
+    		$item['titreItem'] =$fetch['nom'];
+    		$item['imgUrl'] = $this->getUrlRacine().'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'];
+    		$item['urlItem'] = $this->creerUrl('', '',
+    				array(
+    						'archiAffichage'=>'adresseDetail',
+    						"archiIdAdresse"=>$fetch['idAdresse'],
+    						"archiIdEvenementGroupeAdresse"=>$fetch['idEvenementGroupeAdresse']
+    				));
+    		$item['textItem'] = $fetch['nom'];
+    		//$itemContent[] = $item;
+    		$itemContent[]=$fetch;
+    	}
+    	return $itemContent;
     }
     
 }

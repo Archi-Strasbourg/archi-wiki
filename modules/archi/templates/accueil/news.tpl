@@ -4,7 +4,7 @@
 		<h2>{newsAccueil.titreCategory}</h2>
 		<a href="{newsAccueil.urlNewsList}">>Toutes les actualités</a>
 	</div>
-	
+	<hr class="edgeFade"/>
 	<div class="newsContent">	
 	<a class="linkNews" href="{newsAccueil.urlNews}">
 		<div class="miniatureWrapper">

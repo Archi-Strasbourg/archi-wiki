@@ -5358,7 +5358,12 @@ class archiImage extends config
     	);
     }
     
-    
+    /**
+     * Get the main image for an event
+     * 
+     * @param unknown $idEvenement
+     * @return array of idHistoriqueImage and dateUpload 
+     */
     public function getImagePrincipale($idEvenement){
     	$a = new archiAdresse();
     	$imageInfo = $a->getFirstImageFromEvenement($idEvenement);
