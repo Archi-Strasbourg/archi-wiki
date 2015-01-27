@@ -2059,3 +2059,6 @@ Page d'accueil
     width: calc(100% / 3);
 	display:inline-block;
 }
+
+.linkListCommentaire{
+	text-decoration: underline;

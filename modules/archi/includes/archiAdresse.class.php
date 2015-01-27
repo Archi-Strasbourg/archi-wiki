@@ -9614,6 +9614,10 @@ class archiAdresse extends ArchiContenu
                 SELECT distinct idCommentaire
                 FROM commentaires c
                 WHERE CommentaireValide=1
+            	UNION
+            	SELECT distinct idCommentairesEvenement as idCommentaire
+            	FROM commentairesEvenement
+            	WHERE CommentaireValide=1
             ";
             
             $resCount = $this->connexionBdd->requete($reqCount);
@@ -9639,6 +9643,12 @@ class archiAdresse extends ArchiContenu
                 FROM commentaires c
 				LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
                 LEFT JOIN _adresseEvenement ae ON ae.idEvenement = c.idEvenementGroupeAdresse
+                WHERE c.CommentaireValide=1
+UNION
+SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.prenom,c.commentaire,c.idEvenement as idEvenementGroupeAdresse ,DATE_FORMAT(c.date,'%d/%m/%Y') as dateF, date
+                FROM commentairesEvenement c
+				LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
+                LEFT JOIN _adresseEvenement ae ON ae.idEvenement = c.idEvenement
                 WHERE c.CommentaireValide=1
                 ORDER BY date DESC
                 $sqlLimit
