@@ -65,17 +65,32 @@
 				</div>
 			</div>
 			<!-- END informations -->
-			<div class=" inline-block">
-				<button id="searchButton" class="left-buttons-header menu-button">
-					<div><span><img id="logoSearch" alt="" src="images/logo_loupe.png"></span><span id="crossSearch">&#x2715;</span></div>
-					<div class="label-menu-buttons-left">Recherche</div>
-				</button>
-			</div>
 			<div class="inline-block">
-				<button id="connexionButton" class="left-buttons-header menu-button">
-					<div><span id="logoConnexion"><img alt="" src="images/logo_connexion.png"></span><span id="crossConnexion">&#x2715;</span></div>
-					<div class="label-menu-buttons-left">Connexion</div>
-				</button>			
+				<div>
+					<ul class="languageSwitch">
+						<li><a href="?lang=fr_FR">FR</a>/</li>
+						<li><a href="?lang=en_US">EN</a>/</li>
+						<li><a href="?lang=de_DE">DE</a></li>
+					</ul>
+				</div>
+				<div>
+					<div class=" inline-block">
+						<button id="searchButton" class="left-buttons-header menu-button">
+							<div><span><img id="logoSearch" alt="" src="images/logo_loupe.png"></span><span id="crossSearch">&#x2715;</span></div>
+							<div class="label-menu-buttons-left">Recherche</div>
+						</button>
+					</div>
+					<div class="inline-block">
+						<button id="connexionButton" class="left-buttons-header menu-button">
+							<div><span id="logoConnexion"><img alt="" src="images/logo_connexion.png"></span><span id="crossConnexion">&#x2715;</span></div>
+							<div class="label-menu-buttons-left">Connexion</div>
+						</button>			
+					</div>
+				</div>
+				
+				
+				
+				
 			</div>
 		</div>
 		

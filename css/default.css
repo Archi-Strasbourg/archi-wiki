@@ -177,6 +177,22 @@ a:hover {
 	color: white;
 	vertical-align: top;
 }
+.languageSwitch li{
+	display: inline-block;
+	list-style: none;
+	color: #FE802C;
+}
+
+.languageSwitch li , .languageSwitch li a{
+	color: #FE802C;
+}
+
+.languageSwitch li a{
+	padding-left: 5px;
+	padding-right: 5px;
+	
+}
+
 .left-div-header{
 	float: right;
 }
