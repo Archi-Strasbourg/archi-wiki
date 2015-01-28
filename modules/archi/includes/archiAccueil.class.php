@@ -2319,5 +2319,73 @@ class ArchiAccueil extends config
     	return $itemContent;
     }
     
+    public function afficherOpendata(){
+    	$html = "";
+    	 
+    	$t = new Template('modules/archi/templates/');
+    	$t->set_filenames(array('opendata'=>'opendata/index.tpl'));
+    	 
+    	$filesArray = array(
+    			array(
+    					'name'=>'Adresses par architectes',
+    					'xml'=>'xml/adressesArchitecte.xml',
+    					'csv'=>'csv/adressesArchitecte.csv'
+   
+    			),
+    			array(
+    					'name'=>'Adresses par quartier',
+    					'xml'=>'xml/adressesQuartier.xml',
+    					'csv'=>'xml/adressesQuartier.csv'
+    			),
+    			array(
+    					'name'=>'Adresses par rues',
+    					'xml'=>'xml/adressesRues.xml',
+    					'csv'=>'xml/adressesRues.csv'
+    			),
+    			array(
+    					'name'=>'Quartiers par ville',
+    					'xml'=>'xml/quartiersVille.xml',
+    					'csv'=>'xml/quartiersVille.csv'
+    			),
+    			array(
+    					'name'=>'Rues par quartier',
+    					'xml'=>'xml/ruesQuartier.xml',
+    					'csv'=>'xml/ruesQuartier.csv'
+    			),
+    			array(
+    					'name'=>'Rues par sous quartier',
+    					'xml'=>'xml/ruesSousQuartier.xml',
+    					'csv'=>'xml/ruesSousQuartier.csv'
+    			),
+    			array(
+    					'name'=>'Rues par villes',
+    					'xml'=>'xml/ruesVilles.xml',
+    					'csv'=>'xml/ruesVilles.csv'
+    			),
+    			array(
+    					'name'=>'Photos par quartier',
+    					'xml'=>'xml/urlPhotosQuartier.xml',
+    					'csv'=>'xml/urlPhotosQuartier.csv'
+    			),
+    			array(
+    					'name'=>'Photos par rues',
+    					'xml'=>'xml/urlPhotosRue.xml',
+    					'csv'=>'xml/urlPhotosRue.csv'
+    			)
+    	);
+    	 
+    	 
+    	foreach ($filesArray as $file){
+    		$t->assign_block_vars('fichier', $file);
+    	}
+    	 
+    	ob_start();
+    	$t->pparse('opendata');
+    	$html .= ob_get_contents();
+    	ob_end_clean();
+    	 
+    	return $html;
+    }
+    
 }
 ?>

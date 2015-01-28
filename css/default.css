@@ -307,11 +307,13 @@ a.subscribeLabel{
 }
 .classicConnexion{
 	width: 650px;
-	display: inline-block;
+	//display: inline-block;
+	float:left;
 }
 .fastConnect{
 	width: 100px;
-	display: inline-block	
+	float: left;	
+	//display: inline-block
 }
 
 /* Menu */
@@ -1119,7 +1121,7 @@ img {
 	background-color: #FC802C;
 	border-radius: 10px;
 	border: none;
-	width: 30px;
+	width: 40px;
 	height: 30px;
 }
 
@@ -2092,10 +2094,15 @@ Page d'accueil
 .push-menu-top-search .switchSearch , .push-menu-top-search form{
 	float:left;
 	margin-right: 10px;
+	color: #BCBFBE;
 }
 
 .push-menu-top-search .switchSearch {
 	height: 100px;
+	color: #BCBFBE;
+}
+.push-menu-top-search .switchSearch a,.push-menu-top-search .switchSearch a:hover {
+		color: #BCBFBE;
 	
 }
 
@@ -2111,6 +2118,7 @@ Page d'accueil
 
 .rechercheBottomElements{
 	margin-top: 10px;
+	color: white;
 }
 
 .rechercheBlock{
@@ -2125,7 +2133,12 @@ Page d'accueil
 
 .lienRechercheAvancee{
 	float: right;
-} 
+}
+
+.lienRechercheAvancee , .lienRechercheAvancee:hover{
+	color: #FC802C;	
+}
+
 
 .push-menu-top-search form #afficheResultatsSurCarte{
 	color: white;

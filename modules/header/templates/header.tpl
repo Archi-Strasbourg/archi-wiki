@@ -170,8 +170,9 @@
 	                <a href="http://www.data.gouv.fr/Licence-Ouverte-Open-Licence" title="<?_("Le texte de ce site est disponible selon les termes de la Licence ouverte.")?>"><img src="images/Advisa/openlicence.png" alt="Licence ouverte"/>
 	                </a>
                 </div>
-                
-                
+                <div>
+                <a href="{urlOpendata}">Accèder à l'Opendata</a>
+                </div>
                 
                 </div>
             </div>

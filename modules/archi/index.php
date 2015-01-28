@@ -1510,6 +1510,10 @@ if (isset($_GET['archiAffichage'])) {
 			}
 			echo $e->displaySingleEvent($idEvenement,array('displayMenu' => true));    		
     		break;
+       case 'lienOpendata':
+       		$s = new archiAccueil();
+       		echo $s->afficherOpendata();
+       		break;
         }
     }
 }

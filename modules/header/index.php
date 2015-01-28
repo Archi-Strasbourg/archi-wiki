@@ -200,7 +200,8 @@ $t->assign_vars(
         'jsHeader'=>$headerJS,
         "lang"=>LANG,
         "lang_short"=>substr(LANG, 0, 2),
-        "listPages"=>$htmlListPages
+        "listPages"=>$htmlListPages,
+        "urlOpendata" => $config->creerUrl('', 'lienOpendata')
     )
 ); // headerJS = variables contenant le javascript recupéré des fonctions du site que l'on collecte et que l'on place dans la balise header
 
