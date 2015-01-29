@@ -47,7 +47,7 @@ WHERE EXISTS (SELECT quartier.idVille
 ;
 
 
---Resetting idPays
+-- Resetting idPays
 UPDATE historiqueAdresse
 SET idPays = (SELECT ville.idPays
             FROM ville

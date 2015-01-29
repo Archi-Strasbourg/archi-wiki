@@ -20,9 +20,9 @@ CREATE TABLE _evenementSource AS
 
 ALTER TABLE `source` CHANGE `idTypeSource` `idTypeSource` INT( 10 ) UNSIGNED NOT NULL ;
 -- Add missing constraints
-ALTER TABLE source ADD CONSTRAINT source_ibfk_1 FOREIGN KEY(idTypeSource) REFERENCES typeSource(idTypeSource);
+--ALTER TABLE source ADD CONSTRAINT source_ibfk_1 FOREIGN KEY(idTypeSource) REFERENCES typeSource(idTypeSource);
 
-ALTER TABLE historiqueAdresse ADD CONSTRAINT historiqueAdresse_ibfk_5 FOREIGN KEY(idIndicatif) REFERENCES indicatif(idIndicatif);
+--ALTER TABLE historiqueAdresse ADD CONSTRAINT historiqueAdresse_ibfk_5 FOREIGN KEY(idIndicatif) REFERENCES indicatif(idIndicatif);
 
 
 

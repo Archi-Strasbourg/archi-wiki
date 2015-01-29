@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `commentairesEvenement` (
   `idUtilisateur` int(10) unsigned NOT NULL DEFAULT '0',
   `CommentaireValide` tinyint(4) NOT NULL DEFAULT '0',
   `uniqid` char(23) NOT NULL,
-  PRIMARY KEY (`idCommentaireEvenement`),
+  PRIMARY KEY (`idCommentairesEvenement`),
   INDEX `fk_commentairesEvenement_historiqueEvenement1_idx` (`idEvenement` ASC),
   INDEX `fk_commentairesEvenement_utilisateur1_idx` (`idUtilisateur` ASC)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6173 ;

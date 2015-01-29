@@ -31,3 +31,8 @@ ALTER TABLE `_evenementImage` DROP FOREIGN KEY `_evenementImage_ibfk_3` ;
 ALTER TABLE `_evenementImage` ADD CONSTRAINT `_evenementImage_ibfk_3` FOREIGN KEY ( `idEvenement` ) REFERENCES `archi_v2`.`evenements` (
 `idEvenement`
 ) ON DELETE CASCADE ON UPDATE CASCADE ;
+
+
+ALTER TABLE `commentairesEvenement`
+  ADD CONSTRAINT `commentairesEvenement_ibfk_1` FOREIGN KEY (`idUtilisateur`) REFERENCES `utilisateur` (`idUtilisateur`),
+  ADD CONSTRAINT `commentairesEvenement_ibfk_2` FOREIGN KEY (`idEvenement`) REFERENCES `evenements` (`idEvenement`);
