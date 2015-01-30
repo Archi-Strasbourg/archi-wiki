@@ -7067,6 +7067,18 @@ class archiEvenement extends config
 	 * @return idEvenement of the groupe evenement corresponding
 	 */
 	public function getIdGroupeEvenement($idEvenement){
+		
+
+		$requete = "
+		SELECT idEvenement
+		FROM _evenementEvenement
+		WHERE idEvenementAssocie = $idEvenement
+		ORDER BY idEvenement DESC
+		LIMIT 1
+		";
+		$result =  $this->connexionBdd->requete($requete);
+		$res = mysql_fetch_assoc($result);
+		
 		$requete = "
 				SELECT idEvenement 
 				FROM _evenementEvenement

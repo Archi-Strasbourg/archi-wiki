@@ -37,7 +37,7 @@
 
 <br>
 <TABLE class="partners">
-<caption><?_("Ils nous soutiennent et nous les remercions :")?></caption>
+<caption><?_("Nos principaux financeurs :")?></caption>
 <TR>
 <TD>
 <div class="inline-block">
