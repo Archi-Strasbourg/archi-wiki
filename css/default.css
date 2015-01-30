@@ -1843,7 +1843,7 @@ hr.edgeFade {
 	margin-left: 20px;
 }
 .logo_header a{
-	background: url('images/logo_archi_wiki.png')  no-repeat scroll left center transparent;
+	background: url('/images/logo_archi_wiki.png')  no-repeat scroll left center transparent;
 	display: block;
 	height: 100px;
 	top: 0px;

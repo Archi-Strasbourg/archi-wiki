@@ -162,6 +162,9 @@ RewriteRule actualites-archi-strasbourg-liste\.html index.php?archiAffichage=tou
 RewriteRule vues-photos-archi-strasbourg\.html index.php?archiAffichage=toutesLesVues [L,QSA]
 
 
+RewriteRule opendata-([a-zA-Z0-9]+)-([a-zA-Z0-9]+) modules/opendata/$1/$2.$1 [L,QSA]
+RewriteRule generate-opendata.php modules/opendata/fullexport.php
+
 
 # URL rewrite pour le nom de la ville en faux sous domaine
 
