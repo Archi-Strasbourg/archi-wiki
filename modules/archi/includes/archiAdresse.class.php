@@ -1869,8 +1869,8 @@ class archiAdresse extends ArchiContenu
 			{
 				// on recherche les evenements du groupe d'adresses
 				$listeEvenementsGroupeAdresse = implode("','",$arrayListeEvenementsGroupeAdresse);
-				debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
-				debug($arrayListeEvenementsGroupeAdresse);
+				//debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
+				//debug($arrayListeEvenementsGroupeAdresse);
 				$queryEvenementAssocies = "
 						SELECT idEvenementAssocie FROM _evenementEvenement WHERE idEvenement in ('".$listeEvenementsGroupeAdresse."')
 								";
@@ -1992,8 +1992,8 @@ class archiAdresse extends ArchiContenu
 			}
 			if(count($arrayListeEvenementsGroupeAdresse)>0)
 			{
-				debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
-				debug($arrayListeEvenementsGroupeAdresse);
+				//debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
+				//debug($arrayListeEvenementsGroupeAdresse);
 				
 				// on recherche les evenements du groupe d'adresses
 				$listeEvenementsGroupeAdresse = implode("','",$arrayListeEvenementsGroupeAdresse);
@@ -2131,8 +2131,8 @@ class archiAdresse extends ArchiContenu
 
 			if(count($arrayListeEvenementsGroupeAdresse)>0)
 			{
-				debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
-				debug($arrayListeEvenementsGroupeAdresse);
+				//debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
+				//debug($arrayListeEvenementsGroupeAdresse);
 				
 				// on recherche les evenements du groupe d'adresses
 				$listeEvenementsGroupeAdresse = implode("','",$arrayListeEvenementsGroupeAdresse);
@@ -2253,8 +2253,8 @@ class archiAdresse extends ArchiContenu
 
 			if(count($arrayListeEvenementsGroupeAdresse)>0)
 			{
-				debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
-				debug($arrayListeEvenementsGroupeAdresse);
+				//debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
+				//debug($arrayListeEvenementsGroupeAdresse);
 				
 				// on recherche les evenements du groupe d'adresses
 				$listeEvenementsGroupeAdresse = implode("','",$arrayListeEvenementsGroupeAdresse);
@@ -2519,8 +2519,8 @@ class archiAdresse extends ArchiContenu
 				$arrayCritereListeIdEvenementPersonne=array();
 				if(isset($this->variablesGet['selection']) && $this->variablesGet['selection']=='personne')
 				{
-					debug("Il y aura surement un probleme ici. Wait for it !");
-					debug($arrayListeEvenementsAssocies);
+					//debug("Il y aura surement un probleme ici. Wait for it !");
+					//debug($arrayListeEvenementsAssocies);
 					// voyons d'abord s'il y a des photos sur l'evenement concerné par l'architect , sinon ce n'est pas la peine d'ajouter ce critere a la recherche de la photo
 					$reqIsPhotoSurEvenement = "
 							SELECT idEvenementAssocie as idEvenementPhotoPersonne
@@ -5386,7 +5386,7 @@ class archiAdresse extends ArchiContenu
 
 		));
 
-		debug($modeAffichageList);
+		//debug($modeAffichageList);
 		 
 		switch($modeAffichageListe)
 		{
@@ -6191,7 +6191,7 @@ class archiAdresse extends ArchiContenu
 		}
 
 		
-		//debug($sqlWhere);
+		////debug($sqlWhere);
 
 
 		// ************************************************************************************************************************************************
@@ -6848,8 +6848,8 @@ class archiAdresse extends ArchiContenu
 												ORDER BY he1.dateDebut, he1.idEvenement
 												";//RIGHT JOIN _adresseEvenement ae ON ae.idAdresse = '".$fetch['idAdresse']."'
 
-								//debug($sql);
-								//debug($reqTitresEvenements);
+								////debug($sql);
+								////debug($reqTitresEvenements);
 
 								$resTitresEvenements = $this->connexionBdd->requete($reqTitresEvenements);
 
@@ -7308,7 +7308,7 @@ class archiAdresse extends ArchiContenu
 		$html=ob_get_contents();
 		ob_end_clean();
 
-		debug("end of the method afficherList");
+		//debug("end of the method afficherList");
 
 		return array('html'=>$html, 'nbAdresses'=>$nbAdresses, 'arrayLiens'=>$arrayRetour, 'arrayIdAdresses'=>$arrayIdAdressesRetour, 'arrayIdEvenementsGroupeAdresse'=>$arrayIdEvenementsGARetour, 'arrayRetourLiensVoirBatiments'=>$arrayRetourLiensVoirBatiments);
 	}
@@ -8398,7 +8398,7 @@ class archiAdresse extends ArchiContenu
         
         $reqEvenements=$reqEvenementsCustom;
                 
-        debug($reqEvenements);
+        //debug($reqEvenements);
         $resEvenements = $this->connexionBdd->requete($reqEvenements);
                 
         $tabAdressesEvenementsAffichees=array(); // tableau contenant les idAdresses qu'il ne faudra pas reafficher 
@@ -8737,7 +8737,7 @@ class archiAdresse extends ArchiContenu
         $reqAdresses=$reqAdressesOriginal;
         
         
-        debug($reqAdresses);
+        //debug($reqAdresses);
         $resAdresses = $this->connexionBdd->requete($reqAdresses);
         $image = new archiImage();
         $isImageAdresses=false;

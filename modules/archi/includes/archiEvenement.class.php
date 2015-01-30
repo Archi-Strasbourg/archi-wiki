@@ -288,7 +288,7 @@ class archiEvenement extends config
 				}
 				else
 				{
-					debug($this->variablesPost);
+					//debug($this->variablesPost);
 					//***************
 					//**  ENREGISTREMENT
 					//**
@@ -673,7 +673,7 @@ class archiEvenement extends config
 		// recuperation de l'idHistoriqueEvenement Courant pour le renvoyer en tant que idHistoriquePrecedent a la fin de la modification ( visualisation de l'administrateur de l'ancien evenement)
 		// *************************************************************************************************************************************
 
-		debug("Modification de la requete qui n a plus aucun sens a présent : On la bypass");
+		//debug("Modification de la requete qui n a plus aucun sens a présent : On la bypass");
 		$reqIdHistoriqueEvenementAvantModif = "
 				SELECT he1.idEvenement as idHistoriqueEvenementAvantModif
 				FROM evenements he2,evenements he1
@@ -1096,8 +1096,8 @@ class archiEvenement extends config
 	// *************************************************************************************************************************************
 	public function supprimer($idEvenement, $idHistoriqueEvenement='')
 	{
-		debug($idEvenement);
-		debug($idHistoriqueEvenement);
+		//debug($idEvenement);
+		//debug($idHistoriqueEvenement);
 		$html = '';
 		$idEvenementGroupeAdresse = 0;
 		if($idHistoriqueEvenement !='')
@@ -1116,7 +1116,7 @@ class archiEvenement extends config
 
 			// recup d'idAdresse pour l'affichage du detail de l'adresse a la fin de la suppression
 			$reqSuppHistorique = "DELETE FROM evenements WHERE idEvenement = '".idEvenement."'";
-			debug($reqSuppHistorique);
+			//debug($reqSuppHistorique);
 			$resSupprHistorique = $this->connexionBdd->requete($reqSuppHistorique);
 
 
@@ -1138,7 +1138,7 @@ class archiEvenement extends config
 			// verification que l'evenement est le seul ou pas lié au groupe d'adresse
 			$idEvenementGroupeAdresse = $this->getParent($idEvenement);
 
-			debug($idEvenementGroupeAdresse);
+			//debug($idEvenementGroupeAdresse);
 			// on verifie que l'evenement n'a qu'un seul parent
 			$reqVerifParent = "
 					SELECT idEvenement
@@ -1174,12 +1174,12 @@ class archiEvenement extends config
 						// quand il y aura des sous sous evenements , il faudra aussi les supprimer
 						// ...
 						$reqDeleteEvenement = "DELETE FROM evenements WHERE idEvenement = '".$idEvenement."'";
-						debug($reqDeleteEvenement);
+						//debug($reqDeleteEvenement);
 						$resDeleteEvenement = $this->connexionBdd->requete($reqDeleteEvenement );
 						
 						$reqDeleteEvenementGroupeEvenement = "DELETE FROM evenements WHERE idEvenement = ( SELECT idEvenement FROM _evenementEvenement WHERE idEvenementAssocie = '".$idEvenement."' )";
 						$reqDeleteEvenementEvenement = "DELETE FROM _evenementEvenement WHERE idEvenementAssocie = '".$idEvenement."'";
-						debug($reqDeleteEvenementEvenement);
+						//debug($reqDeleteEvenementEvenement);
 						$resDeleteEvenementEvenement = $this->connexionBdd->requete($reqDeleteEvenementEvenement);
 
 						// maj des position
@@ -1204,12 +1204,12 @@ class archiEvenement extends config
 						$this->deleteLiaisonsAdressesLieesSurEvenement($idEvenement);
 
 						$reqDeleteEvenementEvenement = "DELETE FROM _evenementEvenement WHERE idEvenementAssocie = '".$idEvenement."'";
-						debug($reqDeleteEvenementEvenement);
+						//debug($reqDeleteEvenementEvenement);
 						$resDeleteEvenementEvenement = $this->connexionBdd->requete($reqDeleteEvenementEvenement);
 						
 						//supression de l'evenement
 						$reqDeleteEvenement = "DELETE FROM evenements WHERE idEvenement = '".$idEvenement."'";
-						debug($reqDeleteEvenement);
+						//debug($reqDeleteEvenement);
 						$resDeleteEvenement = $this->connexionBdd->requete($reqDeleteEvenement );
 
 						$this->majPositionsEvenements(array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse,'refreshAfterDelete'=>true)); // dans ce cas la fonction va mettre a jour les positions des evenements pour que ceux ci se suivent, et supprimera la liaison vers l'evenement qui n'existe plus
@@ -1249,26 +1249,26 @@ class archiEvenement extends config
 
 				// s'il n'y a aucun evenement lié au groupe d'adresses , on peut supprimer le groupe d'adresse et les liaisons vers celui ci
 				$reqDeleteGroupeAdresseHistorique = "DELETE FROM evenements WHERE idEvenement = '".$idEvenementGroupeAdresse."'";
-				debug($reqDeleteGroupeAdresseHistorique);
+				//debug($reqDeleteGroupeAdresseHistorique);
 				$resDeleteGroupeAdresseHistorique = $this->connexionBdd->requete($reqDeleteGroupeAdresseHistorique);
 
 				$reqDeleteAdresseGroupeAdresse = "DELETE FROM _adresseEvenement WHERE idEvenement = '".$idEvenementGroupeAdresse."'";
-				debug($reqDeleteAdresseGroupeAdresse);
+				//debug($reqDeleteAdresseGroupeAdresse);
 				$resDeleteAdresseGroupeAdresse = $this->connexionBdd->requete($reqDeleteAdresseGroupeAdresse);
 
 				// on supprime aussi les liaisons vers le groupe d'adresse dans les adresses liés
 				$reqDeleteLiaisonsAdressesLiees = "DELETE FROM _evenementAdresseLiee WHERE idEvenementGroupeAdresse='".$idEvenementGroupeAdresse."'";
-				debug($reqDeleteLiaisonsAdressesLiees );
+				//debug($reqDeleteLiaisonsAdressesLiees );
 				$resDeleteAdresseGroupeAdresse = $this->connexionBdd->requete($reqDeleteLiaisonsAdressesLiees);
 
 				// supprimons aussi les liaisons vueSur et prisDepuis sur le groupe d'adresse
 				$reqDeleteVueSurPrisDepuis = "DELETE FROM _adresseImage WHERE idEvenementGroupeAdresse = '".$idEvenementGroupeAdresse."' AND (vueSur='1' OR prisDepuis='1')";
-				debug($reqDeleteVueSurPrisDepuis );
+				//debug($reqDeleteVueSurPrisDepuis );
 				$resDeleteVueSurPrisDepuis = $this->connexionBdd->requete($reqDeleteVueSurPrisDepuis);
 
 				// suppression des liaisons entre evenement et evenement groupe d'adresse
 				$reqDeleteEvenementGAEvenementAssocie = "DELETE FROM _evenementEvenement WHERE idEvenement='".$idEvenementGroupeAdresse."'";
-				debug($reqDeleteEvenementGAEvenementAssocie);
+				//debug($reqDeleteEvenementGAEvenementAssocie);
 				$resDeleteEvenementGAEvenementAssocie = $this->connexionBdd->requete($reqDeleteEvenementGAEvenementAssocie);
 			}
 		}
@@ -1374,7 +1374,7 @@ class archiEvenement extends config
 				// on affiche les idHistoriqueEvenement de l'evenement choisi
 				$isAffichageSingleEvenement=true;
 				$sqlWhere = 'hE.idEvenement='.$idEvenement;
-				debug('Hack here : modification idHistoriqueEvenement en idEvenement');
+				//debug('Hack here : modification idHistoriqueEvenement en idEvenement');
 				//$sqlWhere = 'hE.idEvenement='.$idHistoriqueEvenement;
 			}
 
@@ -1574,7 +1574,7 @@ class archiEvenement extends config
 						//$t->assign_vars(array("divDisplayMenuAction"=>"none"));
 
 						
-						debug($fetchAdressesExternes['idAdresse']);
+						//debug($fetchAdressesExternes['idAdresse']);
 						$ancrePositionAdresseLiee = "";
 
 						$positionSurAdresseOrigine = $adresse->getPositionFromEvenement($idEvenement);
@@ -2582,7 +2582,7 @@ class archiEvenement extends config
 		$retour=0;
 		if(isset($params['idEvenement']))
 		{
-			debug("A modifier vis  a vis de l'historique  (en principe la requete est ok");
+			//debug("A modifier vis  a vis de l'historique  (en principe la requete est ok");
 			$req = "SELECT count(idHistoriqueEvenement) as nb FROM historiqueEvenement WHERE idEvenement=".$params['idEvenement'];
 			$res = $this->connexionBdd->requete($req);
 			$fetch = mysql_fetch_assoc($res);
@@ -2665,7 +2665,7 @@ class archiEvenement extends config
 		{
 			$idEvenementGroupeAdresse = $this->variablesGet['archiIdEvenementGroupeAdresse'];
 			$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
-			debug("Modifier la requete et les param de la fonction : utiliser _adresseEvenement et l'idAdresse pour trouver touts les evenements liés");
+			//debug("Modifier la requete et les param de la fonction : utiliser _adresseEvenement et l'idAdresse pour trouver touts les evenements liés");
 			//Modifier la requete et les param de la fonction : utiliser _adresseEvenement et l'idAdresse pour trouver touts les evenements liés
 			$req = "update evenements set idEvenementRecuperationTitre=".$this->variablesGet['idEvenementTitreSelection']." WHERE idEvenement=$idEvenementGroupeAdresse";
 				
@@ -2682,7 +2682,7 @@ class archiEvenement extends config
 	// ******************************************************************************************
 	public function getIdEvenementTitre($params=array())
 	{
-		debug("getIdEvenementTitre : retourner l'idEvenementRecuperationTitre de l'evenement dans la table evenements");
+		//debug("getIdEvenementTitre : retourner l'idEvenementRecuperationTitre de l'evenement dans la table evenements");
 		//En pratique, ce n'est pas très intelligent, mais comme les données relatives à une adresses ont été stockées à la base dans les evenements ( ¯\_(ツ)_/¯)
 		
 		$retour = 0;
@@ -2935,7 +2935,7 @@ class archiEvenement extends config
 	// *********************************************************************
 	public function getTitreFromFirstChildEvenement($idEvenementGroupeAdresse=0)
 	{
-		debug("Big modification on the request, doesn't seem to be buggy");
+		//debug("Big modification on the request, doesn't seem to be buggy");
 		$query="
 				select he.titre as titre
 				from evenements he2, evenements he
@@ -3150,7 +3150,7 @@ class archiEvenement extends config
 						";
 
 
-		debug("Modification might be buggy on getParent");
+		//debug("Modification might be buggy on getParent");
 		$rep = $this->connexionBdd->requete($sql);
 
 		if (mysql_num_rows($rep) > 0) {
@@ -3498,7 +3498,7 @@ class archiEvenement extends config
 						
 						$adresse = new archiAdresse();
 						
-						debug($idParent);
+						//debug($idParent);
 						$t->assign_vars(array('recapitulatifAdresse'=>$adresse->afficherRecapitulatifAdresses($idParent)));
 						
 					}
@@ -4103,7 +4103,7 @@ class archiEvenement extends config
 						and he.idTypeEvenement = '".$this->getIdTypeEvenementGroupeAdresse()."'
 								group by he.idEvenement
 								";
-		debug($req);
+		//debug($req);
 		$res = $this->connexionBdd->requete($req);
 
 		if(mysql_num_rows($res)==1)
@@ -4766,7 +4766,7 @@ class archiEvenement extends config
 	// on va donc trouver la position du nouvel evenement et renvoyer les nouvelles positions de tous les evenements pour les mettres toutes a jour
 	public function majPositionsEvenements($params = array())
 	{
-		debug($params);
+		//debug($params);
 		$retour = true;
 		$tabTravail = array();
 
@@ -5010,13 +5010,13 @@ class archiEvenement extends config
 		$fieldsCommentaires=$this->getCommentairesFields();
 		$formulaire = new formGenerator();
 
-		debug($error);
+		//debug($error);
 		if($auth->estConnecte())
 		{
 			unset($fieldsCommentaires['captcha']);
 		}
 		$error = $formulaire->getArrayFromPost($fieldsCommentaires);
-		debug($error);
+		//debug($error);
 		if(count($error)==0)
 		{
 
@@ -6541,7 +6541,7 @@ class archiEvenement extends config
 	{
 	// recherche de l'idAdresse
 		
-		debug("Funky hack, les hypothetiques erreurs peuvent venir de la.");
+		//debug("Funky hack, les hypothetiques erreurs peuvent venir de la.");
 		return $idHistoriqueEvenement;
 		$req = "
 				
@@ -7021,8 +7021,8 @@ class archiEvenement extends config
 		global $countTest;
 		$countTest=0;
 		$evenement = $this->getEventInfos(152);
-		debug($countTest);
-		//debug($evenement);
+		//debug($countTest);
+		////debug($evenement);
 		
 	}
 	
