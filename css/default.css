@@ -2006,6 +2006,13 @@ Page d'accueil
 	vertical-align: top;
 }
 
+.textNews div{
+	line-height: 16px;
+	height: 16px;
+	overflow: hidden;
+	
+}
+
 .textNews div:first-child a , .favorisTextWrapper div:first-child a{
 	color: #273638;
 	font-size: 14px;

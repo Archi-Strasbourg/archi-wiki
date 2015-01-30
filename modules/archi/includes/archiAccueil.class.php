@@ -2124,14 +2124,14 @@ class ArchiAccueil extends config
     	$result = $this->connexionBdd->requete($requete);
     	$fetch = mysql_fetch_assoc($result);
     	//$url = $this->getUrlRacine().'images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
-    	$url = 'http://www.archi-strasbourg.org/images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
+    	$url = ''.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
     	$urlNews = 'http://archi-strasbourg.org/actualites-archi-strasbourg-'.$fetch['idActualite'].'.html';
     	$description = strip_tags($fetch['texte']);
     	$news=array(
     			'urlMiniature'=>$url,
     			'titre' => $fetch['titre'],
     			'date' => $fetch['date'],
-    			'description' => mb_substr($description, 1,100,'UTF-8'),
+    			'description' => $description,
     			'urlNews' => $urlNews
     	);
    		return $news;
@@ -2160,9 +2160,9 @@ class ArchiAccueil extends config
     	$result = $this->connexionBdd->requete($requete);
     	$arrayComment = array();
     	while($latestComment = mysql_fetch_assoc($result)){
-    		$idEvernement = $latestComment['idEvenement'];
+    		$idEvenement = $latestComment['idEvenement'];
     		$e = new archiEvenement();
-    		$adresseArray = $e->getArrayAdresse($idEvernement);
+    		$adresseArray = $e->getArrayAdresse($idEvenement);
     		$adresse = '';
     		if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
     			$adresse.=$adresseArray['numero'];
