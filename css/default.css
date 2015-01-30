@@ -219,6 +219,7 @@ a:hover {
 
 
 .stats{
+	margin-right: 20px;
 /* 	height: 100px; */
 /* 	line-height:100px; */
 }
@@ -1847,7 +1848,9 @@ hr.edgeFade {
 .menu-button-div , .toggle-push-left{
 	background: none repeat scroll 0% 0% #FC802C;
 }
-
+#menu-button{
+	width: 120px;
+}
 .logo_header{
 	position: absolute;
 	line-height: 195px;
