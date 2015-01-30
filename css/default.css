@@ -23,7 +23,15 @@
 	padding:0; 
 }
 body {
-	background-color: #8FA3A4;
+	background-position: center center;
+	background-repeat: no-repeat; 
+	background-attachment: fixed; 
+	background-size: cover; 
+	-moz-background-size: 100% 100%;     /* Gecko 1.9.2 (Firefox 3.6) */
+	-o-background-size: 100% 100%;        /* Opera 9.5 */
+	-webkit-background-size: 100% 100%;   /* Safari 3.0 */
+	background-size: 100% 100%;           /* Gecko 2.0 (Firefox 4.0) > CSS3 */ 
+	background-image: url("../images/Advisa/fond.jpg");
 }
 
 h1 {
@@ -112,15 +120,6 @@ a:hover {
 .outer {
 	width: 100%;
 	margin: 0 auto 0 auto;
-	background-position: center center;
-	background-repeat: no-repeat; 
-	background-attachment: fixed; 
-	background-size: cover; 
-	-moz-background-size: 100% 100%;     /* Gecko 1.9.2 (Firefox 3.6) */
-	-o-background-size: 100% 100%;        /* Opera 9.5 */
-	-webkit-background-size: 100% 100%;   /* Safari 3.0 */
-	background-size: 100% 100%;           /* Gecko 2.0 (Firefox 4.0) > CSS3 */ 
-	background-image: url("../images/Advisa/fond.jpg");
 	position: relative;
     z-index: 10;
     top: 0;
@@ -134,7 +133,7 @@ a:hover {
 
 /* Header */
 #header {
-	height: 100px;
+	height: 120px;
 	width: 1200px;
 	margin: auto;
 	background-color: rgba(46, 56, 60 , 0.6);
@@ -172,12 +171,19 @@ a:hover {
 	color: #343434;
 }
 #header .menu-button-div{
-	width: 100px;
-	height: 100px;
+	//width: 120px;
+	//height: 120px;
 	text-align: center;
 	color: white;
 	vertical-align: top;
+	float: left;
 }
+
+.languageSwitch{
+	position: relative;
+	top: 10px;
+}
+
 .languageSwitch li{
 	display: inline-block;
 	list-style: none;
@@ -217,9 +223,9 @@ a:hover {
 /* 	line-height:100px; */
 }
 .stats-wrap{
-	display: table;
+	//display: table;
 	height: 100px;
-	width: 150px;	
+	//width: 150px;	
 }
 .stats-wrap p{
 	display: table-cell;
@@ -1844,13 +1850,13 @@ hr.edgeFade {
 
 .logo_header{
 	position: absolute;
-	line-height: 175px;
+	line-height: 195px;
 	margin-left: 20px;
 }
 .logo_header a{
 	background: url('/images/logo_archi_wiki.png')  no-repeat scroll left center transparent;
 	display: block;
-	height: 100px;
+	height: 120px;
 	top: 0px;
 	text-indent: 280px;
 	color: white;
