@@ -314,7 +314,11 @@ a.subscribeLabel{
 .fastConnect{
 	width: 100px;
 	float: left;	
-	//display: inline-block
+	margin-left: 20px;
+	margin-top: 20px;
+}
+.fastConnect > div:first-child{
+	width: 125px;
 }
 
 /* Menu */
@@ -1848,7 +1852,7 @@ hr.edgeFade {
 	display: block;
 	height: 100px;
 	top: 0px;
-	text-indent: 300px;
+	text-indent: 280px;
 	color: white;
 }
 
