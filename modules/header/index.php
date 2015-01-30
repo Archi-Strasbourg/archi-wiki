@@ -206,8 +206,6 @@ $t->assign_vars(
 ); // headerJS = variables contenant le javascript recupéré des fonctions du site que l'on collecte et que l'on place dans la balise header
 
 
-// encart des derniers commentaires
-$t->assign_vars(array('derniersCommentaires'=>$adresse->getDerniersCommentaires()));
 
 if ($authentification->estConnecte() !== true) {
     // utilisateur pas connecté

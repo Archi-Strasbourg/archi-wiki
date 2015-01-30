@@ -567,72 +567,91 @@ class ArchiAccueil extends config
             }
 
             
-            //Gestion des derniers favoris
-            $t->assign_var('urlCustomNewsFeed',$this->creerUrl('', 'mesInterets', array()) );
-            $latestFav = $this->getLatestFav(3);
-            foreach ($latestFav as $fav){
-            	$e = new archiEvenement();
-            	$adresseArray = $e->getArrayAdresse($fav['idEvenement']);
-            	 
-            	//Adresse
-            	$adresse = '';
-            	if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
-            		$adresse.=$adresseArray['numero'];
-            	}
-            	if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-            		$adresse.=' '.$adresseArray['prefixe'];
-            	}
-            	if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
-            		$adresse.=' '.$adresseArray['nomRue'];
-            	}
+            
+            
+            
+            
+            
+            if ($auth->estConnecte()) {
             	
-            	//Image
-            	$i=new archiImage();
-            	$infoImage = $i->getImagePrincipale($fav['idEvenement']);
-            	//$urlImage = $this->getUrlRacine().$infoImage['dateUpload'].'-'.$infoImage['idHistoriqueImage'].'-moyen.jpg';
-            	$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
-            	 
-            	//Url Evenement
-            	$idAdresse = $e->getIdAdresse($fav['idEvenement']);
-            	$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($fav['idEvenement']);
-            	$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
-            	
-            	//Description
-            	$so = new StringObject();
-            	$description = $so->sansBalises($fav['description']);
-            	$description = stripslashes($description);
-            	$description = mb_substr($description, 1,130);
-            	
-            	//Titre
-            	$requeteTitre = "
-            			SELECT evt.titre
-            			FROM evenements evt
-            			WHERE evt.idEvenement = ".$fav['idEvenementRecuperationTitre']."
-            			";
-            	$resTitre = $this->connexionBdd->requete($requeteTitre);
-            	$titreArray = mysql_fetch_array($resTitre);
-            	if($titreArray['titre'] == ''){
-            		$titre = $adresse;
-            	}
-            	else{
-            		$titre = $titreArray['titre'];
-            	}
-            	
-            	$favoris = array(
-            			'adresse' => $adresse,
-            			'urlMiniature' => $urlImage,
-            			'urlEvenement' => $urlEvenement,
-            			'description' => $description,
-            			'titre' => $titre
-            	);
-            	$favorits=array(
-            			'urlEvenement' => 'BLOBLO',
-            			'urlMiniature'=> 'BLUBLU',
-            			'titre' => 'blibli',
-            			'description' => 'BLABLA'
-            	);
-            	$t->assign_block_vars('favoris', $favoris);
+	            	$favoris = array(
+	            			'content' => "Vous n'êtes pas connecté !"
+	            	);
+	            	$t->assign_block_vars('message', $favoris);
             }
+            else{
+	            
+	            
+	            
+	            //Gestion des derniers favoris
+	            $latestFav = $this->getLatestFav(3);
+	            if(empty($latestFav)){
+	            	$favoris = array(
+	            			'content' => "Aucun batiment en favori !"
+	            	);
+	            	$t->assign_block_vars('message', $favoris);
+	            }
+	            foreach ($latestFav as $fav){
+	            	$e = new archiEvenement();
+	            	$adresseArray = $e->getArrayAdresse($fav['idEvenement']);
+	            	 
+	            	//Adresse
+	            	$adresse = '';
+	            	if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
+	            		$adresse.=$adresseArray['numero'];
+	            	}
+	            	if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
+	            		$adresse.=' '.$adresseArray['prefixe'];
+	            	}
+	            	if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
+	            		$adresse.=' '.$adresseArray['nomRue'];
+	            	}
+	            	
+	            	//Image
+	            	$i=new archiImage();
+	            	$infoImage = $i->getImagePrincipale($fav['idEvenement']);
+	            	//$urlImage = $this->getUrlRacine().$infoImage['dateUpload'].'-'.$infoImage['idHistoriqueImage'].'-moyen.jpg';
+	            	$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
+	            	 
+	            	//Url Evenement
+	            	$idAdresse = $e->getIdAdresse($fav['idEvenement']);
+	            	$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($fav['idEvenement']);
+	            	$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
+	            	
+	            	//Description
+	            	$so = new StringObject();
+	            	$description = $so->sansBalises($fav['description']);
+	            	$description = stripslashes($description);
+	            	$description = mb_substr($description, 1,130);
+	            	
+	            	//Titre
+	            	$requeteTitre = "
+	            			SELECT evt.titre
+	            			FROM evenements evt
+	            			WHERE evt.idEvenement = ".$fav['idEvenementRecuperationTitre']."
+	            			";
+	            	$resTitre = $this->connexionBdd->requete($requeteTitre);
+	            	$titreArray = mysql_fetch_array($resTitre);
+	            	if($titreArray['titre'] == ''){
+	            		$titre = $adresse;
+	            	}
+	            	else{
+	            		$titre = $titreArray['titre'];
+	            	}
+	            	
+	            	$favoris = array(
+	            			'adresse' => $adresse,
+	            			'urlMiniature' => $urlImage,
+	            			'urlEvenement' => $urlEvenement,
+	            			'description' => $description,
+	            			'titre' => $titre
+	            	);
+	            	$t->assign_block_vars('favoris', $favoris);
+	            }
+            }
+            
+            
+            
             
             
             
