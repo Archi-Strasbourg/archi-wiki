@@ -2256,11 +2256,6 @@ class ArchiAccueil extends config
     		$arrayComment[] = $latestComment;
     	}
     	
-    	
-    	
-    	
-    	
-    	debug($arrayComment);
     	return $arrayComment;
     }
     
