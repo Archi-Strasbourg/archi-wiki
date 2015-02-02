@@ -584,6 +584,7 @@ class ArchiAccueil extends config
 	            
 	            
 	            //Gestion des derniers favoris
+            	$t->assign_var('urlCustomNewsFeed',$this->creerUrl('', 'mesInterets', array()) );
 	            $latestFav = $this->getLatestFav(3);
 	            if(empty($latestFav)){
 	            	$favoris = array(
@@ -2137,9 +2138,24 @@ class ArchiAccueil extends config
    		return $news;
     }
     public function getLatestComments($nbComment){
-    	$requete ="
+    	
+    	
+    	
+    	
+    	
+    	/*
+    	 *    			
+    	 */
+    	
+    	
+    	
+    	
+    	
+    	$requete= "
+    	SELECT * FROM
+    					(
     			SELECT 
-    			date_format(c.date,"._('"%e/%m/%Y"').") as date,
+    			c.date as date,
     			c.idUtilisateur,
     			c.idEvenement, 
     			c.commentaire, 
@@ -2147,7 +2163,8 @@ class ArchiAccueil extends config
     			c.prenom,
     			ha.numero,
     			r.prefixe,
-    			r.nom as nomRue
+    			r.nom as nomRue,
+				'commentairesEvenement' as typeCommentaire
     			
     			FROM commentairesEvenement c
     			LEFT JOIN utilisateur u on u.idUtilisateur = c.idUtilisateur
@@ -2155,13 +2172,68 @@ class ArchiAccueil extends config
     			LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
     			LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
     			LEFT JOIN rue r on r.idRue = ha.idRue
-    			LIMIT $nbComment
-    			";
+                ORDER BY date desc
+                           ) as tmp1
+				
+				UNION all
+				
+				SELECT * FROM (
+    			SELECT 
+    			c.date as date,
+    			c.idUtilisateur,
+    			c.idEvenementGroupeAdresse, 
+    			c.commentaire, 
+    			c.nom, 
+    			c.prenom,
+    			ha.numero,
+    			r.prefixe,
+    			r.nom as nomRue,
+				'commentaires' as typeCommentaire
+
+    			
+    			FROM commentaires c
+    			LEFT JOIN utilisateur u on u.idUtilisateur = c.idUtilisateur
+    			LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie= c.idEvenementGroupeAdresse
+    			LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
+    			LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
+    			LEFT JOIN rue r on r.idRue = ha.idRue 
+          		ORDER BY date desc                
+    			)
+    							AS tmp2
+    							LIMIT $nbComment	
+    	";
+    	
+    	
     	$result = $this->connexionBdd->requete($requete);
     	$arrayComment = array();
+    	$e = new archiEvenement();
+    	 
     	while($latestComment = mysql_fetch_assoc($result)){
-    		$idEvenement = $latestComment['idEvenement'];
-    		$e = new archiEvenement();
+    		
+    		$idEvenement = "";
+    		$idEvenementGroup = "";
+    		$idAdresse="";
+    		
+    		if(strcmp($latestComment['typeCommentaire'] , 'commentaireEvenement')){
+    			$idEvenement = $latestComment['idEvenement'];
+    			$idEvenementGroup = $e->getIdGroupeEvenement($latestComment['idEvenement']);
+    			$idAdresse = $e->getIdAdresse($latestComment['idEvenement']);
+    		}
+    		else{
+    			$idEvenementGroup = $latestComment['idEvenement'];
+    			$reqIdEvt = "
+    					SELECT idEvenementAssocie as idEvenement
+    					FROM _evenementEvenement
+    					WHERE idEvenement = $idEvenementGroup
+    					";
+    			$resIdEvt = $this->connexionBdd->requete($reqIdEvt);
+    			$tmp = mysql_fetch_array($resIdEvt);
+    			$idEvenement = $tmp['idEvenement'];
+    			$idAdresse = $e->getIdAdresse($idEvenement);
+    		}
+    		
+    		
+    		
     		$adresseArray = $e->getArrayAdresse($idEvenement);
     		$adresse = '';
     		if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
@@ -2174,16 +2246,21 @@ class ArchiAccueil extends config
     			$adresse.=' '.$adresseArray['nomRue'];
     		}
 
-    		$idEvenementGroup = $e->getIdGroupeEvenement($latestComment['idEvenement']);
-    		$idAdresse = $e->getIdAdresse($latestComment['idEvenement']);
     		$url = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail',"archiIdAdresse"=>$idAdresse,"archiIdEvenementGroupeAdresse"=>$idEvenementGroup));
     		$urlPersonne = $this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$latestComment['idUtilisateur'],'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroup));
     		
+    		$latestComment['typeCommentaire'] = 'commentaireEvenement';
     		$latestComment['urlAdresse'] = $url;
     		$latestComment['urlPersonne'] = $urlPersonne;
     		$latestComment['adresse']=$adresse;
     		$arrayComment[] = $latestComment;
     	}
+    	
+    	
+    	
+    	
+    	
+    	debug($arrayComment);
     	return $arrayComment;
     }
     
