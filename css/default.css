@@ -435,7 +435,7 @@ nav.push-menu-left li {
     display: block;
     border-bottom: solid 1px black;
     border-top: solid 1px black;
-    padding-left: 15px;
+    padding-left: 10px;
 }
 nav.push-menu-left li:hover{
 	background-color: #4E5F66;
@@ -2208,6 +2208,7 @@ Page d'accueil
 	border: none;
 	color: orange;
 }
+/*
 .opendataLink{
 	background-image: url("images/lock_opendata.png");
 	background-repeat: no-repeat;
