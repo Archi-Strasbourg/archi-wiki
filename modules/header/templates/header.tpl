@@ -55,7 +55,7 @@
 		<div class="logo_header">
 			<a href="./">
 			<img alt="Archi-Wiki" src="images/logo_archi_wiki.png">
-			<div class=" inline-block">
+			<div class="text-lien-header inline-block">
 				<div>Tous architectes !</div>
 				<div>Partageons la ville, ses batiments, ses lieux</div>		
 			</div>

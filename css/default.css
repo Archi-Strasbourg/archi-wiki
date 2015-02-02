@@ -1885,6 +1885,16 @@ hr.edgeFade {
 	width: 600px;
 }
 
+.text-lien-header{
+	margin-left: 10px;
+	font-size: 14px;
+	text-decoration: none;
+	color: white;
+}
+
+.text-lien-header > div:first-child{
+	font-size: 18px;
+}
 /*
 .logo_header{
 	position: absolute;
