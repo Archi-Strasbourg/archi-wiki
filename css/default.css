@@ -435,7 +435,7 @@ nav.push-menu-left li {
     display: block;
     border-bottom: solid 1px black;
     border-top: solid 1px black;
-    padding-left: 10px;
+    padding-left: 15px;
 }
 nav.push-menu-left li:hover{
 	background-color: #4E5F66;
@@ -462,6 +462,7 @@ nav.push-menu-left {
 }
 body.pml-open nav.push-menu-left {
 	display: block;
+	width: 220px;
 	width: 200px;
 	position: absolute;
 	top: 120px;
@@ -1895,21 +1896,7 @@ hr.edgeFade {
 .text-lien-header > div:first-child{
 	font-size: 18px;
 }
-/*
-.logo_header{
-	position: absolute;
-	line-height: 195px;
-	margin-left: 20px;
-}
-.logo_header a{
-	//background: url('images/logo_archi_wiki.png')  no-repeat scroll left center transparent;
-	display: block;
-	height: 120px;
-	top: 0px;
-	text-indent: 280px;
-	color: white;
-}
-*/
+
 
 /*
 	PUB
@@ -2220,4 +2207,9 @@ Page d'accueil
 .customNewsFeed ,.customNewsFeed h2{
 	border: none;
 	color: orange;
+}
+.opendataLink{
+	background-image: url("images/lock_opendata.png");
+	background-repeat: no-repeat;
+    background-position: center left; 
 }

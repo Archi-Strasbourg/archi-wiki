@@ -62,35 +62,40 @@
 			</a>
 		</div>
 		<div class="left-div-header">
-			<!-- BEGIN informations -->
-			<div class="stats inline-block">
-				<div class="stats-wrap">
-					<p>Évènements : {informations.evenement}<br/>
-					Adresses : {informations.adresse}<br/>
-					Photos : {informations.photo}</p>
-				</div>
+			
+			<div>
+				<ul class="languageSwitch">
+					<li><a href="?lang=fr_FR">FR</a>/</li>
+					<li><a href="?lang=en_US">EN</a>/</li>
+					<li><a href="?lang=de_DE">DE</a></li>
+				</ul>
 			</div>
-			<!-- END informations -->
-			<div class="inline-block">
-				<div>
-					<ul class="languageSwitch">
-						<li><a href="?lang=fr_FR">FR</a>/</li>
-						<li><a href="?lang=en_US">EN</a>/</li>
-						<li><a href="?lang=de_DE">DE</a></li>
-					</ul>
-				</div>
-				<div>
-					<div class=" inline-block">
-						<button id="searchButton" class="left-buttons-header menu-button">
-							<div><span><img id="logoSearch" alt="" src="images/logo_loupe.png"></span><span id="crossSearch">&#x2715;</span></div>
-							<div class="label-menu-buttons-left">Recherche</div>
-						</button>
+			
+			<div>
+				<!-- BEGIN informations -->
+				<div class="stats inline-block">
+					<div class="stats-wrap">
+						<p>Évènements : {informations.evenement}<br/>
+						Adresses : {informations.adresse}<br/>
+						Photos : {informations.photo}</p>
 					</div>
-					<div class="inline-block">
-						<button id="connexionButton" class="left-buttons-header menu-button">
-							<div><span id="logoConnexion"><img alt="" src="images/logo_connexion.png"></span><span id="crossConnexion">&#x2715;</span></div>
-							<div class="label-menu-buttons-left">Connexion</div>
-						</button>			
+				</div>
+				<!-- END informations -->
+				<div class="inline-block">
+					
+					<div>
+						<div class=" inline-block">
+							<button id="searchButton" class="left-buttons-header menu-button">
+								<div><span><img id="logoSearch" alt="" src="images/logo_loupe.png"></span><span id="crossSearch">&#x2715;</span></div>
+								<div class="label-menu-buttons-left">Recherche</div>
+							</button>
+						</div>
+						<div class="inline-block">
+							<button id="connexionButton" class="left-buttons-header menu-button">
+								<div><span id="logoConnexion"><img alt="" src="images/logo_connexion.png"></span><span id="crossConnexion">&#x2715;</span></div>
+								<div class="label-menu-buttons-left">Connexion</div>
+							</button>			
+						</div>
 					</div>
 				</div>
 			</div>
@@ -132,6 +137,7 @@
 				<!-- BEGIN isParcours -->
 				<li><a href="{parcours}">Parcours</a></li>
 				<!-- END isParcours -->
+				<li class="opendataLink"><a href="{urlOpendata}">Accèder à l'Opendata</a>
 				<li><a href="{ajoutNouveauDossier}">Ajouter une adresse</a></li>
 				<li><a href="{ajoutNouvellePersonne}">Ajouter une personne</a></li>
 				<li><a href="{nosSources}">Nos sources</a></li>
@@ -177,7 +183,7 @@
 	                </a>
                 </div>
                 <div>
-                <a href="{urlOpendata}">Accèder à l'Opendata</a>
+                <a href="{urlOpendata}"><img alt="" src="images/opendata.png"></a>
                 </div>
                 
                 </div>
