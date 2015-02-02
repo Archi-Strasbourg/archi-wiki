@@ -200,9 +200,7 @@ a:hover {
 	
 }
 
-.left-div-header{
-	float: right;
-}
+
 
 .left-buttons-header{
 	vertical-align: bottom;
@@ -1851,20 +1849,57 @@ hr.edgeFade {
 #menu-button{
 	width: 120px;
 }
+.logo-header span{
+	display: block;
+	float: left;
+}
+
+.menu-button-div,.logo_header{
+		height: 120px;
+}
+
+.left-div-header{
+	float: right;
+}
+.menu-button-div,.logo_header{
+	float: left;
+}
+
+.logo_header > a{
+	height: 100px;
+	margin-left: 20px;
+	margin-top: 20px; 
+}
+.logo_header , .logo_header > a{
+	width: 600px;
+}
+
+.logo_header{
+	position:relative;
+	height: 120px;
+	
+}
+.logo_header > a{
+	position: absolute;
+	vertical-align:middle;
+	width: 600px;
+}
+
+/*
 .logo_header{
 	position: absolute;
 	line-height: 195px;
 	margin-left: 20px;
 }
 .logo_header a{
-	background: url('/images/logo_archi_wiki.png')  no-repeat scroll left center transparent;
+	//background: url('images/logo_archi_wiki.png')  no-repeat scroll left center transparent;
 	display: block;
 	height: 120px;
 	top: 0px;
 	text-indent: 280px;
 	color: white;
 }
-
+*/
 
 /*
 	PUB

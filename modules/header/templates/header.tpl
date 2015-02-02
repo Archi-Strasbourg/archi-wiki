@@ -52,9 +52,15 @@
 		<div class="menu-button-div inline-block">
 			<button id="menu-button" class="toggle-push-left menu-button"><div><span id="logoMenu" class="visible">&#9776;</span><span id="crossMenu" class="hidden">&#x2715;</span></div><div>Menu</div></button>
 		</div>
-		<div class="logo_header inline-block">
-		<a href="./">Tous architectes ! Partageons la ville, ses batiments, ses lieux</a>
-				</div>
+		<div class="logo_header">
+			<a href="./">
+			<img alt="Archi-Wiki" src="images/logo_archi_wiki.png">
+			<div class=" inline-block">
+				<div>Tous architectes !</div>
+				<div>Partageons la ville, ses batiments, ses lieux</div>		
+			</div>
+			</a>
+		</div>
 		<div class="left-div-header">
 			<!-- BEGIN informations -->
 			<div class="stats inline-block">
