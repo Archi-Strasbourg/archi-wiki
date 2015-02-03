@@ -660,7 +660,7 @@ body .primaryContent{
 /* menu de gauche */
 .secondaryContent {
 	float: left;
-	margin-right: 20px;
+	margin-right: 15px;
 	/*padding: 2.5em 2.5em 1.5em 2.5em;*/
 	/*max-width: 130px;*/
 }

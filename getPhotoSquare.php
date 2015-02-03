@@ -12,7 +12,7 @@
  * 
  * */
 
-
+ini_set( 'memory_limit', '32M' );
 
 
 
@@ -59,7 +59,7 @@ function resizeJpeg($url, $thumb_width, $thumb_height)
 	$new_width, $new_height,
 	$width, $height);
 
-	//header('Content-Type: image/jpeg');
+	header('Content-Type: image/jpeg');
 	return $thumb;
 	// Also tried 'return imagejpeg($thumb);' and simply 'imagejpeg($thumb);'
 }
@@ -115,6 +115,7 @@ if(isset($_GET['width'])){
 else{
 	$new_width = 130;
 }
+
 
 $remote_file=$path;
 list($width, $height) = getimagesize($remote_file);
