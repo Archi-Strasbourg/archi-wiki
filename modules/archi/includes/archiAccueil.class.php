@@ -554,7 +554,7 @@ class ArchiAccueil extends config
             	$so = new StringObject();
             	$description = $so->sansBalises($modif['description']);
             	$description = stripslashes($description);
-            	$description = mb_substr($description, 1,130);;
+            	$description = mb_substr($description, 0,130);;
             	
             	$t->assign_block_vars('lastModif', array(
             			'miniatureLabelLeft'=>$modif['typeEvenement'],
@@ -567,16 +567,8 @@ class ArchiAccueil extends config
             }
 
             
-            
-            
-            
-            
-            
             if ($auth->estConnecte()) {
-            	
-	            	$favoris = array(
-	            			'content' => "Vous n'êtes pas connecté !"
-	            	);
+	            	$favoris = array('content' => "Vous n'êtes pas connecté !");
 	            	$t->assign_block_vars('message', $favoris);
             }
             else{
@@ -650,9 +642,6 @@ class ArchiAccueil extends config
 	            	$t->assign_block_vars('favoris', $favoris);
 	            }
             }
-            
-            
-            
             
             
             
@@ -2089,7 +2078,7 @@ class ArchiAccueil extends config
     			while($fetch = mysql_fetch_assoc($result)){
     				$item['CSSClassWrapper'] = 'interest';
     				$item['titreItem'] =$fetch['nom'];
-    				$item['imgUrl'] = $this->getUrlRacine().'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'];
+    				$item['imgUrl'] = 'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'];
     				$item['urlItem'] = $this->creerUrl('', '',
     						array(
     								'archiAffichage'=>'adresseDetail',
@@ -2124,9 +2113,9 @@ class ArchiAccueil extends config
     	
     	$result = $this->connexionBdd->requete($requete);
     	$fetch = mysql_fetch_assoc($result);
-    	//$url = $this->getUrlRacine().'images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
-    	$url = ''.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
-    	$urlNews = 'http://archi-strasbourg.org/actualites-archi-strasbourg-'.$fetch['idActualite'].'.html';
+    	$url = 'http://archi-strasbourg.org/images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
+    	//$url = 'http://archi-strasbourg.org/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
+    	$urlNews = 'actualites-archi-strasbourg-'.$fetch['idActualite'].'.html';
     	$description = strip_tags($fetch['texte']);
     	$news=array(
     			'urlMiniature'=>$url,
@@ -2396,7 +2385,9 @@ class ArchiAccueil extends config
     	while($fetch = mysql_fetch_assoc($result)){
     		$item['CSSClassWrapper'] = 'interest';
     		$item['titreItem'] =$fetch['nom'];
-    		$item['imgUrl'] = $this->getUrlRacine().'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'];
+    		$item['imgUrl'] = $this->getUrlImage().'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'];
+    		debug(array('urlimage'=>$this->getUrlImage(),'Racine'=>$this->getUrlRacine(),'nomserveur'=>$this->getNomServeur()));
+    		
     		$item['urlItem'] = $this->creerUrl('', '',
     				array(
     						'archiAffichage'=>'adresseDetail',
