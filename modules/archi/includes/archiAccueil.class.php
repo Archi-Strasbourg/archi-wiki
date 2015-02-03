@@ -567,7 +567,7 @@ class ArchiAccueil extends config
             }
 
             
-            if ($auth->estConnecte()) {
+            if (!$auth->estConnecte()) {
 	            	$favoris = array('content' => "Vous n'êtes pas connecté !");
 	            	$t->assign_block_vars('message', $favoris);
             }
@@ -2316,7 +2316,6 @@ class ArchiAccueil extends config
     	);
     	$auth = new ArchiAuthentification();
     	$userId=$auth->getIdUtilisateur();
-    	 
     	/*
     	 * Boucle pour faire les sous requetes
     	*/
@@ -2385,7 +2384,6 @@ class ArchiAccueil extends config
     						"archiIdEvenementGroupeAdresse"=>$fetch['idEvenementGroupeAdresse']
     				));
     		$item['textItem'] = $fetch['nom'];
-    		//$itemContent[] = $item;
     		$itemContent[]=$fetch;
     	}
     	return $itemContent;
