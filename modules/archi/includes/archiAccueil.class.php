@@ -2130,14 +2130,7 @@ class ArchiAccueil extends config
     	
     	
     	
-    	
-    	
-    	/*
-    	 *    			
-    	 */
-    	
-    	
-    	
+       	
     	
     	
     	$requete= "
@@ -2386,7 +2379,6 @@ class ArchiAccueil extends config
     		$item['CSSClassWrapper'] = 'interest';
     		$item['titreItem'] =$fetch['nom'];
     		$item['imgUrl'] = $this->getUrlImage().'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'];
-    		debug(array('urlimage'=>$this->getUrlImage(),'Racine'=>$this->getUrlRacine(),'nomserveur'=>$this->getNomServeur()));
     		
     		$item['urlItem'] = $this->creerUrl('', '',
     				array(
