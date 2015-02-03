@@ -131,8 +131,8 @@
     <div id="content" class="content">
     	<nav  class="menu-new push-menu-left inline-block">
 			<ul>
-				<li><a href="">Accueil</a></li>
-				<li><a href="index.php?archiAffichage=page&idPage=7">Présentation du site</a></li>
+				<li><a href="index.php">Accueil</a></li>
+				<li><a href="index.php?archiAffichage=page&idPage=6">Présentation du site</a></li>
 				<li><a href="index.php?archiAffichage=page&idPage=7">Revue de presse</a></li>
 				<li><a href="{quiSommesNous}">Qui sommes-nous ?</a></li>
 				<li><a href="{listeDossiers}">Adresses</a></li>
