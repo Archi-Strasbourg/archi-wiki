@@ -18,7 +18,6 @@ ini_set( 'memory_limit', '32M' );
 
 function resizeJpeg($url, $thumb_width, $thumb_height)
 {
-	echo "URL: " . $url . "<br />";
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -117,6 +116,14 @@ else{
 }
 
 
+$image_p = resizeJpeg($path, $new_width, $new_height);
+header('Content-Type: image/jpeg');
+imagejpeg($image_p, NULL, 100);
+imagedestroy($image_p);
+
+
+/*
+
 $remote_file=$path;
 list($width, $height) = getimagesize($remote_file);
 $image_p = imagecreatetruecolor($new_width, $new_height);
@@ -125,5 +132,5 @@ imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width
 header('Content-Type: image/jpeg');
 imagejpeg($image_p, NULL, 100);
 imagedestroy($image_p);
-
+*/
 ?>
