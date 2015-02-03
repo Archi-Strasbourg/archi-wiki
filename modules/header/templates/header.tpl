@@ -75,9 +75,11 @@
 				<!-- BEGIN informations -->
 				<div class="stats inline-block">
 					<div class="stats-wrap">
+					<a href="statistiques-adresses-photos-architectes-strasbourg.html">
 						<p>Évènements : {informations.evenement}<br/>
 						Adresses : {informations.adresse}<br/>
 						Photos : {informations.photo}</p>
+						</a>
 					</div>
 				</div>
 				<!-- END informations -->
@@ -162,7 +164,7 @@
                 </div>
 
                 <div class="emplacementPub pubSecondaryContent">
-                	<img alt="" src="images/pub/pub_mobile.jpg">
+                	<a href="http://m.archi-strasbourg.org"><img alt="" src="images/pub/pub_mobile.jpg"></a>
                 </div>
                 
                 <div class="fb-like-box reseauSocial" data-href="https://www.facebook.com/pages/Association-Archi-Strasbourg/215793091822502" data-width="250" data-stream="false" data-header="true"></div>
@@ -195,7 +197,7 @@
             	
             	</div>
             	<div class="emplacementPub pubPrimaryTwo inline-block">
-					<img alt="" src="images/pub/bandeau_open_data_bleu.jpg">
+					 <a href="{urlOpendata}"><img alt="" src="images/pub/bandeau_open_data_bleu.jpg"></a>
             	
             	</div>
             	

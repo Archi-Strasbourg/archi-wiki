@@ -528,11 +528,11 @@ class ArchiAccueil extends config
             	
             	//Adresse
             	$adresse = '';
-            	if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
-            		$adresse.=$adresseArray['numero'];
+            	if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero'] !='0'){
+            		$adresse.=$adresseArray['numero'].' ';
             	}
             	if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-            		$adresse.=' '.$adresseArray['prefixe'];
+            		$adresse.=$adresseArray['prefixe'];
             	}
             	if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
             		$adresse.=' '.$adresseArray['nomRue'];
@@ -559,7 +559,7 @@ class ArchiAccueil extends config
             	$t->assign_block_vars('lastModif', array(
             			'miniatureLabelLeft'=>$modif['typeEvenement'],
             			'miniatureLabelRight' => $modif['dateCreationEvenement'],
-            			'adresse' => $adresse,
+            			'adresse' => ucfirst($adresse),
             			'urlMiniature' => $urlImage,
             			'urlEvenement' => $urlEvenement,
             			'description' => $description
@@ -590,11 +590,11 @@ class ArchiAccueil extends config
 	            	 
 	            	//Adresse
 	            	$adresse = '';
-	            	if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
-	            		$adresse.=$adresseArray['numero'];
+	            	if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''&& $adresseArray['numero'] !='0'){
+	            		$adresse.=$adresseArray['numero'].' ';
 	            	}
 	            	if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-	            		$adresse.=' '.$adresseArray['prefixe'];
+	            		$adresse.=$adresseArray['prefixe'];
 	            	}
 	            	if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
 	            		$adresse.=' '.$adresseArray['nomRue'];
@@ -615,7 +615,7 @@ class ArchiAccueil extends config
 	            	$so = new StringObject();
 	            	$description = $so->sansBalises($fav['description']);
 	            	$description = stripslashes($description);
-	            	$description = mb_substr($description, 1,130);
+	            	$description = mb_substr($description, 0,130);
 	            	
 	            	//Titre
 	            	$requeteTitre = "
@@ -2128,11 +2128,6 @@ class ArchiAccueil extends config
     }
     public function getLatestComments($nbComment){
     	
-    	
-    	
-       	
-    	
-    	
     	$requete= "
     	SELECT * FROM
     					(
@@ -2259,7 +2254,10 @@ class ArchiAccueil extends config
 				LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
 				WHERE ee.idEvenementAssocie IS NOT NULL
 				AND ae.idAdresse IS NOT NULL
-				GROUP BY ae.idAdresse
+				".
+				//GROUP BY ae.idAdresse
+				"
+				ORDER BY evt.idEvenement DESC 
     			LIMIT $nbElts 
     			";
     	$result = $this->connexionBdd->requete($requete);

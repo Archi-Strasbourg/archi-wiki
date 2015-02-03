@@ -226,7 +226,7 @@ a:hover {
 	height: 100px;
 	//width: 150px;	
 }
-.stats-wrap p{
+.stats-wrap a{
 	display: table-cell;
 	vertical-align: middle; 	
 	color: white;
@@ -2030,21 +2030,31 @@ Page d'accueil
 	display: inline-block;
 }
 
-.newsAccueil , .commentairesAccueil,.textNews,.linkNews{
+.newsAccueil , .commentairesAccueil{
 	display: inline-block;
 }
 
 .linkNews{
 	vertical-align: top;
+		width: 200px;
 }
-
-.textNews div{
-	line-height: 16px;
+.linkNews , .textNews{
+	float:left;
+}
+.textNews{
+	margin-left: 10px;
+	width: 490px;
+}
+.descriptionNews{
+	height: 64px;	
+}
+.textNews > div:first-child,.textNews > div:last-child{
 	height: 16px;
-	overflow: hidden;
-	
 }
-
+.textNews > div{
+	line-height: 16px;
+	overflow: hidden;
+}
 .textNews div:first-child a , .favorisTextWrapper div:first-child a{
 	color: #273638;
 	font-size: 14px;
@@ -2067,6 +2077,11 @@ Page d'accueil
 	width: 200px;
 	height: 200px;
 }
+
+.miniatureWrapper img{
+	border: none;	
+}
+
 .miniature{
 	position: absolute;
 	top: 0;
@@ -2123,7 +2138,8 @@ Page d'accueil
 }
 
 .favorisTextWrapper{
-	width: 200px;
+	width: 190px;
+	margin-left:10px;
 }
 
 .favorisTextWrapper , .favorisMiniatureWrapper{
@@ -2139,6 +2155,8 @@ Page d'accueil
 	width: 300px;
 	display:block;
 	float: left;
+		margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 .linkListCommentaire{

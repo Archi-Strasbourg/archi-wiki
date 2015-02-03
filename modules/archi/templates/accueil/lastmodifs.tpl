@@ -4,7 +4,7 @@
 <!-- BEGIN lastModif -->
 <div class="lastModifElement">
 	<div class="miniatureWrapper">
-		<a href="">
+		<a href="{lastModif.urlEvenement}">
 		<img alt="" src="{lastModif.urlMiniature}">
 		<span class="miniatureLabel">
 			<span class="miniatureLabelLeft">
