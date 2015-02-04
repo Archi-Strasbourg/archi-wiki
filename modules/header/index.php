@@ -272,21 +272,37 @@ else {
         )
     );
     $t->assign_block_vars('linkConnected', array(
+    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
+    		'authLinkUrl'=> $config->creerUrl('', 'utilisateurListe'),
+    		'authLinkLabel' => _('Utilisateurs')
+    ));
+    $t->assign_block_vars('linkConnected', array(
+    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
+    		'authLinkUrl'=> $config->creerUrl('', 'afficheLogsMails'),
+    		'authLinkLabel' => _('Logs Mails')
+    ));
+    $t->assign_block_vars('linkConnected', array(
+    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
+    		'authLinkUrl'=> $config->creerUrl('', 'administration'),
+    		'authLinkLabel' => _('Administration')
+    ));
+    $t->assign_block_vars('linkConnected', array(
     		'authLinkOneClass'=> ' authLinkOneClass forgetPasswordLabel',
     		'authLinkUrl'=> $config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'profil')),
-    		'authLinkLabel' => 'Mon profil'
+    		'authLinkLabel' => _('Mon profil')
     ));
     $t->assign_block_vars('linkConnected', array(
     		'authLinkOneClass'=> ' authLinkOneClass forgetPasswordLabel',
     		'authLinkUrl'=> $config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'monArchi')),
-    		'authLinkLabel' => 'Mon Archi'
+    		'authLinkLabel' => _('Mon Archi')
     ));
     
     $t->assign_block_vars('linkConnected', array(
     		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
     		'authLinkUrl'=> $config->creerUrl('deconnexion', 'authentification'),
-    		'authLinkLabel' => 'Déconnexion'
+    		'authLinkLabel' => _('Déconnexion')
     ));
+
     
     if ($utilisateur->isAuthorized('affiche_menu_admin', $authentification->getIdUtilisateur())) {
         $t->assign_block_vars('afficheAdministrationMenu', array());
