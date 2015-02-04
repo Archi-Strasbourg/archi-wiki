@@ -403,7 +403,7 @@ class ArchiAuthentification extends config
      * */
     public function afficheFormulaireAuthentification($modeAffichage = 'noCompact', $params = array())
     {
-        $t                                         = new Template('modules/archi/templates/');
+        $t = new Template('modules/archi/templates/');
         $t->set_filenames((array('authentification'=>'authentification.tpl')));
         $authentification                          = new archiAuthentification();
         $t->assign_block_vars($modeAffichage, array());

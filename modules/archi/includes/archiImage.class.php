@@ -5272,9 +5272,8 @@ class archiImage extends config
     		$resultInfoImage = $this->connexionBdd->requete($requeteInfoImage);
     		$valuesImage = mysql_fetch_assoc($resultInfoImage);
     		
-    		
-    		$hrefImage = $this->creerUrl('',  'imageDetail',  array('archiIdImage' => $idImage,  'archiRetourAffichage'=>'evenement',  'archiRetourIdName'=>'idEvenement',  'archiRetourIdValue'=>$idEvenement))."'";
-    		
+    		$idEvenementGroupeAdresse = $this->variablesGet['archiIdEvenementGroupeAdresse'];
+    		$hrefImage = $this->creerUrl('',  'imageDetail',  array('archiIdImage' => $idImage,  'archiRetourAffichage'=>'evenement',  'archiRetourIdName'=>'idEvenement',  'archiRetourIdValue'=>$idEvenementGroupeAdresse))."'";
     		//OnClickImage
     		
     		//divePAramIdGroupeAdresseAffiche 

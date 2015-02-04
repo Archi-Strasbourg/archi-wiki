@@ -3495,12 +3495,8 @@ class archiEvenement extends config
 						$infos=$person->getInfosPersonne($idPerson);
 						$t->assign_vars(array('recapitulatifAdresse'=>"<h2 class='h1'><a href='".$this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$idPerson))."'>".$infos["prenom"]." ".$infos["nom"]."</a></h2>"));
 					} else {
-						
 						$adresse = new archiAdresse();
-						
-						//debug($idParent);
 						$t->assign_vars(array('recapitulatifAdresse'=>$adresse->afficherRecapitulatifAdresses($idParent)));
-						
 					}
 					$t->assign_block_vars('afficheAjoutEvenement',array());
 					//$t->assign_block_vars('isNotAffichageGroupeAdresse',array());
@@ -5170,64 +5166,52 @@ class archiEvenement extends config
 
 		
 		
-		if(mysql_num_rows($res)>0)
-		{	
-		
-		
-		$t->assign_vars(array(
-				'tableHtmlCode'=>"  ",
-				'titre'=>_("Liste des commentaires concernant l'événement")
-		));
-
+		if(mysql_num_rows($res)>0){	
+			
+			$t->assign_vars(array(
+					'tableHtmlCode'=>"  ",
+					'titre'=>_("Liste des commentaires concernant l'événement")
+			));
 	
-
-		$authentification = new archiAuthentification();
-
-
-
-		// si l'utilisateur est administrateur, on affiche le bouton de suppression d'un commentaire
-		$isAdmin=false;
-		if($authentification->estConnecte() && $authentification->estAdmin())
-		{
-			$isAdmin=true;
-		}
-
-
-		while($fetch = mysql_fetch_assoc($res))
-		{
-			$adresseMail = "";
-			$boutonSupprimer="";
-			$urlSiteWeb = "";
-			/*
-			if($fetch['urlSiteWeb']!='')
+			$authentification = new archiAuthentification();
+	
+	
+			// si l'utilisateur est administrateur, on affiche le bouton de suppression d'un commentaire
+			$isAdmin=false;
+			if($authentification->estConnecte() && $authentification->estAdmin())
 			{
-				$urlSiteWeb = "<br><a itemprop='url' href='".$fetch['urlSiteWeb']."' target='_blank'><span style='font-size:9px;color:#FFFFFF;'>".$fetch['urlSiteWeb']."</span></a>";
+				$isAdmin=true;
 			}
-*/
-			if($isAdmin)
+	
+			while($fetch = mysql_fetch_assoc($res))
 			{
-				$archiIdAdresse='';
-				if(isset($this->variablesGet['archiIdAdresse']))
+				$adresseMail = "";
+				$boutonSupprimer="";
+				$urlSiteWeb = "";
+				if($isAdmin)
 				{
-					$archiIdAdresse = $this->variablesGet['archiIdAdresse'];
+					$archiIdAdresse='';
+					if(isset($this->variablesGet['archiIdAdresse']))
+					{
+						$archiIdAdresse = $this->variablesGet['archiIdAdresse'];
+					}
+					$boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaireEvenement','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse))."';\">";
+					$adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
 				}
-				$boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaireEvenement','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse))."';\">";
-				$adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
+				$t->assign_block_vars('commentaires',array(
+						'infosPersonne'=>"".$fetch['dateF'].' : <span itemprop="name">'.$fetch['nom'].' '.$fetch['prenom']."</span>",
+						'adresseMail'=>$adresseMail,
+						'commentaire'=>"<img itemprop='image' src='".$u->getImageAvatar(array('idUtilisateur'=>$fetch['idUtilisateur']))."' border=0 align=left style='padding-right:5px;padding-bottom:5px;'>".$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))),
+						'boutonSupprimer'=>$boutonSupprimer,
+						'siteWeb'=>$urlSiteWeb)
+				);
 			}
-			$t->assign_block_vars('commentaires',array(
-					'infosPersonne'=>"".$fetch['dateF'].' : <span itemprop="name">'.$fetch['nom'].' '.$fetch['prenom']."</span>",
-					'adresseMail'=>$adresseMail,
-					'commentaire'=>"<img itemprop='image' src='".$u->getImageAvatar(array('idUtilisateur'=>$fetch['idUtilisateur']))."' border=0 align=left style='padding-right:5px;padding-bottom:5px;'>".$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))),
-					'boutonSupprimer'=>$boutonSupprimer,
-					'siteWeb'=>$urlSiteWeb)
-			);
-		}
-		ob_start();
-		$t->pparse('listeCommentaires');
-		$html .= ob_get_contents();
-		ob_end_clean();
-
-		return $html;
+			ob_start();
+			$t->pparse('listeCommentaires');
+			$html .= ob_get_contents();
+			ob_end_clean();
+	
+			return $html;
 		}
 
 	}
