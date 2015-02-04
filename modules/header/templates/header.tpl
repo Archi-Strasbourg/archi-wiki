@@ -94,8 +94,8 @@
 						</div>
 						<div class="inline-block">
 							<button id="connexionButton" class="left-buttons-header menu-button">
-								<div><span id="logoConnexion"><img alt="" src="images/logo_connexion.png"></span><span id="crossConnexion">&#x2715;</span></div>
-								<div class="label-menu-buttons-left">Connexion</div>
+								<div><span id="logoConnexion"><img alt="" src="{imageConnexion}"></span><span id="crossConnexion">&#x2715;</span></div>
+								<div class="label-menu-buttons-left">{labelConnexion}</div>
 							</button>			
 						</div>
 					</div>

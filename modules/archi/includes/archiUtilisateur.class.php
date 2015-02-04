@@ -451,7 +451,7 @@ class archiUtilisateur extends config {
         
         $t=new Template('modules/archi/templates/');
         $t->set_filenames((array('ev'=>$modeAffichage.'.tpl')));
-        
+        debug($modeAffichage);
         
         
         if (empty($idUtilisateur) OR !is_numeric($idUtilisateur) OR $idUtilisateur < 1) 

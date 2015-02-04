@@ -179,6 +179,12 @@ a:hover {
 	float: left;
 }
 
+
+#logoConnexion img{
+	height: 29px;
+	width: 29px;
+}
+
 .languageSwitch{
 	position: relative;
 	top: 10px;

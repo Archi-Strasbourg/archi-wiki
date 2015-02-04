@@ -207,6 +207,7 @@ $t->assign_vars(
 
 
 
+$labelConnexion = _('Connexion');
 if ($authentification->estConnecte() !== true) {
     // utilisateur pas connecté
     $t->assign_block_vars('utilisateurNonConnecte', array());
@@ -244,6 +245,15 @@ else {
     }
     // utilisateur connecté
     $classFastConnect="hidden";
+    $userId = $authentification->getIdUtilisateur();
+    $imgConnexion = $utilisateur->getImageAvatar($userId);
+	$reqTitre ="SELECT prenom, nom FROM utilisateur WHERE idUtilisateur = $userId";
+	$res = $config->connexionBdd->requete($reqTitre);
+	$arrayUser = mysql_fetch_assoc($res);
+	
+	
+    
+    $labelConnexion = $arrayUser['prenom']. " ".$arrayUser['nom'];
     $t->assign_block_vars('utilisateurConnecte', array());
     $t->assign_vars(
         array(
@@ -281,6 +291,13 @@ else {
     }
     
 }
+
+
+
+$t->assign_vars(array(
+		"labelConnexion" =>$labelConnexion,
+		'imageConnexion' =>$imgConnexion
+));
 
 
 if ($adresse->isParcoursActif()) {
