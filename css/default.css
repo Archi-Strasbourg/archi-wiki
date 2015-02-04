@@ -2241,3 +2241,7 @@ Page d'accueil
 	background-repeat: no-repeat;
     background-position: center left; 
 }
+
+.formAjoutCommentaireEvenement h1{
+	font-size: 20px;
+}
