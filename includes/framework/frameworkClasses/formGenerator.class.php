@@ -1213,9 +1213,7 @@ class formGenerator extends config
         $html="";
         $t=new Template($this->cheminTemplates);
         
-        
         $t->assign_vars(array('idFormObject'=>$this->identifiantObject));
-        
         
         
         if (isset($parametres['onClickButtonSubmit'])) {
