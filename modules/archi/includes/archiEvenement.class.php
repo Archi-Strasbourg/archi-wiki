@@ -5157,16 +5157,6 @@ class archiEvenement extends config
 		$t->set_filenames((array('listeCommentaires'=>'listeCommentaires.tpl')));
 
 			
-		/*			
-		$req = "SELECT c.idCommentairesEvenement as idCommentaire,u.nom as nom,u.prenom as prenom,u.mail as email,DATE_FORMAT(c.date,'"._("%d/%m/%Y à %kh%i")."') as dateF,c.commentaire as commentaire,c.idUtilisateur as idUtilisateur, u.urlSiteWeb as urlSiteWeb
-				FROM commentairesEvenement c
-				LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
-				WHERE c.idHistoriqueEvenement = '".$idCommentaireAdresse."'
-						AND CommentaireValide=1
-						ORDER BY date DESC
-						";
-		*/
-		
 		$req = "SELECT c.idCommentairesEvenement as idCommentaire,c.nom as nom,c.prenom as prenom,c.email as email,DATE_FORMAT(c.date,'"._("%d/%m/%Y à %kh%i")."') as dateF,c.commentaire as commentaire,c.idUtilisateur as idUtilisateur
 				FROM commentairesEvenement c
 				LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
@@ -5178,15 +5168,18 @@ class archiEvenement extends config
 		$res = $this->connexionBdd->requete($req);
 
 
+		
+		
+		if(mysql_num_rows($res)>0)
+		{	
+		
+		
 		$t->assign_vars(array(
 				'tableHtmlCode'=>"  ",
 				'titre'=>_("Liste des commentaires concernant l'événement")
 		));
 
-		if(mysql_num_rows($res)==0)
-		{
-			$t->assign_vars(array("msg"=>_("Il n'y a pas encore de commentaires pour cette adresse.")."<br><br>"));
-		}
+	
 
 		$authentification = new archiAuthentification();
 
@@ -5235,6 +5228,7 @@ class archiEvenement extends config
 		ob_end_clean();
 
 		return $html;
+		}
 
 	}
 

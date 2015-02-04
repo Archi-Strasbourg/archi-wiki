@@ -9542,65 +9542,64 @@ class archiAdresse extends ArchiContenu
         
         
         $res = $this->connexionBdd->requete($req);
-        
-        
-        $t->assign_vars(array(
-        		'tableHtmlCode'=>"  ",
-        		'titre'=>_("Liste des commentaires concernant l'adresse")
-        ));
-        
+
         if(mysql_num_rows($res)==0)
         {
-            $t->assign_vars(array("msg"=>_("Il n'y a pas encore de commentaires pour cette adresse.")."<br><br>"));
+        
+	        $t->assign_vars(array(
+	        		'tableHtmlCode'=>"  ",
+	        		'titre'=>_("Liste des commentaires concernant l'adresse")
+	        ));
+	    
+	        
+	        $authentification = new archiAuthentification();
+	        
+	        
+	        
+	        // si l'utilisateur est administrateur, on affiche le bouton de suppression d'un commentaire
+	        $isAdmin=false;
+	        if($authentification->estConnecte() && $authentification->estAdmin())
+	        {
+	            $isAdmin=true;
+	        }
+	        
+	        
+	        while($fetch = mysql_fetch_assoc($res))
+	        {
+	            $adresseMail = "";
+	            $boutonSupprimer="";
+	            $urlSiteWeb = "";
+	            if($fetch['urlSiteWeb']!='')
+	            {
+	                $urlSiteWeb = "<br><a itemprop='url' href='".$fetch['urlSiteWeb']."' target='_blank'><span style='font-size:9px;color:#FFFFFF;'>".$fetch['urlSiteWeb']."</span></a>";
+	            }
+	            
+	            if($isAdmin)
+	            {
+	                $archiIdAdresse='';
+	                if(isset($this->variablesGet['archiIdAdresse']))
+	                {
+	                    $archiIdAdresse = $this->variablesGet['archiIdAdresse'];
+	                }
+	                $boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse))."';\">";
+	                $adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
+	            }
+	            $t->assign_block_vars('commentaires',array(
+	                'infosPersonne'=>"".$fetch['dateF'].' : <span itemprop="name">'.$fetch['nom'].' '.$fetch['prenom']."</span>",
+	                'adresseMail'=>$adresseMail,
+	                'commentaire'=>"<img itemprop='image' src='".$u->getImageAvatar(array('idUtilisateur'=>$fetch['idUtilisateur']))."' border=0 align=left style='padding-right:5px;padding-bottom:5px;'>".$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
+	                'boutonSupprimer'=>$boutonSupprimer,
+	                'siteWeb'=>$urlSiteWeb)
+	                );
+	        }
+	        
+	        ob_start();
+	        $t->pparse('listeCommentaires');
+	        $html .= ob_get_contents();
+	        ob_end_clean();
+	        
+	        return $html;
         }
-        
-        $authentification = new archiAuthentification();
-        
-        
-        
-        // si l'utilisateur est administrateur, on affiche le bouton de suppression d'un commentaire
-        $isAdmin=false;
-        if($authentification->estConnecte() && $authentification->estAdmin())
-        {
-            $isAdmin=true;
-        }
-        
-        
-        while($fetch = mysql_fetch_assoc($res))
-        {
-            $adresseMail = "";
-            $boutonSupprimer="";
-            $urlSiteWeb = "";
-            if($fetch['urlSiteWeb']!='')
-            {
-                $urlSiteWeb = "<br><a itemprop='url' href='".$fetch['urlSiteWeb']."' target='_blank'><span style='font-size:9px;color:#FFFFFF;'>".$fetch['urlSiteWeb']."</span></a>";
-            }
-            
-            if($isAdmin)
-            {
-                $archiIdAdresse='';
-                if(isset($this->variablesGet['archiIdAdresse']))
-                {
-                    $archiIdAdresse = $this->variablesGet['archiIdAdresse'];
-                }
-                $boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse))."';\">";
-                $adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
-            }
-            $t->assign_block_vars('commentaires',array(
-                'infosPersonne'=>"".$fetch['dateF'].' : <span itemprop="name">'.$fetch['nom'].' '.$fetch['prenom']."</span>",
-                'adresseMail'=>$adresseMail,
-                'commentaire'=>"<img itemprop='image' src='".$u->getImageAvatar(array('idUtilisateur'=>$fetch['idUtilisateur']))."' border=0 align=left style='padding-right:5px;padding-bottom:5px;'>".$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
-                'boutonSupprimer'=>$boutonSupprimer,
-                'siteWeb'=>$urlSiteWeb)
-                );
-        }
-        
-        ob_start();
-        $t->pparse('listeCommentaires');
-        $html .= ob_get_contents();
-        ob_end_clean();
-        
-        return $html;
     }
    
     /**
