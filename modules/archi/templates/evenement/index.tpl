@@ -40,7 +40,7 @@
 		<ul>
 		<!-- BEGIN sommaireItem -->
 		<li>
-		<a href="{sommaireEvenements.sommaireItem.ancre}">{sommaireEvenements.sommaireItem.titre} - {sommaireEvenements.sommaireItem.date}</a>
+		<a href="{sommaireEvenements.sommaireItem.ancre}">{sommaireEvenements.sommaireItem.titre}{sommaireEvenements.sommaireItem.date}</a>
 		</li>
 		<!-- END sommaireItem -->
 		</ul>

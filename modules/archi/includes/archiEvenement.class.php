@@ -6935,8 +6935,6 @@ class archiEvenement extends config
 	
 		);
 	
-	
-	
 		/*
 		 * Useless now, but might be need futher if
 		*	this function is reused and should not display menu action

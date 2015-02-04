@@ -642,10 +642,14 @@ class archiAdresse extends ArchiContenu
 					$t->assign_block_vars($courantArchi[0], $courantArchi[1]);
 				}
 			}
+			$titre =stripslashes($evenement['evenementData']['titre']);
+			if(isset($evenement['evenementData']['titre']) &&$evenement['evenementData']['titre']!=""){
+				$titre.=" - ";
+			}
 			$ancre = "#evenement".$evenement['evenementData']['idEvenement'];
 			$t->assign_block_vars('sommaireEvenements.sommaireItem', array(
 					'ancre' => $ancre,
-					'titre' => $evenement['evenementData']['titre'],
+					'titre' => $titre,
 					'date' =>$evenement['evenementData']['dates']
 			));
 				
