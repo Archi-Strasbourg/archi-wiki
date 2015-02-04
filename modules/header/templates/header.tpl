@@ -120,10 +120,6 @@
 					<!-- END linkConnected -->
 					</div>
 					</div>
-					<div class="fastConnect {classFastConnect}">
-						<div>Connexion rapide</div>
-				        <div><a class="persona-button dark" id="browserid" title="<?_("Se connecter avec BrowserID")?>" title="<?_("Se connecter avec BrowserID")?>" ><span><?_("Connexion")?></span></a></div> 
-					</div>
 				</div>
 				
 			</div>

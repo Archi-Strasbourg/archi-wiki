@@ -313,14 +313,18 @@ a.subscribeLabel{
 .authFormInput{
 	display: table-cell;
 }
+.formConnexion form,.formConnexion hr , .notConnectedAuthLink{
+	width: 615px;
+	margin: 0 auto;
+}
+
 
 .formConnexion , .fastConnect{
 /* 	display: inline-block; */
 }
 .classicConnexion{
 	width: 650px;
-	//display: inline-block;
-	float:left;
+	//margin:auto;
 }
 .fastConnect{
 	width: 100px;

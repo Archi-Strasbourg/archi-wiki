@@ -208,6 +208,7 @@ $t->assign_vars(
 
 
 $labelConnexion = _('Connexion');
+$imgConnexion="images/logo_connexion.png";
 if ($authentification->estConnecte() !== true) {
     // utilisateur pas connecté
     $t->assign_block_vars('utilisateurNonConnecte', array());
@@ -223,7 +224,8 @@ if ($authentification->estConnecte() !== true) {
             'inscriptionDeconnexion' => _("Inscrivez-vous !"),
             'urlInscriptDeconnexion' => $config->creerUrl('', 'inscription'),
             'urlAccueil'=>$config->creerUrl('', 'afficheAccueil'),
-            'txtAccueil'=>'Accueil'
+            'txtAccueil'=>'Accueil',
+        	'classAuthLinkWrapper'=>'notConnectedAuthLink'
         		
     )
     );
@@ -291,7 +293,6 @@ else {
     }
     
 }
-
 
 
 $t->assign_vars(array(
