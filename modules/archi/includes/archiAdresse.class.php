@@ -9492,7 +9492,7 @@ class archiAdresse extends ArchiContenu
     
         $fieldsCommentaires['commentaire']['htmlCodeBeforeField'] = $bbMiseEnFormBoutons;
     
-        $tabCommentaires = array(   'titrePage'=>_("Ajouter un commentaire"),
+        $tabCommentaires = array(   'titrePage'=>_("Ajouter un commentaire concernant l'adresse"),
                                     'formName'=>'formAjoutCommentaire',
                                     'formAction'=>$this->creerUrl('enregistreCommentaire','',array()),
                                     'tableHtmlCode'=>" class='formAjoutCommentaire'",
@@ -9544,7 +9544,10 @@ class archiAdresse extends ArchiContenu
         $res = $this->connexionBdd->requete($req);
         
         
-        $t->assign_vars(array('tableHtmlCode'=>"  "));
+        $t->assign_vars(array(
+        		'tableHtmlCode'=>"  ",
+        		'titre'=>_("Liste des commentaires concernant l'adresse")
+        ));
         
         if(mysql_num_rows($res)==0)
         {

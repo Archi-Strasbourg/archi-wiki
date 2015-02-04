@@ -5178,7 +5178,10 @@ class archiEvenement extends config
 		$res = $this->connexionBdd->requete($req);
 
 
-		$t->assign_vars(array('tableHtmlCode'=>"  "));
+		$t->assign_vars(array(
+				'tableHtmlCode'=>"  ",
+				'titre'=>_("Liste des commentaires concernant l'événement")
+		));
 
 		if(mysql_num_rows($res)==0)
 		{
@@ -5295,7 +5298,7 @@ class archiEvenement extends config
 
 		$fieldsCommentaires['commentaire']['htmlCodeBeforeField'] = $bbMiseEnFormBoutons;
 
-		$tabCommentaires = array(   'titrePage'=>_("Ajouter un commentaire"),
+		$tabCommentaires = array(   'titrePage'=>_("Ajouter un commentaire concernant l'événement"),
 				'formName'=>'formAjoutCommentaireEvenement',
 				'formAction'=>$this->creerUrl('enregistreCommentaireEvenement','',array()),
 				'tableHtmlCode'=>" class='formAjoutCommentaireEvenement'",

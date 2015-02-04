@@ -1,5 +1,5 @@
 ﻿<br>
-<h2><?_("Liste des commentaires")?></h2>
+<h2>{titre}<??></h2>
 <table {tableHtmlCode}>
 <!-- BEGIN commentaires -->
 <tr><td class="commentWrapper" style="padding:0;" itemprop="review" itemscope itemtype="http://schema.org/Review"><div class="commentHeader" itemprop="creator" itemscope itemtype="http://schema.org/Person">{commentaires.infosPersonne} {commentaires.boutonSupprimer}{commentaires.siteWeb}{commentaires.adresseMail}</div>
