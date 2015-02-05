@@ -870,7 +870,10 @@ class archiImage extends config
             
             $description = $fetch['description'];
 
+
             $bbCode = new bbCodeObject();
+            //$bbCode = new bbCodeObject();
+            
             if (!empty($description)) {
                 $description = $bbCode->convertToDisplay(array('text'=>$description));
             }
@@ -5326,10 +5329,10 @@ class archiImage extends config
     		$title = trim($string->sansBalises(strip_tags(stripslashes($valuesImage['description']))).' '.$intituleAdresseAlt);
     		$alt = trim($string->sansBalises(strip_tags(stripslashes($valuesImage['description']))).' '.$intituleAdresseAlt);
     		
-    		
     		//bbcode init
-    		$bbCode = new BBCodeObject();
+    		$bbCode = new bbCodeObject();
     		
+
     		$imageHTML .= '
     				<div class="inline-div">
 	    				<a class="imgResultGrp" 
@@ -5343,7 +5346,7 @@ class archiImage extends config
 			    						src="'.'photos--'.$valuesImage['dateUpload'].'-'.$valuesImage['idHistoriqueImage'].'-moyen.jpg'.'" 
 			    						class="eventImage" />
 			    				<p>'.strip_tags($bbCode->convertToDisplay(array('text'=>$valuesImage['description']))).'</p>
-		    				</div>
+			    			</div>
 	    				</a>
 	    				<div class="imgDesc">'.$bbCode->convertToDisplay(array('text'=>$valuesImage['description'])).'</div>
     				</div>		

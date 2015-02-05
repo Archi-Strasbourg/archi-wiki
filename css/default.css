@@ -191,6 +191,7 @@ a:hover {
 }
 #searchButton , #connexionButton{
 	text-align: center;
+	cursor: pointer;
 }
 .languageSwitch{
 	margin-top: 10px;
@@ -238,7 +239,7 @@ a:hover {
 	height: 100px;
 	//width: 150px;	
 }
-.stats-wrap a{
+.stats a{
 	display: table-cell;
 	vertical-align: middle; 	
 	color: white;
@@ -2132,6 +2133,7 @@ Page d'accueil
 .lastModifElement{
 	display: inline-block;
 	vertical-align: top;
+	margin-right: 20px;
 }
 
 .lastModifElement:hover .description{
@@ -2185,6 +2187,10 @@ Page d'accueil
 	float:left;
 	margin-right: 10px;
 	color: #BCBFBE;
+}
+
+.push-menu-top-search form{
+	margin-top: 30px;	
 }
 
 .push-menu-top-search .switchSearch {
@@ -2245,7 +2251,6 @@ Page d'accueil
 }
 
 .opendataLink{
-	background-image: url("images/lock_opendata.png");
 	background-repeat: no-repeat;
     background-position: center left; 
 }

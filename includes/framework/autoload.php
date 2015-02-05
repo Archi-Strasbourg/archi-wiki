@@ -44,7 +44,6 @@ class Autoload
         )) {
             include_once __DIR__."/frameworkClasses/".$class_name.".class.php";
         }
-
     }
 }
 spl_autoload_register("Autoload::load");

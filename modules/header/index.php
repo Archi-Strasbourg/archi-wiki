@@ -307,7 +307,6 @@ else {
     if ($utilisateur->isAuthorized('affiche_menu_admin', $authentification->getIdUtilisateur())) {
         $t->assign_block_vars('afficheAdministrationMenu', array());
     }
-    
 }
 
 $t->assign_vars(array(

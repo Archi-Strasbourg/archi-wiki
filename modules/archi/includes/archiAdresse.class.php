@@ -662,6 +662,8 @@ class archiAdresse extends ArchiContenu
 		$idPrisDepuis = $image->getidImagePrisDepuis($idEvenementGroupeAdresse);
 		
 		
+		
+		
 		if(!empty($idVueSur)){
 			$evenementVueSur = $image->getEventInfosMiscImage($idVueSur,$idAdresse,"Autres vues sur");
 			$t->assign_block_vars('evenement', $evenementVueSur);
@@ -13972,7 +13974,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         
         if($idParcours!=0)
         {
+        	
             $bbCode = new bbCodeObject();
+            
+            debug($bbCode);
             
             $resParcours = $this->getMysqlParcours(array('sqlWhere'=>"AND idParcours='".$idParcours."'"));
 
