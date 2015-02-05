@@ -2398,49 +2398,49 @@ class ArchiAccueil extends config
     	$filesArray = array(
     			array(
     					'name'=>'Adresses par architectes',
-    					'xml'=>'xml/adressesArchitecte.xml',
-    					'csv'=>'csv/adressesArchitecte.csv'
+    					'xml'=>'opendata-xml-adressesArchitecte.xml',
+    					'csv'=>'opendata-csv-adressesArchitecte'
    
     			),
     			array(
     					'name'=>'Adresses par quartier',
-    					'xml'=>'xml/adressesQuartier.xml',
-    					'csv'=>'xml/adressesQuartier.csv'
+    					'xml'=>'opendata-xml-adressesQuartier',
+    					'csv'=>'opendata-csv-adressesQuartier'
     			),
     			array(
     					'name'=>'Adresses par rues',
-    					'xml'=>'xml/adressesRues.xml',
-    					'csv'=>'xml/adressesRues.csv'
+    					'xml'=>'opendata-xml-adressesRues',
+    					'csv'=>'opendata-csv-adressesRues'
     			),
     			array(
     					'name'=>'Quartiers par ville',
-    					'xml'=>'xml/quartiersVille.xml',
-    					'csv'=>'xml/quartiersVille.csv'
+    					'xml'=>'opendata-xml-quartiersVille',
+    					'csv'=>'opendata-csv-quartiersVille'
     			),
     			array(
     					'name'=>'Rues par quartier',
-    					'xml'=>'xml/ruesQuartier.xml',
-    					'csv'=>'xml/ruesQuartier.csv'
+    					'xml'=>'opendata-xml-ruesQuartier',
+    					'csv'=>'opendata-csv-ruesQuartier'
     			),
     			array(
     					'name'=>'Rues par sous quartier',
-    					'xml'=>'xml/ruesSousQuartier.xml',
-    					'csv'=>'xml/ruesSousQuartier.csv'
+    					'xml'=>'opendata-xml-ruesSousQuartier',
+    					'csv'=>'opendata-csv-ruesSousQuartier'
     			),
     			array(
     					'name'=>'Rues par villes',
-    					'xml'=>'xml/ruesVilles.xml',
-    					'csv'=>'xml/ruesVilles.csv'
+    					'xml'=>'opendata-xml-ruesVilles',
+    					'csv'=>'opendata-csv-ruesVilles'
     			),
     			array(
     					'name'=>'Photos par quartier',
-    					'xml'=>'xml/urlPhotosQuartier.xml',
-    					'csv'=>'xml/urlPhotosQuartier.csv'
+    					'xml'=>'opendata-xml-urlPhotosQuartier',
+    					'csv'=>'opendata-csv-urlPhotosQuartier'
     			),
     			array(
     					'name'=>'Photos par rues',
-    					'xml'=>'xml/urlPhotosRue.xml',
-    					'csv'=>'xml/urlPhotosRue.csv'
+    					'xml'=>'opendata-xml-urlPhotosRue',
+    					'csv'=>'opendata-csv-urlPhotosRue'
     			)
     	);
     	 
