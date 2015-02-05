@@ -92,7 +92,6 @@
 				</div>			
 			</div>
 		</div>
-		
 	</div>
 		<div class="push-menu-top-search">
 		{formulaireRecherche}
