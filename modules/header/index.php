@@ -248,7 +248,7 @@ else {
     // utilisateur connecté
     $classFastConnect="hidden";
     $userId = $authentification->getIdUtilisateur();
-    $imgConnexion = $utilisateur->getImageAvatar($userId);
+    $imgConnexion = $utilisateur->getImageAvatar(array('idUtilisateur'=>$userId,'default'=>"images/logo_connexion.png"));
 	$reqTitre ="SELECT prenom, nom FROM utilisateur WHERE idUtilisateur = $userId";
 	$res = $config->connexionBdd->requete($reqTitre);
 	$arrayUser = mysql_fetch_assoc($res);
@@ -309,7 +309,6 @@ else {
     }
     
 }
-
 
 $t->assign_vars(array(
 		"labelConnexion" =>$labelConnexion,

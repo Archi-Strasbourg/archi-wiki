@@ -1991,32 +1991,36 @@ class archiUtilisateur extends config {
     // si pas d'idUtilisateur en parametre ,  on renvoi l'image de l'avatar pour l'utilisateur connecté
     public function getImageAvatar($params = array())
     {
-        $retour = "";
-        $idUtilisateur = 0;
-        $authentification = new archiAuthentification();
-        
-        if ($authentification->estConnecte())
-            $idUtilisateur = $authentification->getIdUtilisateur();
-        
-        if (isset($params['idUtilisateur']) && $params['idUtilisateur']!='')
-            $idUtilisateur = $params['idUtilisateur'];
-        
-        
-        if (file_exists($this->getCheminPhysique()."/images/avatar/".$idUtilisateur."/avatar.jpg"))
-        {
-            $retour = $this->getUrlImage()."avatar/".$idUtilisateur."/avatar.jpg";
-        } else {
-            $retour = $this->getUrlImage()."avatar/default.jpg";
-        }
-        
-        return $retour;
+    	$retour = "";
+    	$idUtilisateur = 0;
+    	$authentification = new archiAuthentification();
+
+    	if ($authentification->estConnecte())
+    		$idUtilisateur = $authentification->getIdUtilisateur();
+
+    	if (isset($params['idUtilisateur']) && $params['idUtilisateur']!='')
+    		$idUtilisateur = $params['idUtilisateur'];
+
+    	if (file_exists($this->getCheminPhysique()."/images/avatar/".$idUtilisateur."/avatar.jpg"))
+    	{
+    		$retour = $this->getUrlImage()."avatar/".$idUtilisateur."/avatar.jpg";
+    	}
+    	else {
+    		if (isset($params['default']) && $params['default']!=''){
+    			$retour =$params['default'];
+    		}
+    		else{
+    			$retour = $this->getUrlImage()."avatar/default.jpg";
+    		}
+    	}
+    	return $retour;
     }
-    
+
     public function afficheProfilPublique($params = array())
     {
-        $html="";
-        
-        $idUtilisateur = 0;
+    	$html="";
+
+    	$idUtilisateur = 0;
         
         if (isset($this->variablesGet['archiIdUtilisateur']) && $this->variablesGet['archiIdUtilisateur']!='')
         {
