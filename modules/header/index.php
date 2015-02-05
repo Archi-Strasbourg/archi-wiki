@@ -271,21 +271,26 @@ else {
         	'classFastConnect' =>$classFastConnect
         )
     );
-    $t->assign_block_vars('linkConnected', array(
-    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
-    		'authLinkUrl'=> $config->creerUrl('', 'utilisateurListe'),
-    		'authLinkLabel' => _('Utilisateurs')
-    ));
-    $t->assign_block_vars('linkConnected', array(
-    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
-    		'authLinkUrl'=> $config->creerUrl('', 'afficheLogsMails'),
-    		'authLinkLabel' => _('Logs Mails')
-    ));
-    $t->assign_block_vars('linkConnected', array(
-    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
-    		'authLinkUrl'=> $config->creerUrl('', 'administration'),
-    		'authLinkLabel' => _('Administration')
-    ));
+    if($utilisateur->getIdProfil($userId)>=4){
+    	    $t->assign_block_vars('linkConnected', array(
+	    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
+	    		'authLinkUrl'=> $config->creerUrl('', 'utilisateurListe'),
+	    		'authLinkLabel' => _('Utilisateurs')
+	    ));
+    }
+    
+    if($utilisateur->getIdProfil($userId)>=3){
+	    $t->assign_block_vars('linkConnected', array(
+	    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
+	    		'authLinkUrl'=> $config->creerUrl('', 'afficheLogsMails'),
+	    		'authLinkLabel' => _('Logs Mails')
+	    ));
+	    $t->assign_block_vars('linkConnected', array(
+	    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
+	    		'authLinkUrl'=> $config->creerUrl('', 'administration'),
+	    		'authLinkLabel' => _('Administration')
+	    ));
+    }
     $t->assign_block_vars('linkConnected', array(
     		'authLinkOneClass'=> ' authLinkOneClass forgetPasswordLabel',
     		'authLinkUrl'=> $config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'profil')),

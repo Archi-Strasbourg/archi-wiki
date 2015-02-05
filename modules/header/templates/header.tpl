@@ -57,7 +57,7 @@
 			<img alt="Archi-Wiki" src="images/logo_archi_wiki.png">
 			<div class="text-lien-header inline-block">
 				<div>Tous architectes !</div>
-				<div>Partageons la ville, ses batiments, ses lieux</div>		
+				<div>Partageons la ville, ses bâtiments, ses lieux</div>		
 			</div>
 			</a>
 		</div>
@@ -124,7 +124,7 @@
 				<!-- BEGIN isParcours -->
 				<li><a href="{parcours}">Parcours</a></li>
 				<!-- END isParcours -->
-				<li class="opendataLink"><a href="{urlOpendata}">Accèder à l'Opendata</a>
+				<li class="opendataLink"><a href="{urlOpendata}">Accéder à l'Opendata</a>
 				<li><a href="{ajoutNouveauDossier}">Ajouter une adresse</a></li>
 				<li><a href="{ajoutNouvellePersonne}">Ajouter une personne</a></li>
 				<li><a href="{nosSources}">Nos sources</a></li>

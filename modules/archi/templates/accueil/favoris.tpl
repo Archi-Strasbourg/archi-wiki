@@ -1,6 +1,6 @@
 <a  class="customNewsFeed" href="{urlCustomNewsFeed}"><h2>Personnaliser mon flux d'actualité</h2></a>
 <div class="favorisAccueil">
-<h2>Batiments favoris</h2>
+<h2>Bâtiments favoris</h2>
 <hr class="plain"/>
 <div class="listeFavoris">
 <!-- BEGIN message -->
