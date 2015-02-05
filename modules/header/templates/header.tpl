@@ -73,33 +73,23 @@
 			
 			<div>
 				<!-- BEGIN informations -->
-				<div class="stats inline-block">
-					<div class="stats-wrap">
+				<div class="stats ">
 					<a href="statistiques-adresses-photos-architectes-strasbourg.html">
 						<p>Évènements : {informations.evenement}<br/>
 						Adresses : {informations.adresse}<br/>
 						Photos : {informations.photo}</p>
 						</a>
-					</div>
 				</div>
 				<!-- END informations -->
-				<div class="inline-block">
-					
-					<div>
-						<div class=" inline-block">
-							<button id="searchButton" class="left-buttons-header menu-button">
-								<div><span><img id="logoSearch" alt="" src="images/logo_loupe.png"></span><span id="crossSearch">&#x2715;</span></div>
-								<div class="label-menu-buttons-left">Recherche</div>
-							</button>
-						</div>
-						<div class="inline-block">
-							<button id="connexionButton" class="left-buttons-header menu-button">
-								<div><span id="logoConnexion"><img alt="" src="{imageConnexion}"></span><span id="crossConnexion">&#x2715;</span></div>
-								<div class="label-menu-buttons-left">{labelConnexion}</div>
-							</button>			
-						</div>
-					</div>
+		
+				<div id="searchButton" class="left-buttons-header menu-button">
+					<div><span><img id="logoSearch" alt="" src="images/logo_loupe.png"></span><span id="crossSearch">&#x2715;</span></div>
+					<div class="label-menu-buttons-left">Recherche</div>
 				</div>
+				<div id="connexionButton" class="left-buttons-header menu-button">
+					<div><span id="logoConnexion"><img alt="" src="{imageConnexion}"></span><span id="crossConnexion">&#x2715;</span></div>
+					<div class="label-menu-buttons-left">{labelConnexion}</div>
+				</div>			
 			</div>
 		</div>
 		
