@@ -18,7 +18,7 @@ RewriteEngine on
 # Exemples 							   #
 ########################################
 
-#RewriteRule images/(.+) images/$1 [L,QSA]
+
 
 RewriteRule images/petit/(.+) http://archi-strasbourg.org/images/$1 [L,QSA]
 RewriteRule images/grand/(.+) http://archi-strasbourg.org/images/grand/$1 [L,QSA]
@@ -30,6 +30,7 @@ RewriteRule images/avatar/(.+) http://archi-strasbourg.org/images/avatar/$1 [L,Q
 RewriteRule images/bandeau/(.+) http://archi-strasbourg.org/images/bandeau/$1 [L,QSA]
 RewriteRule images/donateurs/(.+) http://archi-strasbourg.org/images/donateurs/$1 [L,QSA]
 
+RewriteRule images/(.+) images/$1 [L,QSA]
 
 
 RewriteRule css/(.+) css/$1 [L,QSA]
