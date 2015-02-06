@@ -1829,6 +1829,7 @@ class formGenerator extends config
                     break;
                 case 'captcha':
                     $securimage = new Securimage();
+                    //debug(array('fonction' =>$securimage->check($param[$name]) , 'param' => $param[$name],'name' => $name));
                     if ($securimage->check($param[$name]) == false) 
                     {
                         // the code was incorrect
@@ -1873,16 +1874,16 @@ class formGenerator extends config
                 }
             }
         }
-    if (isset($param["recaptcha_challenge_field"])) {
-    $resp = recaptcha_check_answer(
-            $config->captchakey,
-            $_SERVER["REMOTE_ADDR"],
-            $param["recaptcha_challenge_field"],
-            $param["recaptcha_response_field"]
-        );
-        if (!$resp->is_valid) {
-            $errors['captcha-error']=$resp->error;
-        }
+        if (isset($param["recaptcha_challenge_field"])) {
+        	$resp = recaptcha_check_answer(
+        			$config->captchakey,
+        			$_SERVER["REMOTE_ADDR"],
+        			$param["recaptcha_challenge_field"],
+        			$param["recaptcha_response_field"]
+        	);
+        	if (!$resp->is_valid) {
+        		$errors['captcha-error']=$resp->error;
+        	}
         }
         return $errors;
     }

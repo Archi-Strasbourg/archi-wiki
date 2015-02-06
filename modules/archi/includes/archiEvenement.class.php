@@ -5012,10 +5012,9 @@ class archiEvenement extends config
 			unset($fieldsCommentaires['captcha']);
 		}
 		$error = $formulaire->getArrayFromPost($fieldsCommentaires);
+		debug($this->variablesPost);
 		if(count($error)==0)
 		{
-
-
 			$idUtilisateur=0;
 			if($auth->estConnecte())
 			{

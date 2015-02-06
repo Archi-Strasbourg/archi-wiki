@@ -5371,14 +5371,14 @@ class archiImage extends config
     	$imageInfo = $a->getFirstImageFromEvenement($idEvenement);
     	if(empty($imageInfo)){
     		$a = new archiAdresse();
-    		$requeteIdAdresse = $a->getIdAdressesFromIdEvenement($idEvenement);
+    		$requeteIdAdresse = $a->getIdAdressesFromIdEvenement(array('idEvenement'=>$idEvenement));
     		$resourceIdAdresse = $this->connexionBdd->requete($requeteIdAdresse);
     		$arrayIdAdresse = mysql_fetch_assoc($resourceIdAdresse);
     		$idAdresse = $arrayIdAdresse['idAdresse'];
     		$resourceImage = $this->getImagesEvenementsFromAdresse($idAdresse);
-    		while($img = mysql_fetch_assoc($resourceImage)){
-    			$imageInfo = $img;
-       		}
+    		$img = mysql_fetch_assoc($resourceImage);
+   			$imageInfo = $img;
+   			//I don't think  looping on all the images is required, but it might be
     	}
     	return $imageInfo;
     }

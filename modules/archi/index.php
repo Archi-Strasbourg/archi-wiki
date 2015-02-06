@@ -123,7 +123,7 @@ if (isset($_GET['archiAction'])) {
        	$a = new archiEvenement();
        	$a->enregistreCommentaireEvenement();
         
-        	if (!$authentification->estConnecte()) {
+        	/*if (!$authentification->estConnecte()) {
         		echo "<SCRIPT>";
         		echo "alert('"._("Merci pour votre commentaire.")."\\n".
         				_(
@@ -133,6 +133,7 @@ if (isset($_GET['archiAction'])) {
         				"\\n"."A bientôt !')";
         		echo "</SCRIPT>";
         	}
+        	*/
         	break;
     case 'validAuthentification':
         $connexionUtilisateur= new archiAuthentification();

@@ -2103,6 +2103,8 @@ Page d'accueil
 
 .miniatureWrapper img{
 	border: none;	
+	width: 200px;
+	height: 200px;
 }
 
 .miniature{
