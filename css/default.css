@@ -2010,10 +2010,14 @@ Page d'accueil
 }
 .commentDate , .commentAuthor{
 	color: white;	
+	font-size: 13px;
+	font-weight: bold;
 }
 
 .commentAdresse , .commentAdresse a{
-	color: #C1722E;
+	color: #E17A32;
+	font-size: 12px;
+	font-weight: bold; 
 }
 .commentBody{
 	color:#2E3D40;
@@ -2041,7 +2045,8 @@ Page d'accueil
 	float: left;
 }
 .singleComment{
-	margin-top: 15px;
+	margin-top: 5px;
+	margin-bottom: 10px;
 }
 
 .newsTitle h2 , .newsTitle a{

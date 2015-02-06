@@ -5012,7 +5012,6 @@ class archiEvenement extends config
 			unset($fieldsCommentaires['captcha']);
 		}
 		$error = $formulaire->getArrayFromPost($fieldsCommentaires);
-		//debug($error);
 		if(count($error)==0)
 		{
 
@@ -5038,7 +5037,8 @@ class archiEvenement extends config
 			$email=$auth->estConnecte()?$user->getMailUtilisateur($idUtilisateur):$this->variablesPost['email'];
 			$uniqid = uniqid(null, true);
 			//$req = "insert into commentaires (nom,prenom,email,commentaire,idEvenementGroupeAdresse,date,idUtilisateur) values (\"".addslashes(strip_tags($this->variablesPost['nom']))."\",\"".addslashes(strip_tags($this->variablesPost['prenom']))."\",\"".addslashes(strip_tags($this->variablesPost['email']))."\",\"".addslashes(strip_tags($this->variablesPost['commentaire']))."\",'".$this->variablesPost['idEvenementGroupeAdresse']."',now(),'".$idUtilisateur."')";
-			$req = "INSERT INTO commentairesEvenement (nom,prenom,email,commentaire, idEvenement, date, idUtilisateur, CommentaireValide) VALUES (\"".addslashes(strip_tags($this->variablesPost['nom']))."\",\"".addslashes(strip_tags($this->variablesPost['prenom']))."\",\"".addslashes(strip_tags($this->variablesPost['email']))."\",'".mysql_real_escape_string(strip_tags($this->variablesPost['commentaire']))."', '".mysql_real_escape_string($this->variablesPost['idEvenementGroupeAdresse'])."', now(), '".mysql_real_escape_string($idUtilisateur). "'," . mysql_real_escape_string($CommentaireValide).")";
+			$req = "INSERT INTO commentairesEvenement (nom,prenom,email,commentaire, idEvenement, date, idUtilisateur, CommentaireValide) 
+					VALUES (\"".addslashes(strip_tags($this->variablesPost['nom']))."\",\"".addslashes(strip_tags($this->variablesPost['prenom']))."\",\"".addslashes(strip_tags($this->variablesPost['email']))."\",'".mysql_real_escape_string(strip_tags($this->variablesPost['commentaire']))."', '".mysql_real_escape_string($this->variablesPost['idEvenementGroupeAdresse'])."', now(), '".mysql_real_escape_string($idUtilisateur). "'," . mysql_real_escape_string($CommentaireValide).")";
 			$res = $this->connexionBdd->requete($req);
 			// retour a l'affichage de l'adresse
 			$idAdresse = $this->variablesPost['idEvenementGroupeAdresse'];
@@ -5129,13 +5129,15 @@ class archiEvenement extends config
 			$adresse = new archiAdresse();
 			
 			$this->messages->addConfirmation("Commentaire enregistré !");
-			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false));
+			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#evenement'.$this->variablesPost['idEvenementGroupeAdresse']);
 				
 			//echo $adresse->afficherDetailAdresse($idAdresse,$idGroupeEvenement);
 			//echo $this->afficheHistoriqueEvenement(array('idEvenement' =>$this->variablesGet['archiIdEvenementGroupeAdresse']));
 		}
 		else
 		{
+			debug($error);
+			debug($_POST);
 			//header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false));
 			
 			$this->erreurs->ajouter('Il y a une erreur dans le formulaire.');
@@ -5163,8 +5165,6 @@ class archiEvenement extends config
 
 		$res = $this->connexionBdd->requete($req);
 
-
-		
 		
 		if(mysql_num_rows($res)>0){	
 			

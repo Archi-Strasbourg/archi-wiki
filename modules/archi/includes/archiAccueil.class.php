@@ -2132,7 +2132,7 @@ class ArchiAccueil extends config
     	SELECT * FROM
     					(
     			SELECT 
-    			c.date as date,
+    			date_format(c.date,"._('"%e/%m/%Y"').") as date,
     			c.idUtilisateur,
     			c.idEvenement, 
     			c.commentaire, 
@@ -2156,7 +2156,7 @@ class ArchiAccueil extends config
 				
 				SELECT * FROM (
     			SELECT 
-    			c.date as date,
+    			date_format(c.date,"._('"%e/%m/%Y"').") as date,
     			c.idUtilisateur,
     			c.idEvenementGroupeAdresse, 
     			c.commentaire, 
