@@ -500,7 +500,7 @@ class ArchiAccueil extends config
             //Gestion pour les commentaires
             $latestComments = $this->getLatestComments(2);
             $t->assign_vars(array(
-            		'commentaireSectionTitle'=>'Commentaires récents',
+            		'commentaireSectionTitle'=>_("Commentaires récents"),
             		'urlListCommentaire' => $this->creerUrl('','tousLesCommentaires')
             ));
 
@@ -565,10 +565,10 @@ class ArchiAccueil extends config
             			'description' => $description
             	));
             }
-
+			$t->assign_vars(array('lastModifTitle' => _("Dernières modifications")));
             
             if (!$auth->estConnecte()) {
-	            	$favoris = array('content' => "Vous n'êtes pas connecté !");
+	            	$favoris = array('content' => _("Vous n'êtes pas connecté !"));
 	            	$t->assign_block_vars('message', $favoris);
             }
             else{
@@ -580,7 +580,7 @@ class ArchiAccueil extends config
 	            $latestFav = $this->getLatestFav(3);
 	            if(empty($latestFav)){
 	            	$favoris = array(
-	            			'content' => "Aucun batiment en favori !"
+	            			'content' => _("Aucun bâtiment en favori !")
 	            	);
 	            	$t->assign_block_vars('message', $favoris);
 	            }
@@ -958,7 +958,7 @@ class ArchiAccueil extends config
         $tActualites = new Template($this->getCheminPhysique().$this->cheminTemplates);
         $tActualites->set_filenames(array('encartActualites'=>'encartAccueil.tpl'));
         
-        $tActualites->assign_vars(array('titre'=>_('Actualités'), "type"=>"actualites"));
+        $tActualites->assign_vars(array('titre'=>_("Actualités"), "type"=>"actualites"));
         $i=0;
         
         if (count($params['actualites'])>0) {
@@ -1209,7 +1209,7 @@ class ArchiAccueil extends config
    		$tActualites = new Template($this->getCheminPhysique().$this->cheminTemplates);
    		$tActualites->set_filenames(array('encartActualites'=>'encartAccueil.tpl'));
    		 
-   		$tActualites->assign_vars(array('titre'=>_('Actualités'), "type"=>"actualites"));
+   		$tActualites->assign_vars(array('titre'=>_("Actualités"), "type"=>"actualites"));
    		$i=0;
    		 
    		if (count($params['actualites'])>0) {

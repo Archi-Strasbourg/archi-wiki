@@ -75,7 +75,7 @@
 				<!-- BEGIN informations -->
 				<div class="stats ">
 					<a href="statistiques-adresses-photos-architectes-strasbourg.html">
-						<p>Évènements : {informations.evenement}<br/>
+						<p>Événements : {informations.evenement}<br/>
 						Adresses : {informations.adresse}<br/>
 						Photos : {informations.photo}</p>
 						</a>

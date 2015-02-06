@@ -3,15 +3,14 @@
 	<h1><?_("Recherche")?></h1>
 	<!-- END titreEtLiens -->
 	
-	<form action="{formAction}" method="get">
+	
 	<div class="switchSearch">
-		<div>
-			<b>Texte</b>
-		</div> 
-		<div>
-			<a href="index.php?query={motcle}&archiAffichage=imageSearch&licence_1=on&licence_2=on&licence_3=on">Images</a>
-		</div>
+		<b>Texte</b> &ndash; 
+		<a href="index.php?query={motcle}&archiAffichage=imageSearch&licence_1=on&licence_2=on&licence_3=on">Images</a>
 	</div>
+	
+	<form action="{formAction}" method="get">
+
 	<input type='hidden' name='archiAffichage' value='recherche'>
 	<input type='hidden' name='submit' value='Rechercher'>
 	

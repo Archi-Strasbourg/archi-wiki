@@ -2183,7 +2183,7 @@ Page d'accueil
 }
 
 
-.push-menu-top-search .switchSearch , .push-menu-top-search form{
+.push-menu-top-search form{
 	float:left;
 	margin-right: 10px;
 	color: #BCBFBE;
@@ -2195,6 +2195,9 @@ Page d'accueil
 
 .push-menu-top-search .switchSearch {
 	height: 100px;
+	line-height: 100px;
+	float: left;
+	margin-right: 10px;
 	color: #BCBFBE;
 }
 .push-menu-top-search .switchSearch a,.push-menu-top-search .switchSearch a:hover {
@@ -2218,7 +2221,7 @@ Page d'accueil
 }
 
 .rechercheBlock{
-	width: 650px;	
+	width: 700px;	
 	height: 100px;
 	margin: auto;
 }
