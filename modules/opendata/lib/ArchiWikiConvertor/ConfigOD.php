@@ -1,5 +1,5 @@
 <?php
-class Config{
+class ConfigOD{
 	private $user;
 	private $password;
 	private $db_name;
