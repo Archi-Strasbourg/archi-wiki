@@ -28,3 +28,7 @@ ALTER TABLE `source` CHANGE `idTypeSource` `idTypeSource` INT( 10 ) UNSIGNED NOT
 
 -- TODO : Delete idSource from histriqueEvenement
 
+ALTER TABLE `positionsEvenements` DROP FOREIGN KEY `positionsEvenements_ibfk_1` ,
+ADD FOREIGN KEY ( `idEvenement` ) REFERENCES `archi_dbname_preprod`.`evenements` (
+`idEvenement`
+) ON DELETE CASCADE ON UPDATE CASCADE ;
