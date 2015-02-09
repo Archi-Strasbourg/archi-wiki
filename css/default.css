@@ -949,8 +949,13 @@ img {
 	font-weight: bold;
 }
 
+
+.subbox.paypal{
+	width: 100%;	
+}
+
 .box {
-	width: 100%;
+	width: 240px;
 }
 
 .center {
@@ -1156,7 +1161,6 @@ img {
 	/*background-image:url(../images/Advisa/btn_gauche.png);*/
 	background-repeat: no-repeat;
 	list-style-type: none;
-	width: 250px;
 	height: 27px;
 	margin-top: 0.5em;
 	background-color: #829395;
@@ -1428,6 +1432,8 @@ li:empty {
 #header .infos a:hover {
 	color: #111;
 }
+
+
 
 .pub {
 	background-color: #A9BEC1;
@@ -1923,8 +1929,7 @@ hr.edgeFade {
 	background-color: grey;	
 }
 .pubSecondaryContent{
-	height: 250px;
-	width: 250px;
+	height: 240px;
 	margin-top: 20px;
 }
 .pubPrimaryContent{

@@ -6888,7 +6888,7 @@ class archiEvenement extends config
 		 * Template filling
 		*/
 		$evenementData = array(
-				'titre' => $fetch['titre'],
+				'titre' => stripslashes($fetch['titre']),
 				'infoTitre'=> " - ".$txtEnvoi." par $utilisateur " .$fetch['dateCreationEvenement'],
 				'txtEnvoi' => $txtEnvoi,
 				'utilisateur' => $fetch['prenomUtilisateur'].' '.$fetch['nomUtilisateur'],
