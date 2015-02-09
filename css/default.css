@@ -2148,6 +2148,8 @@ Page d'accueil
 	margin-right: 20px;
 }
 
+
+/*
 .lastModifElement:hover .description{
 	//display: inline-block;
 	visibility: visible;
@@ -2156,7 +2158,7 @@ Page d'accueil
 	//display: none;
 	visibility: hidden;
 }
-
+*/
 .textLastModif{
 	width: 200px;
 }
