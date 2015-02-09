@@ -1,10 +1,10 @@
 <?php
-class UrlPhotosRue implements Strategy{
+class UrlPhotosRue extends Strategy{
 	public function execute(){
 		$utils = new Utils();
 		$c = new Convertor();
-		$c->connect('localhost', 'archiwiki', 'archi-dev', 'archi_v2');
-		
+		$c->connect($this->config->getServer(),$this->config->getUser(),$this->config->getPassword(),$this->config->getDBName());
+				
 		//Requesting all the borough
 		$requestRue = "
 				SELECT idRue ,nom , prefixe

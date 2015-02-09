@@ -1,9 +1,9 @@
 <?php
-class RuesVille implements Strategy{
+class RuesVille extends Strategy{
 	public function execute(){
 		$c = new Convertor();
-		$c->connect('localhost', 'archiwiki', 'archi-dev', 'archi_v2');
-
+		$c->connect($this->config->getServer(),$this->config->getUser(),$this->config->getPassword(),$this->config->getDBName());
+		
 		//Requesting all the streets
 		$requestVille = "
 				SELECT idVille , nom

@@ -91,7 +91,9 @@ class Convertor{
 
 	public function arrayToXML($input = array(),$output = 'output.xml',$startingNode='result' , $row = 'row' ){
 		$writer = new XMLWriter();
+		
 		$writer->openURI($output);
+		
 		//$writer->openURI('php://output');
 		$writer->startDocument('1.0','UTF-8');
 		$writer->setIndent(4);
@@ -112,10 +114,8 @@ class Convertor{
 
 	public function complexArrayToXML($input = array(),$output = 'output.xml',$startingNode='result' , $row = 'row'){
 		$writer = new XMLWriter();
-		//$writer->openURI($output);
-		header("Content-Type: text/html/force-download");
-		header("Content-Disposition: attachment; filename='whatever.xml'");
-		$writer->openURI('php://output');
+		$writer->openURI($output);
+		//$writer->openURI('php://output');
 		$writer->startDocument('1.0','UTF-8');
 		$writer->setIndent(4);
 		//$writer->startElement($startingNode);

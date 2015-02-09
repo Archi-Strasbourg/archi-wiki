@@ -1,10 +1,14 @@
 <?php
 class RequestProcessor{
 	var $strategy=NULL;
+	var $config=NULL;
 
-	public function __construct($strat=NULL){
+	public function __construct($strat=NULL,$config=NULL){
 		if($strat!=NULL){
 			$this->strategy=$strat;
+		}
+		if($config!=NULL){
+			$this->config=$config;
 		}
 	}
 
@@ -17,34 +21,34 @@ class RequestProcessor{
 	public function executeStrategy($input){
 		switch ($input){
 			case 'adressesRue':
-				$this->strategy=new AdressesRue();
+				$this->strategy=new AdressesRue($this->config);
 				break;
 			case 'ruesQuartier':
-				$this->strategy=new RuesQuartier();
+				$this->strategy=new RuesQuartier($this->config);
 				break;
 			case 'ruesSousQuartier':
-				$this->strategy=new RuesSousQuartier();
+				$this->strategy=new RuesSousQuartier($this->config);
 				break;
 			case 'quartiersVille':
-				$this->strategy=new QuartiersVille();
+				$this->strategy=new QuartiersVille($this->config);
 				break;
 			case 'adressesArchitecte':
-				$this->strategy=new AdressesArchitecte();
+				$this->strategy=new AdressesArchitecte($this->config);
 				break;
 			case 'urlPhotosRue':
-				$this->strategy=new UrlPhotosRue();
+				$this->strategy=new UrlPhotosRue($this->config);
 				break;
 			case 'urlPhotosQuartier':
-				$this->strategy=new UrlPhotosQuartier();
+				$this->strategy=new UrlPhotosQuartier($this->config);
 				break;
 			case 'ruesVille':
-				$this->strategy=new RuesVille();
+				$this->strategy=new RuesVille($this->config);
 				break;
 			case 'adressesQuartier':
-				$this->strategy=new AdressesQuartier();
+				$this->strategy=new AdressesQuartier($this->config);
 				break;
 			default:
-				$this->strategy=new AdressesRue();
+				$this->strategy=new AdressesRue($this->config);
 		}
 		$this->strategy->execute();
 	}

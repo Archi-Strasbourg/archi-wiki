@@ -1,9 +1,9 @@
 <?php
-class AdressesArchitecte implements Strategy{
+class AdressesArchitecte extends Strategy{
 	public function execute(){
 		$c = new Convertor();
-		$c->connect('localhost', 'archiwiki', 'archi-dev', 'archi_v2');
-
+		$c->connect($this->config->getServer(),$this->config->getUser(),$this->config->getPassword(),$this->config->getDBName());
+		
 		//Requesting all the architects
 		$requeteArchitecte= "
 				SELECT p.idPersonne, p.nom, p.prenom,p.description,p.dateNaissance,p.dateDeces,p.idMetier

@@ -1,10 +1,10 @@
 <?php
-class AdressesRue implements Strategy{
+class AdressesRue extends Strategy{
 
 	public function execute(){
 		$c = new Convertor();
-		$c->connect('localhost', 'archiwiki', 'archi-dev', 'archi_v2');
-
+		$c->connect($this->config->getServer(),$this->config->getUser(),$this->config->getPassword(),$this->config->getDBName());
+		
 		//Requesting all the streets
 		$requestStreets = "
 				SELECT r.prefixe as prefixe,ha.idRue as idRue ,r.nom as nom

@@ -12,7 +12,8 @@ foreach (glob("lib/*.php") as $filename){
 ini_set('memory_limit', '-1');
 set_time_limit(0);
 
-$rp = new RequestProcessor();
+$config = new Config('archi_u_preprod', 'archi_pwd_preprod', 'archi_dbname_preprod', 'localhost');
+$rp = new RequestProcessor(NULL,$config);
 $rp->executeAllStrategies();
 
 ini_set('memory_limit', '128M');
