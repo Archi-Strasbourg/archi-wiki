@@ -4,7 +4,6 @@ abstract class Strategy{
 	public function __construct($c){
 		if($c != NULL){
 			$this->config= $c;
-			var_dump($)		
 		}
 	}
 	
