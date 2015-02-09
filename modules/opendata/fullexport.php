@@ -1,13 +1,16 @@
 <?php
 foreach (glob("lib/ArchiWikiConvertor/Interface/*.php") as $filename){
 	var_dump($filename);
+	echo $filename."<br/>";
 	include $filename;
 }
 foreach (glob("lib/ArchiWikiConvertor/*.php") as $filename){
+	echo $filename."<br/>";
 	var_dump($filename);
 	include $filename;
 }
 foreach (glob("lib/*.php") as $filename){
+	echo $filename."<br/>";
 	var_dump($filename);
 	include $filename;
 }
