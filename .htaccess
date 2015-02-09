@@ -29,6 +29,7 @@ RewriteRule images/upload(.+)/(.+) http://archi-strasbourg.org/upload$1/$2 [L,QS
 RewriteRule images/avatar/(.+) http://archi-strasbourg.org/images/avatar/$1 [L,QSA]
 RewriteRule images/bandeau/(.+) http://archi-strasbourg.org/images/bandeau/$1 [L,QSA]
 RewriteRule images/donateurs/(.+) http://archi-strasbourg.org/images/donateurs/$1 [L,QSA]
+RewriteRule photos-(.+).jpg http://archi-strasbourg.org/photos-$1.jpg [L,QSA]
 
 RewriteRule images/(.+) images/$1 [L,QSA]
 

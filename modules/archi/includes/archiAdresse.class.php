@@ -9619,11 +9619,11 @@ class archiAdresse extends ArchiContenu
         if(isset($params['afficherTous']) && $params['afficherTous']==true)
         {
             $reqCount = "
-                SELECT distinct idCommentaire
+                SELECT distinct idCommentaire,'commentaires' as typeCommentaires
                 FROM commentaires c
                 WHERE CommentaireValide=1
             	UNION
-            	SELECT distinct idCommentairesEvenement as idCommentaire
+            	SELECT distinct idCommentairesEvenement as idCommentaire,'commentairesEvenement' as typeCommentaires
             	FROM commentairesEvenement
             	WHERE CommentaireValide=1
             ";
@@ -9647,13 +9647,13 @@ class archiAdresse extends ArchiContenu
 
         
         $req = "
-                SELECT distinct c.idCommentaire, u.mail,u.nom,u.prenom,c.commentaire,c.idEvenementGroupeAdresse,DATE_FORMAT(c.date,'%d/%m/%Y') as dateF, date
+                SELECT distinct c.idCommentaire, u.mail,u.nom,u.prenom,c.commentaire,c.idEvenementGroupeAdresse,DATE_FORMAT(c.date,'%d/%m/%Y') as dateF, date,'commentaires' as typeCommentaires
                 FROM commentaires c
 				LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
                 LEFT JOIN _adresseEvenement ae ON ae.idEvenement = c.idEvenementGroupeAdresse
                 WHERE c.CommentaireValide=1
 UNION
-SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.prenom,c.commentaire,c.idEvenement as idEvenementGroupeAdresse ,DATE_FORMAT(c.date,'%d/%m/%Y') as dateF, date
+SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.prenom,c.commentaire,c.idEvenement as idEvenementGroupeAdresse ,DATE_FORMAT(c.date,'%d/%m/%Y') as dateF, date,'commentairesEvenement' as typeCommentaires
                 FROM commentairesEvenement c
 				LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
                 LEFT JOIN _adresseEvenement ae ON ae.idEvenement = c.idEvenement
@@ -9688,24 +9688,40 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             while($fetch = mysql_fetch_assoc($res))
             {
                 // recuperation de l'adresse concernée
-                $resAdresses = $this->getAdressesFromEvenementGroupeAdresses($fetch['idEvenementGroupeAdresse']);
-                $arrayIntituleAdresses = array();
-                while($fetchAdresses = mysql_fetch_assoc($resAdresses))
-                {
-                    $arrayIntituleAdresses[]=$this->getIntituleAdresse($fetchAdresses);
-                }
+            	if($fetch['typeCommentaires'] ==  'commentaires'){
+            		$idEvenementGroupeAdresse  = $fetch['idEvenementGroupeAdresse'];
+            		$resAdresses = $this->getAdressesFromEvenementGroupeAdresses($idEvenementGroupeAdresse);
+            		$arrayIntituleAdresses = array();
+            		while($fetchAdresses = mysql_fetch_assoc($resAdresses))
+            		{
+            			$arrayIntituleAdresses[]=$this->getIntituleAdresse($fetchAdresses);
+            		}
+            		$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
+            		
+            	}
+            	elseif($fetch['typeCommentaires'] == 'commentairesEvenement'){
+            		$e = new archiEvenement();
+            		$idEvenementGroupeAdresse = $e->getIdEvenementGroupeAdresseFromIdEvenement($fetch['idEvenementGroupeAdresse']);
+            		
+            		//debug($idEvenementGroupEvenement);
+            		$resAdresses = $this->getAdressesFromEvenementGroupeAdresses($idEvenementGroupeAdresse);
+            		$arrayIntituleAdresses = array();
+            		while($fetchAdresses = mysql_fetch_assoc($resAdresses))
+            		{
+            			$arrayIntituleAdresses[]=$this->getIntituleAdresse($fetchAdresses);
+            		}
+            		$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
+            		//debug($arrayIntituleAdresses);
+            	}
+            	//debug($fetch);
+            	
                 
-                
-                
-                $idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($fetch['idEvenementGroupeAdresse']);
-                //$fetchAdresse = $this->getArrayAdresseFromIdAdresse($idAdresse);
-                //$intituleAdresse = $this->getIntituleAdresse($fetchAdresse);
                 $imageSurListeTousLesCommentaires="";
-                $urlAdresse = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$fetch['idEvenementGroupeAdresse']));
+                $urlAdresse = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
                 if(isset($params['afficherTous']) && $params['afficherTous']==true)
                 {
                     $txtCommentaire = stripslashes(stripslashes($fetch['commentaire']));
-                    $arrayImage = $this->getUrlImageFromAdresse($idAdresse,'mini',array('idEvenementGroupeAdresse'=>$fetch['idEvenementGroupeAdresse']));
+                    $arrayImage = $this->getUrlImageFromAdresse($idAdresse,'mini',array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
                     $imageSurListeTousLesCommentaires="<div style='float:left;display:block;overflow:visible;padding-right:3px;width:80px;text-align:center;'><a href='".$urlAdresse."'><img src='".$arrayImage['url']."' border=0 align=middle></a></div>";
                 }
                 else
