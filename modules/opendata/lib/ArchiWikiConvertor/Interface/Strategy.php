@@ -1,9 +1,10 @@
 <?php
 abstract class Strategy{
 	var $config;
-	public function __construct($c=NULL){
+	public function __construct($c){
 		if($c != NULL){
-			$this->config= new Config(c);
+			$this->config= $c;
+			var_dump($)		
 		}
 	}
 	
