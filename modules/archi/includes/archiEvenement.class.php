@@ -288,7 +288,6 @@ class archiEvenement extends config
 				}
 				else
 				{
-					//debug($this->variablesPost);
 					//***************
 					//**  ENREGISTREMENT
 					//**
@@ -298,8 +297,9 @@ class archiEvenement extends config
 					// ayant pour type d'évènement un groupe d'adresses
 					// sur lequel on va donc lier les adresses
 
-					if (!isset($this->variablesPost['evenementGroupeAdresse']) || $this->variablesPost['evenementGroupeAdresse']=='')//(empty($tabForm['evenements']['value']))
+					if (isset($this->variablesPost['evenementGroupeAdresse']) && $this->variablesPost['evenementGroupeAdresse']!='')//(empty($tabForm['evenements']['value']))
 					{
+						
 						// creation de l'evenement parent groupe d'adresse
 						$sql = "INSERT INTO evenements (titre, description, dateDebut, dateFin, idSource, idUtilisateur, idTypeStructure, idTypeEvenement,dateCreationEvenement)
 								VALUES ('', '', '', '', ".$idSource.", ".$idUtilisateur.", 0, '".$this->getIdTypeEvenementGroupeAdresse()."', now())";
@@ -310,6 +310,7 @@ class archiEvenement extends config
 						$idEvenement = $this->connexionBdd->getLastId();
 						$idSousEvenement =$idEvenement+ 1; // id du sous evenements lié à l'evenement groupe d'adresses
 
+						
 						// on lie les adresses a l'evenement groupe d'adresse
 						if (!empty($tabForm['adresses']['value']))
 						{
@@ -800,8 +801,30 @@ class archiEvenement extends config
 					$sqlHistoriqueEvenement = "INSERT INTO evenements ( titre, description, dateDebut, dateFin, idSource, idUtilisateur, idTypeStructure, idTypeEvenement, dateCreationEvenement,nbEtages, ISMH , MH, isDateDebutEnviron,numeroArchive)
 							VALUES (\"".$titre."\", \"".$description."\", '".$dateDebut."', '".$dateFin."', ".$idSource.", ".$idUtilisateur.", '".$idTypeStructure."', '".$idTypeEvenement."', NOW(),'".$nbEtages."','".$ISMH."','".$MH."','".$isDateDebutEnviron."',\"".$numeroArchive."\")";
 
+					$sqlHistoriqueEvenement = "
+							UPDATE evenements
+							SET titre= '".$titre."',
+							description = '".$description."',
+							dateDebut = '".$dateDebut."',
+							dateFin = '".$dateFin."',
+							idSource = '".$idSource."',
+							idUtilisateur = '".$idUtilisateur."',
+							idTypeStructure = '".$idTypeStructure."',
+							dateCreationEvenement = NOW(),
+							nbEtages = '".$nbEtages."', 
+							ISMH ='".$ISMH."', 
+							MH = '".$MH."', 
+							isDateDebutEnviron='".$isDateDebutEnviron."',
+							numeroArchive='".$numeroArchive."'
+							WHERE idEvenement = ".$idEvenement."
+							
+							
+							";
+					
+					//TODO : Cleanup debug , redirection
 					$this->connexionBdd->requete($sqlHistoriqueEvenement);
 
+					
 					$idHistoriqueEvenementNouveau = mysql_insert_id();
 
 
@@ -862,7 +885,7 @@ class archiEvenement extends config
 								$sqlEvenementPersonne .= '('.$idPersonne.', '.$idEvenement.'),';
 							}
 							$sqlEvenementPersonne = pia_substr( $sqlEvenementPersonne, 0, -1);
-
+								
 							$this->connexionBdd->requete($sqlEvenementPersonne);
 						}
 					}
@@ -1009,7 +1032,8 @@ class archiEvenement extends config
 
 			$resAdresse = $this->connexionBdd->requete($reqAdresse);
 			$fetchAdresse = mysql_fetch_assoc($resAdresse);
-			$html = $adresse->afficherDetail('',$idEvenementGroupeAdresse);
+			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
+			//$html = $adresse->afficherDetail('',$idEvenementGroupeAdresse);
 			/*$arrayAffichage = $this->afficher($id);
 			 $html .= $arrayAffichage['html'];
 			*/
@@ -6724,14 +6748,18 @@ class archiEvenement extends config
 				u.idUtilisateur as idUtilisateur, 
 				hE.numeroArchive as numeroArchive,
 				ae.idAdresse,
-				ha.idVille
+				ha.idVille,
+				ee.idEvenement as idEvenementGroupeAdresse		
+				
 					
 				FROM evenements hE
 				LEFT JOIN source s      ON s.idSource = hE.idSource
 				LEFT JOIN typeStructure tS  ON tS.idTypeStructure = hE.idTypeStructure
 				LEFT JOIN typeEvenement tE  ON tE.idTypeEvenement = hE.idTypeEvenement
 				LEFT JOIN utilisateur u     ON u.idUtilisateur = hE.idUtilisateur
-				LEFT JOIN _adresseEvenement ae on ae.idEvenement ='.$idEvenement.'
+
+				LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie ='. $idEvenement.'
+				LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
 				LEFT JOIN historiqueAdresse ha on ha.idAdresse= ae.idAdresse
 						
 				WHERE hE.idEvenement='.$idEvenement.'
@@ -6784,6 +6812,7 @@ class archiEvenement extends config
 		$metier="";
 		$arrayPersonne = array();
 		while( $res = mysql_fetch_object($rep)){
+			$idEvenementGroupeAdresse = $fetch['idEvenementGroupeAdresse'];
 			$personne=array();
 			if(isset($res->metier) && $res->metier!='')	{
 				$metier = $res->metier.' : ';
@@ -6861,10 +6890,11 @@ class archiEvenement extends config
 		$isModerateur = $u->isModerateurFromVille($userId,$cityId,'idVille');
 		$isAdmin = ($u->getIdProfil($userId)=='4');
 	
+		
 		$urlMenuAction = array(
 				'ajouterImage'     => $this->creerUrl('','ajoutImageEvenement',array('archiIdEvenement'=>$idEvenement)),
 				'modifierImage'    => $this->creerUrl('','modifierImageEvenement',array('archiIdEvenement'=>$idEvenement)),
-				'modifierEvenement'=> $this->creerUrl('', 'modifierEvenement', array_merge(array('archiIdEvenement' => $idEvenement,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse),$arrayIdAdresseToUrl)),
+				'modifierEvenement'=>$this->creerUrl('', 'modifierEvenement', array('archiIdEvenement' => $idEvenement,'archiIdEvenementGroupeAdresse'=>$fetch['idEvenementGroupeAdresse'],'archiIdAdresse'=>$fetch['idAdresse'])),
 				'supprimerEvenement' =>  $this->creerUrl('supprimerEvenement', '',  array('archiIdEvenement'=>$idEvenement)),
 	
 				'urlImporterImage'=>"#",
@@ -6950,11 +6980,11 @@ class archiEvenement extends config
 			$menuArray[] = array('evenement.menuAction.rowName', array(
 					'actionName'=>'Supprimer',
 					'urlAction'=>'#',
-					'actionTarget'=>'Évènement'
+					'actionTarget'=>'Événement'
 			));
 				
 			$menuArray[] = array('evenement.menuAction.rowName.confirmMessage', array(
-					'message'=>'Voulez vous vraiment supprimer cet évènement ?',
+					'message'=>'Voulez vous vraiment supprimer cet événement ?',
 					'url'=>$urlMenuAction['supprimerEvenement']
 			));
 				

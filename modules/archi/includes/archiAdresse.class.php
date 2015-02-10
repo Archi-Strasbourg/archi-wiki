@@ -527,13 +527,7 @@ class archiAdresse extends ArchiContenu
 		}
 		$t->assign_block_vars('sommaireEvenements', array());
 		//Preparing the loop on all related event to the current address
-		/*
-		$requeteIdEvenements = "
-				SELECT idEvenementAssocie as idEvenement
-				FROM _evenementEvenement
-				WHERE idEvenement = ".$idEvenementGroupeAdresse."
-				";
-		*/
+
 		$requeteIdEvenements = "
 				SELECT idEvenement 
 				FROM positionsEvenements
@@ -542,7 +536,6 @@ class archiAdresse extends ArchiContenu
 				";
 		
 		$resultIdEvenements = $this->connexionBdd->requete($requeteIdEvenements);
-		
 		
 		
 		//Add actions buttons
