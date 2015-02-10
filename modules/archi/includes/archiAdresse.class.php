@@ -14426,7 +14426,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			);
 			//Generating next/previous pagination link
 			$siblingIndex = $this->getNextPreviousPages($optionsPagination['currentPage'] , $optionsPagination['nbPages']);
-				
 			$indexToDisplay = $this->getPaginationIndex($optionsPagination);
 			foreach ($indexToDisplay as $indexPage){
 				$t->assign_block_vars(
@@ -14482,6 +14481,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				)
 			 */
 			foreach ($addressesInfromations as $info){
+				$titreEvenements="";
 				$illustration = $this->getUrlImageFromAdresse(
 						$info['idHistoriqueAdresse'], 
 						'mini', 
@@ -14492,8 +14492,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				
 				
 				//Processing name of the address
-				$nom = $info['nom'];
-				$fulladdress =  $this->getIntituleAdresseFrom($info['idEvenementGroupeAdresse'],$type='idEvenementGroupeAdresse');
+				$nom = ucfirst($info['nom']);
+				$fulladdress =  ucfirst($this->getIntituleAdresseFrom($info['idEvenementGroupeAdresse'],$type='idEvenementGroupeAdresse'));
 				
 				
 				//If prisdepuis
@@ -14544,9 +14544,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 
 					//Event title
 					$titreEvenements = 	implode(" - ", $info['titresEvenements']); // Getting all the events links on one line
-					$t->assign_block_vars(
-						'adresses',
-						array('titresEvenements'        => $titreEvenements));
 				}
 								
 				
@@ -14558,6 +14555,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 								'urlImageIllustration'    => 'getPhotoSquare.php?id='.$illustration['idHistoriqueImage'],
 								'alt' => $nom,
 								'urlDetailHref' => $addressUrl,
+								'titresEvenements'        => $titreEvenements,
 								'urlDetailOnClick' => $urlDetailOnClick
 						)
 				);
@@ -14586,14 +14584,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			
 			//Building WHERE clause
 			$whereClause = 'WHERE idHistoriqueAdresse IN (';
+			$orderByClause = 'ORDER BY FIELD(idHistoriqueAdresse, ';
 			$i=0;
 			$nbElt=count($idList);
 			foreach ($idList as $id){
 				if(++$i==$nbElt){
 					$whereClause .= $id." ) ";
+					$orderByClause .= $id." ) ";
 				}
 				else{
 					$whereClause .= $id." , ";
+					$orderByClause .= $id." , ";
 				}
 			}
 			
@@ -14611,11 +14612,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idHistoriqueAdresse
     				".$whereClause."
     				GROUP BY ha.idHistoriqueAdresse
-    						
-					".$limit."
+					".$orderByClause."
 							";
 			$res = $this->connexionBdd->requete($req);
-			
 			//Processing all the adresses get from the request : getting address title and link to the events linked
 			while($fetch = mysql_fetch_assoc($res)){
 				$reqTitresEvenements ="
@@ -14631,11 +14630,11 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$resTitresEvenements = $this->connexionBdd->requete($reqTitresEvenements);
 				$titresEvenements = array();
 				$positionAncre=0;
-				$defaultEventTitle= "Evenement sans titre";
+				$defaultEventTitle= "Événements sans titre";
 				
 				//Generating all the link to the events linked to current address 
 				while ($row = mysql_fetch_assoc($resTitresEvenements)) {
-					$titre = ($row['titre']=="") ? $defaultEventTitle : $row['titre']; //Assigning default title to event which doesn't have one 
+					$titre = ($row['titre']=="") ? $defaultEventTitle : ucfirst($row['titre']); //Assigning default title to event which doesn't have one 
 					//Link creation with the ancre to each event
 					$titresEvenements[] =
 				 	"<a href='".

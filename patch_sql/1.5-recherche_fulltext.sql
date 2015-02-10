@@ -23,6 +23,7 @@ CREATE TABLE recherche AS
                 CONVERT( ha1.numero USING utf8 ) as numeroAdresse,
                 ha1.idHistoriqueAdresse,
                 ha1.idIndicatif as idIndicatif,
+                ind.nom as nomIndicatif,
 				ha1.latitude AS latitude,
                 ha1.longitude AS longitude,
 				he1.idTypeStructure as idTypeStructure,
@@ -33,9 +34,11 @@ CREATE TABLE recherche AS
 				he1.ISMH as ISMH,
 				he1.MH as MH,
 				eca.idCourantArchitectural as idCourantArchitectural,
-				CONCAT_WS( '', he1.titre, CONVERT( ha1.numero USING utf8 ) , r.prefixe, r.nom, sq.nom, q.nom, v.nom, p.nom ) as concat1,
-				CONCAT_WS('', pers.nom, pers.prenom) as concat2,
-				CONCAT_WS('',pers.prenom , pers.nom) as concat3
+				CONCAT_WS('', CONVERT(ha1.numero USING utf8), ind.nom, r.prefixe, r.nom, sq.nom,  q.nom,  v.nom,  p.nom) as concat1,
+				CONCAT_WS('', CONVERT(ha1.numero USING utf8), ' ', r.prefixe, ' ', r.nom)as concat2,
+				CONCAT_WS('', he1.titre, CONVERT(ha1.numero USING utf8), ' ', r.prefixe, ' ', r.nom)as concat3,
+				CONCAT_WS('', pers.nom, pers.prenom) as concat4,
+				CONCAT_WS('', pers.prenom, pers.nom) as concat5
 
 
         
@@ -68,7 +71,7 @@ ALTER TABLE recherche ENGINE=MYISAM;
 
 
 -- Adding the index for the fulltext search
-ALTER TABLE recherche ADD FULLTEXT INDEX `search` (nomRue, nomQuartier, nomSousQuartier, nomVille, nomPays, numeroAdresse, prefixeRue, description, titre , nomPersonne, prenomPersonne, concat1,concat2,concat3);
+ALTER TABLE recherche ADD FULLTEXT INDEX `search` (nomRue, nomQuartier, nomSousQuartier, nomVille, nomPays, numeroAdresse, prefixeRue, description, titre , nomPersonne, prenomPersonne, concat1,concat2,concat3,concat4,concat5);
 
 
 

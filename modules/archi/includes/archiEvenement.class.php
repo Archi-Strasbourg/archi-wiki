@@ -1141,7 +1141,6 @@ class archiEvenement extends config
 
 			// recup d'idAdresse pour l'affichage du detail de l'adresse a la fin de la suppression
 			$reqSuppHistorique = "DELETE FROM evenements WHERE idEvenement = '".idEvenement."'";
-			//debug($reqSuppHistorique);
 			$resSupprHistorique = $this->connexionBdd->requete($reqSuppHistorique);
 
 
