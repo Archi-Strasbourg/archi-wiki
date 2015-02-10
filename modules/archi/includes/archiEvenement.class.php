@@ -163,6 +163,8 @@ class archiEvenement extends config
 
 			$idEvenement = $this->connexionBdd->getLastId();
 			
+			$idSousEvenement = $idEvenement;
+			
 			
 			// on relie l'evenement pere (groupe d'adresse ) à l'evenement fils
 			$sqlAssociationNettoie = "delete from _evenementEvenement where idEvenement = '".$idEvenementGroupeAdresse."'";
@@ -821,7 +823,6 @@ class archiEvenement extends config
 							
 							";
 					
-					//TODO : Cleanup debug , redirection
 					$this->connexionBdd->requete($sqlHistoriqueEvenement);
 
 					
@@ -1273,26 +1274,21 @@ class archiEvenement extends config
 
 				// s'il n'y a aucun evenement lié au groupe d'adresses , on peut supprimer le groupe d'adresse et les liaisons vers celui ci
 				$reqDeleteGroupeAdresseHistorique = "DELETE FROM evenements WHERE idEvenement = '".$idEvenementGroupeAdresse."'";
-				//debug($reqDeleteGroupeAdresseHistorique);
 				$resDeleteGroupeAdresseHistorique = $this->connexionBdd->requete($reqDeleteGroupeAdresseHistorique);
 
 				$reqDeleteAdresseGroupeAdresse = "DELETE FROM _adresseEvenement WHERE idEvenement = '".$idEvenementGroupeAdresse."'";
-				//debug($reqDeleteAdresseGroupeAdresse);
 				$resDeleteAdresseGroupeAdresse = $this->connexionBdd->requete($reqDeleteAdresseGroupeAdresse);
 
 				// on supprime aussi les liaisons vers le groupe d'adresse dans les adresses liés
 				$reqDeleteLiaisonsAdressesLiees = "DELETE FROM _evenementAdresseLiee WHERE idEvenementGroupeAdresse='".$idEvenementGroupeAdresse."'";
-				//debug($reqDeleteLiaisonsAdressesLiees );
 				$resDeleteAdresseGroupeAdresse = $this->connexionBdd->requete($reqDeleteLiaisonsAdressesLiees);
 
 				// supprimons aussi les liaisons vueSur et prisDepuis sur le groupe d'adresse
 				$reqDeleteVueSurPrisDepuis = "DELETE FROM _adresseImage WHERE idEvenementGroupeAdresse = '".$idEvenementGroupeAdresse."' AND (vueSur='1' OR prisDepuis='1')";
-				//debug($reqDeleteVueSurPrisDepuis );
 				$resDeleteVueSurPrisDepuis = $this->connexionBdd->requete($reqDeleteVueSurPrisDepuis);
 
 				// suppression des liaisons entre evenement et evenement groupe d'adresse
 				$reqDeleteEvenementGAEvenementAssocie = "DELETE FROM _evenementEvenement WHERE idEvenement='".$idEvenementGroupeAdresse."'";
-				//debug($reqDeleteEvenementGAEvenementAssocie);
 				$resDeleteEvenementGAEvenementAssocie = $this->connexionBdd->requete($reqDeleteEvenementGAEvenementAssocie);
 			}
 		}
@@ -1598,7 +1594,6 @@ class archiEvenement extends config
 						//$t->assign_vars(array("divDisplayMenuAction"=>"none"));
 
 						
-						//debug($fetchAdressesExternes['idAdresse']);
 						$ancrePositionAdresseLiee = "";
 
 						$positionSurAdresseOrigine = $adresse->getPositionFromEvenement($idEvenement);
@@ -2959,7 +2954,6 @@ class archiEvenement extends config
 	// *********************************************************************
 	public function getTitreFromFirstChildEvenement($idEvenementGroupeAdresse=0)
 	{
-		//debug("Big modification on the request, doesn't seem to be buggy");
 		$query="
 				select he.titre as titre
 				from evenements he2, evenements he
@@ -3174,7 +3168,6 @@ class archiEvenement extends config
 						";
 
 
-		//debug("Modification might be buggy on getParent");
 		$rep = $this->connexionBdd->requete($sql);
 
 		if (mysql_num_rows($rep) > 0) {
@@ -4123,7 +4116,6 @@ class archiEvenement extends config
 						and he.idTypeEvenement = '".$this->getIdTypeEvenementGroupeAdresse()."'
 								group by he.idEvenement
 								";
-		//debug($req);
 		$res = $this->connexionBdd->requete($req);
 
 		if(mysql_num_rows($res)==1)
@@ -4786,7 +4778,6 @@ class archiEvenement extends config
 	// on va donc trouver la position du nouvel evenement et renvoyer les nouvelles positions de tous les evenements pour les mettres toutes a jour
 	public function majPositionsEvenements($params = array())
 	{
-		//debug($params);
 		$retour = true;
 		$tabTravail = array();
 
@@ -5030,13 +5021,11 @@ class archiEvenement extends config
 		$fieldsCommentaires=$this->getCommentairesFields();
 		$formulaire = new formGenerator();
 
-		//debug($error);
 		if($auth->estConnecte())
 		{
 			unset($fieldsCommentaires['captcha']);
 		}
 		$error = $formulaire->getArrayFromPost($fieldsCommentaires);
-		debug($this->variablesPost);
 		if(count($error)==0)
 		{
 			$idUtilisateur=0;
@@ -5159,9 +5148,7 @@ class archiEvenement extends config
 		}
 		else
 		{
-			debug($error);
-			debug($_POST);
-			//header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false));
+			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false));
 			
 			$this->erreurs->ajouter('Il y a une erreur dans le formulaire.');
 			echo $this->erreurs->afficher();
@@ -7025,13 +7012,9 @@ class archiEvenement extends config
 
 	
 	function displaySingleEvent($idEvenement){
-
 		global $countTest;
 		$countTest=0;
 		$evenement = $this->getEventInfos(152);
-		//debug($countTest);
-		////debug($evenement);
-		
 	}
 	
 	

@@ -1919,7 +1919,6 @@ class ArchiAccueil extends config
 					$item['imgUrl'] = $this->getUrlRacine().'getPhotoSquare.php?id='.$new['photoIllustration'];;
 					$item['urlItem'] = $this->creerUrl('', 'afficherActualite', array('archiIdActualite'=>$new['idActualite']));;
 					$item['textItem'] = strip_tags($new['texte']);
-					//debug($item);
 					
 					$itemContent[]=$item;
 				}
