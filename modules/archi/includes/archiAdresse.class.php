@@ -519,12 +519,6 @@ class archiAdresse extends ArchiContenu
 				'popupGoogleMap'=>$calqueGoogleMap->getDivNoDraggableWithBackgroundOpacity(array('top'=>20,'lienSrcIFrame'=>'','contenu'=>$contenuIFramePopup))
 		));
 		
-		if($authentification->estConnecte()){
-			$t->assign_block_vars('listeAdressesVoisines.favoris', array(
-					//'urlFavoris' => $this->creerUrl('saveInterest','',array('adresse'=>$idAdresse)) 
-					'urlFavoris' => $this->creerUrl('','saveInterest',array('adresse'=>$idAdresse)) 
-			));
-		}
 		$t->assign_block_vars('sommaireEvenements', array());
 		//Preparing the loop on all related event to the current address
 

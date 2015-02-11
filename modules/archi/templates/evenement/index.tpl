@@ -22,11 +22,6 @@
 				</a></li>
 				<li class="seeAll"><a href="{listeAdressesVoisines.urlAutresBiensQuartier}"><?_("Voir tous les bâtiments de ce quartier...")?>
 				</a></li>
-				<!-- BEGIN favoris -->
-					<li class="ajouterFavoris seeAll">
-					<a href="{listeAdressesVoisines.favoris.urlFavoris}">Ajouter aux favoris</a>
-					</li>
-				<!-- END favoris -->
 			</ul>
 		</div>
 	</div>
