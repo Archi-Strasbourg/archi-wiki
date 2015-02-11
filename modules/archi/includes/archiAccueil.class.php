@@ -518,7 +518,6 @@ class ArchiAccueil extends config
             	);
             	$t->assign_block_vars('commentaire', $commentaire);
             }
-            
 
             //Gestion des dernieres modifs
             $lastModifs = $this->getLatestModification(8);
@@ -573,10 +572,12 @@ class ArchiAccueil extends config
             }
             else{
 	            
-	            
-	            
 	            //Gestion des derniers favoris
-            	$t->assign_var('urlCustomNewsFeed',$this->creerUrl('', 'mesInterets', array()) );
+            	$t->assign_vars(array(
+            			'urlCustomNewsFeed'=>$this->creerUrl('', 'mesInterets', array()) ,            					
+            			'favorisTitle' =>  _("Bâtiments favoris")
+            		)
+				);
 	            $latestFav = $this->getLatestFav(3);
 	            if(empty($latestFav)){
 	            	$favoris = array(
@@ -2240,7 +2241,6 @@ class ArchiAccueil extends config
     	
     	$interest = new archiInterest();
     	$test = $interest->testInterest();
-    	debug($test);
     	
     	$requete ="
 	    		SELECT 

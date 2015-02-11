@@ -116,19 +116,19 @@
     <div id="content" class="content">
     	<nav  class="menu-new push-menu-left inline-block">
 			<ul>
-				<li><a href="index.php">Accueil</a></li>
-				<li><a href="index.php?archiAffichage=page&idPage=6">Présentation du site</a></li>
-				<li><a href="index.php?archiAffichage=page&idPage=7">Revue de presse</a></li>
-				<li><a href="{quiSommesNous}">Qui sommes-nous ?</a></li>
-				<li><a href="{listeDossiers}">Adresses</a></li>
+				<li><a href="index.php"><?_("Accueil")?></a></li>
+				<li><a href="index.php?archiAffichage=page&idPage=6"><?_("Présentation du site")?></a></li>
+				<li><a href="index.php?archiAffichage=page&idPage=7"><?_("Revue de presse")?></a></li>
+				<li><a href="{quiSommesNous}"><?_("Qui sommes-nous ?")?></a></li>
+				<li><a href="{listeDossiers}"><?_("Adresses")?></a></li>
 				<!-- BEGIN isParcours -->
-				<li><a href="{parcours}">Parcours</a></li>
+				<li><a href="{parcours}"><?_("Parcours")?></a></li>
 				<!-- END isParcours -->
-				<li class="opendataLink"><a href="{urlOpendata}">Accéder à l'Opendata</a>
-				<li><a href="{ajoutNouveauDossier}">Ajouter une adresse</a></li>
-				<li><a href="{ajoutNouvellePersonne}">Ajouter une personne</a></li>
-				<li><a href="{nosSources}">Nos sources</a></li>
-				<li><a href="index.php?archiAffichage=donateurs">Nos donateurs</a></li>
+				<li class="opendataLink"><a href="{urlOpendata}"><?_("Accéder à l'Opendata")?></a>
+				<li><a href="{ajoutNouveauDossier}"><?_("Ajouter une adresse")?></a></li>
+				<li><a href="{ajoutNouvellePersonne}"><?_("Ajouter une personne")?></a></li>
+				<li><a href="{nosSources}"><?_("Nos sources")?></a></li>
+				<li><a href="index.php?archiAffichage=donateurs"><?_("Nos donateurs")?></a></li>
 			</ul>
 		</nav>
         <div id="primaryContentContainer" class="inline-block">

@@ -207,7 +207,7 @@ $t->assign_vars(
 
 
 
-$labelConnexion = _('Connexion');
+$labelConnexion = _("Connexion");
 $imgConnexion="images/logo_connexion.png";
 if ($authentification->estConnecte() !== true) {
     // utilisateur pas connecté
@@ -275,7 +275,7 @@ else {
     	    $t->assign_block_vars('linkConnected', array(
 	    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
 	    		'authLinkUrl'=> $config->creerUrl('', 'utilisateurListe'),
-	    		'authLinkLabel' => _('Utilisateurs')
+	    		'authLinkLabel' => _("Utilisateurs")
 	    ));
     }
     
@@ -283,29 +283,29 @@ else {
 	    $t->assign_block_vars('linkConnected', array(
 	    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
 	    		'authLinkUrl'=> $config->creerUrl('', 'afficheLogsMails'),
-	    		'authLinkLabel' => _('Logs Mails')
+	    		'authLinkLabel' => _("Logs Mails")
 	    ));
 	    $t->assign_block_vars('linkConnected', array(
 	    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
 	    		'authLinkUrl'=> $config->creerUrl('', 'administration'),
-	    		'authLinkLabel' => _('Administration')
+	    		'authLinkLabel' => _("Administration")
 	    ));
     }
     $t->assign_block_vars('linkConnected', array(
     		'authLinkOneClass'=> ' authLinkOneClass forgetPasswordLabel',
     		'authLinkUrl'=> $config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'profil')),
-    		'authLinkLabel' => _('Mon profil')
+    		'authLinkLabel' => _("Mon Profil")
     ));
     $t->assign_block_vars('linkConnected', array(
     		'authLinkOneClass'=> ' authLinkOneClass forgetPasswordLabel',
     		'authLinkUrl'=> $config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'monArchi')),
-    		'authLinkLabel' => _('Mon Archi')
+    		'authLinkLabel' => _("Mon Archi")
     ));
     
     $t->assign_block_vars('linkConnected', array(
     		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
     		'authLinkUrl'=> $config->creerUrl('deconnexion', 'authentification'),
-    		'authLinkLabel' => _('Déconnexion')
+    		'authLinkLabel' => _("Déconnexion")
     ));
 
     

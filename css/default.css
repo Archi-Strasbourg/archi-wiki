@@ -2004,6 +2004,10 @@ Page d'accueil
 	width: 900px;
 }
 
+.lastModifsAccueil > h2{
+	margin-bottom: 10px;
+}
+
 .favorisAccueil{
 	width: 900px;
 	margin-bottom: 20px;
@@ -2107,14 +2111,14 @@ Page d'accueil
 
 .miniatureWrapper{
 	position: relative;
-	width: 200px;
-	height: 200px;
+	width: 150px;
+	height: 150px;
 }
 
 .miniatureWrapper img{
 	border: none;	
-	width: 200px;
-	height: 200px;
+	width: 150px;
+	height: 150px;
 }
 
 .miniature{
