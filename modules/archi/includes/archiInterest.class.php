@@ -72,8 +72,7 @@ class archiInterest extends config{
 		 */
 		foreach ($userInterest as $interestByCat){
 			if(!isset($interestByCat[0]['vide'])){
-				$t->assign_block_vars('interestList',array('title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centres d\'intéret','CSSclass'=>'interestList'));
-				
+				$t->assign_block_vars('interestList',array('title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centres d\'intérêt','CSSclass'=>'interestList'));
 				/*
 				 * Interest of each category
 				 */
@@ -269,6 +268,146 @@ class archiInterest extends config{
 	}
 	
 	
+	
+	public function testInterest(){
+		
+		/*
+		 * Adresse
+		 */
+		$idEvenementArray = array();
+		$idEvenementArray[]= "adresse";
+		$requeteAdresse ="
+				SELECT ae.idEvenement
+				FROM _interetAdresse ia
+				LEFT JOIN historiqueAdresse ha on ha.idHistoriqueAdresse = ia.idHistoriqueAdresse
+				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
+				WHERE ia.idUtilisateur = ".$this->userId." 
+				";
+		$resultAdresse = $this->connexionBdd->requete($requeteAdresse);
+		while($rowAdresse = mysql_fetch_assoc($resultAdresse)){
+			if(isset($rowAdresse['idEvenement'] ) && $rowAdresse['idEvenement']!=''){
+				$idEvenementArray[] = $rowAdresse['idEvenement'];
+			}
+		}
+		
+		
+		/*
+		 * Rue
+		 */
+		$idEvenementArray[]= "rue";
+		$requete ="
+				SELECT ae.idEvenement
+				FROM _interetRue i
+				LEFT JOIN historiqueAdresse ha on ha.idRue = i.idRue
+				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
+				WHERE i.idUtilisateur = ".$this->userId."
+				";
+		$result = $this->connexionBdd->requete($requete);
+		while($row = mysql_fetch_assoc($result)){
+			if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
+				$idEvenementArray[] = $row['idEvenement'];
+			}
+		}
+		
+		
+		/*
+		 * Sous quartier
+		 */
+		$idEvenementArray[]= "sousQuartier";
+			$requete ="
+				SELECT ae.idEvenement
+				FROM _interetSousQuartier i
+				LEFT JOIN historiqueAdresse ha on ha.idSousQuartier = i.idSousQuartier
+				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
+				WHERE i.idUtilisateur = ".$this->userId."
+				";
+		$result = $this->connexionBdd->requete($requete);
+		while($row = mysql_fetch_assoc($result)){
+			if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
+				$idEvenementArray[] = $row['idEvenement'];
+			}
+		}
+		
+		/*
+		 * Personne
+		 */
+		$idEvenementArray[]= "Personne";
+		$requete ="
+				SELECT ep.idEvenement
+				FROM _interetPersonne i
+				LEFT JOIN _evenementPersonne ep on ep.idPersonne = i.idPersonne
+				WHERE i.idUtilisateur = ".$this->userId."
+				";
+		$result = $this->connexionBdd->requete($requete);
+		while($row = mysql_fetch_assoc($result)){
+			if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
+				$idEvenementArray[] = $row['idEvenement'];
+			}
+		}
+		
+		
+		/*
+		 * Quartier
+		 */
+		$idEvenementArray[]= "quartier";
+		$requete ="
+				SELECT ae.idEvenement
+				FROM _interetQuartier i
+				LEFT JOIN historiqueAdresse ha on ha.idQuartier = i.idQuartier
+				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
+				WHERE i.idUtilisateur = ".$this->userId."
+				";
+		$result = $this->connexionBdd->requete($requete);
+		while($row = mysql_fetch_assoc($result)){
+			if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
+				$idEvenementArray[] = $row['idEvenement'];
+			}
+		}
+		
+		/*
+		 * Ville
+		 */
+		$idEvenementArray[]= "Ville";
+		$requete ="
+				SELECT ae.idEvenement
+				FROM _interetVille i
+				LEFT JOIN historiqueAdresse ha on ha.idVille = i.idVille
+				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
+				WHERE i.idUtilisateur = ".$this->userId."
+				";
+		$result = $this->connexionBdd->requete($requete);
+		while($row = mysql_fetch_assoc($result)){
+			if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
+				$idEvenementArray[] = $row['idEvenement'];
+			}
+		}
+		
+		
+		/*
+		 * Pays
+		 */
+		$idEvenementArray[]= "pays";
+		$requetePays ="
+				SELECT ae.idEvenement
+				FROM _interetPays ip
+				LEFT JOIN historiqueAdresse ha on ha.idPays = ip.idPays
+				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
+				WHERE ip.idUtilisateur = ".$this->userId."
+						";
+		$resultPays = $this->connexionBdd->requete($requetePays);
+		while($rowPays = mysql_fetch_assoc($resultPays)){
+			if($rowPays['idEvenement'] != "" && isset($rowPays['idEvenement'])){
+				$idEvenementArray[] = $rowPays['idEvenement'];
+			}
+		}
+
+		return $idEvenementArray;
+	}
+	
+	
+	
+	
+	
 
 	/*
 	 * Private functions
@@ -283,10 +422,10 @@ class archiInterest extends config{
 	private function getCountryInterest(){
 		$countriesList = array();
 		$requete = "
-				SELECT p.idPays , p.nom , i.pays_idPays
+				SELECT p.idPays , p.nom , i.idPays
 				FROM pays p
-				LEFT JOIN _interetPays i on i.pays_idPays = p.idPays
-				WHERE i.utilisateur_idUtilisateur  = ".$this->userId."
+				LEFT JOIN _interetPays i on i.idPays = p.idPays
+				WHERE i.idUtilisateur  = ".$this->userId."
 						";
 
 		$res = $this->connexionBdd->requete($requete);
@@ -304,10 +443,10 @@ class archiInterest extends config{
 	private function getCityInterest(){
 		$citiesList = array();
 		$requete = "
-				SELECT v.idVille , v.nom , i.ville_idVille
+				SELECT v.idVille , v.nom , i.idVille
 				FROM ville v
-				LEFT JOIN _interetVille i on i.ville_idVille = v.idVille
-				WHERE i.utilisateur_idUtilisateur  = ".$this->userId."
+				LEFT JOIN _interetVille i on i.idVille = v.idVille
+				WHERE i.idUtilisateur  = ".$this->userId."
 						";
 
 		$res = $this->connexionBdd->requete($requete);
@@ -325,10 +464,10 @@ class archiInterest extends config{
 	private function getSubNeighborhoodInterest(){
 		$sneighborhood = array();
 		$requete ="
-				SELECT sq.idSousQuartier , sq.nom , i.sousQuartier_idSousQuartier
+				SELECT sq.idSousQuartier , sq.nom , i.idSousQuartier
 				FROM sousQuartier sq
-				LEFT JOIN _interetSousQuartier i on i.sousQuartier_idSousQuartier = sq.idSousQuartier
-				WHERE i.utilisateur_idUtilisateur  = ".$this->userId."
+				LEFT JOIN _interetSousQuartier i on i.idSousQuartier = sq.idSousQuartier
+				WHERE i.idUtilisateur  = ".$this->userId."
 						";
 		$res = $this->connexionBdd->requete($requete);
 		while ($fetch = mysql_fetch_assoc($res)) {
@@ -361,10 +500,10 @@ class archiInterest extends config{
 	private function getStreetInterest(){
 		$street = array();
 		$requete ="
-				SELECT r.idRue , r.nom , i.rue_idRue
+				SELECT r.idRue , r.nom , i.idRue
 				FROM rue r
-				LEFT JOIN _interetRue i on i.rue_idRue = r.idSousQuartier
-				WHERE i.utilisateur_idUtilisateur  = ".$this->userId."
+				LEFT JOIN _interetRue i on i.idRue = r.idSousQuartier
+				WHERE i.idUtilisateur  = ".$this->userId."
 						";
 		$res = $this->connexionBdd->requete($requete);
 		while ($fetch = mysql_fetch_assoc($res)) {
@@ -403,10 +542,10 @@ class archiInterest extends config{
 	private function getPersonInterest(){
 		$person = array();
 		$requete ="
-				SELECT p.idPersonne , p.nom ,p.prenom, i.rue_idRue
+				SELECT p.idPersonne , p.nom ,p.prenom, i.idRue
 				FROM personne p
-				LEFT JOIN _interetRue i on i.personne_idPersonne = p.idPersonne
-				WHERE i.utilisateur_idUtilisateur  = ".$this->userId."
+				LEFT JOIN _interetRue i on i.idUtilisateur = p.idPersonne
+				WHERE i.idUtilisateur  = ".$this->userId."
 						";
 		$res = $this->connexionBdd->requete($requete);
 		while ($fetch = mysql_fetch_assoc($res)) {
@@ -516,7 +655,6 @@ class archiInterest extends config{
 				$subArray=array(array_merge(array('vide'=>true,'titre'=>$titre),$params));
 				
 			}
-			
 			while ($fetch = mysql_fetch_assoc($res)) {
 				
 				$temp = array_merge($fetch,$params);
@@ -528,6 +666,11 @@ class archiInterest extends config{
 				}
 				else{
 					$temp = array_merge($temp,array('titre' =>$temp['associateTable'] ));
+				}
+				
+				//Ajout de "s" si plusieurs resultats
+				if($temp['associateTable']!='pays'){
+					$temp['titre'].="s";
 				}
 				$subArray[]=$temp;
 			}
@@ -546,7 +689,6 @@ class archiInterest extends config{
 
 	private function generateFormPersonne(){
 		$this->userId;
-
 
 
 

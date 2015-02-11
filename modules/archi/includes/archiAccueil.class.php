@@ -2237,6 +2237,11 @@ class ArchiAccueil extends config
     
     
     public function getLatestModification($nbElts){
+    	
+    	$interest = new archiInterest();
+    	$test = $interest->testInterest();
+    	debug($test);
+    	
     	$requete ="
 	    		SELECT 
 	    		evt.idEvenement AS idEvenement, 
