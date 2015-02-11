@@ -42,7 +42,7 @@
 <TD>
 <div class="inline-block">
 	<div><a href="http://www.strasbourg-creative.eu/"><img alt="Tango scan" src="images/TangoScanLogo_mini.jpg"></a></div>
-	<div><a target=_blank href="http://archives.strasbourg.eu/"><IMG  alt="Archives de la ville de Strasbourg" SRC="images/20120326appeldons/mini_Archives_de_la_ville.jpg"></a></div>
+	<div><a target=_blank href="http://www.strasbourg.eu/"><IMG  alt="La ville de Strasbourg" SRC="images/strasbourg-banner.png"></a></div>
 </div>
 <div class="inline-block">
 <a href="http://www.culturecommunication.gouv.fr/Regions/Drac-Alsace"><img src="images/20120326appeldons/mini_drac.jpg" alt="DRAC"></a>
