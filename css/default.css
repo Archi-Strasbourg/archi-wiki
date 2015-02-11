@@ -2169,7 +2169,7 @@ Page d'accueil
 }
 
 
-.favorisMiniatureWrapper{
+.favorisMiniatureWrapper , .favorisMiniature{
 	//position: absolute;
 	width: 100px;
 	height: 100px;
@@ -2185,6 +2185,8 @@ Page d'accueil
 	float: left;
 	
 }
+
+
 .listeFavoris > div:first-child{
 	margin-top: 10px;
 	margin-bottom: 10px;

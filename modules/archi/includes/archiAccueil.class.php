@@ -603,8 +603,8 @@ class ArchiAccueil extends config
 	            	//Image
 	            	$i=new archiImage();
 	            	$infoImage = $i->getImagePrincipale($fav['idEvenement']);
-	            	//$urlImage = $this->getUrlRacine().$infoImage['dateUpload'].'-'.$infoImage['idHistoriqueImage'].'-moyen.jpg';
-	            	$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
+	            	$urlImage = 'photos--'.$infoImage['dateUpload'].'-'.$infoImage['idHistoriqueImage'].'-moyen.jpg';
+	            	//$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
 	            	 
 	            	//Url Evenement
 	            	$idAdresse = $e->getIdAdresse($fav['idEvenement']);
