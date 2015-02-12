@@ -2112,17 +2112,28 @@ Page d'accueil
 	color: black;
 }
 
-.miniatureWrapper{
+.miniatureWrapper , .newsMiniature{
 	position: relative;
+
+}
+
+.miniatureWrapper{
+	width: 200px;
+	height: 200px;
+}
+
+.newsMiniature{
 	width: 150px;
 	height: 150px;
 }
 
 .miniatureWrapper img{
 	border: none;	
-	width: 150px;
-	height: 150px;
+	width: 100%;
+	height: 100%;
 }
+
+
 
 .miniature{
 	position: absolute;

@@ -7,7 +7,7 @@
 	<hr class="edgeFade"/>
 	<div class="newsContent">	
 		<a class="linkNews" href="{newsAccueil.urlNews}">
-			<div class="miniatureWrapper">
+			<div class="miniatureWrapper newsMiniature">
 				<img alt="" class="miniature" src="{newsAccueil.urlMiniature}">
 				<span class="miniatureLabel"><span class="miniatureLabelLeft"></span><span class="miniatureLabelRight">{newsAccueil.date}</span></span>
 			</div>
