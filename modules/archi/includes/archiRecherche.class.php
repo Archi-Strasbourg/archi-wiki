@@ -2269,7 +2269,7 @@ class archiRecherche extends config {
 			
 				) as relevance
 			
-				FROM recherchemap "
+				FROM recherche "
 				.$sqlWhere.
 				"GROUP BY idHistoriqueAdresse 
 				ORDER BY relevance  ".$order." " . 
@@ -2280,7 +2280,7 @@ class archiRecherche extends config {
 		}
 		else{
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5, 1 as relevance
-				FROM recherchemap "
+				FROM recherche "
 				.$sqlWhere.
 				"
 				GROUP BY idHistoriqueAdresse 
