@@ -28,15 +28,4 @@
 </div>
 <!-- END favoris -->
 </div>
-<p>
-init ?N
-<?php 
-echo gettext("Hello");
-echo "salut";
-echo _("Salut");
-echo _("Ca va ?");
-echo _("Traduction en carton");
-echo _("Je te conchie");
-?>
-</p>
 </div>

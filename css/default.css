@@ -2091,6 +2091,9 @@ Page d'accueil
 .textNews > div{
 	line-height: 16px;
 	overflow: hidden;
+	-o-text-overflow: ellipsis; /* pour Opera 9 */
+  	text-overflow: ellipsis; /* pour le reste du monde */
+  	word-space: nowarp;
 }
 .textNews div:first-child a , .favorisTextWrapper div:first-child a{
 	color: #273638;
