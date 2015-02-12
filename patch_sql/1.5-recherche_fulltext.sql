@@ -37,8 +37,8 @@ CREATE TABLE recherche AS
 				CONCAT_WS('', CONVERT(ha1.numero USING utf8), ind.nom, r.prefixe, r.nom, sq.nom,  q.nom,  v.nom,  p.nom) as concat1,
 				CONCAT_WS('', CONVERT(ha1.numero USING utf8), ' ', r.prefixe, ' ', r.nom)as concat2,
 				CONCAT_WS('', he1.titre, CONVERT(ha1.numero USING utf8), ' ', r.prefixe, ' ', r.nom)as concat3,
-				CONCAT_WS('', pers.nom, pers.prenom) as concat4,
-				CONCAT_WS('', pers.prenom, pers.nom) as concat5
+				CONCAT_WS('', pers.nom,' ', pers.prenom) as concat4,
+				CONCAT_WS('', pers.prenom,' ' , pers.nom) as concat5
 
 
         
