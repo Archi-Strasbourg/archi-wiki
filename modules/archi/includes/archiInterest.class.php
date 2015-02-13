@@ -269,142 +269,149 @@ class archiInterest extends config{
 	}
 	
 	
-	
+	/**
+	 * Get an array of idEvenementGroupeAdresse of the latest modification of the user
+	 * 
+	 * @param number of element to display
+	 * @return array of idEvenementGroupeAdresse
+	 */
 	public function getFavorisIdEvenementGroupeAdresse($nbElts=8){
-		
-		/*
-		 * Adresse
-		 */
-		$requete ="
+		$a = new ArchiAuthentification();
+		if($a->estConnecte()){
+			$this->userId = $a->getIdUtilisateur();
+			/*
+			 * Adresse
+			*/
+			$requete ="
 				SELECT ae.idEvenement
 				FROM _interetAdresse ia
 				LEFT JOIN historiqueAdresse ha on ha.idHistoriqueAdresse = ia.idHistoriqueAdresse
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
-				WHERE ia.idUtilisateur = ".$this->userId." 
-				LIMIT $nbElts
-				";
-		$resultAdresse = $this->connexionBdd->requete($requete);
-		while($rowAdresse = mysql_fetch_assoc($resultAdresse)){
-			if(isset($rowAdresse['idEvenement'] ) && $rowAdresse['idEvenement']!=''){
-				$idEvenementArray[] = $rowAdresse['idEvenement'];
+				WHERE ia.idUtilisateur = ".$this->userId."
+							LIMIT $nbElts
+							";
+			$resultAdresse = $this->connexionBdd->requete($requete);
+			while($rowAdresse = mysql_fetch_assoc($resultAdresse)){
+				if(isset($rowAdresse['idEvenement'] ) && $rowAdresse['idEvenement']!=''){
+					$idEvenementArray[] = $rowAdresse['idEvenement'];
+				}
 			}
-		}
-		
-		/*
-		 * Rue
-		 */
-		$requete ="
+			
+			/*
+			 * Rue
+			*/
+			$requete ="
 				SELECT ae.idEvenement
 				FROM _interetRue i
 				LEFT JOIN historiqueAdresse ha on ha.idRue = i.idRue
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
-				LIMIT $nbElts
-				";
-		$result = $this->connexionBdd->requete($requete);
-		while($row = mysql_fetch_assoc($result)){
-			if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
-				$idEvenementArray[] = $row['idEvenement'];
+							LIMIT $nbElts
+							";
+			$result = $this->connexionBdd->requete($requete);
+			while($row = mysql_fetch_assoc($result)){
+				if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
+					$idEvenementArray[] = $row['idEvenement'];
+				}
 			}
-		}
-		
-		
-		/*
-		 * Sous quartier
-		 */
+			
+			
+			/*
+			 * Sous quartier
+			*/
 			$requete ="
 				SELECT ae.idEvenement
 				FROM _interetSousQuartier i
 				LEFT JOIN historiqueAdresse ha on ha.idSousQuartier = i.idSousQuartier
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
-				LIMIT $nbElts
-				";
-		$result = $this->connexionBdd->requete($requete);
-		while($row = mysql_fetch_assoc($result)){
-			if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
-				$idEvenementArray[] = $row['idEvenement'];
+							LIMIT $nbElts
+							";
+			$result = $this->connexionBdd->requete($requete);
+			while($row = mysql_fetch_assoc($result)){
+				if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
+					$idEvenementArray[] = $row['idEvenement'];
+				}
 			}
-		}
-		
-		
-		/*
-		 * Personne
-		 */
-		$requete ="
+			
+			
+			/*
+			 * Personne
+			*/
+			$requete ="
 				SELECT ep.idEvenement
 				FROM _interetPersonne i
 				LEFT JOIN _evenementPersonne ep on ep.idPersonne = i.idPersonne
 				WHERE i.idUtilisateur = ".$this->userId."
-				LIMIT $nbElts
-				";
-		$result = $this->connexionBdd->requete($requete);
-		while($row = mysql_fetch_assoc($result)){
-			if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
-				$idEvenementArray[] = $row['idEvenement'];
+							LIMIT $nbElts
+							";
+			$result = $this->connexionBdd->requete($requete);
+			while($row = mysql_fetch_assoc($result)){
+				if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
+					$idEvenementArray[] = $row['idEvenement'];
+				}
 			}
-		}
-		
-		
-		/*
-		 * Quartier
-		 */
-		$requete ="
+			
+			
+			/*
+			 * Quartier
+			*/
+			$requete ="
 				SELECT ae.idEvenement
 				FROM _interetQuartier i
 				LEFT JOIN historiqueAdresse ha on ha.idQuartier = i.idQuartier
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
-				LIMIT $nbElts
-				";
-		$result = $this->connexionBdd->requete($requete);
-		while($row = mysql_fetch_assoc($result)){
-			if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
-				$idEvenementArray[] = $row['idEvenement'];
+							LIMIT $nbElts
+							";
+			$result = $this->connexionBdd->requete($requete);
+			while($row = mysql_fetch_assoc($result)){
+				if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
+					$idEvenementArray[] = $row['idEvenement'];
+				}
 			}
-		}
-		
-		
-		
-		/*
-		 * Ville
-		 */
-		$requete ="
+			
+			
+			
+			/*
+			 * Ville
+			*/
+			$requete ="
 				SELECT ae.idEvenement
 				FROM _interetVille i
 				LEFT JOIN historiqueAdresse ha on ha.idVille = i.idVille
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
-				LIMIT $nbElts
-				";
-		$result = $this->connexionBdd->requete($requete);
-		while($row = mysql_fetch_assoc($result)){
-			if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
-				$idEvenementArray[] = $row['idEvenement'];
+							LIMIT $nbElts
+							";
+			$result = $this->connexionBdd->requete($requete);
+			while($row = mysql_fetch_assoc($result)){
+				if(isset($row['idEvenement'] ) && $row['idEvenement']!=''){
+					$idEvenementArray[] = $row['idEvenement'];
+				}
 			}
-		}
-		
-		
-		/*
-		 * Pays
-		 */
-		$requetePays ="
+			
+			
+			/*
+			 * Pays
+			*/
+			$requetePays ="
 				SELECT ae.idEvenement
 				FROM _interetPays ip
 				LEFT JOIN historiqueAdresse ha on ha.idPays = ip.idPays
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE ip.idUtilisateur = ".$this->userId."
-				LIMIT $nbElts
-				";
-		$resultPays = $this->connexionBdd->requete($requetePays);
-		while($rowPays = mysql_fetch_assoc($resultPays)){
-			if($rowPays['idEvenement'] != "" && isset($rowPays['idEvenement'])){
-				$idEvenementArray[] = $rowPays['idEvenement'];
+							LIMIT $nbElts
+							";
+			$resultPays = $this->connexionBdd->requete($requetePays);
+			while($rowPays = mysql_fetch_assoc($resultPays)){
+				if($rowPays['idEvenement'] != "" && isset($rowPays['idEvenement'])){
+					$idEvenementArray[] = $rowPays['idEvenement'];
+				}
 			}
+			
 		}
 		
-
-	
 		return $idEvenementArray;
 	}
 	
