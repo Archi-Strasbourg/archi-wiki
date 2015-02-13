@@ -7023,32 +7023,57 @@ class archiEvenement extends config
 	 * @param unknown $idEvenement related to the address
 	 * @return multitype:array of string composing the address
 	 */
-	public function getArrayAdresse($idEvenement){
-		$requete = "SELECT ha.numero, 
-				r.nom as nomRue,
-				r.prefixe,
-				sq.nom as nomSousQuartier , 
-				q.nom as nomQuartier, 
-				v.codepostal as codepostal , 
-				v.nom as nomVille,
-				p.nom as nomPays
-				FROM evenements evt
-				LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
-				LEFT JOIN _adresseEvenement ae  on ae.idEvenement = ee.idEvenement
-				LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse  
-				LEFT JOIN rue r on r.idRue = ha.idRue
-				LEFT JOIN sousQuartier sq on sq.idSousQuartier = ha.idSousQuartier
-				LEFT JOIN quartier q on q.idQuartier = ha.idQuartier
-				LEFT JOIN ville v on v.idVille = ha.idVille
-				LEFT JOIN pays p on p.idPays = ha.idPays
-				WHERE evt.idEvenement = ".$idEvenement."
-				LIMIT 1
-				";
+	public function getArrayAdresse($idEvenement,$type ='idEvenement'){
+		switch($type){
+			case 'idEvenement':
+				$requete = "SELECT ha.numero,
+						r.nom as nomRue,
+						r.prefixe,
+						sq.nom as nomSousQuartier ,
+						q.nom as nomQuartier,
+						v.codepostal as codepostal ,
+						v.nom as nomVille,
+						p.nom as nomPays
+						FROM evenements evt
+						LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+						LEFT JOIN _adresseEvenement ae  on ae.idEvenement = ee.idEvenement
+						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
+						LEFT JOIN rue r on r.idRue = ha.idRue
+						LEFT JOIN sousQuartier sq on sq.idSousQuartier = ha.idSousQuartier
+						LEFT JOIN quartier q on q.idQuartier = ha.idQuartier
+						LEFT JOIN ville v on v.idVille = ha.idVille
+						LEFT JOIN pays p on p.idPays = ha.idPays
+						WHERE evt.idEvenement = ".$idEvenement."
+								LIMIT 1
+								";
+				break;
+			case 'idEvenementGroupeAdresse' :
+				$requete = "SELECT ha.numero,
+						r.nom as nomRue,
+						r.prefixe,
+						sq.nom as nomSousQuartier ,
+						q.nom as nomQuartier,
+						v.codepostal as codepostal ,
+						v.nom as nomVille,
+						p.nom as nomPays
+						FROM  _adresseEvenement ae
+						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
+						LEFT JOIN rue r on r.idRue = ha.idRue
+						LEFT JOIN sousQuartier sq on sq.idSousQuartier = ha.idSousQuartier
+						LEFT JOIN quartier q on q.idQuartier = ha.idQuartier
+						LEFT JOIN ville v on v.idVille = ha.idVille
+						LEFT JOIN pays p on p.idPays = ha.idPays
+						WHERE ae.idEvenement = ".$idEvenement."
+								LIMIT 1
+								";
+				break;
+		}
 		$result = $this->connexionBdd->requete($requete);
 		$fetch = mysql_fetch_assoc($result);
 		return $fetch;
 	}
-	
+
+
 	
 	/**
 	 * Get idEvenement of the group of evenement with a regular idEvenement
@@ -7081,7 +7106,12 @@ class archiEvenement extends config
 		return $res['idEvenement'];
 	}
 
-	
+	/**
+	 * Get id adresse from idEvenement
+	 * 
+	 * @param unknown $idEvenement of current evenement
+	 * @return Ambigous <>
+	 */
 	public function getIdAdresse($idEvenement){
 		$idEvenementGroup = $this->getIdGroupeEvenement($idEvenement);
 		$requete ="
@@ -7092,6 +7122,26 @@ class archiEvenement extends config
 		$result = $this->connexionBdd->requete($requete);
 		$res = mysql_fetch_assoc($result);
 		return $res['idAdresse'];		
+	}
+	/**
+	 * Get an array of idEvenement related to an idEvenementGroupeAdresse 
+	 * 
+	 * @param unknown $idEvenementGroupeAdresse
+	 * @return array of idEvenement
+	 */
+	public function getArrayIdEvenement($idEvenementGroupeAdresse){
+		$requete ="
+		SELECT evt.idEvenement
+		FROM evenements evt
+		LEFT JOIN _evenementEvenement ee on ee.idEvenement = $idEvenementGroupeAdresse
+		WHERE evt.idEvenement = ee.idEvenementAssocie
+		";
+		$result = $this->connexionBdd->requete($requete);
+		$arrayIdEvenement = array();
+		while($res = mysql_fetch_assoc($result)){
+			$arrayIdEvenement[]=$res['idEvenement'];
+		}
+		return $arrayIdEvenement;
 	}
 }
 

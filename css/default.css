@@ -2095,7 +2095,7 @@ Page d'accueil
   	text-overflow: ellipsis; /* pour le reste du monde */
   	word-space: nowarp;
 }
-.textNews div:first-child a , .favorisTextWrapper div:first-child a{
+.textNews div:first-child a , .favorisTextWrapper div:first-child a, .titreLastModif a{
 	color: #273638;
 	font-size: 14px;
 }
@@ -2182,30 +2182,34 @@ Page d'accueil
 	visibility: hidden;
 }
 */
-.textLastModif{
+.textLastModif , .textLastVisit{
 	width: 200px;
 }
 
 
-.favorisMiniatureWrapper , .favorisMiniature{
+.favorisMiniatureWrapper , .favorisMiniature , .lastVisitElement >div:first-child {
 	//position: absolute;
 	width: 100px;
 	height: 100px;
 }
 
-.favorisTextWrapper{
+.lastVisitElement{
+	height: 100px;
+	float: left;
+}
+.favorisTextWrapper , .textLastVisit{
 	width: 190px;
 	margin-left:10px;
 }
 
-.favorisTextWrapper , .favorisMiniatureWrapper{
+.favorisTextWrapper , .favorisMiniatureWrapper {
 	display: block;
 	float: left;
 	
 }
 
 
-.listeFavoris > div:first-child{
+.listeFavoris > div:first-child {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
@@ -2213,8 +2217,17 @@ Page d'accueil
 	width: 300px;
 	display:block;
 	float: left;
-		margin-top: 10px;
+	margin-top: 10px;
 	margin-bottom: 10px;
+}
+
+.lastVisitElement{
+	margin-top: 10px;
+	margin-bottom: 10px;	
+}
+
+.lastVisitElement >div:first-child , .textLastVisit{
+	float: left;
 }
 
 .linkListCommentaire{

@@ -18,6 +18,7 @@
 	{commentaires}
 	{dernieresModifs}
 	{favoris}
+	{lastVisits}
 </div>
 
 

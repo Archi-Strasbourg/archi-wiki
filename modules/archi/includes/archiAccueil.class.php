@@ -488,6 +488,7 @@ class ArchiAccueil extends config
             $t->set_filenames(array('derniereModfis' => 'accueil/lastmodifs.tpl'));
             $t->set_filenames(array('commentaire' => 'accueil/commentaire.tpl'));
             $t->set_filenames(array('favoris' => 'accueil/favoris.tpl'));
+            $t->set_filenames(array('lastVisit' => 'accueil/lastVisit.tpl'));
             
             
             $news['titreCategory'] = 'Actualité de l\'association';
@@ -495,8 +496,6 @@ class ArchiAccueil extends config
             $t->assign_block_vars('newsAccueil', $news);
   			
 
-            
-            
             //Gestion pour les commentaires
             $latestComments = $this->getLatestComments(2);
             $t->assign_vars(array(
@@ -541,7 +540,7 @@ class ArchiAccueil extends config
             	$i=new archiImage();
             	$infoImage = $i->getImagePrincipale($modif['idEvenement']);
             	$urlImage = 'photos--'.$infoImage['dateUpload'].'-'.$infoImage['idHistoriqueImage'].'-moyen.jpg';
-            	
+
             	
             	//Url Evenement
             	$idAdresse = $e->getIdAdresse($modif['idEvenement']);
@@ -564,6 +563,118 @@ class ArchiAccueil extends config
             			'description' => $description
             	));
             }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            //Gestion des dernieres visites
+            $this->getLatestVisited();
+            $t->assign_vars(array('lastVisitTitle' => _("Dernières visites")));
+            $lastVisitArray=$_SESSION['lastVisited'];
+            if(empty($lastVisitArray)){
+            	$visite = array('content' => _("Vous n'avez visité aucune adresse !"));
+            	$t->assign_block_vars('message', $visite);
+            } 
+            else{
+	            
+            	foreach ($lastVisitArray as $lastVisit){
+            		
+		            $e = new archiEvenement();
+		            $adresseArray = $e->getArrayAdresse($lastVisit['idEvenementGroupeAdresse'], 'idEvenementGroupeAdresse');
+		             
+		            //Adresse
+		            $adresse = '';
+		            if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''&& $adresseArray['numero'] !='0'){
+		            	$adresse.=$adresseArray['numero'].' ';
+		            }
+		            if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
+		            	$adresse.=$adresseArray['prefixe'];
+		            }
+		            if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
+		            	$adresse.=' '.$adresseArray['nomRue'];
+		            }
+		            
+		            //Image
+		            $i=new archiImage();
+		            
+		            $a = new archiAdresse();
+		            $arrayIdEvenement = $e->getArrayIdEvenement($lastVisit['idEvenementGroupeAdresse']);
+		            $imgPrincipale = array();
+		            foreach ($arrayIdEvenement as $idEvt){
+		            	$infoImage = $i->getImagePrincipale($idEvt);
+		            	//debug($infoImage);
+		            }
+		           	//$infoImage = $i->getImagePrincipale($lastVisit['idEvenementGroupeAdresse']);
+		            //debug($infoImage);
+		            $urlImage = 'photos--'.$infoImage['dateUpload'].'-'.$infoImage['idHistoriqueImage'].'-moyen.jpg';
+		            //$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
+		             
+		            //Url Evenement
+		            $idAdresse = $lastVisit['idAdresse'];
+		            $idEvenementGroupeAdresses = $e->getIdGroupeEvenement($lastVisit['idEvenementGroupeAdresse']);
+		            $urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
+		            
+		            //Description
+		            $requeteDescription  = "
+		            		SELECT evt.description
+		            		FROM evenements evt
+		            		LEFT JOIN positionsEvenements pe on pe.idEvenementGroupeAdresse = ".$lastVisit['idEvenementGroupeAdresse']."
+		            		WHERE pe.idEvenement = evt.idEvenement
+		            		";
+		            $resDescription = $this->connexionBdd->requete($requeteDescription);
+		            $arrayDescription = mysql_fetch_assoc($resDescription);
+		            $so = new StringObject();
+		            $description = $so->sansBalises($arrayDescription['description']);
+		            $description = stripslashes($description);
+		            $description = mb_substr($description, 0,130);
+		            
+					//Titre
+		            $resTitre = $e->getIdEvenementTitre($lastVisit);
+		            $requeteTitre = "
+			            			SELECT evt.titre
+			            			FROM evenements evt
+			            			WHERE evt.idEvenement = ".$resTitre."
+			            			";
+		            $resTitre = $this->connexionBdd->requete($requeteTitre);
+		            $titreArray = mysql_fetch_array($resTitre);
+		            if($titreArray['titre'] == ''){
+		            	$titre = $adresse;
+		            }
+		            else{
+		            	$titre = $titreArray['titre'];
+		            }
+		            
+		            $visite = array(
+		            		'adresse' => $adresse,
+		            		'urlMiniature' => $urlImage,
+		            		'urlEvenement' => $urlEvenement,
+		            		'description' => $description,
+		            		'titre' => $titre
+		            );
+		            $t->assign_block_vars('lastVisit', $visite);
+            	}
+            
+            
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            //Gestion des dernieres modifications
 			$t->assign_vars(array('lastModifTitle' => _("Dernières modifications")));
             
             if (!$auth->estConnecte()) {
@@ -572,6 +683,8 @@ class ArchiAccueil extends config
             }
             else{
 	            
+            	//unset($_SESSION['lastVisited']);
+            	
 	            //Gestion des derniers favoris
             	$t->assign_vars(array(
             			'urlCustomNewsFeed'=>$this->creerUrl('', 'mesInterets', array()) ,            					
@@ -619,10 +732,11 @@ class ArchiAccueil extends config
 	            	$description = mb_substr($description, 0,130);
 	            	
 	            	//Titre
+	            	$idEvtTitre = $e->getIdEvenementTitre($fav);
 	            	$requeteTitre = "
 	            			SELECT evt.titre
 	            			FROM evenements evt
-	            			WHERE evt.idEvenement = ".$fav['idEvenementRecuperationTitre']."
+	            			WHERE evt.idEvenement = ".$idEvtTitre."
 	            			";
 	            	$resTitre = $this->connexionBdd->requete($requeteTitre);
 	            	$titreArray = mysql_fetch_array($resTitre);
@@ -650,7 +764,7 @@ class ArchiAccueil extends config
             $t->assign_var_from_handle('news', 'news');
             $t->assign_var_from_handle('dernieresModifs', 'derniereModfis');
             $t->assign_var_from_handle('commentaires', 'commentaire');
-            $t->assign_var_from_handle('favoris', 'favoris');
+            $t->assign_var_from_handle('lastVisits', 'lastVisit');
             
             break;
         
@@ -2287,6 +2401,46 @@ class ArchiAccueil extends config
     	return $arrayLastModif;
     }
     
+    
+    
+    public function getLatestVisited(){
+    	$arrayId =$_SESSION['lastVisited'];
+    	foreach ($arrayId as $ids){
+    		$requeteVisit = "
+    						SELECT 
+    						evt.idEvenement AS idEvenement,
+    						evt.idEvenementRecuperationTitre, 
+		    				evt.idImagePrincipale AS idHistoriqueImage, 
+    						ee.idEvenement AS idEvenementGroupeAdresse, 
+		    				ae.idAdresse AS idAdresse,
+		    				ha.nom , 
+    				   		date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
+    						evt.description,
+							evt.titre AS titre 
+    				   				
+    				
+							FROM _evenementEvenement ee
+							LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+							LEFT JOIN historiqueAdresse ha ON ha.idAdresse = ae.idAdresse
+    				   		LEFT JOIN positionsEvenements pe on pe.idEvenementGroupeAdresse = ee.idEvenement
+    				   		LEFT JOIN evenements evt on evt.idEvenement = pe.idEvenement
+							WHERE ee.idEvenement =".$ids['idEvenementGroupeAdresse']."
+							GROUP BY idEvenement DESC
+							LIMIT 1
+    				";
+    		$res = $this->connexionBdd->requete($requeteVisit);
+    		while($rowVisit = mysql_fetch_assoc($res)){
+    			//debug($rowVisit);
+    		}
+    	}
+    }
+    
+    /**
+     * Get the latest user's favorite information to display
+     *  
+     * @param unknown $nbElts to display
+     * @return multitype:
+     */
     public function getLatestFav($nbElts){
     	/*
     	 * Initialisation des variables :

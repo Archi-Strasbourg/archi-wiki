@@ -5369,6 +5369,17 @@ class archiImage extends config
     public function getImagePrincipale($idEvenement){
     	$a = new archiAdresse();
     	$imageInfo = $a->getFirstImageFromEvenement($idEvenement);
+    	$requeteEvtImg = "
+    			SELECT hi.idHistoriqueImage , hi.dateUpload , hi.idImage
+    			FROM historiqueImage hi 
+    			LEFT JOIN 
+    			";
+    	
+    	
+    	
+    	
+    	//debug($imageInfo);
+    	
     	if(empty($imageInfo)){
     		$a = new archiAdresse();
     		$requeteIdAdresse = $a->getIdAdressesFromIdEvenement(array('idEvenement'=>$idEvenement));
@@ -5376,10 +5387,21 @@ class archiImage extends config
     		$arrayIdAdresse = mysql_fetch_assoc($resourceIdAdresse);
     		$idAdresse = $arrayIdAdresse['idAdresse'];
     		$resourceImage = $this->getImagesEvenementsFromAdresse($idAdresse);
+    		//while($img = mysql_fetch_assoc($resourceImage)){
     		$img = mysql_fetch_assoc($resourceImage);
-   			$imageInfo = $img;
+    			//debug($img);
+   				$imageInfo = $img;
+   				//echo "<a href=\"photos--".$imageInfo['dateUpload']."-".$imageInfo['idImage']."-moyen.jpg\"". ">lien image</a><br/>";
+   				   	
+    		//}
+    		//echo "<a href=\"photos--".$imageInfo['dateUpload']."-".$imageInfo['idImage']."-moyen.jpg\"". ">If image</a><br/>";
    			//I don't think  looping on all the images is required, but it might be
     	}
+    	else{
+    	//	debug('else');
+    		//echo "<a href=\"photos--".$imageInfo['dateUpload']."-".$imageInfo['idImage']."-moyen.jpg\"". ">Else image</a><br/>";
+    	}
+    	//echo "<a href=\"photos--".$imageInfo['dateUpload']."-".$imageInfo['idImage']."-moyen.jpg\"". ">Simple image</a><br/>";
     	return $imageInfo;
     }
 }

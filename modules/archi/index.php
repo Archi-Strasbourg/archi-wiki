@@ -808,6 +808,8 @@ if (isset($_GET['archiAffichage'])) {
             echo $a->afficheFormulaire();
             break;
         case 'adresseDetail':
+        	$u = new archiUtilisateur();
+        	$u->updateVisitedLink($_GET['archiIdAdresse'],$_GET['archiIdEvenementGroupeAdresse']);
             $a = new archiAdresse();
             echo $a->afficherDetailAdresse($_GET['archiIdAdresse'],$_GET['archiIdEvenementGroupeAdresse']);
             break;

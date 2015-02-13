@@ -11027,7 +11027,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         {
             // les images ont deja ete triés , on prend celle qui a la plus petite position <>0
             $req = "
-                SELECT hi1.idHistoriqueImage as idHistoriqueImage, hi1.dateUpload as dateUpload
+                SELECT hi1.idHistoriqueImage as idHistoriqueImage, hi1.dateUpload as dateUpload , hi1.idImage as idImage
                 FROM historiqueImage hi2,historiqueImage hi1
                 RIGHT JOIN _evenementImage ei1 ON ei1.idEvenement ='".$idEvenement."'
                 RIGHT JOIN _evenementImage ei2 ON ei2.idEvenement = ei1.idEvenement
@@ -11049,7 +11049,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         {
             // pas d'image de position differente de zero , on selectionne la derniere ajoutée de l'evenement
             $req = "
-                SELECT hi1.idHistoriqueImage as idHistoriqueImage, hi1.dateUpload as dateUpload
+                SELECT hi1.idHistoriqueImage as idHistoriqueImage, hi1.dateUpload as dateUpload, hi1.idImage as idImage
                 FROM historiqueImage hi2,historiqueImage hi1
                 RIGHT JOIN _evenementImage ei1 ON ei1.idEvenement ='".$idEvenement."'
                 WHERE hi1.idImage = ei1.idImage
@@ -11065,7 +11065,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             {
                 // pas d'image pour l'evenement courant, on va en chercher une pour l'adresse courante de l'evenement ( donc dans un evenement de la meme adresse)
                 $req = "
-                    SELECT hi1.idHistoriqueImage as idHistoriqueImage, hi1.dateUpload as dateUpload,ei1.position as position
+                    SELECT hi1.idHistoriqueImage as idHistoriqueImage, hi1.dateUpload as dateUpload,ei1.position as position  , hi1.idImage as idImage
                     FROM historiqueImage hi2,historiqueImage hi1
                     
                     RIGHT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = '".$idEvenement."'
