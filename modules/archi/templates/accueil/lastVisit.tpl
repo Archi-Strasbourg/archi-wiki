@@ -1,11 +1,11 @@
 <div class="lastVisitAccueil">
 <h2>{lastModifTitle}</h2>
 <hr class="plain"/>
-<!-- BEGIN message -->
+<!-- BEGIN lastVisitMessage -->
 <div class="lastVisitMessage">
 {lastVisitMessage.content}
 </div>
-<!-- END message -->
+<!-- END lastVisitMessage -->
 <!-- BEGIN lastVisit -->
 <div class="lastVisitElement">
 	<div class="miniatureWrapper">
