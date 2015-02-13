@@ -3,7 +3,7 @@
 <hr class="plain"/>
 <!-- BEGIN message -->
 <div class="lastVisitMessage">
-{message.content}
+{lastVisitMessage.content}
 </div>
 <!-- END message -->
 <!-- BEGIN lastVisit -->

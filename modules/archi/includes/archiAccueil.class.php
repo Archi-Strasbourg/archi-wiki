@@ -578,7 +578,7 @@ class ArchiAccueil extends config
             $lastVisitArray=$_SESSION['lastVisited'];
             if(empty($lastVisitArray)){
             	$visite = array('content' => _("Vous n'avez visité aucune adresse pour le moment"));
-            	$t->assign_block_vars('message', $visite);
+            	$t->assign_block_vars('lastVisitMessage', $visite);
             } 
             else{
 	            
