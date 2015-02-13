@@ -2209,7 +2209,7 @@ Page d'accueil
 }
 
 
-.listeFavoris > div:first-child {
+.listeFavoris > div:first-child  , .lastVisitMessage{
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
