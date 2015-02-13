@@ -632,22 +632,26 @@ class ArchiAccueil extends config
 		            $description = $so->sansBalises($arrayDescription['description']);
 		            $description = stripslashes($description);
 		            $description = mb_substr($description, 0,130);
+
 		            
-					//Titre
-		            $resTitre = $e->getIdEvenementTitre($lastVisit);
-		            $requeteTitre = "
-			            			SELECT evt.titre
-			            			FROM evenements evt
-			            			WHERE evt.idEvenement = ".$resTitre."
-			            			";
-		            $resTitre = $this->connexionBdd->requete($requeteTitre);
-		            $titreArray = mysql_fetch_array($resTitre);
-		            if($titreArray['titre'] == ''){
-		            	$titre = $adresse;
+		            if(isset($lastVisit) && !empty($lastVisit) && isset($lastVisit['idEvenementGroupeAdresse'] )&& !empty($lastVisit['idEvenementGroupeAdresse']) && isset($lastVisit['idAdresse']) && !empty($lastVisit['idAdresse'])){
+						//Titre
+			            $resTitre = $e->getIdEvenementTitre($lastVisit);
+			            $requeteTitre = "
+				            			SELECT evt.titre
+				            			FROM evenements evt
+				            			WHERE evt.idEvenement = ".$resTitre."
+				            			";
+			            $resTitre = $this->connexionBdd->requete($requeteTitre);
+			            $titreArray = mysql_fetch_array($resTitre);
+			            if($titreArray['titre'] == ''){
+			            	$titre = $adresse;
+			            }
+			            else{
+			            	$titre = $titreArray['titre'];
+			            }
 		            }
-		            else{
-		            	$titre = $titreArray['titre'];
-		            }
+		            
 		            
 		            $visite = array(
 		            		'adresse' => $adresse,
@@ -730,6 +734,9 @@ class ArchiAccueil extends config
 	            	$description = $so->sansBalises($fav['description']);
 	            	$description = stripslashes($description);
 	            	$description = mb_substr($description, 0,130);
+	            	
+	            	
+	            	
 	            	
 	            	//Titre
 	            	$idEvtTitre = $e->getIdEvenementTitre($fav);
@@ -2358,10 +2365,10 @@ class ArchiAccueil extends config
     	
     	$requete ="
 	    		SELECT 
+    			DISTINCT ee.idEvenement AS idEvenementGroupeAdresse, 
 	    		evt.idEvenement AS idEvenement, 
 	    		evt.idEvenementRecuperationTitre , 
 	    		evt.idImagePrincipale AS idHistoriqueImage, 
-	    		ee.idEvenement AS idEvenementGroupeAdresse, 
 	    		ae.idAdresse AS idAdresse,
 	    		te.nom as typeEvenement,
 	    		date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
@@ -2374,10 +2381,14 @@ class ArchiAccueil extends config
 				AND ae.idAdresse IS NOT NULL
 				".
 				//GROUP BY ae.idAdresse
+				//GROUP BY evt.idEvenement
 				"
+				GROUP BY evt.idEvenement
 				ORDER BY evt.idEvenement DESC 
     			LIMIT $nbElts 
     			";
+    	
+    	
     	$result = $this->connexionBdd->requete($requete);
     	$arrayLastModif = array();
     	while($lastModif = mysql_fetch_assoc($result)){
