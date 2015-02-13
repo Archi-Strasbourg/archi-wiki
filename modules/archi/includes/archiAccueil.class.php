@@ -523,7 +523,7 @@ class ArchiAccueil extends config
             foreach ($lastModifs as $modif){
             	$e = new archiEvenement();
             	$adresseArray = $e->getArrayAdresse($modif['idEvenement']);
-            	
+        
             	//Adresse
             	$adresse = '';
             	if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero'] !='0'){
@@ -547,6 +547,7 @@ class ArchiAccueil extends config
             	$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($modif['idEvenement']);
             	$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
             	
+
             	
             	//Description
             	$so = new StringObject();
@@ -2361,39 +2362,54 @@ class ArchiAccueil extends config
     public function getLatestModification($nbElts){
     	
     	$interest = new archiInterest();
-    	$test = $interest->testInterest();
-    	
-    	$requete ="
-	    		SELECT 
-    			DISTINCT ee.idEvenement AS idEvenementGroupeAdresse, 
-	    		evt.idEvenement AS idEvenement, 
-	    		evt.idEvenementRecuperationTitre , 
-	    		evt.idImagePrincipale AS idHistoriqueImage, 
+    	$test = $interest->getFavorisIdEvenementGroupeAdresse($nbElts);
+    	$fieldsList =implode(',', $test); 
+
+    	if(empty($test)){
+    		$requete ="
+	    		SELECT
+    			DISTINCT ee.idEvenement AS idEvenementGroupeAdresse,
+	    		evt.idEvenement AS idEvenement,
+	    		evt.idEvenementRecuperationTitre ,
+	    		evt.idImagePrincipale AS idHistoriqueImage,
 	    		ae.idAdresse AS idAdresse,
 	    		te.nom as typeEvenement,
 	    		date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
+    			    		evt.description				FROM evenements evt
+    			    		LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
+    			    		LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+    			    		LEFT JOIN historiqueAdresse ha ON ha.idAdresse = ae.idAdresse
+    			    		LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
+    			    		WHERE ee.idEvenementAssocie IS NOT NULL
+    			    		AND ae.idAdresse IS NOT NULL
+    			    		".
+    		"
+    		GROUP BY evt.idEvenement
+    		ORDER BY  evt.dateCreationEvenement DESC
+    		LIMIT $nbElts
+    			    		";
+    	}
+    	else{
+    	$requete ="
+    			SELECT 
+	    		evt.idEvenement AS idEvenement, 
+	    		evt.idEvenementRecuperationTitre , 
+	    		evt.idImagePrincipale AS idHistoriqueImage, 
+	    		te.nom as typeEvenement,
+	    		date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
 	    		evt.description				FROM evenements evt
-				LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
-				LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-				LEFT JOIN historiqueAdresse ha ON ha.idAdresse = ae.idAdresse
 				LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
-				WHERE ee.idEvenementAssocie IS NOT NULL
-				AND ae.idAdresse IS NOT NULL
-				".
-				//GROUP BY ae.idAdresse
-				//GROUP BY evt.idEvenement
-				"
-				GROUP BY evt.idEvenement
-				ORDER BY evt.idEvenement DESC 
+				LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+				WHERE ee.idEvenement IN ($fieldsList) 
+				ORDER BY  FIELD(ee.idEvenement , ".$fieldsList.")
     			LIMIT $nbElts 
     			";
-    	
-    	
+    	}
     	$result = $this->connexionBdd->requete($requete);
+    	
     	$arrayLastModif = array();
     	while($lastModif = mysql_fetch_assoc($result)){
     		$tmp = $lastModif;
-    		
     		$requeteTitre = "SELECT titre
     				FROM evenements 
     				WHERE idEvenement = ".$lastModif['idEvenementRecuperationTitre']."";
@@ -2406,9 +2422,6 @@ class ArchiAccueil extends config
     	}
     	
     	
-    	/*
-    	 * Requte pour récuperer le titre
-    	 */
     	return $arrayLastModif;
     }
     

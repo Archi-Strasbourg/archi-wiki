@@ -2199,6 +2199,8 @@ Page d'accueil
 .favorisTextWrapper , .textLastVisit{
 	width: 190px;
 	margin-left:10px;
+	height: 100px;
+	overflow-y:hidden;
 }
 
 .favorisTextWrapper , .favorisMiniatureWrapper {

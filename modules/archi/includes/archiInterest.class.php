@@ -85,6 +85,7 @@ class archiInterest extends config{
 					$userId = $interest['idUtilisateur'];
 					$interestId = $interest[$fieldId];
 					
+					
 					$paramsDelete = array(
 						$table,
 						$fieldId,
@@ -239,7 +240,6 @@ class archiInterest extends config{
 					;
 		$res = $this->connexionBdd->requete($requete,false);
 		$fetch = mysql_fetch_assoc($res);
-
 		if($fetch['nb']==1){
 			$requeteDelete = "
 					DELETE FROM ".$table." WHERE ".$fieldId." = ".$interestId. " AND idUtilisateur = " . $userId
@@ -257,7 +257,8 @@ class archiInterest extends config{
 		
 		$t->assign_vars(array(
 				'message' => $this->messages->display(),
-				'urlBack'=> $this->creerUrl('', 'mesInterets', array())
+				'urlBack'=> $this->creerUrl('', 'mesInterets', array()),
+				'textLink' => _("Revenir à la page précédante")
 		));
 
 		ob_start();
@@ -269,38 +270,36 @@ class archiInterest extends config{
 	
 	
 	
-	public function testInterest(){
+	public function getFavorisIdEvenementGroupeAdresse($nbElts=8){
 		
 		/*
 		 * Adresse
 		 */
-		$idEvenementArray = array();
-		$idEvenementArray[]= "adresse";
-		$requeteAdresse ="
+		$requete ="
 				SELECT ae.idEvenement
 				FROM _interetAdresse ia
 				LEFT JOIN historiqueAdresse ha on ha.idHistoriqueAdresse = ia.idHistoriqueAdresse
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE ia.idUtilisateur = ".$this->userId." 
+				LIMIT $nbElts
 				";
-		$resultAdresse = $this->connexionBdd->requete($requeteAdresse);
+		$resultAdresse = $this->connexionBdd->requete($requete);
 		while($rowAdresse = mysql_fetch_assoc($resultAdresse)){
 			if(isset($rowAdresse['idEvenement'] ) && $rowAdresse['idEvenement']!=''){
 				$idEvenementArray[] = $rowAdresse['idEvenement'];
 			}
 		}
 		
-		
 		/*
 		 * Rue
 		 */
-		$idEvenementArray[]= "rue";
 		$requete ="
 				SELECT ae.idEvenement
 				FROM _interetRue i
 				LEFT JOIN historiqueAdresse ha on ha.idRue = i.idRue
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
+				LIMIT $nbElts
 				";
 		$result = $this->connexionBdd->requete($requete);
 		while($row = mysql_fetch_assoc($result)){
@@ -313,13 +312,13 @@ class archiInterest extends config{
 		/*
 		 * Sous quartier
 		 */
-		$idEvenementArray[]= "sousQuartier";
 			$requete ="
 				SELECT ae.idEvenement
 				FROM _interetSousQuartier i
 				LEFT JOIN historiqueAdresse ha on ha.idSousQuartier = i.idSousQuartier
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
+				LIMIT $nbElts
 				";
 		$result = $this->connexionBdd->requete($requete);
 		while($row = mysql_fetch_assoc($result)){
@@ -328,15 +327,16 @@ class archiInterest extends config{
 			}
 		}
 		
+		
 		/*
 		 * Personne
 		 */
-		$idEvenementArray[]= "Personne";
 		$requete ="
 				SELECT ep.idEvenement
 				FROM _interetPersonne i
 				LEFT JOIN _evenementPersonne ep on ep.idPersonne = i.idPersonne
 				WHERE i.idUtilisateur = ".$this->userId."
+				LIMIT $nbElts
 				";
 		$result = $this->connexionBdd->requete($requete);
 		while($row = mysql_fetch_assoc($result)){
@@ -349,13 +349,13 @@ class archiInterest extends config{
 		/*
 		 * Quartier
 		 */
-		$idEvenementArray[]= "quartier";
 		$requete ="
 				SELECT ae.idEvenement
 				FROM _interetQuartier i
 				LEFT JOIN historiqueAdresse ha on ha.idQuartier = i.idQuartier
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
+				LIMIT $nbElts
 				";
 		$result = $this->connexionBdd->requete($requete);
 		while($row = mysql_fetch_assoc($result)){
@@ -364,16 +364,18 @@ class archiInterest extends config{
 			}
 		}
 		
+		
+		
 		/*
 		 * Ville
 		 */
-		$idEvenementArray[]= "Ville";
 		$requete ="
 				SELECT ae.idEvenement
 				FROM _interetVille i
 				LEFT JOIN historiqueAdresse ha on ha.idVille = i.idVille
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
+				LIMIT $nbElts
 				";
 		$result = $this->connexionBdd->requete($requete);
 		while($row = mysql_fetch_assoc($result)){
@@ -386,21 +388,23 @@ class archiInterest extends config{
 		/*
 		 * Pays
 		 */
-		$idEvenementArray[]= "pays";
 		$requetePays ="
 				SELECT ae.idEvenement
 				FROM _interetPays ip
 				LEFT JOIN historiqueAdresse ha on ha.idPays = ip.idPays
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE ip.idUtilisateur = ".$this->userId."
-						";
+				LIMIT $nbElts
+				";
 		$resultPays = $this->connexionBdd->requete($requetePays);
 		while($rowPays = mysql_fetch_assoc($resultPays)){
 			if($rowPays['idEvenement'] != "" && isset($rowPays['idEvenement'])){
 				$idEvenementArray[] = $rowPays['idEvenement'];
 			}
 		}
+		
 
+	
 		return $idEvenementArray;
 	}
 	
@@ -632,14 +636,28 @@ class archiInterest extends config{
 
 		foreach ($arrayParams as $params){
 			$subArray = array();
-
-			$requete = "
-					SELECT *
-					FROM ".$params['table']." t
-					LEFT JOIN ".$params['associateTable']." at on at.".$params['field']."= t.".$params['field']."
-					WHERE t.idUtilisateur = ".$this->userId."
-					";
-		
+			if($params['associateTable'] != "efefhistoriqueAdresse"){
+				$requete = "
+						SELECT t.idUtilisateur,at.idHistoriqueAdresse,t.created, at.idAdresse ,at.idVille,at.idPays,at.date,at.nom,at.description,at.numero,at.idIndicatif,at.latitude,at.longitude,at.coordonneesVerrouillees
+						FROM _interetAdresse t
+						LEFT JOIN historiqueAdresse at on at.idHistoriqueAdresse= t.idHistoriqueAdresse
+						WHERE t.idUtilisateur = ".$this->userId."
+						";
+				$requete = "
+						SELECT *
+						FROM ".$params['table']." t
+						LEFT JOIN ".$params['associateTable']." at on at.".$params['field']."= t.".$params['field']."
+						WHERE t.idUtilisateur = ".$this->userId."
+						";
+			}
+			else{
+							$requete = "
+						SELECT *
+						FROM ".$params['table']." t
+						LEFT JOIN ".$params['associateTable']." at on at.".$params['field']."= t.".$params['field']."
+						WHERE t.idUtilisateur = ".$this->userId."
+						";				
+			}
 			$res = $this->connexionBdd->requete($requete);
 			if(mysql_num_rows($res)==0){
 				$titre='';
@@ -656,13 +674,13 @@ class archiInterest extends config{
 				
 			}
 			while ($fetch = mysql_fetch_assoc($res)) {
-				
 				$temp = array_merge($fetch,$params);
 				if($temp['associateTable']=='sousQuartier'){
 					$temp = array_merge($temp,array('titre' =>'sous quartier' ));
 				}
 				elseif($temp['associateTable']=='historiqueAdresse'){
 					$temp = array_merge($temp,array('titre' =>'adresse' ));
+										
 				}
 				else{
 					$temp = array_merge($temp,array('titre' =>$temp['associateTable'] ));
