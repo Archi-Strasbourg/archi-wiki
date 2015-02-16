@@ -14618,7 +14618,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					".$orderByClause."
 							";
 			
-			
+			debug($req);
 			$res = $this->connexionBdd->requete($req);
 			//Processing all the adresses get from the request : getting address title and link to the events linked
 			while($fetch = mysql_fetch_assoc($res)){
@@ -14645,7 +14645,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$resTitresEvenements = $this->connexionBdd->requete($reqTitresEvenements);
 				$titresEvenements = array();
 				$positionAncre=0;
-				$defaultEventTitle= "Événements sans titre";
+				$defaultEventTitle= "Événement sans titre";
 				
 				//Generating all the link to the events linked to current address 
 				while ($row = mysql_fetch_assoc($resTitresEvenements)) {
