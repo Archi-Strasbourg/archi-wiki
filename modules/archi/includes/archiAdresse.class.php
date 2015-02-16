@@ -14488,7 +14488,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				//Processing name of the address
 				$nom = ucfirst($info['nom']);
 				$fulladdress =  ucfirst($this->getIntituleAdresseFrom($info['idEvenementGroupeAdresse'],$type='idEvenementGroupeAdresse'));
-				
+				$titre = $info['titre'];
 				
 				//If prisdepuis
 				if(isset($this->variablesGet['modeAffichage']) && ($this->variablesGet['modeAffichage'] == 'popupRechercheAdressePrisDepuis')){
@@ -14544,7 +14544,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$t->assign_block_vars(
 						'adresses',
 						array(
-								'nom'        => $nom,
+								'nom'        => $titre,
 								'adresseComplete' => $fulladdress,
 								'urlImageIllustration'    => 'getPhotoSquare.php?id='.$illustration['idHistoriqueImage'],
 								'alt' => $nom,
@@ -14601,16 +14601,32 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			
 			
 			$req="
-					SELECT ha.nom , ha.idHistoriqueAdresse , ha.idAdresse , ae.idEvenement as idEvenementGroupeAdresse
+					SELECT ha.nom , 
+					ha.idHistoriqueAdresse , 
+					ha.idAdresse , 
+					ae.idEvenement as idEvenementGroupeAdresse
+					
     				FROM historiqueAdresse ha
 					LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idHistoriqueAdresse
     				".$whereClause."
     				GROUP BY ha.idHistoriqueAdresse
 					".$orderByClause."
 							";
+			
 			$res = $this->connexionBdd->requete($req);
 			//Processing all the adresses get from the request : getting address title and link to the events linked
 			while($fetch = mysql_fetch_assoc($res)){
+				
+				$titreRequest = "
+						SELECT evt2.titre
+						FROM evenements evt , evenements evt2
+						WHERE evt.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
+						AND evt2.idEvenement = evt.idEvenementRecuperationTitre
+						";
+				$resTitre = $this->connexionBdd->requete($titreRequest);
+				$arrayTitre = mysql_fetch_assoc($resTitre);
+				$fetch['titre'] = $arrayTitre['titre'];
+				
 				$reqTitresEvenements ="
 					SELECT  distinct he1.titre
     				FROM evenements he1
