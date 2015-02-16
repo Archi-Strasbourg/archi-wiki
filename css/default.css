@@ -2170,10 +2170,13 @@ Page d'accueil
 	display: inline-block;
 	vertical-align: top;
 	margin-right: 20px;
+	margin-bottom: 20px; 
 }
 
 
 /*
+
+Allow to display description on hover
 .lastModifElement:hover .description{
 	//display: inline-block;
 	visibility: visible;
