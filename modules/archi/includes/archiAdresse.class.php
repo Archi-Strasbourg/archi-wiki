@@ -14600,23 +14600,28 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			}
 			
 			
+			
+			/*
+			 * Previous request
+			 */
+			
 			$req="
-					SELECT ha.nom , 
-					ha.idHistoriqueAdresse , 
-					ha.idAdresse , 
+					SELECT ha.nom ,
+					ha.idHistoriqueAdresse ,
+					ha.idAdresse ,
 					ae.idEvenement as idEvenementGroupeAdresse
-					
+			
     				FROM historiqueAdresse ha
-					LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idHistoriqueAdresse
+					LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
     				".$whereClause."
     				GROUP BY ha.idHistoriqueAdresse
 					".$orderByClause."
 							";
 			
+			
 			$res = $this->connexionBdd->requete($req);
 			//Processing all the adresses get from the request : getting address title and link to the events linked
 			while($fetch = mysql_fetch_assoc($res)){
-				
 				$titreRequest = "
 						SELECT evt2.titre
 						FROM evenements evt , evenements evt2
@@ -14625,7 +14630,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 						";
 				$resTitre = $this->connexionBdd->requete($titreRequest);
 				$arrayTitre = mysql_fetch_assoc($resTitre);
-				$fetch['titre'] = $arrayTitre['titre'];
+				$fetch['titre'] = stripslashes($arrayTitre['titre']);
 				
 				$reqTitresEvenements ="
 					SELECT  distinct he1.titre

@@ -2245,14 +2245,9 @@ class archiRecherche extends config {
 			$order = $params['order'];
 		}
 		if(isset($params['motcle']) && $params['motcle']!=''){
-			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,
+			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5,
 				
-				CONCAT_WS('', CONVERT(numeroAdresse USING utf8), nomIndicatif, prefixeRue, nomRue, nomSousQuartier,  nomQuartier,  nomVille,  nomPays) as con1,
-				CONCAT_WS('', CONVERT(numeroAdresse USING utf8), ' ', prefixeRue, ' ', nomRue) as con2,					
-				CONCAT_WS('', titre, CONVERT(numeroAdresse USING utf8), ' ', prefixeRue, ' ', nomRue) as con3,
-				CONCAT_WS('', nomPersonne, prenomPersonne) as con4,
-				CONCAT_WS('', prenomPersonne, nomPersonne) as con5,
-						
+			
 				(
 				10000 * (MATCH (nomRue) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 				10000 * (MATCH (nomSousQuartier) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
@@ -2271,11 +2266,10 @@ class archiRecherche extends config {
 			
 				FROM recherche "
 				.$sqlWhere.
-				"GROUP BY idHistoriqueAdresse 
+				"GROUP BY idEvenementGA 
 				ORDER BY relevance  ".$order." " . 
 				$limit.
 				";";
-			
 			
 		}
 		else{
@@ -2283,11 +2277,12 @@ class archiRecherche extends config {
 				FROM recherche "
 				.$sqlWhere.
 				"
-				GROUP BY idHistoriqueAdresse 
+				GROUP BY idEvenementGA 
 				ORDER BY relevance  " . $order." "
 				.$limit.						
 				";";
 		}
+		
 		$idHistoriqueAdresse  = array();
 		$res = $this->connexionBdd->requete($request);
 		while($fetch = mysql_fetch_assoc($res)){
