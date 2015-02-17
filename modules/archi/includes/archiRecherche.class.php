@@ -2272,32 +2272,32 @@ class archiRecherche extends config {
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5,
 		
 				(
-				1000000 * (MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				1000000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) +
+				100000 * (MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				100000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) +
 
-				(1000000 - CONVERT(numeroAdresse  , UNSIGNED INTEGER))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) )) +
+				(20000 - CONVERT(numeroAdresse  , UNSIGNED INTEGER))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) )) +
 					
 						
-				100000 * (MATCH (concat3) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				100000 * (MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				10000 * (MATCH (concat3) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				10000 * (MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 						
 			
-				10000 * (MATCH (titre) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				1000 * (MATCH (titre) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 			
-				1000 * (MATCH (concat4) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				1000 * (MATCH (concat5) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				100 * (MATCH (concat4) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				100 * (MATCH (concat5) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 			
-				100 * (MATCH (nomRue) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				100 * (MATCH (nomSousQuartier) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				100 * (MATCH (nomQuartier) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				100 * (MATCH (nomVille) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				100 * (MATCH (nomPays) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				10 * (MATCH (nomRue) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				10 * (MATCH (nomSousQuartier) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				10 * (MATCH (nomQuartier) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				10 * (MATCH (nomVille) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				10 * (MATCH (nomPays) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 			
-				10 * (MATCH (description) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE))
+				1 * (MATCH (description) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE))
 		
-				) as relevance,
-						 (1000000 - CONVERT(numeroAdresse  , UNSIGNED INTEGER))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) )) as blip
-		
+				) as relevance
+						
+						
 				FROM recherche "
 				.$sqlWhere.
 				"GROUP BY idEvenementGA
@@ -2316,7 +2316,6 @@ class archiRecherche extends config {
 				.$limit.						
 				";";
 		}
-		debug($request);		
 		$idHistoriqueAdresse  = array();
 		$res = $this->connexionBdd->requete($request);
 		while($fetch = mysql_fetch_assoc($res)){

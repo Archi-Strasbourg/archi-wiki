@@ -523,11 +523,13 @@ class archiAdresse extends ArchiContenu
 		//Preparing the loop on all related event to the current address
 
 		$requeteIdEvenements = "
-				SELECT idEvenement 
-				FROM positionsEvenements
-				WHERE idEvenementGroupeAdresse = $idEvenementGroupeAdresse
-				order by position ASC
+				SELECT ee.idEvenementAssocie as idEvenement
+				FROM _evenementEvenement ee
+				LEFT JOIN positionsEvenements pe on pe.idEvenementGroupeAdresse = ee.idEvenement
+				WHERE ee.idEvenement = $idEvenementGroupeAdresse
+				order by pe.position ASC
 				";
+		
 		
 		$resultIdEvenements = $this->connexionBdd->requete($requeteIdEvenements);
 		

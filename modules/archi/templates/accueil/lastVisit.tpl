@@ -1,5 +1,5 @@
 <div class="lastVisitAccueil">
-<h2>{lastModifTitle}</h2>
+<h2>{lastVisitTitle}</h2>
 <hr class="plain"/>
 <!-- BEGIN lastVisitMessage -->
 <div class="lastVisitMessage">
