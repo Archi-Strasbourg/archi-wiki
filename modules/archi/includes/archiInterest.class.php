@@ -276,6 +276,10 @@ class archiInterest extends config{
 	 * @return array of idEvenementGroupeAdresse
 	 */
 	public function getFavorisIdEvenementGroupeAdresse($nbElts=8){
+		if($nbElts > 0){
+			$limit = "LIMIT ".$nbElts;
+		}
+		
 		$a = new ArchiAuthentification();
 		if($a->estConnecte()){
 			$this->userId = $a->getIdUtilisateur();
@@ -288,7 +292,7 @@ class archiInterest extends config{
 				LEFT JOIN historiqueAdresse ha on ha.idHistoriqueAdresse = ia.idHistoriqueAdresse
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE ia.idUtilisateur = ".$this->userId."
-							LIMIT $nbElts
+				$limit
 							";
 			$resultAdresse = $this->connexionBdd->requete($requete);
 			while($rowAdresse = mysql_fetch_assoc($resultAdresse)){
@@ -306,7 +310,7 @@ class archiInterest extends config{
 				LEFT JOIN historiqueAdresse ha on ha.idRue = i.idRue
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
-							LIMIT $nbElts
+				$limit
 							";
 			$result = $this->connexionBdd->requete($requete);
 			while($row = mysql_fetch_assoc($result)){
@@ -325,7 +329,7 @@ class archiInterest extends config{
 				LEFT JOIN historiqueAdresse ha on ha.idSousQuartier = i.idSousQuartier
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
-							LIMIT $nbElts
+				$limit
 							";
 			$result = $this->connexionBdd->requete($requete);
 			while($row = mysql_fetch_assoc($result)){
@@ -343,7 +347,7 @@ class archiInterest extends config{
 				FROM _interetPersonne i
 				LEFT JOIN _evenementPersonne ep on ep.idPersonne = i.idPersonne
 				WHERE i.idUtilisateur = ".$this->userId."
-							LIMIT $nbElts
+				$limit
 							";
 			$result = $this->connexionBdd->requete($requete);
 			while($row = mysql_fetch_assoc($result)){
@@ -362,7 +366,7 @@ class archiInterest extends config{
 				LEFT JOIN historiqueAdresse ha on ha.idQuartier = i.idQuartier
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
-							LIMIT $nbElts
+				$limit
 							";
 			$result = $this->connexionBdd->requete($requete);
 			while($row = mysql_fetch_assoc($result)){
@@ -382,7 +386,7 @@ class archiInterest extends config{
 				LEFT JOIN historiqueAdresse ha on ha.idVille = i.idVille
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 				WHERE i.idUtilisateur = ".$this->userId."
-							LIMIT $nbElts
+				$limit
 							";
 			$result = $this->connexionBdd->requete($requete);
 			while($row = mysql_fetch_assoc($result)){
@@ -412,7 +416,9 @@ class archiInterest extends config{
 			
 		}
 		
-		return $idEvenementArray;
+		//Array_unique enable to remove double value get from multiple select
+		//return $idEvenementArray;
+		return array_unique($idEvenementArray);
 	}
 	
 	
