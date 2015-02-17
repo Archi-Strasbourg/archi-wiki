@@ -14618,7 +14618,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					".$orderByClause."
 							";
 			
-			debug($req);
 			$res = $this->connexionBdd->requete($req);
 			//Processing all the adresses get from the request : getting address title and link to the events linked
 			while($fetch = mysql_fetch_assoc($res)){

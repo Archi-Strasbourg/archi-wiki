@@ -2245,36 +2245,66 @@ class archiRecherche extends config {
 			$order = $params['order'];
 		}
 		if(isset($params['motcle']) && $params['motcle']!=''){
+			
+			/*
+			 * Ordering results is using relevance field
+			 * 
+			 *  Relevance field is processed using several fields 
+			 *  
+			 *  Higher priority on concat3 1 and 2 matching with the adresse of the result
+			 *  
+			 *  Concat 2 + idTypeStructure=12 refers to a street 
+			 *  
+			 *  
+			 *  The lower level correspond to
+			 *  Title  of the event
+			 *  
+			 *  Person related (architects or others) based on First name + Last name or Last name + First name
+			 *  
+			 *  
+			 *  Sub lower level are related to only one field of the adresse (name of the street, neighborough etc...)
+			 *  
+			 *  Lower level are the description of the events
+			 *  
+			 *  
+			 */
+			
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5,
-				
-			
+		
 				(
-				2000000000000000000000000000 * (MATCH (concat3) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				
-				1000000000000000000000000000 * (MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				1000000000000000000000000000 * (MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				
-				2000000000000000000 * (MATCH (titre) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-						
-				20000000000000000 * (MATCH (concat4) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				20000000000000000 * (MATCH (concat5) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +		
+				1000000 * (MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				1000000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) +
+
+				(1000000 - CONVERT(numeroAdresse  , UNSIGNED INTEGER))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) )) +
 					
-				10000 * (MATCH (nomRue) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				10000 * (MATCH (nomSousQuartier) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				10000 * (MATCH (nomQuartier) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				10000 * (MATCH (nomVille) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				10000 * (MATCH (nomPays) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 						
-				10 * (MATCH (description) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) 
+				100000 * (MATCH (concat3) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				100000 * (MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+						
 			
-				) as relevance
+				10000 * (MATCH (titre) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 			
+				1000 * (MATCH (concat4) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				1000 * (MATCH (concat5) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+			
+				100 * (MATCH (nomRue) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				100 * (MATCH (nomSousQuartier) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				100 * (MATCH (nomQuartier) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				100 * (MATCH (nomVille) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				100 * (MATCH (nomPays) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+			
+				10 * (MATCH (description) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE))
+		
+				) as relevance,
+						 (1000000 - CONVERT(numeroAdresse  , UNSIGNED INTEGER))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) )) as blip
+		
 				FROM recherche "
 				.$sqlWhere.
-				"GROUP BY idEvenementGA 
-				ORDER BY relevance  ".$order." " . 
-				$limit.
-				";";
+				"GROUP BY idEvenementGA
+				ORDER BY relevance  ".$order." " .
+							$limit.
+							";";
+
 		}
 		else{
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5, 1 as relevance
