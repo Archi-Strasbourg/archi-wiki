@@ -2418,7 +2418,7 @@ class ArchiAccueil extends config
     		    LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
     		    WHERE ee.idEvenement IN ($fieldsList)
     		    GROUP BY ee.idEvenement
-    		    ORDER BY  FIELD(ee.idEvenement , ".$fieldsList.")
+    		    ORDER BY dateCreationEvenement DESC,  FIELD(ee.idEvenement , ".$fieldsList.")
     		    LIMIT $nbElts
     	    	";
     	}
