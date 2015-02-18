@@ -625,8 +625,9 @@ class ArchiAccueil extends config
 	            	$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
 		             
 		            //Url Evenement
-		            $idEvenementGroupeAdresses = $e->getIdGroupeEvenement($lastVisit['idEvenementGroupeAdresse']);
+		            $idEvenementGroupeAdresses = $lastVisit['idEvenementGroupeAdresse'];
 		            $urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
+		            
 		            
 		            //Description
 		            $requeteDescription  = "
