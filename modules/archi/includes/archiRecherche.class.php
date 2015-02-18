@@ -2262,7 +2262,7 @@ class archiRecherche extends config {
 			 *  Person related (architects or others) based on First name + Last name or Last name + First name
 			 *  
 			 *  
-			 *  Sub lower level are related to only one field of the adresse (name of the street, neighborough etc...)
+			 *  Sub lower level are related to only one field of the adresse (name of the street, neighborhood etc...)
 			 *  
 			 *  Lower level are the description of the events
 			 *  
@@ -2274,7 +2274,9 @@ class archiRecherche extends config {
 				(
 				100000 * (MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 				100000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) +
-
+						
+				100000 * ((MATCH (nomQuartier) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
+						
 				(20000 - CONVERT(numeroAdresse  , UNSIGNED INTEGER))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) )) +
 					
 						
@@ -2301,9 +2303,10 @@ class archiRecherche extends config {
 				FROM recherche "
 				.$sqlWhere.
 				"GROUP BY idEvenementGA
-				ORDER BY relevance  ".$order." " .
-							$limit.
-							";";
+				ORDER BY relevance  ".$order." 
+				" .
+				$limit.
+				";";
 
 		}
 		else{
@@ -2316,6 +2319,7 @@ class archiRecherche extends config {
 				.$limit.						
 				";";
 		}
+		debug($request);
 		$idHistoriqueAdresse  = array();
 		$res = $this->connexionBdd->requete($request);
 		while($fetch = mysql_fetch_assoc($res)){

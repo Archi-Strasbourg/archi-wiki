@@ -66,7 +66,6 @@ if (isset($_GET["id"]) && !empty($_GET["id"])) {
     //$res =$config->connexionBdd->requete($req);
     $image=mysql_fetch_object($res);
     if ($image) {
-    	//RewriteRule photos-(.*)-([0-9]+)-([0-9]+)-([0-9]+)-([0-9]+)-([a-zA-Z]+)\.jpg images/$6/$2-$3-$4/$5\.jpg [L,QSA]
     	//http://archi-strasbourg.org/photo-detail-16_rue_bastian__cronenbourg__strasbourg-1-evenement-idEvenement-1-adresse1.html
         $tempPath="http://archi-strasbourg.org/photos--".$image->dateUpload."-".$_GET["id"]."-moyen.jpg";
         //if (file_exists($tempPath)) {

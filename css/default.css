@@ -2008,6 +2008,7 @@ Page d'accueil
 
 .lastModifsAccueil > h2{
 	margin-bottom: 10px;
+	margin-top: 0px;
 }
 
 .favorisAccueil{
@@ -2018,7 +2019,6 @@ Page d'accueil
 .commentairesAccueil{
 	width:200px;
 	vertical-align: top;
-	margin-bottom: 10px;
 }
 
 .commentairesAccueil h2{

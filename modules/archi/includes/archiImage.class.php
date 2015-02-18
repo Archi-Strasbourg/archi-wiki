@@ -5367,6 +5367,76 @@ class archiImage extends config
      * @return array of idHistoriqueImage and dateUpload 
      */
     public function getImagePrincipale($idEvenement){
+
+    	/*
+    	$requestMainImage = "
+    	SELECT evt.idImagePrincipale as idImage, hi.idHistoriqueImage , hi.dateUpload
+    	FROM evenements evt
+    	LEFT JOIN historiqueImage hi on hi.idImage = evt.idImagePrincipale
+    	WHERE evt.idEvenement = $idEvenement
+    	AND evt.idImagePrincipale != 0
+    	";
+    	$resMainImage = $this->connexionBdd->requete($requestMainImage);
+
+    	 
+    	if(mysql_num_rows($resMainImage)==0){
+    		debug("premier requete echoué");
+    		$requeteEI = "
+    		SELECT hi.idHistoriqueImage , hi.dateUpload , hi.idImage
+    		FROM historiqueImage hi
+    		LEFT JOIN _evenementImage ei on ei.idEvenement = $idEvenement
+    		WHERE ei.idImage = hi.idImage
+    		";
+    		$resultEI = $this->connexionBdd->requete($requeteEI);
+
+    		if(mysql_num_rows($resultEI) == 0){
+				debug("deuixieme if echoue");
+    			$requeteAI = "
+    			SELECT hi.idHistoriqueImage , hi.dateUpload , hi.idImage
+    			FROM historiqueImage hi
+    			LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = $idEvenement
+    			LEFT JOIN _adresseImage ai on ai.idEvenementGroupeAdresse = ee.idEvenement
+    			WHERE ai.idImage = hi.idImage
+    			";
+    			//debug($requeteAI);
+    			$resultAI = $this->connexionBdd->requete($requeteAI);
+    			$imageInfo = mysql_fetch_assoc($resultAI);
+
+    		}
+    		else{
+    			debug("deuxieme if success");
+    			$imageInfo = mysql_fetch_assoc($resultEI);
+    		}
+    	}
+    	else{
+    		debug("premier if succes");
+    		$imageInfo = mysql_fetch_assoc($resMainImage);;
+    	}
+*/
+    	 
+    	$selectAll ="
+    			
+    			SELECT evt.idImagePrincipale as idImage, hi.idHistoriqueImage , hi.dateUpload
+    	FROM evenements evt
+    	LEFT JOIN historiqueImage hi on hi.idImage = evt.idImagePrincipale
+    	WHERE evt.idEvenement = $idEvenement
+    	AND evt.idImagePrincipale != 0
+    			" ;
+    	
+			$resUnion = $this->connexionBdd->requete($selectAll);
+			$arrayImg = array();
+    	    while($fetchUnion = mysql_fetch_assoc($resUnion)){
+    	    	$arrayImg[]=$fetchUnion;
+    	    }
+
+    	    if(empty($arrayImg)){
+    	    	$a = new archiAdresse();
+    	    	$resBrol = $a->getFirstImageFromEvenement($idEvenement);
+    	    }
+    	 
+    	/*
+    	
+    	
     	$a = new archiAdresse();
     	$imageInfo = $a->getFirstImageFromEvenement($idEvenement);
     	$requeteEvtImg = "
@@ -5376,9 +5446,6 @@ class archiImage extends config
     			";
     	
     	
-    	
-    	
-    	//debug($imageInfo);
     	
     	if(empty($imageInfo)){
     		$a = new archiAdresse();
@@ -5402,6 +5469,9 @@ class archiImage extends config
     		//echo "<a href=\"photos--".$imageInfo['dateUpload']."-".$imageInfo['idImage']."-moyen.jpg\"". ">Else image</a><br/>";
     	}
     	//echo "<a href=\"photos--".$imageInfo['dateUpload']."-".$imageInfo['idImage']."-moyen.jpg\"". ">Simple image</a><br/>";
+    	 * 
+    	 */
+    	 //debug(array(empty($imageInfo),isset($imageInfo), $imageInfo));
     	return $imageInfo;
     }
 }

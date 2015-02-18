@@ -3219,7 +3219,6 @@ class archiEvenement extends config
 		$retour=$adresse->afficherListe(array('groupesAdressesSupplementairesExternes'=>$arrayListeGroupesEvenementsParents),'personnalite');
 		$html.=$retour['html'];
 		return $html;
-
 	}
 	// cette fonction renvoi les idEvenements d'une recherche avancee en fonction des criteres du formulaire de recherche avancee sur les evenements
 	public function getIdEvenementsFromRecherche($criteres=array(), $templateName='listeEvenement.tpl', $modeAffichage = '')
@@ -6709,6 +6708,9 @@ class archiEvenement extends config
 		 * Data processing
 		*/
 	
+		$i = new archiImage();
+		$i->getImagePrincipale($idEvenement);
+		
 		$requete = 'SELECT  
 				
 				hE.idEvenement, 

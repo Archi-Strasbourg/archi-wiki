@@ -523,6 +523,8 @@ class ArchiAccueil extends config
             foreach ($lastModifs as $modif){
             	$e = new archiEvenement();
             	$adresseArray = $e->getArrayAdresse($modif['idEvenement']);
+            	$idAdresse = $e->getIdAdresse($modif['idEvenement']);
+            	 
         
             	//Adresse
             	$adresse = '';
@@ -537,13 +539,19 @@ class ArchiAccueil extends config
             	}
             	 
             	//Image
-            	$i=new archiImage();
-            	$infoImage = $i->getImagePrincipale($modif['idEvenement']);
-            	$urlImage = 'photos--'.$infoImage['dateUpload'].'-'.$infoImage['idHistoriqueImage'].'-moyen.jpg';
+            	$a = new archiAdresse();
+            	$resImage = $a->getUrlImageFromAdresse($idAdresse,'moyen');
 
+            	if($resImage['trouve'] != 1){
+            		$resImgEvt = $a->getUrlImageFromEvenement($modif['idEvenement']);
+            		$infoImage = $resImgEvt;
+            	}
+            	else{
+            		$infoImage = $resImage;
+            	}
+            	$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
             	
             	//Url Evenement
-            	$idAdresse = $e->getIdAdresse($modif['idEvenement']);
             	$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($modif['idEvenement']);
             	$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
             	
@@ -574,9 +582,10 @@ class ArchiAccueil extends config
             
             
             //Gestion des dernieres visites
-            $this->getLatestVisited();
+            //$this->getLatestVisited();
             $t->assign_vars(array('lastVisitTitle' => _("Dernières visites")));
             $lastVisitArray=$_SESSION['lastVisited'];
+            
             if(empty($lastVisitArray)){
             	$visite = array('content' => _("Vous n'avez visité aucune adresse pour le moment"));
             	$t->assign_block_vars('lastVisitMessage', $visite);
@@ -584,6 +593,7 @@ class ArchiAccueil extends config
             else{
 	            
             	foreach ($lastVisitArray as $lastVisit){
+            		$idAdresse = $lastVisit['idAdresse'];
             		
 		            $e = new archiEvenement();
 		            $adresseArray = $e->getArrayAdresse($lastVisit['idEvenementGroupeAdresse'], 'idEvenementGroupeAdresse');
@@ -600,22 +610,21 @@ class ArchiAccueil extends config
 		            	$adresse.=' '.$adresseArray['nomRue'];
 		            }
 		            
-		            //Image
-		            $i=new archiImage();
-		            $a = new archiAdresse();
-		            $arrayIdEvenement = $e->getArrayIdEvenement($lastVisit['idEvenementGroupeAdresse']);
-		            $imgPrincipale = array();
-		            foreach ($arrayIdEvenement as $idEvt){
-		            	$infoImage = $i->getImagePrincipale($idEvt);
-		            	//debug($infoImage);
-		            }
-		           	//$infoImage = $i->getImagePrincipale($lastVisit['idEvenementGroupeAdresse']);
-		            //debug($infoImage);
-		            $urlImage = 'photos--'.$infoImage['dateUpload'].'-'.$infoImage['idHistoriqueImage'].'-moyen.jpg';
-		            //$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
+	 
+	            	//Image
+	            	$a = new archiAdresse();
+	            	$resImage = $a->getUrlImageFromAdresse($idAdresse,'moyen');
+	
+	            	if($resImage['trouve'] != 1){
+	            		$resImgEvt = $a->getUrlImageFromEvenement($lastVisit['idEvenement']);
+	            		$infoImage = $resImgEvt;
+	            	}
+	            	else{
+	            		$infoImage = $resImage;
+	            	}
+	            	$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
 		             
 		            //Url Evenement
-		            $idAdresse = $lastVisit['idAdresse'];
 		            $idEvenementGroupeAdresses = $e->getIdGroupeEvenement($lastVisit['idEvenementGroupeAdresse']);
 		            $urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
 		            
@@ -2375,7 +2384,8 @@ class ArchiAccueil extends config
 	    		ae.idAdresse AS idAdresse,
 	    		te.nom as typeEvenement,
 	    		date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
-    			evt.description				
+    			evt.description,
+	    		evt.idImagePrincipale				
 	    		
 	    		FROM evenements evt
     			LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement

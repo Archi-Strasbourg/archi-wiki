@@ -5995,7 +5995,6 @@ class archiAdresse extends ArchiContenu
 	 * */
 	public function afficherListe($criteres = array() ,  $modeAffichage='', $params = array())
 	{
-		
 		$sqlId='';
 
 		$nbAdresses=0;

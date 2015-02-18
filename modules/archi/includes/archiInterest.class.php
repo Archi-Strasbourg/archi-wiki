@@ -45,7 +45,7 @@ class archiInterest extends config{
 		$paramsFields[] = array('table' => 'quartier' ,'value' => 'idQuartier','title'=>'nom');
 		$paramsFields[] = array('table' => 'sousQuartier' ,'value' => 'idSousQuartier','title'=>'nom');
 		$paramsFields[] = array('table' => 'rue' ,'value' => 'idRue','title'=>'nom');
-		$paramsFields[] = array('table' => 'historiqueAdresse' ,'value' => 'idHistoriqueAdresse','title'=>'nom');
+		//$paramsFields[] = array('table' => 'historiqueAdresse' ,'value' => 'idHistoriqueAdresse','title'=>'nom');
 		$paramsFields[] = array('table' => 'personne' ,'value' => 'idPersonne');
 
 
@@ -63,7 +63,7 @@ class archiInterest extends config{
 		$paramsRequest[]=array('table'=> '_interetVille','field' =>'idVille', 'associateTable' => 'ville');
 		$paramsRequest[]=array('table'=> '_interetPays','field' =>'idPays', 'associateTable' => 'pays');
 		$paramsRequest[]=array('table'=> '_interetPersonne','field' =>'idPersonne', 'associateTable' => 'personne');
-		$paramsRequest[]=array('table'=> '_interetAdresse','field' =>'idHistoriqueAdresse', 'associateTable' => 'historiqueAdresse');
+		//$paramsRequest[]=array('table'=> '_interetAdresse','field' =>'idHistoriqueAdresse', 'associateTable' => 'historiqueAdresse');
 
 		$userInterest = $this->getAllInterest($paramsRequest);
 
@@ -417,7 +417,6 @@ class archiInterest extends config{
 		}
 		
 		//Array_unique enable to remove double value get from multiple select
-		//return $idEvenementArray;
 		return array_unique($idEvenementArray);
 	}
 	
@@ -645,8 +644,6 @@ class archiInterest extends config{
 	 * @return multitype:multitype:unknown  multitype:string Ambigous <> array('value'=> res , 'title' => res)
 	 */
 	private function getAllInterest($arrayParams = array()){
-		//$result = array();
-
 		foreach ($arrayParams as $params){
 			$subArray = array();
 			if($params['associateTable'] != "efefhistoriqueAdresse"){
