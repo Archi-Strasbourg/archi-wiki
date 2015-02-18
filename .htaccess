@@ -7,6 +7,11 @@ Options +FollowSymlinks
 
 # Activation du module de réécriture d'URL :
 RewriteEngine on
+
+# Autoriser les URL pour les fichiers
+
+php_value allow_url_fopen On
+
 #--------------------------------------------------
 # Règles de réécriture d'URL :
 #--------------------------------------------------
@@ -21,6 +26,7 @@ RewriteEngine on
 
 
 RewriteRule images/petit/(.+) http://archi-strasbourg.org/images/$1 [L,QSA]
+RewriteRule images/mini/(.+) http://archi-strasbourg.org/images/mini/$1 [L,QSA]
 RewriteRule images/grand/(.+) http://archi-strasbourg.org/images/grand/$1 [L,QSA]
 RewriteRule images/moyen/(.+) http://archi-strasbourg.org/images/moyen/$1 [L,QSA]
 RewriteRule images/originaux/(.+) http://archi-strasbourg.org/images/originaux/$1 [L,QSA]
