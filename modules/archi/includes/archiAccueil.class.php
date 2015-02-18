@@ -2369,10 +2369,7 @@ class ArchiAccueil extends config
     public function getLatestModification($nbElts){
     	
     	$interest = new archiInterest();
-    	$test = $interest->getFavorisIdEvenementGroupeAdresse($nbElts);
-    	//debug($test);
     	$test = $interest->getFavorisIdEvenementGroupeAdresse(0);
-    	//debug($test);
     	$fieldsList =implode(',', $test); 
 
     	if(empty($test)){
@@ -2437,8 +2434,6 @@ class ArchiAccueil extends config
 			
     		$arrayLastModif[]=$tmp;
     	}
-    	
-    	
     	return $arrayLastModif;
     }
     
