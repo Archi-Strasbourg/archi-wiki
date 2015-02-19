@@ -6119,6 +6119,7 @@ class archiAdresse extends ArchiContenu
 					";
 
 
+			
 			//$sqlOrderByPoidsMotCle="poidsTotal DESC";
 			//
 			/* $sqlJoin .="

@@ -2269,6 +2269,10 @@ class archiRecherche extends config {
 			 *  
 			 */
 			
+			$motCleEscaped = str_replace(' ', '*', $params['motcle']);
+			//$motCleEscaped.='*';
+			//debug($motCleEscaped);
+			
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5,
 		
 				(
@@ -2276,6 +2280,8 @@ class archiRecherche extends config {
 				100000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) +
 						
 				100000 * ((MATCH (nomQuartier) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
+						
+				50000 * (MATCH (concat2) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) + 
 						
 				(20000 - CONVERT(numeroAdresse  , UNSIGNED INTEGER))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) )) +
 					
@@ -2297,7 +2303,15 @@ class archiRecherche extends config {
 			
 				1 * (MATCH (description) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE))
 		
-				) as relevance
+				) as relevance,
+				
+						(MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) as con1,
+						(MATCH (concat2) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) as con1escape,
+						((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) as con2,
+						((MATCH (concat2) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) as con2escape,
+						(MATCH (titre) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) as con3,
+						(MATCH (titre) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) as con3escape
+						
 						
 						
 				FROM recherche "
@@ -2308,7 +2322,26 @@ class archiRecherche extends config {
 				$limit.
 				";";
 
-			debug($request);
+			//debug($request);
+			
+			/*
+			$resultArray = array();
+			$res = $this->connexionBdd->requete($request);
+			while($fetch = mysql_fetch_assoc($res)){
+				$resultArray[]= array(
+						"con1"=>$fetch['con1'],
+						"con1Escaped" => $fetch['con1escape'],
+						"con2" => $fetch['con2'],
+						"con2Escaped" => $fetch['con2escape'],
+						"con3" => $fetch['con3'],
+						"con3Escaped" => $fetch['con3escape']
+				);
+			}
+			debug($resultArray);
+				*/
+			
+			
+			
 		}
 		else{
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5, 1 as relevance
