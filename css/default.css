@@ -2319,3 +2319,7 @@ Allow to display description on hover
 .formAjoutCommentaireEvenement h1{
 	font-size: 20px;
 }
+
+.interestList{
+	margin-bottom: 30px;
+}

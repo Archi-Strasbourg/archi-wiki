@@ -2284,7 +2284,7 @@ class archiRecherche extends config {
 				10000 * (MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 						
 			
-				1000 * (MATCH (titre) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				1000 * (MATCH (titre) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
 			
 				100 * (MATCH (concat4) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 				100 * (MATCH (concat5) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
@@ -2308,6 +2308,7 @@ class archiRecherche extends config {
 				$limit.
 				";";
 
+			debug($request);
 		}
 		else{
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5, 1 as relevance

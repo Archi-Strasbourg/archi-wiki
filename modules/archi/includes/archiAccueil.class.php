@@ -549,7 +549,7 @@ class ArchiAccueil extends config
             	else{
             		$infoImage = $resImage;
             	}
-            	$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
+            	$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
             	
             	//Url Evenement
             	$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($modif['idEvenement']);
@@ -622,7 +622,7 @@ class ArchiAccueil extends config
 	            	else{
 	            		$infoImage = $resImage;
 	            	}
-	            	$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
+	            	$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
 		             
 		            //Url Evenement
 		            $idEvenementGroupeAdresses = $lastVisit['idEvenementGroupeAdresse'];
@@ -742,8 +742,6 @@ class ArchiAccueil extends config
 	            	$description = $so->sansBalises($fav['description']);
 	            	$description = stripslashes($description);
 	            	$description = mb_substr($description, 0,130);
-	            	
-	            	
 	            	
 	            	
 	            	//Titre
