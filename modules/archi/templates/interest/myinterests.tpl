@@ -1,5 +1,5 @@
 <div class="myInterests">
-	<h1>Mes centres d'intérêts</h1>
+	<h1>Mes centres d'intérêt</h1>
 	<!-- BEGIN interestList -->
 	<div class="{interestList.CSSclass}">
 		<h2>{interestList.title}</h2>
