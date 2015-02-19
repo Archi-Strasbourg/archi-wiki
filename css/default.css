@@ -2097,7 +2097,7 @@ Page d'accueil
   	text-overflow: ellipsis; /* pour le reste du monde */
   	word-space: nowarp;
 }
-.textNews div:first-child a , .favorisTextWrapper div:first-child a, .titreLastModif a{
+.textNews div:first-child a , .favorisTextWrapper div:first-child a, .titreLastModif a , .adresseLastModif a {
 	color: #273638;
 	font-size: 14px;
 }

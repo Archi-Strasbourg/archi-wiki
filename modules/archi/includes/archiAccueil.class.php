@@ -573,13 +573,7 @@ class ArchiAccueil extends config
             	));
             }
             
-            
-            
-            
-            
-            
-            
-            
+                       
             
             //Gestion des dernieres visites
             //$this->getLatestVisited();

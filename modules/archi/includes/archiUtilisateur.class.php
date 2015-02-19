@@ -2393,29 +2393,33 @@ class archiUtilisateur extends config {
     
     
     public function updateVisitedLink($idAdresse,$idEvenementGroupeAdresse){
+    	$subArray  = array(
+    			'idAdresse' => $idAdresse,
+				'idEvenementGroupeAdresse' => $idEvenementGroupeAdresse
+    	);
     	if(empty($_SESSION['lastVisited'])){
     		$lastVisitedLinks = array();
     	}
     	else{
     		$lastVisitedLinks = $_SESSION['lastVisited'];
     	}
-    	
-    	$subArray  = array(
-    			'idAdresse' => $idAdresse,
-				'idEvenementGroupeAdresse' => $idEvenementGroupeAdresse
-    			
-    	);
 
-    	//Add ids to session array
-    	
-    	//Flush the last url if 3 url are already registered
-    	while(count($lastVisitedLinks) >=3){
-    		array_pop($lastVisitedLinks);
+		//Check if link already exists
+    	$alreadyExist = false;
+    	foreach ($lastVisitedLinks as $element){
+    		if($element['idAdresse'] == $idAdresse && $element['idEvenementGroupeAdresse']== $idEvenementGroupeAdresse){
+    			$alreadyExist = true;
+    		}
     	}
-    	
-    	//Append new url at the begining 
-   		array_unshift($lastVisitedLinks, $subArray);
-
+    	if($alreadyExist== false){
+	    	//Add ids to session array
+	    	//Flush the last url if 3 url are already registered
+	    	while(count($lastVisitedLinks) >=3){
+	    		array_pop($lastVisitedLinks);
+	    	}
+	    	//Append new url at the begining 
+	   		array_unshift($lastVisitedLinks, $subArray);
+    	}
     	$_SESSION['lastVisited']=$lastVisitedLinks ;
     }
     
