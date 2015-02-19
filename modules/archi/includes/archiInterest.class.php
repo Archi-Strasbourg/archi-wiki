@@ -704,7 +704,7 @@ class archiInterest extends config{
 					$temp['titre'].="s";
 				}
 				$associateCity = $this->getCityName($temp[$temp['field']], $temp['associateTable']);
-				if($associateCity){
+				if($associateCity && $associateCity!=''){
 					$nom = $temp['nom']. ' ('.$associateCity.')';
 					$temp['nom']=$nom;
 				}
