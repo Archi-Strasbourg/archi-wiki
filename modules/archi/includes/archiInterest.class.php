@@ -110,7 +110,7 @@ class archiInterest extends config{
 				}
 			}
 			else{
-				$t->assign_block_vars('interestList',array('vide'=>'Aucun résultat','title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centre d\'intéret','CSSclass'=>'interestList'));
+				$t->assign_block_vars('interestList',array('vide'=>'Aucun résultat','title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centre d\'intérêt','CSSclass'=>'interestList'));
 			}
 				
 		}
