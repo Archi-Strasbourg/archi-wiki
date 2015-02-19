@@ -1,7 +1,7 @@
 <div class="myInterests">
 	<h1>Mes centres d'intérêts</h1>
 	<!-- BEGIN interestList -->
-	<div class="interestList {interestList.CSSclass}">
+	<div class="{interestList.CSSclass}">
 		<h2>{interestList.title}</h2>
 		<ul>
 		{interestList.vide}

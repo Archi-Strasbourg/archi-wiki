@@ -70,7 +70,6 @@ class archiInterest extends config{
 		/*
 		 * Array of EVERY interest  by categories : street country address etc..
 		 */
-		debug($userInterest);
 		foreach ($userInterest as $interestByCat){
 			if(!isset($interestByCat[0]['vide'])){
 				$t->assign_block_vars('interestList',array('title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centres d\'intérêt','CSSclass'=>'interestList'));
