@@ -46,7 +46,7 @@ class archiInterest extends config{
 		$paramsFields[] = array('table' => 'sousQuartier' ,'value' => 'idSousQuartier','title'=>'nom');
 		$paramsFields[] = array('table' => 'rue' ,'value' => 'idRue','title'=>'nom');
 		//$paramsFields[] = array('table' => 'historiqueAdresse' ,'value' => 'idHistoriqueAdresse','title'=>'nom');
-		$paramsFields[] = array('table' => 'personne' ,'value' => 'idPersonne');
+		//$paramsFields[] = array('table' => 'personne' ,'value' => 'idPersonne');
 
 
 
@@ -62,7 +62,7 @@ class archiInterest extends config{
 		$paramsRequest[]=array('table'=> '_interetQuartier','field' =>'idQuartier', 'associateTable' => 'quartier');
 		$paramsRequest[]=array('table'=> '_interetVille','field' =>'idVille', 'associateTable' => 'ville');
 		$paramsRequest[]=array('table'=> '_interetPays','field' =>'idPays', 'associateTable' => 'pays');
-		$paramsRequest[]=array('table'=> '_interetPersonne','field' =>'idPersonne', 'associateTable' => 'personne');
+	//	$paramsRequest[]=array('table'=> '_interetPersonne','field' =>'idPersonne', 'associateTable' => 'personne');
 		//$paramsRequest[]=array('table'=> '_interetAdresse','field' =>'idHistoriqueAdresse', 'associateTable' => 'historiqueAdresse');
 
 		$userInterest = $this->getAllInterest($paramsRequest);
@@ -70,6 +70,7 @@ class archiInterest extends config{
 		/*
 		 * Array of EVERY interest  by categories : street country address etc..
 		 */
+		debug($userInterest);
 		foreach ($userInterest as $interestByCat){
 			if(!isset($interestByCat[0]['vide'])){
 				$t->assign_block_vars('interestList',array('title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centres d\'intérêt','CSSclass'=>'interestList'));
@@ -680,6 +681,10 @@ class archiInterest extends config{
 				else{
 					$titre=$params['associateTable'] ;
 				}
+				//Ajout de "s" si plusieurs resultats
+				if($params['associateTable']!='pays'){
+					$titre.="s";
+				}
 				$subArray=array(array_merge(array('vide'=>true,'titre'=>$titre),$params));
 				
 			}
@@ -709,18 +714,6 @@ class archiInterest extends config{
 		return $result;
 	}
 
-
-
-
-
-
-
-	private function generateFormPersonne(){
-		$this->userId;
-
-
-
-	}
 
 }
 ?>
