@@ -66,7 +66,6 @@ class archiInterest extends config{
 		//$paramsRequest[]=array('table'=> '_interetAdresse','field' =>'idHistoriqueAdresse', 'associateTable' => 'historiqueAdresse');
 
 		$userInterest = $this->getAllInterest($paramsRequest);
-
 		/*
 		 * Array of EVERY interest  by categories : street country address etc..
 		 */
@@ -110,7 +109,7 @@ class archiInterest extends config{
 				}
 			}
 			else{
-				$t->assign_block_vars('interestList',array('vide'=>'Aucun résultat','title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centre d\'intérêt','CSSclass'=>'interestList'));
+				$t->assign_block_vars('interestList',array('vide'=>'Aucun résultat','title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centres d\'intérêt','CSSclass'=>'interestList'));
 			}
 				
 		}
@@ -704,6 +703,11 @@ class archiInterest extends config{
 				if($temp['associateTable']!='pays'){
 					$temp['titre'].="s";
 				}
+				$associateCity = $this->getCityName($temp[$temp['field']], $temp['associateTable']);
+				if($associateCity){
+					$nom = $temp['nom']. ' ('.$associateCity.')';
+					$temp['nom']=$nom;
+				}
 				$subArray[]=$temp;
 			}
 			if(!empty($subArray)){
@@ -712,7 +716,53 @@ class archiInterest extends config{
 		}
 		return $result;
 	}
-
-
+	
+	
+	/**
+	 * Get the city name with an id and a type of input 
+	 * 
+	 * Type must be 'rue' , 'sousQuartier' or 'quartier'
+	 * otherwise it wille return false
+	 * 
+	 * @param unknown $id if the table
+	 * @param unknown $type of the table
+	 * @return false or the street name
+	 */
+	private function getCityName($id,$type){
+		switch($type){
+			case 'quartier':
+				$requete = "
+						SELECT v.nom
+						FROM ville v
+						LEFT JOIN quartier q on q.idVille = v.idVille
+						WHERE q.idQuartier = $id 
+						";
+				break;
+			case 'sousQuartier':
+				$requete = "
+						SELECT v.nom
+						FROM ville v
+						LEFT JOIN quartier q on q.idVille = v.idVille
+						LEFT JOIN sousQuartier sq on sq.idQuartier = q.idQuartier
+						WHERE sq.idSousQuartier = $id
+						";
+				break;
+			case 'rue':
+				$requete = "
+						SELECT v.nom
+						FROM ville v
+						LEFT JOIN quartier q on q.idVille = v.idVille
+						LEFT JOIN sousQuartier sq on sq.idQuartier = q.idQuartier
+						LEFT JOIN rue r on r.idSousQuartier = sq.idSousQuartier
+						WHERE r.idRue = $id
+						";
+				break;
+			default:
+				return false;
+		}
+		$result = $this->connexionBdd->requete($requete);
+		$row = mysql_fetch_assoc($result);
+		return $row['nom'];
+	}
 }
 ?>
