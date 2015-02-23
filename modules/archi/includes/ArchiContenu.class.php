@@ -715,7 +715,6 @@ abstract class ArchiContenu extends config
         // ensuite on ajoute l'evenement
         // ******************************************************
         $evenement=new archiEvenement();
-        $arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier();
     
         $idEvenementGroupeAdresses=0;
         $idSousEvenement=0;
@@ -727,6 +726,8 @@ abstract class ArchiContenu extends config
             $linkTable="_adresseEvenement";
             $field="idAdresse";
         }
+        $table = array('table'=>$linkTable,'field' => $field);
+        $arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier();
         
         
         // s'il n'y a pas eu d'erreurs ,  on peut faire l'ajout des liaisons entre evenement et adresses
@@ -752,6 +753,17 @@ abstract class ArchiContenu extends config
                 
                 $resLiaisons = $this->connexionBdd->requete($reqLiaisons);
             }
+            
+            
+
+            // on relie l'evenement pere (groupe d'adresse ) à l'evenement fils
+            $sqlAssociationNettoie = "delete from _evenementEvenement where idEvenement = '".$arrayRetourEvenementNouveauDossier['idEvenementGroupeAdresse']."'";
+            $resAssociationNettoie = $this->connexionBdd->requete($sqlAssociationNettoie);
+            $sqlAssociation = "insert into _evenementEvenement (idEvenement,idEvenementAssocie) values ('".$arrayRetourEvenementNouveauDossier['idEvenementGroupeAdresse']."','".$arrayRetourEvenementNouveauDossier['idSousEvenement']."')";
+            $resAssociation = $this->connexionBdd->requete($sqlAssociation);
+            
+
+            
             if ($type=="personne") {
                 
             } else {

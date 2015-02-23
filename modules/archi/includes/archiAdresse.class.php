@@ -14547,7 +14547,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 						array(
 								'nom'        => $titre,
 								'adresseComplete' => $fulladdress,
-								'urlImageIllustration'    => 'getPhotoSquare.php?id='.$illustration['idHistoriqueImage'],
+								'urlImageIllustration'    => 'resizeImage.php?id='.$illustration['idHistoriqueImage'],
 								'alt' => $nom,
 								'urlDetailHref' => $addressUrl,
 								'titresEvenements'        => $titreEvenements,
