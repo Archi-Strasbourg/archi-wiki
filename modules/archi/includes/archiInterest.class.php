@@ -145,6 +145,23 @@ class archiInterest extends config{
 			$interets = $this->variablesGet;
 		}
 		
+		
+		
+		/*
+		 * Initially, it was adding related nesting element in the interests of the user
+		 * Client asked to add only the smallest element in interest (if neighborhood selected, don't add the city and the country)
+		 * Little array handling to satified the client need, to revert, delete the two following loops 
+		 */
+		foreach ($interets as $key => $int){
+			if($int== 0){
+				unset($interets[$key]);
+			}
+		}
+		while(count($interets)>1){
+			array_shift($interets);
+		}
+		
+		
 		$requestParameters = array();
 		if($interets['rue']!=0){
 			$requestParameters[]=array('table'=>'_interetRue','fieldName1'=>'idUtilisateur','fieldName2'=>'idRue','idInteret'=>$interets['rue'],'userId'=>$this->userId);
@@ -199,12 +216,9 @@ class archiInterest extends config{
 					WHERE ".$rp['fieldName1']."='".$this->userId."' AND ".$rp['fieldName2']."='".$rp['idInteret']."')
 					LIMIT 1
 					";
-			
 			$res = $this->connexionBdd->requete($requete,false);
 		}
-		
 		$this->messages->addConfirmation('Intérêt(s) sauvegardé(s) avec succès !');
-
 		$t->assign_vars(array(
 				'message' =>  $this->messages->display(),
 				'textLink' => $txtLink,

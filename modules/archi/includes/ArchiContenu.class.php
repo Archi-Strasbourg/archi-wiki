@@ -762,11 +762,10 @@ abstract class ArchiContenu extends config
             $sqlAssociation = "insert into _evenementEvenement (idEvenement,idEvenementAssocie) values ('".$arrayRetourEvenementNouveauDossier['idEvenementGroupeAdresse']."','".$arrayRetourEvenementNouveauDossier['idSousEvenement']."')";
             $resAssociation = $this->connexionBdd->requete($sqlAssociation);
             
-
-            
             if ($type=="personne") {
                 
-            } else {
+            } 
+            else{
                 // *************************************************************************************************************************************************************
                 // envoi d'un mail aux administrateur pour la moderation
                 $utilisateur = new archiUtilisateur();
@@ -860,16 +859,13 @@ abstract class ArchiContenu extends config
                                 );
                             }
                         }
-                        
                     }
                 }
             }
             
             
-            //$retourEvenement = $evenement->afficher($idEvenementGroupeAdresses);
             //echo $retourEvenement["html"];
             if ($type=="personne") {
-                //?archiAffichage=evenementListe&selection=personne&id=
                 header(
                     "Location: ".$this->creerUrl(
                         '', '', array('archiAffichage'=>'evenementListe',
