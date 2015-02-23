@@ -51,8 +51,8 @@ CREATE TABLE recherche AS
         
         LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
         LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-        LEFT JOIN historiqueEvenement he1 ON he1.idEvenement = ee.idEvenementAssocie
-        LEFT JOIN historiqueEvenement he2 ON he2.idEvenement = he1.idEvenement
+        LEFT JOIN evenements he1 ON he1.idEvenement = ee.idEvenementAssocie
+        LEFT JOIN evenements he2 ON he2.idEvenement = he1.idEvenement
         
         LEFT JOIN _evenementPersonne ep ON ep.idEvenement = he1.idEvenement
         LEFT JOIN personne pers ON pers.idPersonne = ep.idPersonne
@@ -60,7 +60,7 @@ CREATE TABLE recherche AS
 		LEFT JOIN _evenementCourantArchitectural eca on eca.idEvenement = ee.idEvenementAssocie
         
         WHERE ha2.idAdresse = ha1.idAdresse 
-
+		AND he1.idEvenement = NEW.idEvenement
         AND ae.idAdresse IS NOT NULL
         GROUP BY ha1.idAdresse, he1.idEvenement, ha1.idHistoriqueAdresse,  he1.idHistoriqueEvenement
         HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) AND he1.idHistoriqueEvenement = max(he2.idHistoriqueEvenement)
