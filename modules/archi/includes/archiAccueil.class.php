@@ -2361,10 +2361,27 @@ class ArchiAccueil extends config
     public function getLatestModification($nbElts){
     	
     	$interest = new archiInterest();
-    	$test = $interest->getFavorisIdEvenementGroupeAdresse(0);
-    	$fieldsList =implode(',', $test); 
+    	$arrayIdEvenement = $interest->getFavorisIdEvenementGroupeAdresse(0);
+    	
+    	
+    	$remainingIdNB = $nbElts - count($arrayIdEvenement);
+    	if($remainingIdNB>0){
+    		$requeteRemainingId = "
+			SELECT DISTINCT ee.idEvenement
+			FROM evenements evt
+			LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+			WHERE ee.idEvenement is NOT NULL
+			ORDER BY evt.idEvenement desc
+			LIMIT  $remainingIdNB
+    				";
+    		$resultRemainingId = $this->connexionBdd->requete($requeteRemainingId);
+    		while($rowRemainingId = mysql_fetch_assoc($resultRemainingId)){
+				$arrayIdEvenement[] = $rowRemainingId['idEvenement'];
+    		}
+    	}
+    	$fieldsList =implode(',', $arrayIdEvenement); 
 
-    	if(empty($test)){
+    	if(empty($arrayIdEvenement)){
     		$requete ="
 	    		SELECT
     			DISTINCT ee.idEvenement AS idEvenementGroupeAdresse,

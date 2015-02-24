@@ -428,16 +428,11 @@ class archiInterest extends config{
 			}
 			
 		}
-		
 		//Array_unique enable to remove double value get from multiple select
 		return array_unique($idEvenementArray);
 	}
 	
 	
-	
-	
-	
-
 	/*
 	 * Private functions
 	*/
