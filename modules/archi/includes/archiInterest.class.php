@@ -36,8 +36,9 @@ class archiInterest extends config{
 		$a = new archiAdresse();
 
 		//Generate address form
-		$formAddressAddInterest=$a->afficheChoixAdresse();
-
+		$formAddressAddInterest=$a->afficheChoixAdresse(array('afficheNombreResultat' => 1));
+		//$formAddressAddInterest=$a->afficheChoixAdresse();
+		
 
 		$paramsFields= array();
 		$paramsFields[] = array('table' => 'pays' ,'value' => 'idPays','title'=>'nom');
@@ -45,8 +46,6 @@ class archiInterest extends config{
 		$paramsFields[] = array('table' => 'quartier' ,'value' => 'idQuartier','title'=>'nom');
 		$paramsFields[] = array('table' => 'sousQuartier' ,'value' => 'idSousQuartier','title'=>'nom');
 		$paramsFields[] = array('table' => 'rue' ,'value' => 'idRue','title'=>'nom');
-		//$paramsFields[] = array('table' => 'historiqueAdresse' ,'value' => 'idHistoriqueAdresse','title'=>'nom');
-		//$paramsFields[] = array('table' => 'personne' ,'value' => 'idPersonne');
 
 
 
@@ -62,8 +61,6 @@ class archiInterest extends config{
 		$paramsRequest[]=array('table'=> '_interetQuartier','field' =>'idQuartier', 'associateTable' => 'quartier');
 		$paramsRequest[]=array('table'=> '_interetVille','field' =>'idVille', 'associateTable' => 'ville');
 		$paramsRequest[]=array('table'=> '_interetPays','field' =>'idPays', 'associateTable' => 'pays');
-	//	$paramsRequest[]=array('table'=> '_interetPersonne','field' =>'idPersonne', 'associateTable' => 'personne');
-		//$paramsRequest[]=array('table'=> '_interetAdresse','field' =>'idHistoriqueAdresse', 'associateTable' => 'historiqueAdresse');
 
 		$userInterest = $this->getAllInterest($paramsRequest);
 		/*

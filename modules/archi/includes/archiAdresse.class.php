@@ -3565,8 +3565,7 @@ class archiAdresse extends ArchiContenu
 		$html="";
 		$t=new Template('modules/archi/templates/');
 		$t->set_filenames((array('choixAdresse'=>'choixAdresse.tpl')));
-
-
+		$afficheNombreResultat = 0;
 
 		$sqlWherePays ="";
 
@@ -3596,7 +3595,6 @@ class archiAdresse extends ArchiContenu
 					break;
 			}
 		}
-
 
 
 		if(count($criteres)>0)
@@ -3644,6 +3642,18 @@ class archiAdresse extends ArchiContenu
 			$t->assign_block_vars('isQuartier',array());
 			$t->assign_block_vars('isVille',array());
 			$t->assign_block_vars('isPays',array());
+		}
+		if(isset($criteres['afficheNombreResultat'])){
+			$afficheNombreResultat = $criteres['afficheNombreResultat'];
+			$t->assign_block_vars('isRue',array());
+			$t->assign_block_vars('isSousQuartier',array());
+			$t->assign_block_vars('isQuartier',array());
+			$t->assign_block_vars('isVille',array());
+			$t->assign_block_vars('isPays',array());
+		}
+		if($afficheNombreResultat==1 || (isset($this->variablesGet['afficheNombreResultat']) && $this->variablesGet['afficheNombreResultat'] == 1)){
+			$afficheNombreResultat = 1;
+			$urlAfficheNbResultat = "&afficheNombreResultat=1";
 		}
 
 		// initialisation des identifiants de pays, ville,quartier, sousquartier,rue selectionnés par l'utilisateur
@@ -3708,9 +3718,7 @@ class archiAdresse extends ArchiContenu
 
 		if( !isset($criteres['modeAffichage_pays']))
 		{
-			$t->assign_vars(array('paysOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$tabUrl['pays'].$urlTypeNew.",'choixAdresse')"));
-
-
+			$t->assign_vars(array('paysOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheNbResultat.$tabUrl['pays'].$urlTypeNew.",'choixAdresse')"));
 			if($a->getIdProfil()==3) // l'utilisateur est moderateur , on n'affiche seulements les pays des villes qu'il peut moderer et par defaut le pays = france
 			{
 				$arrayVillesModerees = $u->getArrayVillesModereesPar($a->getIdUtilisateur());
@@ -3754,7 +3762,15 @@ class archiAdresse extends ArchiContenu
 					{
 						$selectedPays="selected='selected'";
 					}
-					$t->assign_block_vars('isPays.listePays', array('idPays'=>$fetchPays['idPays'], 'nomPays'=>$fetchPays['nom'], 'selected'=>$selectedPays));
+					if($afficheNombreResultat==1){
+						$resNombre = $this->connexionBdd->requete("select count(*) as nombre from historiqueAdresse where idPays = ".$fetchPays['idPays']);
+						$fetchNombre = mysql_fetch_assoc($resNombre);
+						$nombre = '('.$fetchNombre['nombre'].')';
+						$t->assign_block_vars('isPays.listePays', array('idPays'=>$fetchPays['idPays'], 'nomPays'=>$fetchPays['nom'], 'selected'=>$selectedPays , 'valeur' =>$nombre));
+					}
+					else{
+						$t->assign_block_vars('isPays.listePays', array('idPays'=>$fetchPays['idPays'], 'nomPays'=>$fetchPays['nom'], 'selected'=>$selectedPays));
+					}
 				}
 			}
 		}
@@ -3763,7 +3779,7 @@ class archiAdresse extends ArchiContenu
 		// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		if($idPaysChoixAdresse!=0 && !isset($criteres['modeAffichage_ville']))
 		{
-			$t->assign_vars(array('villeOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$tabUrl['pays'].$tabUrl['ville'].$urlTypeNew.",'choixAdresse')"));
+			$t->assign_vars(array('villeOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheNbResultat.$tabUrl['pays'].$tabUrl['ville'].$urlTypeNew.",'choixAdresse')"));
 
 			$sqlWhereVilles="";
 			if($a->getIdProfil()==3) // l'utilisateur est un moderateur , on limite a l'affichage des villes qu'il modere
@@ -3780,7 +3796,7 @@ class archiAdresse extends ArchiContenu
 
 			}
 
-			$resVille=$this->connexionBdd->requete("select idVille, nom from ville where idPays='".$idPaysChoixAdresse."' and lower(nom)<>'autre' ".$sqlWhereVilles." order by nom");
+			$resVille=$this->connexionBdd->requete("select idVille, nom  from ville where idPays='".$idPaysChoixAdresse."' and lower(nom)<>'autre' ".$sqlWhereVilles." order by nom");
 			while($fetchVille=mysql_fetch_array($resVille))
 			{
 				$selectedVille='';
@@ -3788,7 +3804,15 @@ class archiAdresse extends ArchiContenu
 				{
 					$selectedVille='selected';
 				}
-				$t->assign_block_vars('isVille.listeVilles',array('idVille'=>$fetchVille['idVille'],'nomVille'=>$fetchVille['nom'],'selected'=>$selectedVille));
+				if($afficheNombreResultat){
+					$resNombre = $this->connexionBdd->requete("select count(*) as nombre from historiqueAdresse where idVille = ".$fetchVille['idVille']);
+					$fetchNombre = mysql_fetch_assoc($resNombre);
+					$nombre = '('.$fetchNombre['nombre'].')';
+					$t->assign_block_vars('isVille.listeVilles',array('idVille'=>$fetchVille['idVille'],'nomVille'=>$fetchVille['nom'],'selected'=>$selectedVille,'valeur' =>$nombre));
+				}
+				else{
+					$t->assign_block_vars('isVille.listeVilles',array('idVille'=>$fetchVille['idVille'],'nomVille'=>$fetchVille['nom'],'selected'=>$selectedVille));
+				}
 			}
 		}
 
@@ -3797,7 +3821,7 @@ class archiAdresse extends ArchiContenu
 		// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		if( $idVilleChoixAdresse!='0' && !isset($criteres['modeAffichage_quartier']))
 		{
-			$t->assign_vars(array('quartierOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$tabUrl['pays'].$tabUrl['ville'].$tabUrl['quartier'].$urlTypeNew.",'choixAdresse')"));
+			$t->assign_vars(array('quartierOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheNbResultat.$tabUrl['pays'].$tabUrl['ville'].$tabUrl['quartier'].$urlTypeNew.",'choixAdresse')"));
 
 			$resQuartier = $this->connexionBdd->requete("select idQuartier, nom from quartier where idVille='".$idVilleChoixAdresse."' and lower(nom)<>'autre' order by nom");
 
@@ -3809,7 +3833,15 @@ class archiAdresse extends ArchiContenu
 					$selectedQuartier='selected';
 				}
 
-				$t->assign_block_vars('isQuartier.listeQuartiers',array('idQuartier'=>$fetchQuartier['idQuartier'],'nomQuartier'=>$fetchQuartier['nom'],'selected'=>$selectedQuartier));
+				if($afficheNombreResultat){
+					$resNombre = $this->connexionBdd->requete("select count(*) as nombre from historiqueAdresse where idQuartier = ".$fetchQuartier['idQuartier']);
+					$fetchNombre = mysql_fetch_assoc($resNombre);
+					$nombre = '('.$fetchNombre['nombre'].')';
+					$t->assign_block_vars('isQuartier.listeQuartiers',array('idQuartier'=>$fetchQuartier['idQuartier'],'nomQuartier'=>$fetchQuartier['nom'],'selected'=>$selectedQuartier,'valeur' =>$nombre));
+				}
+				else{
+					$t->assign_block_vars('isQuartier.listeQuartiers',array('idQuartier'=>$fetchQuartier['idQuartier'],'nomQuartier'=>$fetchQuartier['nom'],'selected'=>$selectedQuartier));
+				}
 			}
 		}
 
@@ -3818,7 +3850,7 @@ class archiAdresse extends ArchiContenu
 		// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		if($idQuartierChoixAdresse!=0 && !isset($criteres['modeAffichage_sousQuartier']))
 		{
-			$t->assign_vars(array('sousQuartierOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$tabUrl['pays'].$tabUrl['ville'].$tabUrl['quartier'].$tabUrl['sousQuartier'].$urlTypeNew.",'choixAdresse')"));
+			$t->assign_vars(array('sousQuartierOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheNbResultat.$tabUrl['pays'].$tabUrl['ville'].$tabUrl['quartier'].$tabUrl['sousQuartier'].$urlTypeNew.",'choixAdresse')"));
 
 			$resSousQuartier = $this->connexionBdd->requete("select idSousQuartier, nom from sousQuartier where idQuartier='".$idQuartierChoixAdresse."' and lower(nom)<>'autre' order by nom");
 			while($fetchSousQuartier=mysql_fetch_array($resSousQuartier))
@@ -3828,7 +3860,15 @@ class archiAdresse extends ArchiContenu
 				{
 					$selectedSousQuartier='selected';
 				}
-				$t->assign_block_vars('isSousQuartier.listeSousQuartiers',array('idSousQuartier'=>$fetchSousQuartier['idSousQuartier'],'nomSousQuartier'=>$fetchSousQuartier['nom'],'selected'=>$selectedSousQuartier));
+				if($afficheNombreResultat){
+					$resNombre = $this->connexionBdd->requete("select count(*) as nombre from historiqueAdresse where idSousQuartier = ".$fetchSousQuartier['idSousQuartier']);
+					$fetchNombre = mysql_fetch_assoc($resNombre);
+					$nombre = '('.$fetchNombre['nombre'].')';
+					$t->assign_block_vars('isSousQuartier.listeSousQuartiers',array('idSousQuartier'=>$fetchSousQuartier['idSousQuartier'],'nomSousQuartier'=>$fetchSousQuartier['nom'],'selected'=>$selectedSousQuartier,'valeur' =>$nombre));
+				}
+				else{
+					$t->assign_block_vars('isSousQuartier.listeSousQuartiers',array('idSousQuartier'=>$fetchSousQuartier['idSousQuartier'],'nomSousQuartier'=>$fetchSousQuartier['nom'],'selected'=>$selectedSousQuartier));
+				}
 			}
 		}
 
@@ -3847,10 +3887,17 @@ class archiAdresse extends ArchiContenu
 				{
 					$selectedRue='selected';
 				}
-				$t->assign_block_vars('isRue.listeRues',array('idRue'=>$fetchRue['idRue'],'nomRue'=>$fetchRue['nom'],'selected'=>$selectedRue));
+				if($afficheNombreResultat){
+					$resNombre = $this->connexionBdd->requete("select count(*) as nombre from historiqueAdresse where idSousQuartier = ".$fetchRue['idRue']);
+					$fetchNombre = mysql_fetch_assoc($resNombre);
+					$nombre = '('.$fetchNombre['nombre'].')';
+					$t->assign_block_vars('isRue.listeRues',array('idRue'=>$fetchRue['idRue'],'nomRue'=>$fetchRue['nom'],'selected'=>$selectedRue,'valeur' =>$nombre));
+				}
+				else{
+					$t->assign_block_vars('isRue.listeRues',array('idRue'=>$fetchRue['idRue'],'nomRue'=>$fetchRue['nom'],'selected'=>$selectedRue));
+				}
 			}
 		}
-
 
 		ob_start();
 		$t->pparse('choixAdresse');

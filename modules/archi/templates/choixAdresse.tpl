@@ -9,7 +9,7 @@
 		<select name='pays' id='pays' onchange="{paysOnChange}">
 			<option value='0'><?_("Tous")?></option>
 			<!-- BEGIN listePays -->
-			<option value='{isPays.listePays.idPays}' {isPays.listePays.selected}>{isPays.listePays.nomPays}</option>
+			<option value='{isPays.listePays.idPays}' {isPays.listePays.selected}>{isPays.listePays.nomPays} {isPays.listePays.valeur}</option>
 			<!-- END listePays -->
 		</select>
 	</td>
@@ -22,7 +22,7 @@
 		<select name='ville' id='ville' onchange="{villeOnChange}">
 			<option value='0'><?_("Toutes")?></option>
 			<!-- BEGIN listeVilles -->
-			<option value='{isVille.listeVilles.idVille}' {isVille.listeVilles.selected}>{isVille.listeVilles.nomVille}</option>
+			<option value='{isVille.listeVilles.idVille}' {isVille.listeVilles.selected}>{isVille.listeVilles.nomVille} {isVille.listeVilles.valeur}</option>
 			<!-- END listeVilles -->
 		</select>
 	</td>
@@ -35,7 +35,7 @@
 		<select name='quartier' id='quartier' onchange="{quartierOnChange}">
 			<option value='0'><?_("Tous")?></option>
 			<!-- BEGIN listeQuartiers -->
-			<option value='{isQuartier.listeQuartiers.idQuartier}' {isQuartier.listeQuartiers.selected}>{isQuartier.listeQuartiers.nomQuartier}</option>
+			<option value='{isQuartier.listeQuartiers.idQuartier}' {isQuartier.listeQuartiers.selected}>{isQuartier.listeQuartiers.nomQuartier} {isQuartier.listeQuartiers.valeur}</option>
 			<!-- END listeQuartiers -->
 		</select>
 	</td>
@@ -48,7 +48,7 @@
 		<select name='sousQuartier' id='sousQuartier' onchange="{sousQuartierOnChange}">
 			<option value='0'><?_("Tous")?></option>
 			<!-- BEGIN listeSousQuartiers -->
-			<option value='{isSousQuartier.listeSousQuartiers.idSousQuartier}' {isSousQuartier.listeSousQuartiers.selected}>{isSousQuartier.listeSousQuartiers.nomSousQuartier}</option>
+			<option value='{isSousQuartier.listeSousQuartiers.idSousQuartier}' {isSousQuartier.listeSousQuartiers.selected}>{isSousQuartier.listeSousQuartiers.nomSousQuartier} {isSousQuartier.listeSousQuartiers.valeur}</option>
 			<!-- END listeSousQuartiers -->
 		</select>
 	</td>
@@ -61,7 +61,7 @@
 		<select name='rue' id='rue' onchange="{rueOnChange}">
 			<option value='0'><?_("Toutes")?></option>
 			<!-- BEGIN listeRues -->
-			<option value='{isRue.listeRues.idRue}' {isRue.listeRues.selected}>{isRue.listeRues.nomRue}</option>
+			<option value='{isRue.listeRues.idRue}' {isRue.listeRues.selected}>{isRue.listeRues.nomRue} {isRue.listeRues.valeur}</option>
 			<!-- END listeRues -->
 		</select>
 	</td>
