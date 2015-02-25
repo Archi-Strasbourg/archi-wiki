@@ -1458,8 +1458,15 @@ li:empty {
 	margin-top: 1em;
 	border-bottom: thin dotted #EEE;
 	display: block;
+	font-size: 14px;
 }
 
+.listAddressItem b{
+	color: black;
+}
+.listAddressItem b:hover{
+	color: white;
+}
 .listAddressItem img {
 	margin-right: 1em;
 	vertical-align: top;
