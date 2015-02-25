@@ -2135,6 +2135,9 @@ Page d'accueil
 	height: 100%;
 }
 
+.miniatureWrapper a , .miniatureWrapper a:hover{
+	color: white;
+}
 
 
 .miniature{

@@ -5746,7 +5746,7 @@ class archiAdresse extends ArchiContenu
 
 					$htmlPhoto='';
 					//$urlPhoto = $this->getUrlImageFromRue($fetch['idRue'],'moyen');
-					$urlPhoto="getPhotoSquare.php?id=".$this->getIdImageFromRue($fetch['idRue']);
+					$urlPhoto="resizeImage.php?id=".$this->getIdImageFromRue($fetch['idRue']);
 					if(!pia_ereg("transparent.gif",$urlPhoto))  // la fonction renvoi le lien vers une photo transparente si elle ne trouve pas de photo de la rue
 					{
 						$htmlPhoto = "<a href='".$this->creerUrl('', 'adresseListe', array('recherche_rue'=>$fetch['idRue']))."'><img src='".$urlPhoto."' border=0></a><br>";
@@ -7218,7 +7218,7 @@ class archiAdresse extends ArchiContenu
 										'urlNomPaysOnClick'    => $urlNomPaysOnClick,
 										'urlDetailHref'        => $urlDetailHref,
 										'urlDetailOnClick'     => $urlDetailOnClick,
-										'urlImageIllustration'    => 'getPhotoSquare.php?id='.$illustration['idHistoriqueImage'],
+										'urlImageIllustration'    => 'resizeImage.php?id='.$illustration['idHistoriqueImage'],
 										'alt'=>''
 										//'alt'=>str_replace("'", " ", $nomAdresseNoStyle)
 								)
@@ -12737,7 +12737,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $newWPetit = round(35*$w/100);
             $newHPetit = round(35*$h/100);
             
-            $t->assign_vars(array('image2'=>"<div id='divImagePetit2' style='display:none;'><img src='".$arrayImage2['url']."' alt='' width=$newWPetit height=$newHPetit id='image2Petit'></div><div id='divImageGrand2' style='display:block;'><img src='getPhotoSquare.php?id=".$arrayImage2['idHistoriqueImage']."' alt=''  id='image2Grand' itemprop='image'></div>"));
+            $t->assign_vars(array('image2'=>"<div id='divImagePetit2' style='display:none;'><img src='".$arrayImage2['url']."' alt='' width=$newWPetit height=$newHPetit id='image2Petit'></div><div id='divImageGrand2' style='display:block;'><img src='resizeImage.php?id=".$arrayImage2['idHistoriqueImage']."' alt=''  id='image2Grand' itemprop='image'></div>"));
             
             
 
@@ -12746,13 +12746,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         {
             // image par defaut , si aucune image liee a l'adresse
             $isPhotoCentrale = true;
-            list($w,$h) = getimagesize($this->getUrlRacine()."getPhotoSquare.php");
+            list($w,$h) = getimagesize($this->getUrlRacine()."resizeImage.php");
             $newWGrand = round(75*$w/100);
             $newHGrand = round(75*$h/100);
             
             $newWPetit = round(35*$w/100);
             $newHPetit = round(35*$h/100);
-            $t->assign_vars(array('image2'=>"<div id='divImagePetit2' style='display:none;'><img src='getPhotoSquare.php' alt='' width=$newWPetit height=$newHPetit id='image2Petit'></div><div id='divImageGrand2' style='display:block;'><img src='getPhotoSquare.php' alt='' width=$newWGrand height=$newHGrand id='image2Grand'></div>"));
+            $t->assign_vars(array('image2'=>"<div id='divImagePetit2' style='display:none;'><img src='resizeImage.php' alt='' width=$newWPetit height=$newHPetit id='image2Petit'></div><div id='divImageGrand2' style='display:block;'><img src='resizeImage.php' alt='' width=$newWGrand height=$newHGrand id='image2Grand'></div>"));
         }
 
         
@@ -13191,12 +13191,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $newHPetit = round(35*$h/100);
                 
                 
-                $image = "<div id='divImagePetit".$numeroImage."' style='display:block;'><img src='".$arrayImage['url']."'  width=$newWPetit height=$newHPetit id='image".$numeroImage."Petit' alt=''></div><div id='divImageGrand".$numeroImage."' style='display:none;'><a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$params['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'><img src='getPhotoSquare.php?id=".$arrayImage['idHistoriqueImage']."'   height=$newHGrand alt='' id='image".$numeroImage."Grand'></a></div>";
+                $image = "<div id='divImagePetit".$numeroImage."' style='display:block;'><img src='".$arrayImage['url']."'  width=$newWPetit height=$newHPetit id='image".$numeroImage."Petit' alt=''></div><div id='divImageGrand".$numeroImage."' style='display:none;'><a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$params['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'><img src='resizeImage.php?id=".$arrayImage['idHistoriqueImage']."'   height=$newHGrand alt='' id='image".$numeroImage."Grand'></a></div>";
             }
             else
             {
                 
-                $image = "<div id='divImagePetit".$numeroImage."' style='display:block;'><img src='getPhotoSquare.php' alt='' width='70' id='image".$numeroImage."Petit'></div><div id='divImageGrand".$numeroImage."' style='display:none;'><a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$params['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'><img alt='' src='getPhotoSquare.php' id='image".$numeroImage."Grand'></a></div>";
+                $image = "<div id='divImagePetit".$numeroImage."' style='display:block;'><img src='resizeImage.php' alt='' width='70' id='image".$numeroImage."Petit'></div><div id='divImageGrand".$numeroImage."' style='display:none;'><a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$params['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'><img alt='' src='resizeImage.php' id='image".$numeroImage."Grand'></a></div>";
             }
             $adresse = "<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$params['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'>".$this->getIntituleAdresseFrom($params['idAdresse'],'idAdresse',array('noSousQuartier'=>true,'noQuartier'=>true,'noVille'=>true))."</a>";
             $retour = array('image'=>$image,'adresse'=>$adresse);

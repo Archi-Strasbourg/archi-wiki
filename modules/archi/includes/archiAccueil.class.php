@@ -723,8 +723,7 @@ class ArchiAccueil extends config
 	            	//Image
 	            	$i=new archiImage();
 	            	$infoImage = $i->getImagePrincipale($fav['idEvenement']);
-	            	$urlImage = 'photos--'.$infoImage['dateUpload'].'-'.$infoImage['idHistoriqueImage'].'-moyen.jpg';
-	            	//$urlImage = "getPhotoSquare.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
+	            	$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
 	            	 
 	            	//Url Evenement
 	            	$idAdresse = $e->getIdAdresse($fav['idEvenement']);
@@ -848,7 +847,7 @@ class ArchiAccueil extends config
             $intituleAdresse = $adresse->getIntituleAdresseAccueil($value, array('ifTitreAfficheTitreSeulement'=>true));
             $intituleAdresseAlt=strip_tags(str_replace("\"", "'", $intituleAdresse));
             if (isset($params['indiceEvenementsPremierePositions']['demolition']) && $indice == $params['indiceEvenementsPremierePositions']['demolition']) {
-                $urlImage = $this->getUrlRacine().'getPhotoSquare.php?id='.$params['imagesEvenementsPremieresPositions']['demolition']['idHistoriqueImage'];
+                $urlImage = $this->getUrlRacine().'resizeImage.php?id='.$params['imagesEvenementsPremieresPositions']['demolition']['idHistoriqueImage'];
                 
                 $tDemolitions->assign_block_vars("premiereAdresseAvecPhoto", array());
                 
@@ -894,7 +893,7 @@ class ArchiAccueil extends config
             $intituleAdresse = $adresse->getIntituleAdresseAccueil($value, array('ifTitreAfficheTitreSeulement'=>true));
             $intituleAdresseAlt=strip_tags(str_replace("\"", "'", $intituleAdresse));
             if (isset($params['indiceEvenementsPremierePositions']['construction']) && $indice == $params['indiceEvenementsPremierePositions']['construction']) {
-                $urlImage = $this->getUrlRacine().'getPhotoSquare.php?id='.$params['imagesEvenementsPremieresPositions']['construction']['idHistoriqueImage'];
+                $urlImage = $this->getUrlRacine().'resizeImage.php?id='.$params['imagesEvenementsPremieresPositions']['construction']['idHistoriqueImage'];
                 
                 $tTravaux->assign_block_vars("premiereAdresseAvecPhoto", array());
                 
@@ -941,7 +940,7 @@ class ArchiAccueil extends config
             $intituleAdresseAlt=strip_tags(str_replace("\"", "'", $intituleAdresse));
             if (isset($params['indiceEvenementsPremierePositions']['culturel']) && $indice == $params['indiceEvenementsPremierePositions']['culturel']) {
                 
-                $urlImage = $this->getUrlRacine().'getPhotoSquare.php?id='.$params['imagesEvenementsPremieresPositions']['culturel']['idHistoriqueImage'];
+                $urlImage = $this->getUrlRacine().'resizeImageuare.php?id='.$params['imagesEvenementsPremieresPositions']['culturel']['idHistoriqueImage'];
                 
                 $tCulturel->assign_block_vars("premiereAdresseAvecPhoto", array());
                 
@@ -988,7 +987,7 @@ class ArchiAccueil extends config
             $intituleAdresseAlt = strip_tags(str_replace("\"", "'", $intituleAdresse));
             if (isset($params['indiceEvenementsPremierePositions']['dernieresAdresses']) && $indice == $params['indiceEvenementsPremierePositions']['dernieresAdresses']) {
                 
-                $urlImage = $this->getUrlRacine().'getPhotoSquare.php?id='.$params['imagesEvenementsPremieresPositions']['dernieresAdresses']['idHistoriqueImage'];
+                $urlImage = $this->getUrlRacine().'resizeImage.php?id='.$params['imagesEvenementsPremieresPositions']['dernieresAdresses']['idHistoriqueImage'];
                 
                 $tDernieresAdresses->assign_block_vars("premiereAdresseAvecPhoto", array());
                 if ($params['imagesEvenementsPremieresPositions']['dernieresAdresses']['idHistoriqueImage']!='') {
@@ -1050,7 +1049,7 @@ class ArchiAccueil extends config
                 $intituleAdressePrisDepuis = implode("", $arrayIntituleAdressesPrisDepuis);
                 
                 if ($i==0) {
-                    $urlImage = $this->getUrlRacine().'getPhotoSquare.php?id='.$value['idHistoriqueImage'];
+                    $urlImage = $this->getUrlRacine().'resizeImage.php?id='.$value['idHistoriqueImage'];
                     $tDernieresVues->assign_block_vars("premiereAdresseAvecPhoto", array());
                     $tDernieresVues->assign_vars(
                         array(
@@ -1287,7 +1286,7 @@ class ArchiAccueil extends config
    			$intituleAdresseAlt = strip_tags(str_replace("\"", "'", $intituleAdresse));
    			if (isset($params['indiceEvenementsPremierePositions']['dernieresAdresses']) && $indice == $params['indiceEvenementsPremierePositions']['dernieresAdresses']) {
    		
-   				$urlImage = $this->getUrlRacine().'getPhotoSquare.php?id='.$params['imagesEvenementsPremieresPositions']['dernieresAdresses']['idHistoriqueImage'];
+   				$urlImage = $this->getUrlRacine().'resizeImage.php?id='.$params['imagesEvenementsPremieresPositions']['dernieresAdresses']['idHistoriqueImage'];
    		
    				$tDernieresAdresses->assign_block_vars("premiereAdresseAvecPhoto", array());
    				if ($params['imagesEvenementsPremieresPositions']['dernieresAdresses']['idHistoriqueImage']!='') {
@@ -2038,7 +2037,7 @@ class ArchiAccueil extends config
 				foreach ($news as $new){
 					$item['CSSClassWrapper'] = 'news';
 					$item['titreItem'] =$new['titre'];
-					$item['imgUrl'] = $this->getUrlRacine().'getPhotoSquare.php?id='.$new['photoIllustration'];;
+					$item['imgUrl'] = $this->getUrlRacine().'resizeImage.php?id='.$new['photoIllustration'];;
 					$item['urlItem'] = $this->creerUrl('', 'afficherActualite', array('archiIdActualite'=>$new['idActualite']));;
 					$item['textItem'] = strip_tags($new['texte']);
 					
@@ -2079,7 +2078,7 @@ class ArchiAccueil extends config
     			while($fetch = mysql_fetch_assoc($result)){
     				$item['CSSClassWrapper'] = 'lastAdd';
     				$item['titreItem'] =$fetch['nom'];
-    				$item['imgUrl'] = $this->getUrlRacine().'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'];
+    				$item['imgUrl'] = $this->getUrlRacine().'resizeImage.php?id='.$fetch['idHistoriqueImage'];
     				$item['urlItem'] = $this->creerUrl('', '',
     						 array(
     						 		'archiAffichage'=>'adresseDetail', 
@@ -2107,7 +2106,7 @@ class ArchiAccueil extends config
     			while($fetch = mysql_fetch_assoc($result)){
     				$item['CSSClassWrapper'] = 'lastAdd';
     				$item['titreItem'] =$fetch['nom'];
-    				$item['imgUrl'] = $this->getUrlRacine().'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'];
+    				$item['imgUrl'] = $this->getUrlRacine().'resizeImage.php?id='.$fetch['idHistoriqueImage'];
     				$item['urlItem'] = $this->creerUrl('', '',
     						array(
     								'archiAffichage'=>'adresseDetail',
@@ -2199,7 +2198,7 @@ class ArchiAccueil extends config
     			while($fetch = mysql_fetch_assoc($result)){
     				$item['CSSClassWrapper'] = 'interest';
     				$item['titreItem'] =$fetch['nom'];
-    				$item['imgUrl'] = 'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'];
+    				$item['imgUrl'] = 'resizeImage.php?id='.$fetch['idHistoriqueImage'];
     				$item['urlItem'] = $this->creerUrl('', '',
     						array(
     								'archiAffichage'=>'adresseDetail',
@@ -2578,7 +2577,7 @@ class ArchiAccueil extends config
     	while($fetch = mysql_fetch_assoc($result)){
     		$item['CSSClassWrapper'] = 'interest';
     		$item['titreItem'] =$fetch['nom'];
-    		$item['imgUrl'] = $this->getUrlImage().'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'];
+    		$item['imgUrl'] = $this->getUrlImage().'resizeImage.php?id='.$fetch['idHistoriqueImage'];
     		
     		$item['urlItem'] = $this->creerUrl('', '',
     				array(

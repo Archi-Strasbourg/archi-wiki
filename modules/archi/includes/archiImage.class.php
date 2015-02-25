@@ -4431,7 +4431,7 @@ class archiImage extends config
         $resImages = $this->connexionBdd->requete($reqImages);
         
         while ($fetch = mysql_fetch_assoc($resImages)) {
-            $imageObj->addImageDragAndDrop(array('imageSrc'=>'getPhotoSquare.php?id='.$fetch['idHistoriqueImage'],  'idHistoriqueImage'=>$fetch['idHistoriqueImage']));
+            $imageObj->addImageDragAndDrop(array('imageSrc'=>'resizeImage.php?id='.$fetch['idHistoriqueImage'],  'idHistoriqueImage'=>$fetch['idHistoriqueImage']));
         }
         
         
