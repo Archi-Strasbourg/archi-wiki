@@ -2416,6 +2416,10 @@ class archiRecherche extends config {
 			$nbResult = count($this->getIdHistoAdresses($sqlWhere,array('motcle' => $motcle))); //Count the nb of result
 			$a = new archiAdresse();
 			$html .=$a->displayList($idHistoriqueEvenementArray,$nbResult);
+			
+			$p = new archiPersonne();
+			$html.=$p->search($criterias['motcle']);
+			
 		}
 		else{
 			$this->messages->addError("Erreur, aucun critères n'a été renseigné.");
