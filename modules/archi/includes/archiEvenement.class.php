@@ -5304,13 +5304,13 @@ class archiEvenement extends config
 
 		$help = $this->getHelpMessages('helpEvenement');
 
-		$bbMiseEnFormBoutons= "<div style=''><input type=\"button\" value=\"b\" style=\"width:50px;font-weight:bold\" onclick=\"bbcode_ajout_balise('b', 'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('".$help["msgGras"]."');\" onMouseOut=\"closeContextHelp();\"/>
-				<input type=\"button\" value=\"i\" style=\"width:50px;font-style:italic\" onclick=\"bbcode_ajout_balise('i', 'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('".$help["msgItalic"]."');\" onMouseOut=\"closeContextHelp();\"/>
-						<input type=\"button\" value=\"u\" style=\"width:50px;text-decoration:underline;\" onclick=\"bbcode_ajout_balise('u', 'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('".$help["msgUnderline"]."');\" onMouseOut=\"closeContextHelp();\"/>
-								<input type=\"button\" value=\"quote\" style=\"width:50px\" onclick=\"bbcode_ajout_balise('quote', 'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('".$help["msgQuotes"]."');\" onMouseOut=\"closeContextHelp();\"/>
-										<!--<input type=\"button\" value=\"code\" style=\"width:50px\" onclick=\"bbcode_ajout_balise('code', 'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('{msgCode}');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this,'apercu');\"/>-->
-										<input type=\"button\" value=\"url interne\"  style=\"width:75px\" onclick=\"bbcode_ajout_balise('url',  'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('Insérer une adresse WEB interne à archi-strasbourg.org');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this,'apercu');\"/>
-										<input type=\"button\" value=\"url externe\"  style=\"width:80px\" onclick=\"bbcode_ajout_balise('urlExterne',  'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('Insérer une adresse WEB externe à archi-strasbourg.org');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this,'apercu');\"/></div>";
+		$bbMiseEnFormBoutons= "<div style=''><input type=\"button\" value=\"b\" style=\"width:50px;font-weight:bold\" onclick=\"bbcode_ajout_balise('b', 'formAjoutCommentaireEvenement', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('".$help["msgGras"]."');\" onMouseOut=\"closeContextHelp();\"/>
+				<input type=\"button\" value=\"i\" style=\"width:50px;font-style:italic\" onclick=\"bbcode_ajout_balise('i', 'formAjoutCommentaireEvenement', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('".$help["msgItalic"]."');\" onMouseOut=\"closeContextHelp();\"/>
+				<input type=\"button\" value=\"u\" style=\"width:50px;text-decoration:underline;\" onclick=\"bbcode_ajout_balise('u', 'formAjoutCommentaireEvenement', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('".$help["msgUnderline"]."');\" onMouseOut=\"closeContextHelp();\"/>
+				<input type=\"button\" value=\"quote\" style=\"width:50px\" onclick=\"bbcode_ajout_balise('quote', 'formAjoutCommentaireEvenement', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('".$help["msgQuotes"]."');\" onMouseOut=\"closeContextHelp();\"/>
+				<!--<input type=\"button\" value=\"code\" style=\"width:50px\" onclick=\"bbcode_ajout_balise('code', 'formAjoutCommentaireEvenement', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('{msgCode}');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this,'apercu');\"/>-->
+				<input type=\"button\" value=\"url interne\"  style=\"width:75px\" onclick=\"bbcode_ajout_balise('url',  'formAjoutCommentaireEvenement', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('Insérer une adresse WEB interne à archi-strasbourg.org');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this,'apercu');\"/>
+				<input type=\"button\" value=\"url externe\"  style=\"width:80px\" onclick=\"bbcode_ajout_balise('urlExterne',  'formAjoutCommentaireEvenement', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('Insérer une adresse WEB externe à archi-strasbourg.org');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this,'apercu');\"/></div>";
 
 		$fieldsCommentaires['commentaire']['htmlCodeBeforeField'] = $bbMiseEnFormBoutons;
 
@@ -5319,12 +5319,12 @@ class archiEvenement extends config
 				'formAction'=>$this->creerUrl('enregistreCommentaireEvenement','',array()),
 				'tableHtmlCode'=>" class='formAjoutCommentaireEvenement'",
 				'codeHtmlInFormAfterFields'=>_("Prévisualisation :")."<div id='apercu'></div><div id='helpCalque' style='background-color:#FFFFFF; border:2px solid #000000;padding:10px;float:left;display:none;'><img src='images/aide.jpg' style='float:left;padding-right:3px;' valign='middle'><div id='helpCalqueTxt' style='padding-top:7px;'></div></div><script type='text/javascript' >
-				bbcode_keyup(document.forms['formAjoutCommentaire'].elements['commentaire'], 'apercu');setTimeout('majDescription()',1000);
+				bbcode_keyup(document.forms['formAjoutCommentaireEvenement'].elements['commentaire'], 'apercu');setTimeout('majDescription()',1000);
 				function majDescription()
 				{
-				bbcode_keyup(document.forms['formAjoutCommentaire'].elements['commentaire'], 'apercu');
-				setTimeout('majDescription()',500);
-	}</script>",
+					bbcode_keyup(document.forms['formAjoutCommentaireEvenement'].elements['commentaire'], 'apercu');
+					setTimeout('majDescription()',500);
+				}</script>",
 				'fields'=>$fieldsCommentaires);
 
 

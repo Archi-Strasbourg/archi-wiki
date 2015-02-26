@@ -9537,8 +9537,8 @@ class archiAdresse extends ArchiContenu
                                     bbcode_keyup(document.forms['formAjoutCommentaire'].elements['commentaire'], 'apercu');setTimeout('majDescription()',1000);
                                     function majDescription()
                                     {
-                                        bbcode_keyup(document.forms['formAjoutCommentaire'].elements['commentaire'], 'apercu');
-                                        setTimeout('majDescription()',500);
+                                        bbcode_keyup(document.getElementById('commentaire'), 'apercu');
+        								setTimeout('majDescription()',500);
                                     }</script>",
                                     'fields'=>$fieldsCommentaires);
         
