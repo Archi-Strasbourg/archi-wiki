@@ -576,7 +576,6 @@ class ArchiAccueil extends config
                        
             
             //Gestion des dernieres visites
-            //$this->getLatestVisited();
             $t->assign_vars(array('lastVisitTitle' => _("Dernières visites")));
             $lastVisitArray=$_SESSION['lastVisited'];
             
@@ -683,7 +682,10 @@ class ArchiAccueil extends config
             
             
             //Gestion des dernieres modifications
-			$t->assign_vars(array('lastModifTitle' => _("Dernières modifications")));
+			$t->assign_vars(array(
+					'lastModifTitle' => _("Dernières modifications"),
+					'urlCustomNewsFeed'=>$this->creerUrl('', 'mesInterets', array())
+			));
             
             if (!$auth->estConnecte()) {
 	            	$favoris = array('content' => _("Vous n'êtes pas connecté !"));
@@ -693,7 +695,7 @@ class ArchiAccueil extends config
 	            
 	            //Gestion des derniers favoris
             	$t->assign_vars(array(
-            			'urlCustomNewsFeed'=>$this->creerUrl('', 'mesInterets', array()) ,            					
+            			            					
             			'favorisTitle' =>  _("Bâtiments favoris")
             		)
 				);
@@ -2446,38 +2448,6 @@ class ArchiAccueil extends config
     }
     
     
-    
-    public function getLatestVisited(){
-    	$arrayId =$_SESSION['lastVisited'];
-    	foreach ($arrayId as $ids){
-    		$requeteVisit = "
-    						SELECT 
-    						evt.idEvenement AS idEvenement,
-    						evt.idEvenementRecuperationTitre, 
-		    				evt.idImagePrincipale AS idHistoriqueImage, 
-    						ee.idEvenement AS idEvenementGroupeAdresse, 
-		    				ae.idAdresse AS idAdresse,
-		    				ha.nom , 
-    				   		date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
-    						evt.description,
-							evt.titre AS titre 
-    				   				
-    				
-							FROM _evenementEvenement ee
-							LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-							LEFT JOIN historiqueAdresse ha ON ha.idAdresse = ae.idAdresse
-    				   		LEFT JOIN positionsEvenements pe on pe.idEvenementGroupeAdresse = ee.idEvenement
-    				   		LEFT JOIN evenements evt on evt.idEvenement = pe.idEvenement
-							WHERE ee.idEvenement =".$ids['idEvenementGroupeAdresse']."
-							GROUP BY idEvenement DESC
-							LIMIT 1
-    				";
-    		$res = $this->connexionBdd->requete($requeteVisit);
-    		while($rowVisit = mysql_fetch_assoc($res)){
-    			//debug($rowVisit);
-    		}
-    	}
-    }
     
     /**
      * Get the latest user's favorite information to display

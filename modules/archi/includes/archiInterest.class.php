@@ -23,105 +23,116 @@ class archiInterest extends config{
 	 * @return string
 	 */
 	public function displayMyInterest(){
-		$html ="";
-		$formulaire = new formGenerator();
-		$utils = new archiUtils();
-		$ajax = new ajaxObject();
-		$html.=$ajax->getAjaxFunctions();
-
-		$t = new Template($this->getCheminPhysique().$this->cheminTemplates."interest/");
-		$t->set_filenames(array('myinterests'=>'myinterests.tpl'));
-
-
-		$a = new archiAdresse();
-
-		//Generate address form
-		$formAddressAddInterest=$a->afficheChoixAdresse(array('afficheNombreResultat' => 1));
-		//$formAddressAddInterest=$a->afficheChoixAdresse();
+		$auth = new archiAuthentification();
+		if($auth->estConnecte()){
+			
 		
-
-		$paramsFields= array();
-		$paramsFields[] = array('table' => 'pays' ,'value' => 'idPays','title'=>'nom');
-		$paramsFields[] = array('table' => 'ville' ,'value' => 'idVille','title'=>'nom');
-		$paramsFields[] = array('table' => 'quartier' ,'value' => 'idQuartier','title'=>'nom');
-		$paramsFields[] = array('table' => 'sousQuartier' ,'value' => 'idSousQuartier','title'=>'nom');
-		$paramsFields[] = array('table' => 'rue' ,'value' => 'idRue','title'=>'nom');
-
-
-
-		$formActionUrl = $this->creerUrl('','saveInterest',array());
-
-		foreach ($paramsFields as $params){
-			$options[] = $this->getAllField($params);
-		}
-
-
-		$paramsRequest[]=array('table'=> '_interetRue','field' =>'idRue' , 'associateTable' => 'rue');
-		$paramsRequest[]=array('table'=> '_interetSousQuartier','field' =>'idSousQuartier', 'associateTable' => 'sousQuartier');
-		$paramsRequest[]=array('table'=> '_interetQuartier','field' =>'idQuartier', 'associateTable' => 'quartier');
-		$paramsRequest[]=array('table'=> '_interetVille','field' =>'idVille', 'associateTable' => 'ville');
-		$paramsRequest[]=array('table'=> '_interetPays','field' =>'idPays', 'associateTable' => 'pays');
-
-		$userInterest = $this->getAllInterest($paramsRequest);
-		/*
-		 * Array of EVERY interest  by categories : street country address etc..
-		 */
-		foreach ($userInterest as $interestByCat){
-			if(!isset($interestByCat[0]['vide'])){
-				$t->assign_block_vars('interestList',array('title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centres d\'intérêt','CSSclass'=>'interestList'));
-				/*
-				 * Interest of each category
-				 */
-				foreach ($interestByCat as $interest){
+			$html ="";
+			$formulaire = new formGenerator();
+			$utils = new archiUtils();
+			$ajax = new ajaxObject();
+			$html.=$ajax->getAjaxFunctions();
+	
+			$t = new Template($this->getCheminPhysique().$this->cheminTemplates."interest/");
+			$t->set_filenames(array('myinterests'=>'myinterests.tpl'));
+	
+	
+			$a = new archiAdresse();
+	
+			//Generate address form
+			$formAddressAddInterest=$a->afficheChoixAdresse(array('afficheNombreResultat' => 1));
+			//$formAddressAddInterest=$a->afficheChoixAdresse();
+			
+	
+			$paramsFields= array();
+			$paramsFields[] = array('table' => 'pays' ,'value' => 'idPays','title'=>'nom');
+			$paramsFields[] = array('table' => 'ville' ,'value' => 'idVille','title'=>'nom');
+			$paramsFields[] = array('table' => 'quartier' ,'value' => 'idQuartier','title'=>'nom');
+			$paramsFields[] = array('table' => 'sousQuartier' ,'value' => 'idSousQuartier','title'=>'nom');
+			$paramsFields[] = array('table' => 'rue' ,'value' => 'idRue','title'=>'nom');
+	
+	
+	
+			$formActionUrl = $this->creerUrl('','saveInterest',array());
+	
+			foreach ($paramsFields as $params){
+				$options[] = $this->getAllField($params);
+			}
+	
+	
+			$paramsRequest[]=array('table'=> '_interetRue','field' =>'idRue' , 'associateTable' => 'rue');
+			$paramsRequest[]=array('table'=> '_interetSousQuartier','field' =>'idSousQuartier', 'associateTable' => 'sousQuartier');
+			$paramsRequest[]=array('table'=> '_interetQuartier','field' =>'idQuartier', 'associateTable' => 'quartier');
+			$paramsRequest[]=array('table'=> '_interetVille','field' =>'idVille', 'associateTable' => 'ville');
+			$paramsRequest[]=array('table'=> '_interetPays','field' =>'idPays', 'associateTable' => 'pays');
+	
+			$userInterest = $this->getAllInterest($paramsRequest);
+			/*
+			 * Array of EVERY interest  by categories : street country address etc..
+			 */
+			foreach ($userInterest as $interestByCat){
+				if(!isset($interestByCat[0]['vide'])){
+					$t->assign_block_vars('interestList',array('title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centres d\'intérêt','CSSclass'=>'interestList'));
 					/*
-					 * Process fields for delete link
+					 * Interest of each category
 					 */
-					$table = $interest['table'];
-					$fieldId = $interest['field'];
-					$userId = $interest['idUtilisateur'];
-					$interestId = $interest[$fieldId];
-					
-					
-					$paramsDelete = array(
-						$table,
-						$fieldId,
-						$userId,
-						$interestId
-					);
-					
-					$deleteUrl = $this->creerUrl('', 'deleteInterest', array('params' => $paramsDelete));
-					switch ($interest['associateTable']){
-						case 'personne':
-							$t->assign_block_vars('interestList.interests',array(
-							'name'=>$interest['nom']." ".$interest['prenom'],
-							'deleteUrl' => $deleteUrl
-							));
-							break;
-						default:
-							$t->assign_block_vars('interestList.interests',array(
-							'name'=>$interest['nom'],
-							'deleteUrl' => $deleteUrl
-							));
+					foreach ($interestByCat as $interest){
+						/*
+						 * Process fields for delete link
+						 */
+						$table = $interest['table'];
+						$fieldId = $interest['field'];
+						$userId = $interest['idUtilisateur'];
+						$interestId = $interest[$fieldId];
+						
+						
+						$paramsDelete = array(
+							$table,
+							$fieldId,
+							$userId,
+							$interestId
+						);
+						
+						$deleteUrl = $this->creerUrl('', 'deleteInterest', array('params' => $paramsDelete));
+						switch ($interest['associateTable']){
+							case 'personne':
+								$t->assign_block_vars('interestList.interests',array(
+								'name'=>$interest['nom']." ".$interest['prenom'],
+								'deleteUrl' => $deleteUrl
+								));
+								break;
+							default:
+								$t->assign_block_vars('interestList.interests',array(
+								'name'=>$interest['nom'],
+								'deleteUrl' => $deleteUrl
+								));
+						}
 					}
 				}
+				else{
+					$t->assign_block_vars('interestList',array('vide'=>'Aucun résultat','title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centres d\'intérêt','CSSclass'=>'interestList'));
+				}
+					
 			}
-			else{
-				$t->assign_block_vars('interestList',array('vide'=>'Aucun résultat','title'=>'Liste des '.$interestByCat[0]['titre'].' dans les centres d\'intérêt','CSSclass'=>'interestList'));
-			}
-				
-		}
-
-		$t->assign_vars(array(
-				'formAddInterest' => $formAddressAddInterest,
-				'formActionUrl' => $formActionUrl,
-				'nameForm'=>'saveInterest'
-		));
-
-		ob_start();
-		$t->pparse('myinterests');
-		$html .= ob_get_contents();
-		ob_end_clean();
+	
+			$t->assign_vars(array(
+					'formAddInterest' => $formAddressAddInterest,
+					'formActionUrl' => $formActionUrl,
+					'nameForm'=>'saveInterest'
+			));
+	
+			ob_start();
+			$t->pparse('myinterests');
+			$html .= ob_get_contents();
+			ob_end_clean();
 		return $html;
+		}
+		else{
+			$this->messages->addError("Veuillez vous connecter pour personnaliser votre flux");
+			$this->messages->display();
+			$auth = new ArchiAuthentification();
+			return $auth->afficheFormulaireAuthentification();
+		}
 	}
 
 

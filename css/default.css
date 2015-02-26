@@ -1826,7 +1826,7 @@ hr.edgeFade {
 
 .message-text{
 	margin-left: 30px;
-	margin-bottom: 0px; !important
+	margin-bottom: 0px !important;
 }
 
 .error-message{
