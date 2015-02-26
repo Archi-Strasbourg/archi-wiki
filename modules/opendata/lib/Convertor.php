@@ -99,8 +99,6 @@ class Convertor{
 		$writer->setIndent(4);
 		$writer->startElement($startingNode);
 		foreach ($input as $balise => $data){
-			//debug($balise);
-			//debug($data);
 			$writer->startElement($row);
 			foreach($data as $key => $value) {
 				$writer->writeElement($key,$value);
