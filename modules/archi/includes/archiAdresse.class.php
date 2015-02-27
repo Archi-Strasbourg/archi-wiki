@@ -474,17 +474,22 @@ class archiAdresse extends ArchiContenu
 		//Init auth var to check furtherly user state (connected or not)
 		$authentification = new archiAuthentification();
 		
-		
 		//Setting idAdresse
 		if(isset($this->variablesGet['archiIdAdresse']) && ! empty($this->variablesGet['archiIdAdresse'])){
 			$idAdresse=$this->variablesGet['archiIdAdresse'];
 		}
-		elseif(isset($idEvenementGroupeAdresse) && !empty($idEvenementGroupeAdresse)){
+		if(isset($idEvenementGroupeAdresse) && !empty($idEvenementGroupeAdresse)){
 			//Getting idAdresse
 			$requete = "SELECT idAdresse FROM _adresseEvenement WHERE idEvenement = ".$idEvenementGroupeAdresse;
 			$result = $this->connexionBdd->requete($requete);
 			$fetch = mysql_fetch_assoc($result);
 			$idAdresse = $fetch['idAdresse'];
+		}
+		elseif(isset($idAdresse) && !empty($idAdresse) && $idAdresse != ''){
+			$requete = "SELECT idEvenement FROM _adresseEvenement WHERE idAdresse = ".$idAdresse;
+			$result = $this->connexionBdd->requete($requete);
+			$fetch = mysql_fetch_assoc($result);
+			$idEvenementGroupeAdresse = $fetch['idEvenement'];
 		}
 		
 		//Getting coordo for the current address
@@ -504,19 +509,7 @@ class archiAdresse extends ArchiContenu
 				'idEvenementGroupeAdresseCourant'=>$idEvenement
 		));
 
-		/*
-		$gm = new googleMap(array('googleMapKey'=>$this->googleMapKey,'width'=>700, 'height'=>500, 'zoom'=>13));
-		$this->addToJsHeader($gm->getJsFunctions()); // ajout des fonctions de google map dans le header
-		$resAvAdresse.=$gm->getMap(
-				array(
-						'urlImageIcon'=>$this->getUrlImage()."pointGM.png",
-						'pathImageIcon'=>$this->getCheminPhysique()."images/pointGM.png",
-						'setAutomaticCentering'=>true
-				)
-		);
-		*/
-		
-		//Getting neighbors addresses 
+			//Getting neighbors addresses 
 		$arrayEncartAdresses = $this->getArrayEncartAdressesImmeublesAvantApres(array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
 		$urlAutreBiens = $this->getArrayRetourLiensVoirBatiments($idAdresse);
 		
@@ -531,8 +524,8 @@ class archiAdresse extends ArchiContenu
 				'popupGoogleMap'=>$calqueGoogleMap->getDivNoDraggableWithBackgroundOpacity(array('top'=>20,'lienSrcIFrame'=>'','contenu'=>$contenuIFramePopup))
 		));
 		$t->assign_block_vars('sommaireEvenements', array());
-		//Preparing the loop on all related event to the current address
 
+		//Preparing the loop on all related event to the current address
 		$requeteIdEvenements = "
 				SELECT DISTINCT ee.idEvenementAssocie as idEvenement
 				FROM _evenementEvenement ee
@@ -579,7 +572,6 @@ class archiAdresse extends ArchiContenu
 				)
 		);
 		
-		
 		//Selection du titre
 		$afficheSelectionTitre = 1;
 		if($authentification->estConnecte() && isset($this->variablesGet['afficheSelectionTitre']) && $this->variablesGet['afficheSelectionTitre']=='1'){
@@ -606,7 +598,6 @@ class archiAdresse extends ArchiContenu
 						'labelAction' => 'Repositionner les évènements'
 				)
 		);
-		
 		
 		//Loop on all evenet related to this idAdresse specified in argument of this function
 		while($fetch = mysql_fetch_assoc($resultIdEvenements)){
@@ -658,8 +649,6 @@ class archiAdresse extends ArchiContenu
 		$image = new archiImage();
 		$idVueSur = $image->getIdImageVueSur($idEvenementGroupeAdresse);
 		$idPrisDepuis = $image->getidImagePrisDepuis($idEvenementGroupeAdresse);
-		
-		
 		
 		
 		if(!empty($idVueSur)){
