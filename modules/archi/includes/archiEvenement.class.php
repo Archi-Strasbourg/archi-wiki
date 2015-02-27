@@ -2337,17 +2337,22 @@ class archiEvenement extends config
 									'url'=> "#".$indice
 							));
 						}
-						$listeCommentaires = $this->getListCommentairesEvenements( $value['idEvenementAssocie']);
-						$formulaireCommentaire = $this->getFormulaireCommentairesHistorique($value['idEvenementAssocie'],$this->getCommentairesFields());
 						
-						
+						if($this->variablesGet['selection'] == 'personne'){
+							$listeCommentaires = $this->getListCommentairesEvenements( $value['idEvenementAssocie']);
+							$formulaireCommentaire = $this->getFormulaireCommentairesHistorique($value['idEvenementAssocie'],$this->getCommentairesFields('personne',$this->variablesGet['id']),'personne');
+						}
+						else{
+							$listeCommentaires = $this->getListCommentairesEvenements( $value['idEvenementAssocie']);
+							$formulaireCommentaire = $this->getFormulaireCommentairesHistorique($value['idEvenementAssocie'],$this->getCommentairesFields('evenement'),'evenement');
+						}
+
 						$t->assign_block_vars( 'evenementLie', array(
 								'evenement' => $retourEvenement['html'],
 								'numeroAncre'=>$indice,
 								'listeCommentaires' => $listeCommentaires,
 								'formulaireCommentaire'=>$formulaireCommentaire
 						));
-						
 						$i++;
 					}
 
@@ -2509,9 +2514,6 @@ class archiEvenement extends config
 		}
 		$contenuIFramePopup .= "</td><td style='width:650px;'>";
 		$contenuIFramePopup .= "<iframe id='iFrameDivPopupGM' style='padding:0;margin:0;border:0; overflow:hidden;width:650px;height:480px;'  ></iframe></td></tr></table>";
-
-
-
 
 		return $contenuIFramePopup;
 	}
@@ -3237,15 +3239,9 @@ class archiEvenement extends config
 		$adresse = new archiAdresse();
 
 		$arrayListeGroupesEvenementsParents=array();
-		foreach($arrayListeEvenements as $idEvenementFils)
-		{
-			//$resAdresse = $adresse->getAdressesFromEvenementGroupeAdresses($evenement->getParent($idEvenementFils));
-			//$fetchAdresse = mysql_fetch_assoc($resAdresse);
-			//$html .= "<a href=\"".$this->creerUrl('','adresseDetail',array('archiIdAdresse'=>$fetchAdresse['idAdresse']))."\">".stripslashes($adresse->getIntituleAdresse($fetchAdresse))."</a><br><br>";
-			//$arrayListeEvenementsParents[] = $fetchAdresse['idAdresse'];
+		foreach($arrayListeEvenements as $idEvenementFils){
 			$arrayListeGroupesEvenementsParents[] = $evenement->getParent($idEvenementFils);
 		}
-
 		$retour=$adresse->afficherListe(array('groupesAdressesSupplementairesExternes'=>$arrayListeGroupesEvenementsParents),'personnalite');
 		$html.=$retour['html'];
 		return $html;
@@ -5169,10 +5165,22 @@ class archiEvenement extends config
 			$adresse = new archiAdresse();
 			
 			$this->messages->addConfirmation("Commentaire enregistré !");
-			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#evenement'.$this->variablesPost['idEvenementGroupeAdresse']);
-				
-			//echo $adresse->afficherDetailAdresse($idAdresse,$idGroupeEvenement);
-			//echo $this->afficheHistoriqueEvenement(array('idEvenement' =>$this->variablesGet['archiIdEvenementGroupeAdresse']));
+			//header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#evenement'.$this->variablesPost['idEvenementGroupeAdresse']);
+			debug($this->variablesPost);
+			debug($this->variablesGet);
+			
+			
+			
+			switch ($this->variablesPost['type']){
+				case 'evenement':
+					header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#evenement'.$this->variablesPost['idEvenementGroupeAdresse']);
+					break;
+				case 'personne':
+					header("Location: ".$this->creerUrl('', 'evenementListe', array('selection' => 'personne', 'id' => $this->variablesPost['idPersonne'])));
+					break;
+				default:
+					header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#evenement'.$this->variablesPost['idEvenementGroupeAdresse']);
+			}
 		}
 		else
 		{
@@ -5257,7 +5265,7 @@ class archiEvenement extends config
 	// ************************************************************************************************************************
 	// affiche le formulaire d'ajout d'un commentaire
 	// ************************************************************************************************************************
-	public function getFormulaireCommentairesHistorique($idHistoriqueAdresse=0,$fieldsCommentaires=array())
+	public function getFormulaireCommentairesHistorique($idHistoriqueAdresse=0,$fieldsCommentaires=array(), $type ='evenement' , $id = null)
 	{
 		$html="";
 		//$e = new archiEvenement();
@@ -5300,6 +5308,19 @@ class archiEvenement extends config
 
 			unset($fieldsCommentaires['captcha']); // pas de captcha quand on est connecté
 
+			$titre="";
+			$type = $fieldsCommentaires['type']['default'];
+			switch ($type){
+				case 'evenement':
+					$titre = _("Ajouter un commentaire concernant l'événement");
+					break;
+				case 'personne':
+					$titre = _("Ajouter un commentaire concernant la personne");
+					break;
+				default:
+					$titre = _("Ajouter un commentaire");
+			}
+				
 		}
 
 		$help = $this->getHelpMessages('helpEvenement');
@@ -5314,7 +5335,21 @@ class archiEvenement extends config
 
 		$fieldsCommentaires['commentaire']['htmlCodeBeforeField'] = $bbMiseEnFormBoutons;
 
-		$tabCommentaires = array(   'titrePage'=>_("Ajouter un commentaire concernant l'événement"),
+		/*
+		$titre="";
+		debug($fieldsCommentaires);
+		switch ($type){
+			case 'evenement':
+				$titre = _("Ajouter un commentaire concernant l'événement");
+				break;
+			case 'personne':
+				$titre = _("Ajouter un commentaire concernant la personne");
+				break;
+			default: 
+				$titre = _("Ajouter un commentaire");
+		}		
+		*/
+		$tabCommentaires = array(   'titrePage'=>$titre,
 				'formName'=>'formAjoutCommentaireEvenement',
 				'formAction'=>$this->creerUrl('enregistreCommentaireEvenement','',array()),
 				'tableHtmlCode'=>" class='formAjoutCommentaireEvenement'",
@@ -5325,28 +5360,58 @@ class archiEvenement extends config
 					bbcode_keyup(document.forms['formAjoutCommentaireEvenement'].elements['commentaire'], 'apercu');
 					setTimeout('majDescription()',500);
 				}</script>",
-				'fields'=>$fieldsCommentaires);
+				'fields'=>$fieldsCommentaires,
+				'type' => $type
+		);
 
 
 		$formulaire = new formGenerator();
 
-
 		$bbCode = new bbCodeObject();
-
 
 		$html.= $formulaire->afficherFromArray($tabCommentaires);
 		return $html;
 	}
-	public function getCommentairesFields()
+	public function getCommentairesFields($type='evenement',$idPersonne = null)
 	{
-		return array(
-				'nom'                   =>array('type'=>'text','default'=>'','htmlCode'=>'','libelle'=>_("Votre nom ou pseudo :"),'required'=>true,'error'=>'','value'=>''),
+		switch($type){
+			case 'evenement':
+				$returnArray = array(
+				'nom'                  		=>array('type'=>'text','default'=>'','htmlCode'=>'','libelle'=>_("Votre nom ou pseudo :"),'required'=>true,'error'=>'','value'=>''),
 				'prenom'                    =>array('type'=>'text','default'=>'','htmlCode'=>'','libelle'=>_("Votre prénom :"),'required'=>false,'error'=>'','value'=>''),
 				'email'                     =>array('type'=>'email','default'=>'','htmlCode'=>"style='width:250px;'",'libelle'=>_("Votre e-mail :"),'required'=>false,'error'=>'','value'=>''),
 				'commentaire'               =>array('type'=>'bigText','default'=>'','htmlCode'=>"rows=5 cols=50",'libelle'=>_("Votre commentaire :"),'required'=>true,'error'=>'','value'=>''),
 				'idEvenementGroupeAdresse'  => array('type'=>'hidden','default'=>'','htmlCode'=>'','libelle'=>'','required'=>false,'error'=>'','value'=>''),
 				'captcha'                   =>array('type'=>'captcha','default'=>'','htmlCode'=>'','libelle'=>'','required'=>true,'error'=>'','value'=>'')
-		);
+				);
+				break;
+					
+			case 'personne':
+				$returnArray = array(
+						'nom'                  		=>array('type'=>'text','default'=>'','htmlCode'=>'','libelle'=>_("Votre nom ou pseudo :"),'required'=>true,'error'=>'','value'=>''),
+						'prenom'                    =>array('type'=>'text','default'=>'','htmlCode'=>'','libelle'=>_("Votre prénom :"),'required'=>false,'error'=>'','value'=>''),
+						'email'                     =>array('type'=>'email','default'=>'','htmlCode'=>"style='width:250px;'",'libelle'=>_("Votre e-mail :"),'required'=>false,'error'=>'','value'=>''),
+						'commentaire'               =>array('type'=>'bigText','default'=>'','htmlCode'=>"rows=5 cols=50",'libelle'=>_("Votre commentaire :"),'required'=>true,'error'=>'','value'=>''),
+						'idEvenementGroupeAdresse'  =>array('type'=>'hidden','default'=>'','htmlCode'=>'','libelle'=>'','required'=>false,'error'=>'','value'=>''),
+						'captcha'                   =>array('type'=>'captcha','default'=>'','htmlCode'=>'','libelle'=>'','required'=>true,'error'=>'','value'=>''),
+						'type'						=>array('type'=>'hidden','default'=>$type,'htmlCode'=>'','libelle'=>'','required'=>false,'error'=>'','value'=>''),
+						'idPersonne'				=>array('type'=>'hidden','default'=>$idPersonne,'htmlCode'=>'','libelle'=>'','required'=>false,'error'=>'','value'=>'')
+						
+				);
+				
+				break;
+			default:
+				$returnArray = array(
+				'nom'                  		=>array('type'=>'text','default'=>'','htmlCode'=>'','libelle'=>_("Votre nom ou pseudo :"),'required'=>true,'error'=>'','value'=>''),
+				'prenom'                    =>array('type'=>'text','default'=>'','htmlCode'=>'','libelle'=>_("Votre prénom :"),'required'=>false,'error'=>'','value'=>''),
+				'email'                     =>array('type'=>'email','default'=>'','htmlCode'=>"style='width:250px;'",'libelle'=>_("Votre e-mail :"),'required'=>false,'error'=>'','value'=>''),
+				'commentaire'               =>array('type'=>'bigText','default'=>'','htmlCode'=>"rows=5 cols=50",'libelle'=>_("Votre commentaire :"),'required'=>true,'error'=>'','value'=>''),
+				'idEvenementGroupeAdresse'  => array('type'=>'hidden','default'=>'','htmlCode'=>'','libelle'=>'','required'=>false,'error'=>'','value'=>''),
+				'captcha'                   =>array('type'=>'captcha','default'=>'','htmlCode'=>'','libelle'=>'','required'=>true,'error'=>'','value'=>'')
+				);
+
+		}
+		return $returnArray;
 	}
 	public function getIntituleAdresseFrom($id=0,$type='',$params=array())
 	{
@@ -6812,7 +6877,6 @@ class archiEvenement extends config
 									ORDER BY e.idEvenement DESC LIMIT 1
 									";
 		
-		//$dateDeb = $fetch['dateDebut'];
 		$res = $this->connexionBdd->requete($req);
 		$date2 =mysql_fetch_object($res);
 		$idAdresse = $fetch['idAdresse'];

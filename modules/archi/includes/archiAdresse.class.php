@@ -503,6 +503,18 @@ class archiAdresse extends ArchiContenu
 				'calqueObject'=>$calqueGoogleMap,
 				'idEvenementGroupeAdresseCourant'=>$idEvenement
 		));
+
+		/*
+		$gm = new googleMap(array('googleMapKey'=>$this->googleMapKey,'width'=>700, 'height'=>500, 'zoom'=>13));
+		$this->addToJsHeader($gm->getJsFunctions()); // ajout des fonctions de google map dans le header
+		$resAvAdresse.=$gm->getMap(
+				array(
+						'urlImageIcon'=>$this->getUrlImage()."pointGM.png",
+						'pathImageIcon'=>$this->getCheminPhysique()."images/pointGM.png",
+						'setAutomaticCentering'=>true
+				)
+		);
+		*/
 		
 		//Getting neighbors addresses 
 		$arrayEncartAdresses = $this->getArrayEncartAdressesImmeublesAvantApres(array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
@@ -518,7 +530,6 @@ class archiAdresse extends ArchiContenu
 				'lienVoirCarteGrand'=>"<a href='#' onclick=\"".$calqueGoogleMap->getJsOpenPopupNoDraggableWithBackgroundOpacity()."document.getElementById('iFrameDivPopupGM').src='".$this->creerUrl('','afficheGoogleMapIframe',array('longitude'=>$coordonnees['longitude'],'latitude'=>$coordonnees['latitude'],'noHeaderNoFooter'=>true,'archiIdAdresse'=>$idAdresseCourante,'archiIdEvenementGroupeAdresse'=>$idEvenement,'modeAffichage'=>'popupDetailAdresse'))."';\" class='bigger' style='font-size:11px;'>"._("Voir la carte en + grand")."</a>",
 				'popupGoogleMap'=>$calqueGoogleMap->getDivNoDraggableWithBackgroundOpacity(array('top'=>20,'lienSrcIFrame'=>'','contenu'=>$contenuIFramePopup))
 		));
-		
 		$t->assign_block_vars('sommaireEvenements', array());
 		//Preparing the loop on all related event to the current address
 
@@ -611,7 +622,6 @@ class archiAdresse extends ArchiContenu
 					$t->assign_block_vars($menuElt[0], $menuElt[1]);
 				}
 			}
-			
 			//Personnes
 			if(isset($evenement['arrayPersonne'])){
 				foreach ($evenement['arrayPersonne'] as $personne){
@@ -6043,17 +6053,11 @@ class archiAdresse extends ArchiContenu
 	public function afficherListe($criteres = array() ,  $modeAffichage='', $params = array())
 	{
 		$sqlId='';
-
 		$nbAdresses=0;
-
 		$arrayRetour=array(); // tableau de renvoyé a la sortie de la fonction contenant les liens
-
 		$arrayRetourLiensVoirBatiments = array(); // tableau renvoyé a la sortie de la fonction contenant les liens "voir tous les batiments de la rue/quartier"
-
 		$arrayIdAdressesRetour=array(); // tableau renvoyé a la sortir de la fonction contenant la liste des idAdresses ,  permet d'economiser quelques requetes
-
 		$arrayIdEvenementsGARetour = array(); // tableau avec la liste des evenements de groupes d'adresses
-
 		$tabParametresAutorises = array('ordre',  'tri',  'limit', 'archiIdEvenement',  'debut',  'selection',  'id', 'recherche_rue', 'recherche_quartier', 'recherche_ville', 'recherche_longitude', 'recherche_latitude', 'recherche_rayon', 'recherche_groupesAdressesFromAdresse', 'recherche_sousQuartier', 'displayAdresseIfNoCoordonneesGroupeAdresse');
 
 		$sqlMotCle="";
@@ -6078,19 +6082,13 @@ class archiAdresse extends ArchiContenu
 
 		$sqlAdressesSupplementaires="";
 		$tabidAdresses=array();
-		//$listeIdEvenementsGroupeAdresse="";
 		$whereVillesModerees="";
 		if (!empty($criteres['recherche_motcle'])) {
 			// recherche du mot cle dans les adresses
 
 			$motcle = $criteres['recherche_motcle'];
-
-
-			//$motcle = stripslashes($motcle);
 			$motcle = Pia_eregreplace(", ", " ", $motcle);
 			$motcle = Pia_eregreplace("\"", " ", $motcle);
-
-
 
 			if ($modeAffichage=='popupAjoutAdressesLieesSurEvenement') {
 				// si on est en mode affichage popupAjoutAdressesLieesSurEvenement,  on est dans la popup de selection d'adresse pour lier un evenement a une ou plusieurs adresses
@@ -6112,20 +6110,13 @@ class archiAdresse extends ArchiContenu
 			$motcleEscaped = str_replace(' ', '%', $motcle);
 			$motcleEscaped = mysql_real_escape_string($motcleEscaped);
 
-
 			$motcleEntier = $motcle;
 			$motcleEntierEscaped = str_replace("'", '', $motcleEntier);
 			$motcleEntierEscaped = mysql_real_escape_string($motcleEntierEscaped);
 			$motcleEntierEscaped = str_replace("\\", " ", $motcleEntierEscaped);
 
-
-
 			$motcleEntierEscaped = "REGEXP \"[[:<:]]".$motcleEntierEscaped."[[:>:]]\"";
-
 			$motcleAdresseEntiere = "REGEXP \"[[:<:]]".str_replace(array("'", "\\"), array('', ''), $motcleEntier)."[[:>:]]\"";
-
-			//                    OR he1.titre ".$motcleEntierEscaped."
-			//OR he1.description ".$motcleEntierEscaped."
 
 			$sqlMotCle="
 					AND
@@ -6142,7 +6133,7 @@ class archiAdresse extends ArchiContenu
 					OR CONCAT_WS('', pers.prenom, pers.nom) LIKE \"%".$motcleEscaped."%\"
 					)";
 
-			$sqlSelectMotCle="";//, IF(ha1.idQuartier !=0 and ha1.idRue=0 and ha1.numero=0 and q.nom  LIKE \"%".$motcle."%\", 1000000000, 0) as poidsSpeQuartier
+			$sqlSelectMotCle="";
 
 
 			$sqlOrderBy="(
@@ -6164,18 +6155,6 @@ class archiAdresse extends ArchiContenu
 			+ IF(CONCAT_WS('', pers.prenom, pers.nom) LIKE \"%".$motcleEscaped."%\", 20000000000000000, 0)
 			)
 					";
-
-
-			
-			//$sqlOrderByPoidsMotCle="poidsTotal DESC";
-			//
-			/* $sqlJoin .="
-			LEFT JOIN rue r         ON r.idRue = ha1.idRue
-			LEFT JOIN sousQuartier sq    ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' , ha1.idSousQuartier , r.idSousQuartier )
-			LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' , ha1.idQuartier , sq.idQuartier )
-			LEFT JOIN ville v        ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' , ha1.idVille , q.idVille )
-			LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' , ha1.idPays , v.idPays )
-			";*/
 		}
 
 
@@ -6232,7 +6211,6 @@ class archiAdresse extends ArchiContenu
 		}
 
 		
-		////debug($sqlWhere);
 
 
 		// ************************************************************************************************************************************************
@@ -6321,10 +6299,7 @@ class archiAdresse extends ArchiContenu
 				$prefix    = 'AND';
 			}
 		}
-		/*        else {
-		 $sqlWhere ='1';
-		}
-		*/
+		
 		if (!isset($criteres['debut']) OR !is_numeric($criteres['debut']) OR $criteres['debut'] < 1) {
 			$sqlLimit = '0,  10';
 			$valDebutSuivant = 0;
@@ -6357,10 +6332,8 @@ class archiAdresse extends ArchiContenu
 		// si une ville generale est precisé sinon c'est strasbourg
 		if (isset($this->variablesGet['archiIdVilleGeneral']) && $this->variablesGet['archiIdVilleGeneral']!='' && isset($this->variablesGet['archiIdPaysGeneral']) && $this->variablesGet['archiIdPaysGeneral']!='') {
 			$sqlWhere .= " AND v.idVille = '".$this->variablesGet['archiIdVilleGeneral']."' AND p.idPays='".$this->variablesGet['archiIdPaysGeneral']."' ";
-		} else {
-			//$sqlWhere = " AND v.idVille = '1' AND p.idPays='1' ";
-		}
-
+		} 
+		
 		if (isset($criteres['toutesLesDemolitions'])) {
 			$arrayIdAdressesDemolitions = $this->getIdAdressesFromCriteres(array('whereSql'=>"te.nom = 'Démolition'"));
 			$sqlAdressesSupplementaires = " AND ha1.idAdresse in ('".implode("', '", $arrayIdAdressesDemolitions)."')";
@@ -6414,15 +6387,6 @@ class archiAdresse extends ArchiContenu
 					ha1.numero as numero,
 					ha1.idHistoriqueAdresse,
 					ha1.idIndicatif as idIndicatif";
-			/*
-			 $sqlJoin .="
-			LEFT JOIN rue r         ON r.idRue = ha1.idRue
-			LEFT JOIN sousQuartier sq    ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' , ha1.idSousQuartier , r.idSousQuartier )
-			LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' , ha1.idQuartier , sq.idQuartier )
-			LEFT JOIN ville v        ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' , ha1.idVille , q.idVille )
-			LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' , ha1.idPays , v.idPays )
-			";
-			*/
 		}
 
 		/*
@@ -6522,7 +6486,6 @@ class archiAdresse extends ArchiContenu
 						if ($authentification->estAdmin()) {
 							$description.="<li><a href='".$this->creerUrl("", "deletePerson", array("id"=>$_GET["id"]))."'>"._("Supprimer")."</a></li>";
 						}
-						//TODO: Ajouter le lien pour ajouter aux favoris
 						$description.="<li><a href='".$this->creerUrl("", "saveInterest", array("personne"=>$this->variablesGet["id"]))."'>"._("Ajouter aux favoris")."</a></li>";
 						$description.='</ul>';
 					}
@@ -6547,9 +6510,6 @@ class archiAdresse extends ArchiContenu
 						$description.="</ul></div>";
 					}
 					$description.="<div style='clear:right;'></div>";
-					//$bbCode = new bbCodeObject();
-
-					//$descriptionPersonne = $bbCode->convertToDisplay(array('text'=>$infosPersonne['description']));
 					$description.="</div><br/><br/>";
 					$e = new archiEvenement();
 					$reqEvent = "
@@ -6564,7 +6524,6 @@ class archiAdresse extends ArchiContenu
 						$description.= $e["html"];
 					}
 
-					//$description.="<br><br><h2>"._("Liste de ses réalisations :")."</h2>";
 
 					$t->assign_vars(
 							array(
@@ -6656,13 +6615,7 @@ class archiAdresse extends ArchiContenu
 				$urlSuivant = $this->creerUrl('', '', array_merge($this->variablesGet,  array('debut' => $valDebutSuivant)));
 				$urlSuivantOnClick = "";
 				$tabTempo = array(
-						/*array(   'url'     => $this->creerUrl('', '', array_merge($this->variablesGet,  array('ordre' => 'image'))),
-						 'urlOnClick' => '',
-								'titre'   => 'Image',
-								'urlDesc' => $this->creerUrl('', '', array_merge($this->variablesGet,  array('ordre' => 'image',  'tri'   => 'desc'))),
-								'urlDescOnClick' => '',
-								'urlAsc'  => $this->creerUrl('', '', array_merge($this->variablesGet,  array('ordre' => 'image',  'tri'   => 'asc'))),
-								'urlAscOnClick' => ''),*/
+					
 						array(   'url'     => $this->creerUrl('', '', array_merge($this->variablesGet,  array('ordre' => 'nom'))),
 								'urlOnClick' => '',
 								'titre'   => 'Titre',
@@ -6719,8 +6672,6 @@ class archiAdresse extends ArchiContenu
 							$urlNb = '#';
 							break;
 						case 'calqueEvenement':
-							//$urlNbOnClick = "appelAjax('".$this->creerUrl('', '', array_merge($this->variablesGet,  array('debut' => $i)))."', 'resultatsAdresse');";
-							//$urlNb = '#';
 							$urlNbOnClick = '';
 							$urlNb = $this->creerUrl('', '', array_merge($this->variablesGet,  array('debut' => $i)));
 							break;
@@ -6817,6 +6768,7 @@ class archiAdresse extends ArchiContenu
 				case 'popupDeplacerEvenementVersGroupeAdresse':
 				case 'personnalite':
 					$criteres['desactivateRedirection']=true;
+					break;
 				default:
 					break;
 			}
@@ -6847,13 +6799,7 @@ class archiAdresse extends ArchiContenu
 						/*
 						 * Desactivated for now because we are getting all the necessary fields in the previous request
 						*/
-							
-						/*
-						 if ($modeAffichage != 'listeDesAdressesDuGroupeAdressesSurDetailAdresse') {
-						$fetch = $this->getFetchOneAdresseElementsFromGroupeAdresse($fetch['idEvenementGA']);
-						}
-						*/
-
+						
 						 
 						// *******************************************************************************************************************
 						// recuperation de l'adresse
@@ -6887,11 +6833,9 @@ class archiAdresse extends ArchiContenu
 												AND he1.idEvenement = ee.idEvenementAssocie
 												GROUP BY he1.idEvenement
 												ORDER BY he1.dateDebut, he1.idEvenement
-												";//RIGHT JOIN _adresseEvenement ae ON ae.idAdresse = '".$fetch['idAdresse']."'
+												";
 
-								////debug($sql);
-								////debug($reqTitresEvenements);
-
+						
 								$resTitresEvenements = $this->connexionBdd->requete($reqTitresEvenements);
 
 								$positionAncre=0;
@@ -6936,7 +6880,6 @@ class archiAdresse extends ArchiContenu
 						} elseif (isset($this->variablesGet['archiAffichage']) && $this->variablesGet['archiAffichage']=='recherche') {
 							$nomAdresse ='';
 							$nomAdresse = stripslashes($this->getIntituleAdresseFrom($fetch['idEvenementGA'], 'idEvenementGroupeAdresse', array('styleCSSAdresse'=>"style='font-size:12px;'", 'displayFirstTitreAdresse'=>true, 'isAfficheAdresseStyle'=>true)));
-							//$nomAdresse = stripslashes($this->getIntituleAdresse($fetch, array('styleCSSAdresse'=>"style='font-size:12px;'", 'displayFirstTitreAdresse'=>true, 'isAfficheAdresseStyle'=>true)));
 							$nomAdresseNoStyle= stripslashes($this->getIntituleAdresseFrom($fetch['idEvenementGA'], 'idEvenementGroupeAdresse'));
 						} else {
 							$nomAdresse ='';
@@ -6951,17 +6894,6 @@ class archiAdresse extends ArchiContenu
 							case 'calqueImage':
 								$urlDetailHref    = "#";
 								$urlDetailOnClick = "document.getElementById(document.getElementById('paramChampsAppelantAdresse').value).value='".$fetch['idAdresse']."';document.getElementById(document.getElementById('paramChampsAppelantAdresse').value+'txt').value='".$nomAdresse."';document.getElementById('calqueAdresse').style.display='none';";
-								/*$urlNomRue        = '#';
-								 $urlNomRueOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$fetch['idRue'],  'debut'=>0)))."', 'resultatsAdresse');";
-								$urlNomSousQuartier = '#';
-								$urlNomSousQuartierOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$fetch['idSousQuartier'],  'debut'=>0)))."', 'resultatsAdresse');";
-								$urlNomQuartier = '#';
-								$urlNomQuartierOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'quartier',  'id'=>$fetch['idQuartier'],  'debut'=>0)))."', 'resultatsAdresse');";
-								$urlNomVille = '#';
-								$urlNomVilleOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'ville',  'id'=>$fetch['idVille'],  'debut'=>0)))."', 'resultatsAdresse');";
-								$urlNomPays = '#';
-								$urlNomPaysOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$fetch['idPays'],  'debut'=>0)))."', 'resultatsAdresse');";
-								*/
 								break;
 							case 'calqueImageChampsMultiples':
 								// les liens renvoient la valeur dans un champ select et non pas dans un champ texte ,  mais la meme popup peut etre appelé plusieurs fois pour plusieurs champs differents du meme type
@@ -7028,12 +6960,6 @@ class archiAdresse extends ArchiContenu
 
 										parent.document.getElementById('vueSur'+parent.document.getElementById('identifiantRetour').value).innerHTML+='<option value=\'".$fetch['idAdresse']."_".$fetch['idEvenementGA']."\' SELECTED>".str_replace(array("'", "\""), array("\'", "&#34;"), $nomAdresse)."</option>';";
 
-								/*
-
-								parent.document.getElementById('listeVueSurDiv'+parent.document.getElementById('identifiantRetour').value).innerHTML+='".str_replace("'", "\\'", $nomAdresse)."<a  style=\'cursor:pointer\' onclick=\\\'retirerVueSur(\\\\\'".$fetch['idAdresse']."_".$fetch['idEvenementGA']."\\\\\', '+parent.document.getElementById('identifiantRetour').value+');\\\'>(-)</a><br>';parent.document.getElementById('vueSur'+parent.document.getElementById('identifiantRetour').value).innerHTML+='<option value=\\\'".$fetch["idAdresse"]."_".$fetch['idEvenementGA']."\\\' SELECTED>".str_replace("'", "\'", $nomAdresse)."</option>';
-
-
-								*/
 								$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$fetch['idRue'],  'debut'=>0)));
 								$urlNomRueOnClick = '';
 								$urlNomSousQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$fetch['idSousQuartier'],  'debut'=>0)));
@@ -7091,13 +7017,6 @@ class archiAdresse extends ArchiContenu
 								break;
 							default:
 								$criteresFiltres = array();
-								/*foreach ($criteres as $critereName => $critereValue) {
-								 if (!in_array($critereName, array('sqlSelectionExterne', 'titre'))) {
-								$criteresFiltres[$critereName] = $critereValue;
-								}
-								}*/
-
-
 								$urlDetailHref    = $this->creerUrl('', '', array_merge($criteresFiltres, array('archiIdAdresse'=>$fetch['idAdresse'], 'archiAffichage'=>'adresseDetail', 'archiIdEvenementGroupeAdresse'=>$fetch['idEvenementGA'], 'debut'=>'')));
 								$urlDetailOnClick = '';
 								$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$fetch['idRue'],  'debut'=>0)));
@@ -7240,8 +7159,6 @@ class archiAdresse extends ArchiContenu
 						}
 
 
-
-
 						$t->assign_block_vars(
 								't.adresses',
 								array(
@@ -7313,31 +7230,6 @@ class archiAdresse extends ArchiContenu
 
 					}
 
-					// si on affiche a partir du template : listeAdressesDetailEvenement.tpl c'est qu'on est sur le detail d'un evenement
-					/*if ($criteres["useTemplateFile"]=="listeAdressesDetailEvenement.tpl") {
-					 $coordonnees = $this->getCoordonneesFrom($idDerniereAdresse, 'idAdresse');
-					if ($coordonnees['latitude']!='0' && $coordonnees['longitude']!='0') {
-					// affichage de la googleMap
-					$gm = new googleMap(array(
-							'googleMapKey'=>$this->googleMapKey,
-							'zoom'=>13,
-							'height'=>200,
-							'width'=>200,
-							'noDisplayZoomSelectionSquare'=>true,
-							'noDisplayMapTypeButtons'=>true,
-							'noDisplayEchelle'=>true,
-							'noDisplayZoomSlider'=>true
-					));
-					$pointMarkerHTML = "
-					<script  >
-					point = new GLatLng(".$coordonnees['latitude'].", ".$coordonnees['longitude'].");
-					marker = new GMarker(point);
-					map.addOverlay(marker);
-					</script>";
-
-					$t->assign_block_vars("carteGoogleMap", array("html"=>$gm->getJsFunctions().$gm->getHTML().$pointMarkerHTML));
-					}
-					}*/
 				}
 			}
 		}
@@ -7349,7 +7241,6 @@ class archiAdresse extends ArchiContenu
 		$html=ob_get_contents();
 		ob_end_clean();
 
-		//debug("end of the method afficherList");
 
 		return array('html'=>$html, 'nbAdresses'=>$nbAdresses, 'arrayLiens'=>$arrayRetour, 'arrayIdAdresses'=>$arrayIdAdressesRetour, 'arrayIdEvenementsGroupeAdresse'=>$arrayIdEvenementsGARetour, 'arrayRetourLiensVoirBatiments'=>$arrayRetourLiensVoirBatiments);
 	}
@@ -14390,7 +14281,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
      */
 	public function displayList($idList = array(),$nbResult = 0){
 		$html = "";
-		
 		//Template loading 
 		$t=new Template('modules/archi/templates/');
 		$t->set_filenames(array('addressesList'=>'addressesList.tpl'));

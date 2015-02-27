@@ -108,8 +108,8 @@
 	</div>
 	<!-- BEGIN commentaireEvenement -->
 	<div class="commentaireEvenement">
-		{listeCommentaireEvenement} 
-		{formulaireCommentaireEvenement} 
+		{commentaireEvenement.listeCommentaireEvenement} 
+		{commentaireEvenement.formulaireCommentaireEvenement} 
 	</div>
 	<!-- END commentaireEvenement -->
 </div>
@@ -282,7 +282,7 @@
 <a id='{evenementLie.numeroAncre}'></a>
 <div>
 {evenementLie.evenement}
-{evenementLie.listCommentaires}
+{evenementLie.listeCommentaires}
 {evenementLie.formulaireCommentaire}
 </div>
 <!-- END evenementLie -->
