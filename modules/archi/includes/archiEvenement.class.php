@@ -1412,7 +1412,12 @@ class archiEvenement extends config
 
 		$t->assign_vars(array("divDisplayMenuAction"=>"none"));
 
-
+		
+		if(!isset($idEvenement) || $idEvenement == NULL || $idEvenement=='' ){
+			if(isset($this->variablesGet['archiIdEvenement']) && $this->variablesGet['archiIdEvenement'] !=''){
+				$idEvenement = $this->variablesGet['archiIdEvenement'];
+			}
+		}
 
 		// fabrication de la requete en fonction des parametres
 		$sqlEvenementsAdressesLiees="";
