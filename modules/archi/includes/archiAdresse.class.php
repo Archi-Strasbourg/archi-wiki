@@ -6735,16 +6735,16 @@ class archiAdresse extends ArchiContenu
 			".$sqlJoin."
 
 
-					WHERE
-					ha2.idAdresse = ha1.idAdresse
+			WHERE
+			ha2.idAdresse = ha1.idAdresse
 
-					". $sqlWhere ." ".$sqlAdressesSupplementaires." ".$sqlEvenementsGroupeAdressesSupplementaires." ".$sqlSelectionExterne." ".$sqlMotCle."
-							".$sqlSelectCoordonnees." ".$sqlAdressesSupplementairesRechercheRelancee." ".$whereVillesModerees."
-									AND ae.idAdresse IS NOT NULL
-									GROUP BY ha1.idAdresse, he1.idEvenement, ha1.idHistoriqueAdresse
-									HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
-									ORDER BY  ".$sqlOrderBy."
-											DESC,  CAST(ha1.numero as signed) ASC";
+			". $sqlWhere ." ".$sqlAdressesSupplementaires." ".$sqlEvenementsGroupeAdressesSupplementaires." ".$sqlSelectionExterne." ".$sqlMotCle."
+			".$sqlSelectCoordonnees." ".$sqlAdressesSupplementairesRechercheRelancee." ".$whereVillesModerees."
+			AND ae.idAdresse IS NOT NULL
+			GROUP BY ha1.idAdresse, he1.idEvenement, ha1.idHistoriqueAdresse
+			HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
+			ORDER BY  ".$sqlOrderBy."
+			DESC,  CAST(ha1.numero as signed) ASC";
 			if (!isset($params['sqlNoLimit']) || $params['sqlNoLimit']==false) {
 				$sql.= " LIMIT ".$sqlLimit."
 						";////ORDER BY  ".pia_substr($sqlOrderByPoidsMotCle, 0, -1)."

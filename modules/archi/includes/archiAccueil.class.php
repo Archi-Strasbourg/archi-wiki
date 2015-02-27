@@ -2250,10 +2250,9 @@ class ArchiAccueil extends config
 	}
 	public function getLatestComments($nbComment){
 		 
-		$requete= "
-				SELECT * FROM
-				(
-				SELECT
+		
+		
+		$sousRequete1 = "SELECT
 				date_format(c.date,"._('"%e/%m/%Y"').") as date,
 						c.idUtilisateur,
 						c.idEvenement,
@@ -2271,13 +2270,9 @@ class ArchiAccueil extends config
 						LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
 						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 						LEFT JOIN rue r on r.idRue = ha.idRue
-						ORDER BY date desc
-						) as tmp1
-
-						UNION all
-
-						SELECT * FROM (
-						SELECT
+						ORDER BY c.date DESC";
+		
+		$sousRequete2 = "SELECT
 						date_format(c.date,"._('"%e/%m/%Y"').") as date,
 						c.idUtilisateur,
 						c.idEvenementGroupeAdresse,
@@ -2296,66 +2291,77 @@ class ArchiAccueil extends config
 						LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
 						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 						LEFT JOIN rue r on r.idRue = ha.idRue
-						ORDER BY date desc
-						)
-						AS tmp2
-						LIMIT $nbComment
-						";
-						 
-						 
-						$result = $this->connexionBdd->requete($requete);
-						$arrayComment = array();
-						$e = new archiEvenement();
+						ORDER BY c.date desc
+		";
+		
+		$requete= "
+				SELECT * FROM
+				(
+				$sousRequete1
+					) as tmp1
 
-						while($latestComment = mysql_fetch_assoc($result)){
+					UNION all
 
-							$idEvenement = "";
-							$idEvenementGroup = "";
-							$idAdresse="";
+					SELECT * FROM (
+					$sousRequete2
+					)
+					AS tmp2
+					LIMIT $nbComment
+					";
+			
+		$result = $this->connexionBdd->requete($requete);
+		$arrayComment = array();
+		$e = new archiEvenement();
 
-							if(strcmp($latestComment['typeCommentaire'] , 'commentaireEvenement')){
-								$idEvenement = $latestComment['idEvenement'];
-								$idEvenementGroup = $e->getIdGroupeEvenement($latestComment['idEvenement']);
-								$idAdresse = $e->getIdAdresse($latestComment['idEvenement']);
-							}
-							else{
-								$idEvenementGroup = $latestComment['idEvenement'];
-								$reqIdEvt = "
-								SELECT idEvenementAssocie as idEvenement
-								FROM _evenementEvenement
-								WHERE idEvenement = $idEvenementGroup
-								";
-								$resIdEvt = $this->connexionBdd->requete($reqIdEvt);
-								$tmp = mysql_fetch_array($resIdEvt);
-								$idEvenement = $tmp['idEvenement'];
-								$idAdresse = $e->getIdAdresse($idEvenement);
-							}
+		while($latestComment = mysql_fetch_assoc($result)){
+
+			$idEvenement = "";
+			$idEvenementGroup = "";
+			$idAdresse="";
+
+			if(strcmp($latestComment['typeCommentaire'] , 'commentaireEvenement')){
+				$idEvenement = $latestComment['idEvenement'];
+				$idEvenementGroup = $e->getIdGroupeEvenement($latestComment['idEvenement']);
+				$idAdresse = $e->getIdAdresse($latestComment['idEvenement']);
+			}
+			else{
+				$idEvenementGroup = $latestComment['idEvenement'];
+				$reqIdEvt = "
+				SELECT idEvenementAssocie as idEvenement
+				FROM _evenementEvenement
+				WHERE idEvenement = $idEvenementGroup
+				";
+				$resIdEvt = $this->connexionBdd->requete($reqIdEvt);
+				$tmp = mysql_fetch_array($resIdEvt);
+				$idEvenement = $tmp['idEvenement'];
+				$idAdresse = $e->getIdAdresse($idEvenement);
+			}
 
 
 
-							$adresseArray = $e->getArrayAdresse($idEvenement);
-							$adresse = '';
-							if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
-								$adresse.=$adresseArray['numero'];
-							}
-							if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-								$adresse.=' '.$adresseArray['prefixe'];
-							}
-							if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
-								$adresse.=' '.$adresseArray['nomRue'];
-							}
+			$adresseArray = $e->getArrayAdresse($idEvenement);
+			$adresse = '';
+			if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
+				$adresse.=$adresseArray['numero'];
+			}
+			if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
+				$adresse.=' '.$adresseArray['prefixe'];
+			}
+			if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
+				$adresse.=' '.$adresseArray['nomRue'];
+			}
 
-							$url = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail',"archiIdAdresse"=>$idAdresse,"archiIdEvenementGroupeAdresse"=>$idEvenementGroup));
-							$urlPersonne = $this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$latestComment['idUtilisateur'],'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroup));
+			$url = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail',"archiIdAdresse"=>$idAdresse,"archiIdEvenementGroupeAdresse"=>$idEvenementGroup));
+			$urlPersonne = $this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$latestComment['idUtilisateur'],'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroup));
 
-							$latestComment['typeCommentaire'] = 'commentaireEvenement';
-							$latestComment['urlAdresse'] = $url;
-							$latestComment['urlPersonne'] = $urlPersonne;
-							$latestComment['adresse']=$adresse;
-							$arrayComment[] = $latestComment;
-						}
-						 
-						return $arrayComment;
+			$latestComment['typeCommentaire'] = 'commentaireEvenement';
+			$latestComment['urlAdresse'] = $url;
+			$latestComment['urlPersonne'] = $urlPersonne;
+			$latestComment['adresse']=$adresse;
+			$arrayComment[] = $latestComment;
+		}
+			
+		return $arrayComment;
 	}
 
 
