@@ -63,7 +63,13 @@
 <table><tr>
 <td>
 {htmlMonArchi}
-</td></tr></table>
+</td></tr>
+<tr>
+<td>
+{historiqueUtilisateur}
+</td>
+</tr>
+</table>
 </div>
 <!-- END afficheMonArchi -->
 

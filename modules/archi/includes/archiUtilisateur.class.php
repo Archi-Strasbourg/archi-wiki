@@ -2041,7 +2041,6 @@ class archiUtilisateur extends config {
             $html.="<h1>Profil</h1>";
 
             $nbParticipations = $this->getNbParticipationsUtilisateur(array('idUtilisateur'=>$idUtilisateur));
-
             $d = new dateObject();
             
             $dateCreationCompte = "";
@@ -2425,6 +2424,152 @@ class archiUtilisateur extends config {
     
     
     
+    public function getArrayContribution($offset = 0){
+    	$auth = new ArchiAuthentification();
+    	$userId = $auth->getIdUtilisateur();
+    	if(isset($userId) && $userId != ''){
+    		$requete = "
+    			SELECT *
+    			FROM historiqueEvenement he
+    			WHERE he.idUtilisateur = $userId
+    			";
+    		
+    		$result = $this->connexionBdd->requete($requete);
+    		$arrayHistoriqueEvenement = array();
+    		while($rowHE = mysql_fetch_assoc($result)){
+    			$arrayHistoriqueEvenement[] = $rowHE;
+    		}
+    		return $arrayHistoriqueEvenement;
+    	}
+    	else{
+    		$this->messages->addError("Impossible de récupérer vos contributions, vous n'êtes pas connecté");
+    		$this->messages->display();
+    		return false;
+    	}
+    }
     
+    
+    public function displayProfile($userId = 0){
+		$firstString = "Hello world !";
+		$lastString = "Hellow world";
+
+		$utils = new archiUtils();
+		$result = $utils->get_decorated_diff($firstString,$lastString);
+    	//return $result['old'] . $result['new'];
+    	
+		
+		$t = new Template('modules/archi/templates/utilisateur');
+		$t->set_filenames((array(
+				'general'=>'profile.tpl',
+				'userStats'=>'statistics.tpl'
+				
+		)));
+		
+		
+		//Statistics
+		$statistics =  $this->getProfileStatistics($userId);
+		foreach ($statistics as $stat){
+			$t->assign_block_vars('statistic', $stat);
+		}
+
+		
+		//Informations
+		$info = $this->getUserInfos();
+		//$t->assign_var('userInformations', $info);
+		
+		//Formulaire
+		$form = $this->getUserForm();
+		$t->assign_vars(array(
+				'userFormMail' => $form,
+				'userInformations' =>$info
+		));
+		
+		$t->assign_var_from_handle('userStatistics','userStats');
+		$t->pparse('general');
+    }
+    
+
+    private function getProfileStatistics($idUtilisateur = 0){
+    	$userId =0;
+		if($idUtilisateur == 0){
+			$auth = new ArchiAuthentification();
+			if($auth->estConnecte()){
+				$userId = $auth->getIdUtilisateur();
+			}
+			else{
+				$this->messages->addError("Aucun identifiant spécifié !");
+				$this->messages->display();
+				return false;
+			}
+		}
+		else{
+			if(isset($idUtilisateur) && $idUtilisateur!=''){
+				$userId = $idUtilisateur;
+			}
+			else{
+				$this->messages->addError("Aucun utilisateur associé à cet identifiant !");
+				$this->messages->display();
+				return false;
+			}
+		}
+		$arrayInfosConnexions = $this->getInfosConnexions($userId);
+		$arrayInfosModifs = $this->getInfosModifsPerso($userId);
+
+		return array(
+				array(
+						'label'=>_("Vous vous êtes connecté"),
+						'value'=>$arrayInfosConnexions['nbConnexions']
+				),
+				array(
+						'label'=>_("Date de votre dernière connexion"),
+						'value'=>$arrayInfosConnexions['derniereConnexion']
+				),
+				array(
+						'label'=>_("Nombre d\'images ajoutées"),
+						'value'=>$arrayInfosModifs['nbModifImage']
+				),
+				array(
+						'label'=>_("Nombre d\'événements modifiés"),
+						'value'=>$arrayInfosModifs['nbModifEvenement']
+				),
+				array(
+						'label'=>_("Nombre d\'événements ajoutés"),
+						'value'=>$arrayInfosModifs['nbAjoutEvenement']
+				)
+		);
+    }
+    
+    
+    private function getUserInfos(){
+    	$calque = new calqueObject();
+    	 
+    	$titre = _("En tant qu'utilisateur vous pouvez :");	
+    	$urlNouveauDossier = $this->creerUrl('', 'ajoutNouveauDossier');
+    	$onMouseOverNouveauDossier = $calque->getJsContextHelpOnMouseOver(_("En ajoutant votre adresse vous contribuez au développement du site. Mais d\'abord qu\'entend t-on par \"votre adresse\" ? Et bien cela peut être l\'immeuble ou la maison que vous occupez. Un immeuble que vous aimez mais que vous ne trouvez pas sur le site. Avec le développement des appareils photo numériques,  il devient très simple de prendre une photo,  et de la copier sur l\'ordinateur. Ajouter une adresse dans www.archi-strasbourg.org ne prend pas plus de 20 secondes. Copier la photo 10 secondes de plus..."));
+    	$onMouseOverPhotos = $calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des photos afin d'illustrer une adresse."));
+    	$onMouseOverEvenement =$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des évènements sur toute adresse qu'un autre utilisateur a créée."));
+    	$onMouseOverMail =$calque->getJsContextHelpOnMouseOver(_("En activant votre alerte mail sur les adresses,  vous serez prevenu de toute modification sur une adresse dont vous êtes l'auteur"));
+    	$onMouseOverNvlAdr = $calque->getJsContextHelpOnMouseOver(_("En acceptant de recevoir les mails concernant les nouvelles adresses,  vous serez prévenu de l'ajout d'une nouvelle adresse sur le site."));
+    	$onMouseOverCommentaire = $calque->getJsContextHelpOnMouseOver(_("Grâce à l'alerte par mail sur les commentaires,  vous pouvez débattre avec les autres utilisateurs."));
+    	$onMouseOut = $calque->getJSContextHelpOnMouseOut();
+
+    	$auth = new ArchiAuthentification();
+    	if($auth->estConnecte()){
+    	return "<b>"._("En tant qu'utilisateur vous pouvez :")."</b><ul>
+						<li> <a href='".$this->creerUrl('', 'ajoutNouveauDossier')."' onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En ajoutant votre adresse vous contribuez au développement du site. Mais d\'abord qu\'entend t-on par \"votre adresse\" ? Et bien cela peut être l\'immeuble ou la maison que vous occupez. Un immeuble que vous aimez mais que vous ne trouvez pas sur le site. Avec le développement des appareils photo numériques,  il devient très simple de prendre une photo,  et de la copier sur l\'ordinateur. Ajouter une adresse dans www.archi-strasbourg.org ne prend pas plus de 20 secondes. Copier la photo 10 secondes de plus..."))."\" onmouseout='".$calque->getJSContextHelpOnMouseOut()."'>"._("ajouter des adresses")."</a></li>
+						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des photos afin d'illustrer une adresse."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\"> "._("ajouter des photos à une adresse")."</span></li>
+						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des évènements sur toute adresse qu'un autre utilisateur a créée."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("ajouter des évènements à une adresse")."</span></li>
+						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En activant votre alerte mail sur les adresses,  vous serez prevenu de toute modification sur une adresse dont vous êtes l'auteur"))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être prévenu par mail d'une modification de vos participations")."</span></li>
+						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En acceptant de recevoir les mails concernant les nouvelles adresses,  vous serez prévenu de l'ajout d'une nouvelle adresse sur le site."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être averti des nouvelles adresses")."</span></li>
+						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Grâce à l'alerte par mail sur les commentaires,  vous pouvez débattre avec les autres utilisateurs."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être averti des nouveaux commentaires ajoutés sur une adresse que vous avez créée.")."</span></li></ul>";
+    	}
+    }
+    private function getUserForm(){
+    	$u = new archiUtilisateur();
+    	$s = new objetSession();
+    	if ($s->isInSession('utilisateurConnecte'.$this->idSite)) {
+    		return $u->afficher(array(), $s->getFromSession('utilisateurConnecte'.$this->idSite), 'utilisateurProfil');
+    	}
+    }
 }
 ?>

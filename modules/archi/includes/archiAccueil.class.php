@@ -152,22 +152,21 @@ class ArchiAccueil extends config
 				}
 				$monArchi.="<div style='font-size:12px;'>
 						<b>"._("En tant qu'utilisateur vous pouvez :")."</b><ul>
-								<li> <a href='".$this->creerUrl('', 'ajoutNouveauDossier')."' onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En ajoutant votre adresse vous contribuez au développement du site. Mais d\'abord qu\'entend t-on par \"votre adresse\" ? Et bien cela peut être l\'immeuble ou la maison que vous occupez. Un immeuble que vous aimez mais que vous ne trouvez pas sur le site. Avec le développement des appareils photo numériques,  il devient très simple de prendre une photo,  et de la copier sur l\'ordinateur. Ajouter une adresse dans www.archi-strasbourg.org ne prend pas plus de 20 secondes. Copier la photo 10 secondes de plus..."))."\" onmouseout='".$calque->getJSContextHelpOnMouseOut()."'>"._("ajouter des adresses")."</a></li>
-										<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des photos afin d'illustrer une adresse."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\"> "._("ajouter des photos à une adresse")."</span></li>
-												<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des évènements sur toute adresse qu'un autre utilisateur a créée."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("ajouter des évènements à une adresse")."</span></li>
-														<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En activant votre alerte mail sur les adresses,  vous serez prevenu de toute modification sur une adresse dont vous êtes l'auteur"))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être prévenu par mail d'une modification de vos participations")."</span></li>
-																<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En acceptant de recevoir les mails concernant les nouvelles adresses,  vous serez prévenu de l'ajout d'une nouvelle adresse sur le site."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être averti des nouvelles adresses")."</span></li>
-																		<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Grâce à l'alerte par mail sur les commentaires,  vous pouvez débattre avec les autres utilisateurs."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être averti des nouveaux commentaires ajoutés sur une adresse que vous avez créée.")."</span></li></ul>";
+						<li> <a href='".$this->creerUrl('', 'ajoutNouveauDossier')."' onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En ajoutant votre adresse vous contribuez au développement du site. Mais d\'abord qu\'entend t-on par \"votre adresse\" ? Et bien cela peut être l\'immeuble ou la maison que vous occupez. Un immeuble que vous aimez mais que vous ne trouvez pas sur le site. Avec le développement des appareils photo numériques,  il devient très simple de prendre une photo,  et de la copier sur l\'ordinateur. Ajouter une adresse dans www.archi-strasbourg.org ne prend pas plus de 20 secondes. Copier la photo 10 secondes de plus..."))."\" onmouseout='".$calque->getJSContextHelpOnMouseOut()."'>"._("ajouter des adresses")."</a></li>
+						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des photos afin d'illustrer une adresse."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\"> "._("ajouter des photos à une adresse")."</span></li>
+						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des évènements sur toute adresse qu'un autre utilisateur a créée."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("ajouter des évènements à une adresse")."</span></li>
+						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En activant votre alerte mail sur les adresses,  vous serez prevenu de toute modification sur une adresse dont vous êtes l'auteur"))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être prévenu par mail d'une modification de vos participations")."</span></li>
+						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En acceptant de recevoir les mails concernant les nouvelles adresses,  vous serez prévenu de l'ajout d'une nouvelle adresse sur le site."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être averti des nouvelles adresses")."</span></li>
+						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Grâce à l'alerte par mail sur les commentaires,  vous pouvez débattre avec les autres utilisateurs."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être averti des nouveaux commentaires ajoutés sur une adresse que vous avez créée.")."</span></li></ul>";
 				$monArchi.="<b>"._("Vos statistiques :")."</b><br>";
 				$monArchi.=""._("Vous vous êtes connecté :")." ".$arrayInfosConnexions['nbConnexions']." fois<br>";
 				$monArchi.="&nbsp;&nbsp;&nbsp;"._("Date de votre dernière connexion :")." ".$this->date->toFrench($arrayInfosConnexions['derniereConnexion'])."<br>";
 
-
 				$monArchi.="<p>
 						&nbsp;&nbsp;&nbsp;"._("Nombre d'images modifiées :")." ".$arrayInfosModifs['nbModifImage']."<br />
-								&nbsp;&nbsp;&nbsp;"._("Nombre d'images ajoutées :")." ".$arrayInfosModifs['nbAjoutImage']."<br />
-										&nbsp;&nbsp;&nbsp;"._("Nombre d'évènements modifiés :")." ".$arrayInfosModifs['nbModifEvenement']."<br />
-												&nbsp;&nbsp;&nbsp;"._("Nombre d'évènements ajoutés :")." ".$arrayInfosModifs['nbAjoutEvenement']."</p>";
+						&nbsp;&nbsp;&nbsp;"._("Nombre d'images ajoutées :")." ".$arrayInfosModifs['nbAjoutImage']."<br />
+						&nbsp;&nbsp;&nbsp;"._("Nombre d'évènements modifiés :")." ".$arrayInfosModifs['nbModifEvenement']."<br />
+						&nbsp;&nbsp;&nbsp;"._("Nombre d'évènements ajoutés :")." ".$arrayInfosModifs['nbAjoutEvenement']."</p>";
 				// ******************************************************************************************************************************************
 				// liste des evenements ajoutés ou modifiés par l'utilisateur
 				// ******************************************************************************************************************************************
@@ -421,10 +420,10 @@ class ArchiAccueil extends config
 						LEFT JOIN pays p        ON p.idPays = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' , ha1.idPays , v.idPays )
 
 						WHERE c.idUtilisateur = '".$auth->getIdUtilisateur()."' OR c.email='".$utilisateur->getMailUtilisateur($auth->getIdUtilisateur())."'
-								AND CommentaireValide=1
-								GROUP BY ha1.idAdresse,  ha1.idHistoriqueAdresse
-								HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-								ORDER BY c.date DESC
+						AND CommentaireValide=1
+						GROUP BY ha1.idAdresse,  ha1.idHistoriqueAdresse
+						HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
+						ORDER BY c.date DESC
 								";
 
 				$req = $paginationCommentaires->addLimitToQuery($req);
@@ -446,7 +445,17 @@ class ArchiAccueil extends config
 				$monArchi.=$tableauCommentaires->createHtmlTableFromArray(2, "font-size:12px;");
 				$monArchi.="<a href=".$this->creerUrl('', 'mesInterets', array()).">Afficher mes interets </a>";
 
-
+				
+				//Template for user contributions
+				$t->set_filenames(array('contributions' => 'utilisateur/contributions.tpl'));
+				$t->assign_block_vars('contribution', array('content'=>"plop"));
+				
+				$arrayContributions = $utilisateur->getArrayContribution();
+				debug($arrayContributions);
+				
+				
+				
+				$t->assign_var_from_handle('historiqueUtilisateur', 'contributions');
 				$t->assign_vars(array('htmlMonArchi'=>$monArchi));
 				$t->assign_vars(array('calqueHelp'=>$calque->getHtmlDivContextualHelp()));
 

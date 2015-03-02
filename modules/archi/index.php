@@ -1506,16 +1506,23 @@ if (isset($_GET['archiAffichage'])) {
        case 'showEvenement':
 			$e = new archiEvenement();
 			if(isset($_GET['idEvenement'])){
-				$idEvenement = $_GET['idEvenement'];				
+				$idEvenement = $_GET['idEvenement'];
+				echo $e->displaySingleEvent($idEvenement,array('displayMenu' => true));
 			}
 			else{
-				$idEvenement = 2134; //LOOL MAGiC NUMBER
+				echo "no id specified";
 			}
-			echo $e->displaySingleEvent($idEvenement,array('displayMenu' => true));    		
     		break;
        case 'lienOpendata':
        		$s = new archiAccueil();
        		echo $s->afficherOpendata();
+       		break;
+       case 'profil':
+       		$u = new archiUtilisateur();
+       		if(isset($_GET['idUtilisateur']))
+       			echo $u->displayProfile($_GET['idUtilisateur']);
+       		else 
+       			echo $u->displayProfile();
        		break;
         }
     }
@@ -1530,8 +1537,6 @@ if ((count($_POST)==0 && count($_GET)==0)
     
     $accueil = new archiAccueil();
     echo $accueil->afficheAccueil();
-    //echo $accueil->gestionSondage(array('modeAffichage'=>'resultatAccueil'));
-    //echo $accueil->afficheAccueil();
 }
 
 

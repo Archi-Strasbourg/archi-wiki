@@ -1,0 +1,11 @@
+"<div style='font-size:12px;'>
+	<b>{titreInfos}</b>
+	<ul>
+		<li> <a href='{urlNouveauDossier}' onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En ajoutant votre adresse vous contribuez au développement du site. Mais d\'abord qu\'entend t-on par \"votre adresse\" ? Et bien cela peut être l\'immeuble ou la maison que vous occupez. Un immeuble que vous aimez mais que vous ne trouvez pas sur le site. Avec le développement des appareils photo numériques,  il devient très simple de prendre une photo,  et de la copier sur l\'ordinateur. Ajouter une adresse dans www.archi-strasbourg.org ne prend pas plus de 20 secondes. Copier la photo 10 secondes de plus..."))."\" onmouseout='".$calque->getJSContextHelpOnMouseOut()."'>"._("ajouter des adresses")."</a></li>
+		<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des photos afin d'illustrer une adresse."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\"> "._("ajouter des photos à une adresse")."</span></li>
+		<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des évènements sur toute adresse qu'un autre utilisateur a créée."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("ajouter des évènements à une adresse")."</span></li>
+		<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En activant votre alerte mail sur les adresses,  vous serez prevenu de toute modification sur une adresse dont vous êtes l'auteur"))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être prévenu par mail d'une modification de vos participations")."</span></li>
+		<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En acceptant de recevoir les mails concernant les nouvelles adresses,  vous serez prévenu de l'ajout d'une nouvelle adresse sur le site."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être averti des nouvelles adresses")."</span></li>
+		<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Grâce à l'alerte par mail sur les commentaires,  vous pouvez débattre avec les autres utilisateurs."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être averti des nouveaux commentaires ajoutés sur une adresse que vous avez créée.")."</span></li>
+	</ul>
+</div>
