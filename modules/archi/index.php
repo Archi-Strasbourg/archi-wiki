@@ -1519,10 +1519,7 @@ if (isset($_GET['archiAffichage'])) {
        		break;
        case 'profil':
        		$u = new archiUtilisateur();
-       		if(isset($_GET['idUtilisateur']))
-       			echo $u->displayProfile($_GET['idUtilisateur']);
-       		else 
-       			echo $u->displayProfile();
+			echo $u->displayProfile($_GET['idUtilisateur']);
        		break;
         }
     }

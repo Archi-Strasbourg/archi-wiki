@@ -2101,8 +2101,10 @@ class archiUtilisateur extends config {
             ";
             $mail = new mailObject();
             
+            debug($infosArray);
             if ($infosArray['displayProfilContactForm']=='1' && $infosArray['mail']!='' && $mail->isMail($infosArray['mail'])) 
             {
+            	debug("coucou");
                 $authentification = new archiAuthentification();
                 
                 $mailUtilisateurConnecte = "";
@@ -2424,16 +2426,25 @@ class archiUtilisateur extends config {
     
     
     
-    public function getArrayContribution($offset = 0){
-    	$auth = new ArchiAuthentification();
-    	$userId = $auth->getIdUtilisateur();
+    public function getArrayContribution($userId,$offset = 0){
     	if(isset($userId) && $userId != ''){
+    		$requeteEvenementCree = "
+    				SELECT * 
+    				FROM evenements evts
+    				WHERE idUtilisateur = $userId
+    				";
+    		$resultEvtCree = $this->connexionBdd->requete($requeteEvenementCree);
+    		while($rowEvtCree = mysql_fetch_assoc($resultEvtCree)){
+    		}
+    		
+    		
+    		
+    		
     		$requete = "
     			SELECT *
     			FROM historiqueEvenement he
     			WHERE he.idUtilisateur = $userId
     			";
-    		
     		$result = $this->connexionBdd->requete($requete);
     		$arrayHistoriqueEvenement = array();
     		while($rowHE = mysql_fetch_assoc($result)){
@@ -2449,41 +2460,69 @@ class archiUtilisateur extends config {
     }
     
     
-    public function displayProfile($userId = 0){
+    public function displayProfile($id){
+    	$userId=0;
 		$firstString = "Hello world !";
 		$lastString = "Hellow world";
-
+		
 		$utils = new archiUtils();
 		$result = $utils->get_decorated_diff($firstString,$lastString);
     	//return $result['old'] . $result['new'];
     	
+		if(isset($id) && $id!=''){
+			$userId = $id;
+		}
+		else{
+			$auth = new ArchiAuthentification();
+			if($auth->estConnecte()){
+				$userId = $auth->getIdUtilisateur();
+			}
+			else{
+				$this->messages->addError("Identifiant d'utilisateur incorrect");
+				$this->messages->display();
+				return false;
+			}
+		}
 		
 		$t = new Template('modules/archi/templates/utilisateur');
-		$t->set_filenames((array(
+		$t->set_filenames(array(
 				'general'=>'profile.tpl',
 				'userStats'=>'statistics.tpl'
-				
-		)));
 		
-		
+		));
+			
 		//Statistics
 		$statistics =  $this->getProfileStatistics($userId);
 		foreach ($statistics as $stat){
 			$t->assign_block_vars('statistic', $stat);
 		}
-
-		
+			
 		//Informations
-		$info = $this->getUserInfos();
-		//$t->assign_var('userInformations', $info);
-		
+		$info = $this->getUserInfos($userId);
+			
 		//Formulaire
 		$form = $this->getUserForm();
-		$t->assign_vars(array(
-				'userFormMail' => $form,
-				'userInformations' =>$info
-		));
+			
+		//Formulaire mail contact
+		$formMail = $this->getUserFormMail($userId);
+			
+		//Get contributions
+		$arrayContributions  = $this->getArrayContribution($userId);
+		//debug($arrayContributions);
+			
 		
+		$testEvtCrees = $this->getEvenementsCrees($userId);
+		$testEvtCrees.=$this->getEvenementsModifies($userId);
+		$testEvtCrees.=$this->getUserCommentaires($userId);
+		$testEvtCrees.=$this->getUserAddresses($userId);
+		
+		$t->assign_vars(array(
+				'userFormInfo' => $form,
+				'userFormMail' => $formMail,
+				'userInformations' =>$info,
+				'userContributions'=> $testEvtCrees
+		));
+			
 		$t->assign_var_from_handle('userStatistics','userStats');
 		$t->pparse('general');
     }
@@ -2525,15 +2564,15 @@ class archiUtilisateur extends config {
 						'value'=>$arrayInfosConnexions['derniereConnexion']
 				),
 				array(
-						'label'=>_("Nombre d\'images ajoutées"),
+						'label'=>_("Nombre d'images ajoutées"),
 						'value'=>$arrayInfosModifs['nbModifImage']
 				),
 				array(
-						'label'=>_("Nombre d\'événements modifiés"),
+						'label'=>_("Nombre d'événements modifiés"),
 						'value'=>$arrayInfosModifs['nbModifEvenement']
 				),
 				array(
-						'label'=>_("Nombre d\'événements ajoutés"),
+						'label'=>_("Nombre d'événements ajoutés"),
 						'value'=>$arrayInfosModifs['nbAjoutEvenement']
 				)
 		);
@@ -2564,12 +2603,428 @@ class archiUtilisateur extends config {
 						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Grâce à l'alerte par mail sur les commentaires,  vous pouvez débattre avec les autres utilisateurs."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("être averti des nouveaux commentaires ajoutés sur une adresse que vous avez créée.")."</span></li></ul>";
     	}
     }
+    
+    
+    
     private function getUserForm(){
     	$u = new archiUtilisateur();
     	$s = new objetSession();
     	if ($s->isInSession('utilisateurConnecte'.$this->idSite)) {
     		return $u->afficher(array(), $s->getFromSession('utilisateurConnecte'.$this->idSite), 'utilisateurProfil');
     	}
+    }
+    
+    
+    
+    
+    private function getUserFormMail($idUtilisateur){
+    	$infosArray = $this->getArrayInfosFromUtilisateur($idUtilisateur);
+    	
+    	$mail = new mailObject();
+    	 
+    	if ($infosArray['displayProfilContactForm']=='1' && $infosArray['mail']!='' && $mail->isMail($infosArray['mail'])){
+    		$authentification = new archiAuthentification();
+    		 
+    		$mailUtilisateurConnecte = "";
+    		if ($authentification->estConnecte())
+    		{
+    			$idUtilisateurConnecte = $authentification->getIdUtilisateur();
+    			$mailUtilisateurConnecte = $this->getMailUtilisateur($idUtilisateurConnecte);
+    			if (!$mail->isMail($mailUtilisateurConnecte))
+    			{
+    				$mailUtilisateurConnecte = "";
+    			}
+    		}
+    		 
+    		$f = new formGenerator();
+    		$bb = new bbCodeObject();
+    		 
+    		 
+    		 
+    		$configBoutonsBBCode = array('formName'=>'messagePrive', 'fieldName'=>'message', 'noUrlInterneButton'=>true);
+    		 
+    		$help = $this->getHelpMessages('helpEvenement');
+    		foreach($help as $index=>$value)
+    		{
+    			$configBoutonsBBCode[$index]=$value;
+    		}
+    		$configBoutonsBBCode["msgQuote"]="Selectionnez une partie de votre texte pour le mettre entre quotes";
+    		$configBoutonsBBCode["msgUrlExterne"]="Tapez une url commencant par http:// ,  et selectionnez la pour en faire un lien";
+    		$arrayBBCode = $bb->getBoutonsMiseEnFormeTextArea($configBoutonsBBCode);
+    		 
+    		if ($authentification->estConnecte())
+    		{
+    			$configFieldsContact = array(
+    					'idUtilisateurDestinataire'=>array('type'=>'hidden', 'value'=>'', 'forceValueTo'=>$idUtilisateur, 'htmlCode'=>'', 'default'=>'', 'error'=>'', 'required'=>true),
+    					'mailEnvoyeur'=>array('type'=>'email', 'value'=>'', 'forceValueTo'=>$mailUtilisateurConnecte, 'htmlCode'=>'', 'default'=>'', 'libelle'=>'Votre mail', 'error'=>'', 'required'=>true),
+    					'message'=>array('type'=>'bigText', 'value'=>'', 'htmlCode'=>"style='width:400px;height:100px;'", 'default'=>'', 'libelle'=>'Votre message', 'error'=>'', 'required'=>true, 'htmlCodeBeforeField'=>$arrayBBCode['boutonsHTML'])
+    			);
+    		}
+    		else
+    		{
+    			$configFieldsContact = array(
+    					'idUtilisateurDestinataire'=>array('type'=>'hidden', 'value'=>'', 'forceValueTo'=>$idUtilisateur, 'htmlCode'=>'', 'default'=>'', 'error'=>'', 'required'=>true),
+    					'mailEnvoyeur'=>array('type'=>'email', 'value'=>'', 'forceValueTo'=>$mailUtilisateurConnecte, 'htmlCode'=>'', 'default'=>'', 'libelle'=>'Votre mail', 'error'=>'', 'required'=>true),
+    					'message'=>array('type'=>'bigText', 'value'=>'', 'htmlCode'=>"style='width:400px;height:100px;'", 'default'=>'', 'libelle'=>'Votre message', 'error'=>'', 'required'=>true, 'htmlCodeBeforeField'=>$arrayBBCode['boutonsHTML']),
+    					'captcha'=>array('type'=>'captcha', 'value'=>'', 'htmlCode'=>"", 'default'=>'', 'libelle'=>'Vérification', 'error'=>'', 'required'=>true)
+    			);
+    		}
+    		 
+    		if (isset($this->variablesPost['message']) )//&& !isset($this->variablesPost['sended'])
+    		{
+    			$errors = $f->getArrayFromPost($configFieldsContact);
+    			 
+    			$complementMsgVisiteAdresse = "";
+    			if (isset($this->variablesGet['archiIdEvenementGroupeAdresseOrigine']) && $this->variablesGet['archiIdEvenementGroupeAdresseOrigine']!='')
+    			{
+    				// recuperation de l'intitule de l'adresse
+    				$adresse = new archiAdresse();
+    				$idAdresseMessage = $adresse->getIdAdresseFromIdEvenementGroupeAdresse($this->variablesGet['archiIdEvenementGroupeAdresseOrigine']);
+    				$intituleAdresse = $adresse->getIntituleAdresseFrom($this->variablesGet['archiIdEvenementGroupeAdresseOrigine'], 'idEvenementGroupeAdresse', array('ifTitreAfficheTitreSeulement'=>true, 'noQuartier'=>true, 'noSousQuartier'=>true, 'noVille'=>true));
+    				$complementMsgVisiteAdresse = " à visité l'adresse <a href='".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresseMessage, 'archiIdEvenementGroupeAdresse'=>$this->variablesGet['archiIdEvenementGroupeAdresseOrigine']))."'>".$intituleAdresse."</a> et";
+    			}
+    			 
+    			 
+    			if (count($errors)==0)
+    			{
+    				// envoi du mail
+    				 
+    				$contenu = "Bonjour, <br><br>";
+    				$contenu.="Un utilisateur d'archi-strasbourg (<a href=\"mailto:".$this->variablesPost['mailEnvoyeur']."\">".$this->variablesPost['mailEnvoyeur']."</a>)$complementMsgVisiteAdresse vous envoie un message privé :<br><br>";
+    				$contenu.=stripslashes($bb->convertToDisplay(array('text'=>$this->variablesPost['message'])));
+    				$contenu.="";
+    				$contenu.="";
+    				if ($mail->sendMail($this->siteMail, $infosArray['mail'],  "Un utilisateur d'archi-strasbourg vous envoie un message",  $contenu,  $writeMailToLogs=false,  $this->variablesPost['mailEnvoyeur']))
+    				{
+    					echo "<span style='color:red;'>Mail envoyé.</span>";
+    				}
+    			}
+    		}
+    		$arrayUrlViensDeAdresse = array();
+    		if (isset($this->variablesGet['archiIdEvenementGroupeAdresseOrigine']) && $this->variablesGet['archiIdEvenementGroupeAdresseOrigine']!='')
+    		{
+    			$arrayUrlViensDeAdresse = array('archiIdEvenementGroupeAdresseOrigine'=>$this->variablesGet['archiIdEvenementGroupeAdresseOrigine']);
+    		}
+    		 
+    		$configForm = array(
+    				'formAction'=>$this->creerUrl('', 'detailProfilPublique', array_merge($arrayUrlViensDeAdresse, array('archiIdUtilisateur'=>$idUtilisateur))),
+    				'fields'=>$configFieldsContact,
+    				'formName'=>'messagePrive',
+    				'codeHtmlInFormAfterFields'=>"Prévisualisation :".$arrayBBCode['divAndJsAfterForm']
+    		);
+    		$html.="<br><br><h2>Lui envoyer un message personnel :</h2>";
+    		$html.=$f->afficherFromArray($configForm);
+    	}
+    	return $html;
+    }
+    
+    
+    
+    /**
+     * Return HTML of the last created event related to usedId
+     * @param unknown $userId
+     * @return string
+     */
+    private function getEvenementsCrees($userId){
+    	return $this->getEvenements($userId,'MAX');
+    }    
+    
+    /**
+     * Return HTML of the last modified event 
+     * @param unknown $userId
+     * @return string
+     */
+    private function getEvenementsModifies($userId){
+    	return $this->getEvenements($userId,'MIN');
+    }
+    
+    
+    /**
+     * Return HTML of the events related to user
+     * @param unknown $userId
+     * @param string $strategy
+     * @return string
+     */
+    private function getEvenements($userId , $strategy = 'MAX'){
+    	$date = new dateObject();
+    	$paginationEvenements = new paginationObject();
+    	$adresse = new archiAdresse();
+    	
+    	// calcul du nombre d'evenements ajoutes ou modifies pour la pagination
+    	$req = "
+						SELECT distinct ha1.idAdresse, he1.dateCreationEvenement as dateCreationEvenement
+    	
+						FROM evenements he2,  evenements he1
+						LEFT JOIN _evenementEvenement ee1 ON ee1.idEvenementAssocie = he1.idEvenement
+						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee1.idEvenement
+						LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
+						LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
+    	
+						WHERE he2.idEvenement = he1.idEvenement
+						AND he1.idUtilisateur = '".$userId."'
+								GROUP BY he1.idEvenement,  ha1.idAdresse,  ha1.idHistoriqueAdresse
+								HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
+								";
+    	$res = $this->connexionBdd->requete($req);
+    	$nbEnregistrementTotaux = mysql_num_rows($res);
+    	
+    	$nbEnregistrementsParPage=5;
+    	$arrayPaginationEvenements=$paginationEvenements->pagination(
+    			array(
+    					'nomParamPageCourante'=>'archiMonArchiEvenementPage',
+    					'nbEnregistrementsParPage'=>$nbEnregistrementsParPage,
+    					'nbEnregistrementsTotaux'=>$nbEnregistrementTotaux,
+    					'typeLiens'=>'noformulaire'
+    			)
+    	);
+    	
+    	
+    	   	
+    	
+    	$request = "
+						SELECT distinct ha1.idAdresse as idAdresse, he1.dateCreationEvenement as dateCreationEvenement,  ha1.numero,  ha1.idRue,  ha1.idSousQuartier,  ha1.idQuartier,  ha1.idVille, ha1.idIndicatif,
+    	
+						ha1.idAdresse as idAdresse,  ha1.numero,  ha1.idQuartier,  ha1.idVille, ind.nom,
+    	
+						r.nom as nomRue,
+						sq.nom as nomSousQuartier,
+						q.nom as nomQuartier,
+						v.nom as nomVille,
+						p.nom as nomPays,
+						ha1.numero as numeroAdresse,
+						ha1.idRue,
+						r.prefixe as prefixeRue,
+    					he1.titre as titre,
+    					he1.description as description,
+						IF (ha1.idSousQuartier != 0,  ha1.idSousQuartier,  r.idSousQuartier) AS idSousQuartier,
+						IF (ha1.idQuartier != 0,  ha1.idQuartier,  sq.idQuartier) AS idQuartier,
+						IF (ha1.idVille != 0,  ha1.idVille,  q.idVille) AS idVille,
+						IF (ha1.idPays != 0,  ha1.idPays,  v.idPays) AS idPays,
+    	
+						ha1.numero as numero,
+						ha1.idHistoriqueAdresse,
+						ha1.idIndicatif as idIndicatif,
+    					he1.idHistoriqueEvenement,
+    					he2.idHistoriqueEvenement
+    	
+						FROM historiqueEvenement he2,  historiqueEvenement he1
+						LEFT JOIN _evenementEvenement ee1 ON ee1.idEvenementAssocie = he1.idEvenement
+						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee1.idEvenement
+						LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
+						LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
+						LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
+						LEFT JOIN rue r         ON r.idRue = ha1.idRue
+						LEFT JOIN sousQuartier sq    ON sq.idSousQuartier = if (ha1.idRue='0' and ha1.idSousQuartier!='0' , ha1.idSousQuartier , r.idSousQuartier )
+						LEFT JOIN quartier q        ON q.idQuartier = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' , ha1.idQuartier , sq.idQuartier )
+						LEFT JOIN ville v        ON v.idVille = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' , ha1.idVille , q.idVille )
+						LEFT JOIN pays p        ON p.idPays = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' , ha1.idPays , v.idPays )
+    	
+						WHERE he2.idEvenement = he1.idEvenement
+						AND he1.idUtilisateur = '$userId'
+						GROUP BY he1.idEvenement,  ha1.idAdresse,  ha1.idHistoriqueAdresse
+						HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) and he1.idHistoriqueEvenement = $strategy(he2.idHistoriqueEvenement)
+						ORDER BY he1.dateCreationEvenement DESC
+								";
+    	
+    	$req = $paginationEvenements->addLimitToQuery($request);
+    	
+    	$res = $this->connexionBdd->requete($req);
+    	if($strategy=='MAX'){
+    	$monArchi.="<b>"._("Liste de vos derniers événements crées :")."</b><br>";
+    	}else{
+    		$monArchi.="<b>"._("Liste de vos derniers événements modifiés :")."</b><br>";
+    	}
+    	$monArchi.=$arrayPaginationEvenements['html'];
+    	$tableauEvenements = new tableau();
+    	if (mysql_num_rows($res)==0) {
+    		$monArchi.="<br>"._("Vous n'avez pas encore ajouté d'évènement.")."<br>";
+    	}
+    	while ($fetch = mysql_fetch_assoc($res)) {
+    		$tableauEvenements->addValue($date->toFrench($fetch['dateCreationEvenement']));
+    		$tableauEvenements->addValue("<a href='".$this->creerUrl('', 'adresseDetail', array('archiIdAdresse'=>$fetch['idAdresse']))."'>".stripslashes($adresse->getIntituleAdresse($fetch))."</a>");
+    	}
+    	
+    	$monArchi.= $tableauEvenements->createHtmlTableFromArray(2, "font-size:12px;");
+    	return $monArchi;
+    }
+    
+    private function getUserCommentaires($userId){
+    	$paginationCommentaires = new paginationObject();
+    	$utilisateur = new archiUtilisateur();
+    	$date = new dateObject();
+    	$adresse = new archiAdresse();
+    	$nbEnregistrementsParPage=5;
+    	$req = "
+    	
+						SELECT c.idCommentaire
+						FROM commentaires c
+						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = c.idEvenementGroupeAdresse
+						LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
+						LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
+						WHERE c.idUtilisateur = '".$userId."' OR c.email='".$utilisateur->getMailUtilisateur($userId)."'
+								AND CommentaireValide=1
+								GROUP BY ha1.idAdresse,  ha1.idHistoriqueAdresse
+								HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
+								ORDER BY c.date DESC
+								";
+    	$res = $this->connexionBdd->requete($req);
+    	$nbEnregistrementTotaux=mysql_num_rows($res);
+    	$arrayPaginationCommentaires=$paginationCommentaires->pagination(
+    			array(
+    					'nomParamPageCourante'=>'archiMonArchiAdressesPage',
+    					'nbEnregistrementsParPage'=>$nbEnregistrementsParPage,
+    					'nbEnregistrementsTotaux'=>$nbEnregistrementTotaux,
+    					'typeLiens'=>'noformulaire'
+    			)
+    	);
+    	
+    	$req = "
+						SELECT distinct ha1.idAdresse as idAdresse, c.date as dateCommentaire, ha1.date as date,  ha1.numero,  ha1.idRue,  ha1.idSousQuartier,  ha1.idQuartier,  ha1.idVille, ha1.idIndicatif,
+    	
+						ha1.idAdresse as idAdresse,  ha1.numero,  ha1.idQuartier,  ha1.idVille, ind.nom,
+    	
+						r.nom as nomRue,
+						sq.nom as nomSousQuartier,
+						q.nom as nomQuartier,
+						v.nom as nomVille,
+						p.nom as nomPays,
+						ha1.numero as numeroAdresse,
+						ha1.idRue,
+						r.prefixe as prefixeRue,
+						IF (ha1.idSousQuartier != 0,  ha1.idSousQuartier,  r.idSousQuartier) AS idSousQuartier,
+						IF (ha1.idQuartier != 0,  ha1.idQuartier,  sq.idQuartier) AS idQuartier,
+						IF (ha1.idVille != 0,  ha1.idVille,  q.idVille) AS idVille,
+						IF (ha1.idPays != 0,  ha1.idPays,  v.idPays) AS idPays,
+    	
+						ha1.numero as numero,
+						ha1.idHistoriqueAdresse,
+						ha1.idIndicatif as idIndicatif
+    	
+						FROM commentaires c
+						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = c.idEvenementGroupeAdresse
+						LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
+						LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
+    	
+						LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
+    	
+						LEFT JOIN rue r         ON r.idRue = ha1.idRue
+						LEFT JOIN sousQuartier sq    ON sq.idSousQuartier = if (ha1.idRue='0' and ha1.idSousQuartier!='0' , ha1.idSousQuartier , r.idSousQuartier )
+						LEFT JOIN quartier q        ON q.idQuartier = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' , ha1.idQuartier , sq.idQuartier )
+						LEFT JOIN ville v        ON v.idVille = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' , ha1.idVille , q.idVille )
+						LEFT JOIN pays p        ON p.idPays = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' , ha1.idPays , v.idPays )
+    	
+						WHERE c.idUtilisateur = '".$userId."' OR c.email='".$utilisateur->getMailUtilisateur($userId)."'
+						AND CommentaireValide=1
+						GROUP BY ha1.idAdresse,  ha1.idHistoriqueAdresse
+						HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
+						ORDER BY c.date DESC
+								";
+    	
+    	$req = $paginationCommentaires->addLimitToQuery($req);
+    	
+    	$res = $this->connexionBdd->requete($req);
+    	$monArchi.="<br><b>"._("Liste de vos derniers commentaires :")." </b><br>";
+    	$monArchi.=$arrayPaginationCommentaires['html'];
+    	$tableauCommentaires = new tableau();
+    	
+    	if (mysql_num_rows($res)==0) {
+    		$monArchi.="<br>"._("Vous n'avez pas encore ajouté de commentaire.")."<br>";
+    	}
+    	
+    	while ($fetch = mysql_fetch_assoc($res)) {
+    		$tableauCommentaires->addValue($date->toFrench($fetch['dateCommentaire']));
+    		$tableauCommentaires->addValue("<a href='".$this->creerUrl('', 'adresseDetail', array('archiIdAdresse'=>$fetch['idAdresse']))."'>".stripslashes($adresse->getIntituleAdresse($fetch))."</a>");
+    	}
+    	$monArchi.=$tableauCommentaires->createHtmlTableFromArray(2, "font-size:12px;");
+    	return $monArchi;
+    }
+    
+    
+    private function getUserAddresses($userId){
+    	$paginationAdresses = new paginationObject();
+    	$date = new dateObject();
+    	$adresse = new archiAdresse();
+    	 
+    	$nbEnregistrementsParPage=5;
+    	
+    	$req = "
+						SELECT distinct ha1.idAdresse
+						FROM historiqueAdresse ha2,  historiqueAdresse ha1
+						LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
+						WHERE ha2.idAdresse = ha1.idAdresse
+						AND ha1.idUtilisateur = '".$userId."'
+								GROUP BY ha1.idAdresse ,  ha1.idHistoriqueAdresse
+								HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
+								ORDER BY ha1.date DESC
+								";
+    	
+    	$res = $this->connexionBdd->requete($req);
+    	$nbEnregistrementTotaux=mysql_num_rows($res);
+    	$arrayPaginationAdresses=$paginationAdresses->pagination(
+    			array(
+    					'nomParamPageCourante'=>'archiMonArchiAdressesPage',
+    					'nbEnregistrementsParPage'=>$nbEnregistrementsParPage,
+    					'nbEnregistrementsTotaux'=>$nbEnregistrementTotaux,
+    					'typeLiens'=>'noformulaire'
+    			)
+    	);
+    	
+    	$req = "
+						SELECT distinct ha1.idAdresse as idAdresse, ha1.date as date,  ha1.numero,  ha1.idRue,  ha1.idSousQuartier,  ha1.idQuartier,  ha1.idVille, ha1.idIndicatif,
+    	
+						ha1.idAdresse as idAdresse,  ha1.numero,  ha1.idQuartier,  ha1.idVille, ind.nom,
+    	
+						r.nom as nomRue,
+						sq.nom as nomSousQuartier,
+						q.nom as nomQuartier,
+						v.nom as nomVille,
+						p.nom as nomPays,
+						ha1.numero as numeroAdresse,
+						ha1.idRue,
+						r.prefixe as prefixeRue,
+						IF (ha1.idSousQuartier != 0,  ha1.idSousQuartier,  r.idSousQuartier) AS idSousQuartier,
+						IF (ha1.idQuartier != 0,  ha1.idQuartier,  sq.idQuartier) AS idQuartier,
+						IF (ha1.idVille != 0,  ha1.idVille,  q.idVille) AS idVille,
+						IF (ha1.idPays != 0,  ha1.idPays,  v.idPays) AS idPays,
+    	
+						ha1.numero as numero,
+						ha1.idHistoriqueAdresse,
+						ha1.idIndicatif as idIndicatif
+    	
+    	
+						FROM historiqueAdresse ha2,  historiqueAdresse ha1
+    	
+						LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
+    	
+						LEFT JOIN rue r         ON r.idRue = ha1.idRue
+						LEFT JOIN sousQuartier sq    ON sq.idSousQuartier = if (ha1.idRue='0' and ha1.idSousQuartier!='0' , ha1.idSousQuartier , r.idSousQuartier )
+						LEFT JOIN quartier q        ON q.idQuartier = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' , ha1.idQuartier , sq.idQuartier )
+						LEFT JOIN ville v        ON v.idVille = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' , ha1.idVille , q.idVille )
+						LEFT JOIN pays p        ON p.idPays = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' , ha1.idPays , v.idPays )
+						WHERE ha2.idAdresse = ha1.idAdresse
+						AND ha1.idUtilisateur = '".$userId."'
+								GROUP BY ha1.idAdresse ,  ha1.idHistoriqueAdresse
+								HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
+								ORDER BY ha1.date DESC
+								";
+    	$req = $paginationAdresses->addLimitToQuery($req);
+    	
+    	$res = $this->connexionBdd->requete($req);
+    	$monArchi.="<br><b>"._("Liste de vos adresses :")." </b><br>";
+    	$monArchi.=$arrayPaginationAdresses['html'];
+    	$tableauAdresse = new tableau();
+    	
+    	if (mysql_num_rows($res)==0) {
+    		$monArchi.="<br>"._("Vous n'avez pas encore ajouté d'adresse.")."<br>";
+    	}
+    	
+    	while ($fetch = mysql_fetch_assoc($res)) {
+    		$tableauAdresse->addValue($date->toFrench($fetch['date']));
+    		$tableauAdresse->addValue("<a href='".$this->creerUrl('', 'adresseDetail', array('archiIdAdresse'=>$fetch['idAdresse']))."'>".stripslashes($adresse->getIntituleAdresse($fetch))."</a>");
+    	}
+    	
+    	$monArchi.=$tableauAdresse->createHtmlTableFromArray(2, "font-size:12px;");
+    	 return $monArchi;
     }
 }
 ?>

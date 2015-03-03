@@ -443,19 +443,11 @@ class ArchiAccueil extends config
 				}
 
 				$monArchi.=$tableauCommentaires->createHtmlTableFromArray(2, "font-size:12px;");
+				
+				
 				$monArchi.="<a href=".$this->creerUrl('', 'mesInterets', array()).">Afficher mes interets </a>";
 
-				
-				//Template for user contributions
-				$t->set_filenames(array('contributions' => 'utilisateur/contributions.tpl'));
-				$t->assign_block_vars('contribution', array('content'=>"plop"));
-				
-				$arrayContributions = $utilisateur->getArrayContribution();
-				debug($arrayContributions);
-				
-				
-				
-				$t->assign_var_from_handle('historiqueUtilisateur', 'contributions');
+			
 				$t->assign_vars(array('htmlMonArchi'=>$monArchi));
 				$t->assign_vars(array('calqueHelp'=>$calque->getHtmlDivContextualHelp()));
 

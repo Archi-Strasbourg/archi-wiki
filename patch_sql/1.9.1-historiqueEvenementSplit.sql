@@ -61,24 +61,24 @@ BEFORE UPDATE ON evenements FOR EACH ROW
     VALUES
       (
       
-	OLD.idEvenement ,
-	OLD.idTypeStructure,
-	OLD.idTypeEvenement,
-	OLD.idUtilisateur,
-	OLD.idSource,
-	OLD.idEvenementRecuperationTitre,
-	OLD.idImagePrincipale,
-	OLD.titre,
-	OLD.description,
-	OLD.dateDebut,
-	OLD.isDateDebutEnviron,
-	OLD.dateFin,
-	OLD.dateCreationEvenement, 
-	OLD.nbEtages,
-	OLD.ISMH,
-	OLD.MH,
-	OLD.numeroArchive,
-	OLD.parent
+	NEW.idEvenement ,
+	NEW.idTypeStructure,
+	NEW.idTypeEvenement,
+	NEW.idUtilisateur,
+	NEW.idSource,
+	NEW.idEvenementRecuperationTitre,
+	NEW.idImagePrincipale,
+	NEW.titre,
+	NEW.description,
+	NEW.dateDebut,
+	NEW.isDateDebutEnviron,
+	NEW.dateFin,
+	NEW.dateCreationEvenement, 
+	NEW.nbEtages,
+	NEW.ISMH,
+	NEW.MH,
+	NEW.numeroArchive,
+	NEW.parent
       );
   END;
 //

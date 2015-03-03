@@ -1480,6 +1480,12 @@ li:empty {
 	min-width: 700px;
 }
 
+.boxVertArrondie{
+	background-color: #99ACB0;
+	border-radius: 5px;
+	margin-bottom: 10px;	
+}
+
 .encart a img {
 	border: thin solid black;
 }
