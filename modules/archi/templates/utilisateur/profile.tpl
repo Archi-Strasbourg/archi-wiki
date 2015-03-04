@@ -1,5 +1,6 @@
-<div>
-	
+	<div class="">
+		{userPresentation}
+	</div>
 	<div class="boxVertArrondie">
 		{userFormInfo}
 	</div>
@@ -37,4 +38,3 @@
 
 
 
-</div>

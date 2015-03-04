@@ -1503,24 +1503,32 @@ if (isset($_GET['archiAffichage'])) {
         	$i = new archiInterest();
         	echo $i->deleteInterest();
         	break;
-       case 'showEvenement':
-			$e = new archiEvenement();
-			if(isset($_GET['idEvenement'])){
-				$idEvenement = $_GET['idEvenement'];
-				echo $e->displaySingleEvent($idEvenement,array('displayMenu' => true));
-			}
-			else{
-				echo "no id specified";
-			}
-    		break;
-       case 'lienOpendata':
+        case 'showEvenement':
+        	$e = new archiEvenement();
+        	if(isset($_GET['idEvenement'])){
+        		$idEvenement = $_GET['idEvenement'];
+        		echo $e->displaySingleEvent($idEvenement,array('displayMenu' => true));
+        	}
+        	else{
+        		echo "no id specified";
+        	}
+        	break;
+        case 'lienOpendata':
        		$s = new archiAccueil();
        		echo $s->afficherOpendata();
        		break;
-       case 'profil':
+        case 'profil':
        		$u = new archiUtilisateur();
-			echo $u->displayProfile($_GET['idUtilisateur']);
+       		echo $u->displayProfile($_GET['idUtilisateur']);
        		break;
+        case 'profilPublique':
+        	$u = new archiUtilisateur();
+			$u->getPublicProfil($_GET['idUtilisateur']);
+        	break;
+        case 'profilPrive':
+        	$u =new archiUtilisateur();
+			$u->getPrivateProfil();
+        	break;
         }
     }
 }

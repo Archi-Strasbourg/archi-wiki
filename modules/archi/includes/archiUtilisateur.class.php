@@ -473,7 +473,7 @@ class archiUtilisateur extends config {
                     
                     $s = new objetSession();
                     $infos = $u->getArrayInfosFromUtilisateur($s->getFromSession('utilisateurConnecte'.$this->idSite));
-                    $t->assign_vars(array("phraseBienvenu"=>_("Bienvenue sur votre profil")." ".ucwords($infos['prenom'])." ".ucwords($infos['nom'])));
+                    $t->assign_vars(array("phraseBienvenu"=>_("Modifier vos informations")));
                     $t->assign_vars(array("srcImgTrombone"=>$this->getUrlImage(null,  "trombone.jpg")));
                 }
                 
@@ -2101,10 +2101,8 @@ class archiUtilisateur extends config {
             ";
             $mail = new mailObject();
             
-            debug($infosArray);
             if ($infosArray['displayProfilContactForm']=='1' && $infosArray['mail']!='' && $mail->isMail($infosArray['mail'])) 
             {
-            	debug("coucou");
                 $authentification = new archiAuthentification();
                 
                 $mailUtilisateurConnecte = "";
@@ -2508,7 +2506,6 @@ class archiUtilisateur extends config {
 			
 		//Get contributions
 		$arrayContributions  = $this->getArrayContribution($userId);
-		//debug($arrayContributions);
 			
 		
 		$testEvtCrees = $this->getEvenementsCrees($userId);
@@ -2516,11 +2513,13 @@ class archiUtilisateur extends config {
 		$testEvtCrees.=$this->getUserCommentaires($userId);
 		$testEvtCrees.=$this->getUserAddresses($userId);
 		
+		$contributions = $this->getAllContribution($userId);
+		
 		$t->assign_vars(array(
 				'userFormInfo' => $form,
 				'userFormMail' => $formMail,
 				'userInformations' =>$info,
-				'userContributions'=> $testEvtCrees
+				'userContributions'=> $contributions
 		));
 			
 		$t->assign_var_from_handle('userStatistics','userStats');
@@ -2610,6 +2609,7 @@ class archiUtilisateur extends config {
     	$u = new archiUtilisateur();
     	$s = new objetSession();
     	if ($s->isInSession('utilisateurConnecte'.$this->idSite)) {
+    	//	return $u->afficher(array(), $s->getFromSession('utilisateurConnecte'.$this->idSite), 'utilisateurProfil');
     		return $u->afficher(array(), $s->getFromSession('utilisateurConnecte'.$this->idSite), 'utilisateurProfil');
     	}
     }
@@ -2752,19 +2752,19 @@ class archiUtilisateur extends config {
     	
     	// calcul du nombre d'evenements ajoutes ou modifies pour la pagination
     	$req = "
-						SELECT distinct ha1.idAdresse, he1.dateCreationEvenement as dateCreationEvenement
+						SELECT distinct ha1.idAdresse, he1.dateCreationEvenement as dateCreationEvenement,he1.idHistoriqueEvenement,he2.idHistoriqueEvenement
     	
-						FROM evenements he2,  evenements he1
-						LEFT JOIN _evenementEvenement ee1 ON ee1.idEvenementAssocie = he1.idEvenement
+						FROM historiqueEvenement he2,  historiqueEvenement he1
+    					LEFT JOIN _evenementEvenement ee1 ON ee1.idEvenementAssocie = he1.idEvenement
 						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee1.idEvenement
 						LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
 						LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
     	
 						WHERE he2.idEvenement = he1.idEvenement
 						AND he1.idUtilisateur = '".$userId."'
-								GROUP BY he1.idEvenement,  ha1.idAdresse,  ha1.idHistoriqueAdresse
-								HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-								";
+						GROUP BY he1.idEvenement,  ha1.idAdresse,  ha1.idHistoriqueAdresse
+						HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) and he1.idHistoriqueEvenement = $strategy(he2.idHistoriqueEvenement)
+																";
     	$res = $this->connexionBdd->requete($req);
     	$nbEnregistrementTotaux = mysql_num_rows($res);
     	
@@ -2778,8 +2778,6 @@ class archiUtilisateur extends config {
     			)
     	);
     	
-    	
-    	   	
     	
     	$request = "
 						SELECT distinct ha1.idAdresse as idAdresse, he1.dateCreationEvenement as dateCreationEvenement,  ha1.numero,  ha1.idRue,  ha1.idSousQuartier,  ha1.idQuartier,  ha1.idVille, ha1.idIndicatif,
@@ -2796,10 +2794,10 @@ class archiUtilisateur extends config {
 						r.prefixe as prefixeRue,
     					he1.titre as titre,
     					he1.description as description,
-						IF (ha1.idSousQuartier != 0,  ha1.idSousQuartier,  r.idSousQuartier) AS idSousQuartier,
-						IF (ha1.idQuartier != 0,  ha1.idQuartier,  sq.idQuartier) AS idQuartier,
-						IF (ha1.idVille != 0,  ha1.idVille,  q.idVille) AS idVille,
-						IF (ha1.idPays != 0,  ha1.idPays,  v.idPays) AS idPays,
+						ha1.idSousQuartier AS idSousQuartier,
+						ha1.idQuartier AS idQuartier,
+						ha1.idVille AS idVille,
+						ha1.idPays AS idPays,
     	
 						ha1.numero as numero,
 						ha1.idHistoriqueAdresse,
@@ -2814,10 +2812,10 @@ class archiUtilisateur extends config {
 						LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
 						LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
 						LEFT JOIN rue r         ON r.idRue = ha1.idRue
-						LEFT JOIN sousQuartier sq    ON sq.idSousQuartier = if (ha1.idRue='0' and ha1.idSousQuartier!='0' , ha1.idSousQuartier , r.idSousQuartier )
-						LEFT JOIN quartier q        ON q.idQuartier = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' , ha1.idQuartier , sq.idQuartier )
-						LEFT JOIN ville v        ON v.idVille = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' , ha1.idVille , q.idVille )
-						LEFT JOIN pays p        ON p.idPays = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' , ha1.idPays , v.idPays )
+						LEFT JOIN sousQuartier sq    ON sq.idSousQuartier =  ha1.idSousQuartier 
+						LEFT JOIN quartier q        ON q.idQuartier =  ha1.idQuartier 
+						LEFT JOIN ville v        ON v.idVille = ha1.idVille 
+						LEFT JOIN pays p        ON p.idPays = ha1.idPays 
     	
 						WHERE he2.idEvenement = he1.idEvenement
 						AND he1.idUtilisateur = '$userId'
@@ -3026,5 +3024,216 @@ class archiUtilisateur extends config {
     	$monArchi.=$tableauAdresse->createHtmlTableFromArray(2, "font-size:12px;");
     	 return $monArchi;
     }
+    
+    
+    private function getAllContribution($userId){
+    	$contributions = $this->getEvenementsCrees($userId);
+    	$contributions.=$this->getEvenementsModifies($userId);
+    	$contributions.=$this->getUserCommentaires($userId);
+    	$contributions.=$this->getUserAddresses($userId);
+    	return $contributions;
+    }
+    
+    private function getUserPresentation($userId){
+    	$infosArray = $this->getArrayInfosFromUtilisateur($userId);
+    	$avatar = $this->getImageAvatar(array('idUtilisateur'=>$userId));
+    	
+    	$html.="<h1>Profil</h1>";
+    	
+    	$nbParticipations = $this->getNbParticipationsUtilisateur(array('idUtilisateur'=>$userId));
+    	$d = new dateObject();
+    	
+    	$dateCreationCompte = "";
+    	if ($infosArray['dateCreation']!='0000-00-00 00:00:00')
+    	{
+    		$dateCreationCompte = " - Date de création du compte : ".$d->toFrenchAffichage($infosArray['dateCreation'])."<br>";
+    	}
+    	
+    	$profil = $this->getLibelleProfil(array('idProfil'=>$infosArray['idProfil']));
+    	
+    	$villesModereesArray = $this->getArrayVillesModereesPar($userId);
+    	$villesModerees = "";
+    	if ($infosArray['idProfil']==3)
+    	{
+    		$libelleVillesModerees = array();
+    		$a = new archiAdresse();
+    		foreach($villesModereesArray as $indice => $idVille)
+    		{
+    			$fetchVille = $a->getInfosVille($idVille, array('fieldList'=>"v.nom as nom"));
+    			$libelleVillesModerees[] = $fetchVille['nom'];
+    		}
+    	
+    		if (count($libelleVillesModerees)>0)
+    		{
+    			foreach($libelleVillesModerees as $indice => $nomVille)
+    			{
+    				$villesModerees .= "<a href='".$this->urlRacine."$nomVille/'>$nomVille</a>,  ";
+    			}
+    	
+    			$villesModerees = "- Villes modérées : ".pia_substr($villesModerees, 0, -2);
+    		}
+    	
+    	}
+    	
+    	$urlSiteWeb ="";
+    	
+    	if ($infosArray['urlSiteWeb']!='')
+    	{
+    		$urlSiteWeb = "Son site : <a href='".$infosArray['urlSiteWeb']."' target='_blank'>".$infosArray['urlSiteWeb']."</a><br>";
+    	}
+    	
+    	
+    	
+    	$html.="
+    	<div style='width:750px;'>
+    	
+    	<div style='float:left;width:150px;'>
+    	<img src='$avatar' border=0 style='padding:10px;'>
+    	</div>
+    	<div style='float:left;width:600px;'>
+    	<b>".ucfirst($infosArray['nom'])." ".ucfirst($infosArray['prenom'])."</b><br>
+    			- Nombre de participations : $nbParticipations (ajouts et modifications d'images,  d'événements et commentaires en tant qu'utilisateur inscrit)<br>
+    			$dateCreationCompte
+    			- Cette personne à le statut : <b>$profil</b> sur archi-strasbourg.org<br>
+    			$villesModerees
+    			$urlSiteWeb
+    	
+    			";
+    	return $html;
+    }
+    
+    private function getMedailles($userId){
+    	
+    }
+    
+    
+    public function getPublicProfil($userId){
+    	$userId=0;
+    	if(isset($id) && $id!=''){
+    		$userId = $id;
+    	}
+    	else{
+    		$auth = new ArchiAuthentification();
+    		if($auth->estConnecte()){
+    			$userId = $auth->getIdUtilisateur();
+    		}
+    		else{
+    			$this->messages->addError("Identifiant d'utilisateur incorrect");
+    			$this->messages->display();
+    			return false;
+    		}
+    	}
+    	
+    	
+    	
+    	//Utilisateur banni
+        if (!$this->isUtilisateurBanni(array('idUtilisateur'=>$idUtilisateur))){
+        	$t = new Template('modules/archi/templates/utilisateur');
+        	$t->set_filenames(array(
+        			'general'=>'profile.tpl',
+        			'userStats'=>'statistics.tpl'
+   
+        	));
+        	
+        	//Presentation
+        	$presentation = $this->getUserPresentation($userId);
+        	
+        	//Statistics
+        	$statistics =  $this->getProfileStatistics($userId);
+        	foreach ($statistics as $stat){
+        		$t->assign_block_vars('statistic', $stat);
+        	}
+        	
+        	//Informations
+        	$info = $this->getUserInfos($userId);
+        	
+        	//Formulaire
+        	$form = $this->getUserForm();
+        	
+        	//Formulaire mail contact
+        	$formMail = $this->getUserFormMail($userId);
+        	
+        	//Get contributions
+        	$arrayContributions  = $this->getArrayContribution($userId);
+        	
+        	$contributions = $this->getAllContribution($userId);
+        	 
+        	$t->assign_vars(array(
+        			'userPresentation' => $presentation,
+        			'userFormInfo' => $form,
+        			'userFormMail' => $formMail,
+        			'userInformations' =>$info,
+        			'userContributions'=> $contributions
+        	));
+        	
+        	$t->assign_var_from_handle('userStatistics','userStats');
+        	$t->pparse('general');
+    	}
+    	else {
+    		$this->messages->addWarning("Cet utilisateur est banni");
+    		$this->messages->display();
+    		return false;
+    	}
+    	
+    }
+    
+    
+    public function getPrivateProfil(){
+    	$auth = new ArchiAuthentification();
+    	if($auth->estConnecte()){
+    		$userId = $auth->getIdUtilisateur();
+    	}
+    	else{
+    		$this->messages->addError("Identifiant d'utilisateur incorrect");
+    		$this->messages->display();
+    		return false;
+    	}
+
+    	//Utilisateur banni
+    	if (!$this->isUtilisateurBanni(array('idUtilisateur'=>$idUtilisateur))){
+    		$t = new Template('modules/archi/templates/utilisateur');
+    		$t->set_filenames(array(
+    				'general'=>'profile.tpl',
+    				'userStats'=>'statistics.tpl'
+    		));
+    		 
+    		//Presentation
+    		$presentation = $this->getUserPresentation($userId);
+    		 
+    		//Statistics
+    		$statistics =  $this->getProfileStatistics($userId);
+    		foreach ($statistics as $stat){
+    			$t->assign_block_vars('statistic', $stat);
+    		}
+    		 
+    		//Informations
+    		$info = $this->getUserInfos($userId);
+    		 
+    		//Formulaire
+    		$form = $this->getUserForm();
+    		 
+    		//Get contributions
+    		$arrayContributions  = $this->getArrayContribution($userId);
+    		 
+    		$contributions = $this->getAllContribution($userId);
+    
+    		$t->assign_vars(array(
+    				'userPresentation' => $presentation,
+    				'userFormInfo' => $form,
+    				'userInformations' =>$info,
+    				'userContributions'=> $contributions
+    		));
+    		 
+    		$t->assign_var_from_handle('userStatistics','userStats');
+    		$t->pparse('general');
+    	}
+    	else {
+    		$this->messages->addWarning("Cet utilisateur est banni");
+    		$this->messages->display();
+    		return false;
+    	}
+    	 
+    }
+    
 }
 ?>
