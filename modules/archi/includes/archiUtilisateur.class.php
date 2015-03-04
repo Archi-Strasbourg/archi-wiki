@@ -2854,17 +2854,48 @@ class archiUtilisateur extends config {
     	$nbEnregistrementsParPage=5;
     	$req = "
     	
-						SELECT c.idCommentaire
-						FROM commentaires c
-						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = c.idEvenementGroupeAdresse
-						LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
-						LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
-						WHERE c.idUtilisateur = '".$userId."' OR c.email='".$utilisateur->getMailUtilisateur($userId)."'
-								AND CommentaireValide=1
-								GROUP BY ha1.idAdresse,  ha1.idHistoriqueAdresse
-								HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-								ORDER BY c.date DESC
-								";
+    			
+    			SELECT * FROM (
+	    			SELECT c.idCommentaire as idCommentaire,
+	    					ha1.idAdresse as idAdresse,
+	    					ha1.idHistoriqueAdresse as idHistoriqueAdresse1,
+	    					ha2.idHistoriqueAdresse as idHistoriqueAdresse2,
+	    					c.date as dateCom	    			FROM commentaires c
+	    			LEFT JOIN _adresseEvenement ae ON ae.idEvenement = c.idEvenementGroupeAdresse
+	    			LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
+	    			LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
+	    			WHERE c.idUtilisateur = '".$userId."' OR c.email='".$utilisateur->getMailUtilisateur($userId)."'
+	    			AND CommentaireValide=1
+	    			GROUP BY ha1.idAdresse,  ha1.idHistoriqueAdresse
+	    			HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
+	    			ORDER BY c.date DESC
+
+    			) as tmp1
+    					UNION all
+
+	    		SELECT * FROM (
+	    			SELECT c.idCommentairesEvenement as idCommentaire,
+	    					ha1.idAdresse as idAdresse,
+	    					ha1.idHistoriqueAdresse as idHistoriqueAdresse1,
+	    					ha2.idHistoriqueAdresse as idHistoriqueAdresse2,
+	    					c.date as dateCom
+	    				
+   					FROM commentairesEvenement c
+					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = c.idEvenement
+					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+	    			LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
+	    			LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
+	    			WHERE c.idUtilisateur = '".$userId."' OR c.email='".$utilisateur->getMailUtilisateur($userId)."'
+	    			AND CommentaireValide=1
+	    			GROUP BY ha1.idAdresse,  ha1.idHistoriqueAdresse
+	    			HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
+	    			ORDER BY c.date DESC
+				) as tmp2
+    				GROUP BY idAdresse,  idHistoriqueAdresse1
+	    			HAVING idHistoriqueAdresse1 = max(idHistoriqueAdresse2)
+	    			ORDER BY dateCom DESC
+    							";
+    	debug($req);
     	$res = $this->connexionBdd->requete($req);
     	$nbEnregistrementTotaux=mysql_num_rows($res);
     	$arrayPaginationCommentaires=$paginationCommentaires->pagination(
@@ -2877,26 +2908,33 @@ class archiUtilisateur extends config {
     	);
     	
     	$req = "
-						SELECT distinct ha1.idAdresse as idAdresse, c.date as dateCommentaire, ha1.date as date,  ha1.numero,  ha1.idRue,  ha1.idSousQuartier,  ha1.idQuartier,  ha1.idVille, ha1.idIndicatif,
-    	
-						ha1.idAdresse as idAdresse,  ha1.numero,  ha1.idQuartier,  ha1.idVille, ind.nom,
-    	
+    			
+
+		    			SELECT * FROM (
+		    			
+		    			SELECT 
+		    			
+		    			distinct ha1.idAdresse as idAdresse, 
+		    			ha1.date as date,  
+		    			ha1.numero as numero, 
+		    			ha1.idRue as idRue,  
+		    			ha1.idSousQuartier as idSousQuartier, 
+		    			ha1.idVille as idVille , 
+		    			ha1.idIndicatif as idIndicatif,
+		    			ha1.idQuartier as idQuartier, 
+						ha1.idPays AS idPays,
+						ha1.idHistoriqueAdresse as idHistoriqueAdresse1,
+						ha2.idHistoriqueAdresse as idHistoriqueAdresse2,
+    					ha1.numero as numeroAdresse,
+    					ind.nom as nomIndicatif,
 						r.nom as nomRue,
 						sq.nom as nomSousQuartier,
 						q.nom as nomQuartier,
 						v.nom as nomVille,
 						p.nom as nomPays,
-						ha1.numero as numeroAdresse,
-						ha1.idRue,
 						r.prefixe as prefixeRue,
-						IF (ha1.idSousQuartier != 0,  ha1.idSousQuartier,  r.idSousQuartier) AS idSousQuartier,
-						IF (ha1.idQuartier != 0,  ha1.idQuartier,  sq.idQuartier) AS idQuartier,
-						IF (ha1.idVille != 0,  ha1.idVille,  q.idVille) AS idVille,
-						IF (ha1.idPays != 0,  ha1.idPays,  v.idPays) AS idPays,
-    	
-						ha1.numero as numero,
-						ha1.idHistoriqueAdresse,
-						ha1.idIndicatif as idIndicatif
+    					c.date as dateCommentaire, 
+    					c.idEvenementGroupeAdresse as idEvenementGA
     	
 						FROM commentaires c
 						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = c.idEvenementGroupeAdresse
@@ -2912,12 +2950,61 @@ class archiUtilisateur extends config {
 						LEFT JOIN pays p        ON p.idPays = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' , ha1.idPays , v.idPays )
     	
 						WHERE c.idUtilisateur = '".$userId."' OR c.email='".$utilisateur->getMailUtilisateur($userId)."'
+						AND CommentaireValide=1) as tmp1
+
+						UNION ALL
+								
+	
+								SELECT *
+								FROM (
+	    			SELECT 
+		    			
+		    			distinct ha1.idAdresse as idAdresse, 
+		    			ha1.date as date,  
+		    			ha1.numero as numero, 
+		    			ha1.idRue as idRue,  
+		    			ha1.idSousQuartier as idSousQuartier, 
+		    			ha1.idVille as idVille , 
+		    			ha1.idIndicatif as idIndicatif,
+		    			ha1.idQuartier as idQuartier, 
+						ha1.idPays AS idPays,
+						ha1.idHistoriqueAdresse as idHistoriqueAdresse1,
+						ha2.idHistoriqueAdresse as idHistoriqueAdresse2,
+						ha1.numero as numeroAdresse,
+    					ind.nom as nomIndicatif,
+						r.nom as nomRue,
+						sq.nom as nomSousQuartier,
+						q.nom as nomQuartier,
+						v.nom as nomVille,
+						p.nom as nomPays,
+						r.prefixe as prefixeRue,
+    					c.date as dateCommentaire, 
+						ee.idEvenement as idEvenementGA
+								
+						
+						FROM commentairesEvenement c
+						LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = c.idEvenement
+						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+						LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
+						LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
+						LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
+						LEFT JOIN rue r         ON r.idRue = ha1.idRue
+						LEFT JOIN sousQuartier sq    ON sq.idSousQuartier = if (ha1.idRue='0' and ha1.idSousQuartier!='0' , ha1.idSousQuartier , r.idSousQuartier )
+						LEFT JOIN quartier q        ON q.idQuartier = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' , ha1.idQuartier , sq.idQuartier )
+						LEFT JOIN ville v        ON v.idVille = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' , ha1.idVille , q.idVille )
+						LEFT JOIN pays p        ON p.idPays = if (ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' , ha1.idPays , v.idPays )
+						WHERE c.idUtilisateur = '".$userId."' OR c.email='".$utilisateur->getMailUtilisateur($userId)."'
 						AND CommentaireValide=1
-						GROUP BY ha1.idAdresse,  ha1.idHistoriqueAdresse
-						HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-						ORDER BY c.date DESC
+								
+						)
+								AS tmp2
+								
+						GROUP BY idAdresse,  idHistoriqueAdresse1, idEvenementGA
+						HAVING idHistoriqueAdresse1 = max(idHistoriqueAdresse2)
+						ORDER BY dateCommentaire DESC
+								
+								
 								";
-    	
     	$req = $paginationCommentaires->addLimitToQuery($req);
     	
     	$res = $this->connexionBdd->requete($req);
