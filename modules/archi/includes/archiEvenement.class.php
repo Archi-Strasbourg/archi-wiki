@@ -204,8 +204,6 @@ class archiEvenement extends config
 	// **********************************************************************************************************************************************************************
 	public function ajouter()
 	{
-		debug($this->variablesGet);
-		debug($this->variablesPost);
 		$html = '';
 		$erreur = array();
 		$tabForm = array();
@@ -269,7 +267,6 @@ class archiEvenement extends config
 						AND he1.idTypeEvenement='".$idTypeEvenement."'
 						GROUP BY he1.idEvenement, he1.idEvenement
 						";
-				debug($sqlVerificationDoublon);
 
 				$res = $this->connexionBdd->requete($sqlVerificationDoublon);
 
@@ -300,7 +297,6 @@ class archiEvenement extends config
 						$sql = "INSERT INTO evenements (titre, description, dateDebut, dateFin, idSource, idUtilisateur, idTypeStructure, idTypeEvenement,dateCreationEvenement)
 								VALUES ('', '', '', '', ".$idSource.", ".$idUtilisateur.", 0, '".$this->getIdTypeEvenementGroupeAdresse()."', now())";
 
-						debug($sql);
 						$this->connexionBdd->requete($sql);
 						$tabForm['evenements']['value'][] = $idEvenement;
 						
@@ -368,13 +364,11 @@ class archiEvenement extends config
 					
 					
 					$idSousEvenement=$this->connexionBdd->getLastId();
-					debug($sqlHistoriqueEvenement);
 					
 					
 					if (!empty($tabForm['courant']['value']))
 					{
 						$sqlEvenementCourantArchitectural = "INSERT INTO _evenementCourantArchitectural (idCourantArchitectural, idEvenement) VALUES ";
-						debug($sqlEvenementCourantArchitectural);
 						foreach ( array_unique($tabForm['courant']['value']) AS $idCourant)
 						{
 							$sqlEvenementCourantArchitectural .= '('.$idCourant.', '.$idSousEvenement.'),';
@@ -392,7 +386,6 @@ class archiEvenement extends config
 							$sqlEvenementPersonne .= '('.$idPersonne.', '.$idSousEvenement.'),';
 						}
 						$sqlEvenementPersonne = pia_substr( $sqlEvenementPersonne, 0, -1);
-						debug($sqlEvenementPersonne);
 						$this->connexionBdd->requete($sqlEvenementPersonne);
 					}
 					
@@ -5171,10 +5164,6 @@ class archiEvenement extends config
 			
 			$this->messages->addConfirmation("Commentaire enregistré !");
 			//header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#evenement'.$this->variablesPost['idEvenementGroupeAdresse']);
-			debug($this->variablesPost);
-			debug($this->variablesGet);
-			
-			
 			
 			switch ($this->variablesPost['type']){
 				case 'evenement':
@@ -5340,20 +5329,6 @@ class archiEvenement extends config
 
 		$fieldsCommentaires['commentaire']['htmlCodeBeforeField'] = $bbMiseEnFormBoutons;
 
-		/*
-		$titre="";
-		debug($fieldsCommentaires);
-		switch ($type){
-			case 'evenement':
-				$titre = _("Ajouter un commentaire concernant l'événement");
-				break;
-			case 'personne':
-				$titre = _("Ajouter un commentaire concernant la personne");
-				break;
-			default: 
-				$titre = _("Ajouter un commentaire");
-		}		
-		*/
 		$tabCommentaires = array(   'titrePage'=>$titre,
 				'formName'=>'formAjoutCommentaireEvenement',
 				'formAction'=>$this->creerUrl('enregistreCommentaireEvenement','',array()),

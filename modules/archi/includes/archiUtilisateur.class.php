@@ -3118,15 +3118,12 @@ class archiUtilisateur extends config {
     			$userId = $auth->getIdUtilisateur();
     		}
     		else{
-    			debug($userId);
-    			 
     			$this->messages->addError("Identifiant d'utilisateur incorrect");
     			$this->messages->display();
     			return false;
     		}
     	}
     	
-    	 
     	
     	//Utilisateur banni
         if (!$this->isUtilisateurBanni(array('idUtilisateur'=>$idUtilisateur))){
