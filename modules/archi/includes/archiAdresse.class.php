@@ -18,23 +18,12 @@ class archiAdresse extends ArchiContenu
 	private $nomSousQuartier= '';
 	private $nomPays    = '';
 
-	private $T_PAYS = array();
-	private $T_VILLE = array();
-	private $T_QUARTIER = array();
-	private $T_S_QUARTIER = array();
-	private $T_RUE = array();
-
 	private $microstart;
 
 	function __construct()
 	{
 		parent::__construct();
 		//$this->microstart=microtime(true);
-		$T_RUE = $locations['rue'];
-		$T_S_QUARTIER = $locations['sousQuartier'];
-		$T_QUARTIER = $locations['quartier'];
-		$T_VILLE = $locations['ville'];
-		$T_PAYS = $locations['pays'];
 	}
 
 	function __destruct()
@@ -509,7 +498,7 @@ class archiAdresse extends ArchiContenu
 				'idEvenementGroupeAdresseCourant'=>$idEvenement
 		));
 
-			//Getting neighbors addresses 
+		//Getting neighbors addresses 
 		$arrayEncartAdresses = $this->getArrayEncartAdressesImmeublesAvantApres(array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
 		$urlAutreBiens = $this->getArrayRetourLiensVoirBatiments($idAdresse);
 		
@@ -525,6 +514,7 @@ class archiAdresse extends ArchiContenu
 		));
 		$t->assign_block_vars('sommaireEvenements', array());
 
+		
 		//Preparing the loop on all related event to the current address
 		$requeteIdEvenements = "
 				SELECT DISTINCT ee.idEvenementAssocie as idEvenement
@@ -538,7 +528,6 @@ class archiAdresse extends ArchiContenu
 		
 		
 		//Add actions buttons
-		
 		//Ajouter sous evenement 
 		$t->assign_block_vars('actionsSommaire',
 				array(

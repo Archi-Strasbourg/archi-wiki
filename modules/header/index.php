@@ -293,14 +293,17 @@ else {
     }
     $t->assign_block_vars('linkConnected', array(
     		'authLinkOneClass'=> ' authLinkOneClass forgetPasswordLabel',
-    		'authLinkUrl'=> $config->creerUrl('', 'profilPublique', array()),
+    		'authLinkUrl'=> $config->creerUrl('', 'profilPrive', array()),
     		'authLinkLabel' => _("Mon Profil")
     ));
+    
+    /*
     $t->assign_block_vars('linkConnected', array(
     		'authLinkOneClass'=> ' authLinkOneClass forgetPasswordLabel',
     		'authLinkUrl'=> $config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'monArchi')),
     		'authLinkLabel' => _("Mon Archi")
     ));
+    */
     
     $t->assign_block_vars('linkConnected', array(
     		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',

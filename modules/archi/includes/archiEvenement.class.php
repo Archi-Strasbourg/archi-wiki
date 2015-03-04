@@ -6856,6 +6856,8 @@ class archiEvenement extends config
 		$result = $this->connexionBdd->requete($requete);
 		$fetch = mysql_fetch_assoc($result);
 	
+		$idEvenementGroupeAdresse = $fetch['idEvenementGroupeAdresse'];
+		
 		//History processing
 	
 		$requeteHistory ="SELECT idHistoriqueEvenement from historiqueEvenement where idEvenement = ".$idEvenement;
@@ -6899,7 +6901,6 @@ class archiEvenement extends config
 		$metier="";
 		$arrayPersonne = array();
 		while( $res = mysql_fetch_object($rep)){
-			$idEvenementGroupeAdresse = $fetch['idEvenementGroupeAdresse'];
 			$personne=array();
 			if(isset($res->metier) && $res->metier!='')	{
 				$metier = $res->metier.' : ';
