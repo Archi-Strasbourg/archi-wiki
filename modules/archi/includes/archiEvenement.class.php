@@ -5265,7 +5265,6 @@ class archiEvenement extends config
 		//$e = new archiEvenement();
 		//$idHistoriqueAdresse = $e->getIdEvenementGroupeAdresseFromIdEvenement($idHistoriqueAdresse);
 
-
 		$fieldsCommentaires["idEvenementGroupeAdresse"]['default'] = $idHistoriqueAdresse;
 		// si un utilisateur est connecté , on renseigne directement ces infos , mais on lui laisse la possibilité de modifier
 		$authentification = new archiAuthentification();
@@ -5362,7 +5361,9 @@ class archiEvenement extends config
 				'email'                     =>array('type'=>'email','default'=>'','htmlCode'=>"style='width:250px;'",'libelle'=>_("Votre e-mail :"),'required'=>false,'error'=>'','value'=>''),
 				'commentaire'               =>array('type'=>'bigText','default'=>'','htmlCode'=>"rows=5 cols=50",'libelle'=>_("Votre commentaire :"),'required'=>true,'error'=>'','value'=>''),
 				'idEvenementGroupeAdresse'  => array('type'=>'hidden','default'=>'','htmlCode'=>'','libelle'=>'','required'=>false,'error'=>'','value'=>''),
-				'captcha'                   =>array('type'=>'captcha','default'=>'','htmlCode'=>'','libelle'=>'','required'=>true,'error'=>'','value'=>'')
+				'captcha'                   =>array('type'=>'captcha','default'=>'','htmlCode'=>'','libelle'=>'','required'=>true,'error'=>'','value'=>''),
+				'type'						=>array('type'=>'hidden','default'=>$type,'htmlCode'=>'','libelle'=>'','required'=>false,'error'=>'','value'=>'')
+				
 				);
 				break;
 					
@@ -6917,7 +6918,7 @@ class archiEvenement extends config
 		
 		//Commentaires
 		$listeCommentaires = $this->getListCommentairesEvenements( $idEvenement);
-		$formulaireCommentaire = $this->getFormulaireCommentairesHistorique($idEvenement,$this->getCommentairesFields());
+		$formulaireCommentaire = $this->getFormulaireCommentairesHistorique($idEvenement,$this->getCommentairesFields('evenement'));
 
 		//Adresses liees processing
 		$adressesLieesHTML = $this->getAdressesLieesAEvenement(array('modeRetour'=>'affichageSurDetailEvenement','idEvenement'=>$idEvenement));
