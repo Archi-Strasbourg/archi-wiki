@@ -3107,7 +3107,7 @@ class archiUtilisateur extends config {
     }
     
     
-    public function getPublicProfil($userId){
+    public function getPublicProfil($id){
     	$userId=0;
     	if(isset($id) && $id!=''){
     		$userId = $id;
@@ -3118,13 +3118,15 @@ class archiUtilisateur extends config {
     			$userId = $auth->getIdUtilisateur();
     		}
     		else{
+    			debug($userId);
+    			 
     			$this->messages->addError("Identifiant d'utilisateur incorrect");
     			$this->messages->display();
     			return false;
     		}
     	}
     	
-    	
+    	 
     	
     	//Utilisateur banni
         if (!$this->isUtilisateurBanni(array('idUtilisateur'=>$idUtilisateur))){
@@ -3179,16 +3181,16 @@ class archiUtilisateur extends config {
     
     
     public function getPrivateProfil(){
-    	$auth = new ArchiAuthentification();
-    	if($auth->estConnecte()){
-    		$userId = $auth->getIdUtilisateur();
-    	}
-    	else{
-    		$this->messages->addError("Identifiant d'utilisateur incorrect");
-    		$this->messages->display();
-    		return false;
-    	}
-
+    		$auth = new ArchiAuthentification();
+    		if($auth->estConnecte()){
+    			$userId = $auth->getIdUtilisateur();
+    		}
+    		else{
+    			$this->messages->addError("Identifiant d'utilisateur incorrect");
+    			$this->messages->display();
+    			return false;
+    		}
+    	 
     	//Utilisateur banni
     	if (!$this->isUtilisateurBanni(array('idUtilisateur'=>$idUtilisateur))){
     		$t = new Template('modules/archi/templates/utilisateur');
