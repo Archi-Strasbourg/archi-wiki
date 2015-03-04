@@ -136,44 +136,33 @@ if (isset($_GET['archiAction'])) {
         	*/
         	break;
     case 'validAuthentification':
-        $connexionUtilisateur= new archiAuthentification();
-        $login=isset($_POST['archiLogin'])?$_POST['archiLogin']:"";
-        $mdp=isset($_POST['archiMdp'])?$_POST['archiMdp']:"";
-        $cookie=isset($_POST['cookie'])?$_POST['cookie']:"";
-        if (isset($_GET['assertion'])) {
-            $connexionUtilisateur->browserID($_GET['assertion']);
-            echo $connexionUtilisateur->erreurs->afficher();
-        } else {
-            $connexionUtilisateur->connexion($login, $mdp, $cookie);
-            echo $connexionUtilisateur->erreurs->afficher();
-        }
-        if (isset($_GET['archiActionPrecedente']) 
-            && ($_GET['archiActionPrecedente']==''
-            || $_GET['archiActionPrecedente']=='validAuthentification'
-            || $_GET['archiActionPrecedente']=='deconnexion')
-            && !$connexionUtilisateur->erreurs->existe()
-        ) {
-            if (isset($_GET['archiAffichage'])
-                && $_GET['archiAffichage']=='ajoutNouveauDossier'
-            ) {
-                $_GET['archiAffichage'] = 'ajoutNouveauDossier';
-            } elseif (isset($_GET['archiAffichage'])
-                && $_GET['archiAffichage']=='imageDetail'
-            ) {
-                $_GET['archiAffichage'] = 'imageDetail';
-            } elseif (isset($_GET['archiAffichage']) 
-                && $_GET['archiAffichage']!='adresseDetail'
-            ) {
-                $_GET['archiAffichage'] = 'afficheAccueil';
-                $_GET['modeAffichage'] = 'monArchi';
-            } elseif (!isset($_GET['archiAffichage'])) {
-                $_GET['archiAffichage'] = 'afficheAccueil';
-                $_GET['modeAffichage'] = 'monArchi';
-            }
-        }
-        break;
+    	$connexionUtilisateur= new archiAuthentification();
+    	$login=isset($_POST['archiLogin'])?$_POST['archiLogin']:"";
+    	$mdp=isset($_POST['archiMdp'])?$_POST['archiMdp']:"";
+    	$cookie=isset($_POST['cookie'])?$_POST['cookie']:"";
+    	if (isset($_GET['assertion'])) {
+    		$connexionUtilisateur->browserID($_GET['assertion']);
+    		echo $connexionUtilisateur->erreurs->afficher();
+    	} else {
+    		$connexionUtilisateur->connexion($login, $mdp, $cookie);
+    		echo $connexionUtilisateur->erreurs->afficher();
+    	}
+    	if (isset($_GET['archiActionPrecedente']) 
+    			&& ($_GET['archiActionPrecedente']=='' || $_GET['archiActionPrecedente']=='validAuthentification'	|| $_GET['archiActionPrecedente']=='deconnexion')
+    			&& !$connexionUtilisateur->erreurs->existe()) {
+    		if (isset($_GET['archiAffichage']) && $_GET['archiAffichage']=='ajoutNouveauDossier') {
+    			$_GET['archiAffichage'] = 'ajoutNouveauDossier';
+    		} elseif (isset($_GET['archiAffichage']) && $_GET['archiAffichage']=='imageDetail') {
+    			$_GET['archiAffichage'] = 'imageDetail';
+    		} elseif (isset($_GET['archiAffichage']) && $_GET['archiAffichage']!='adresseDetail') {
+    			$_GET['archiAffichage'] = 'profilPublique';
+    		} elseif (!isset($_GET['archiAffichage'])) {
+    			$_GET['archiAffichage'] = 'profilPublique';
+    		}
+    	}
+    	break;
     }
-    
+
     /* archiActionPrecedente permet de recuperer l'action precedente
      * pour le formulaire d'authentification
      * et permettra de lancer l'action requerant une authentification

@@ -293,7 +293,7 @@ else {
     }
     $t->assign_block_vars('linkConnected', array(
     		'authLinkOneClass'=> ' authLinkOneClass forgetPasswordLabel',
-    		'authLinkUrl'=> $config->creerUrl('', 'afficheAccueil', array('modeAffichage'=>'profil')),
+    		'authLinkUrl'=> $config->creerUrl('', 'profilPublique', array()),
     		'authLinkLabel' => _("Mon Profil")
     ));
     $t->assign_block_vars('linkConnected', array(
@@ -312,7 +312,6 @@ else {
     if ($utilisateur->isAuthorized('affiche_menu_admin', $authentification->getIdUtilisateur())) {
         $t->assign_block_vars('afficheAdministrationMenu', array());
     }
-    //$labelConnexion=_("Connecté");
 }
 
 $t->assign_vars(array(
