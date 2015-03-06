@@ -127,7 +127,8 @@
 	<!-- END evenement -->
 </div>
 
-
+{listeCommentairesAdresse}
+{formulaireCommentaireAdresse}
 
 <!-- BEGIN formEvenement -->
 <form action='' name='formulaireEvenement' method='POST' enctype='multipart/form-data' id='formulaireEvenement'>

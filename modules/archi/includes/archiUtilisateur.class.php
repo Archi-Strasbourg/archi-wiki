@@ -2581,16 +2581,6 @@ class archiUtilisateur extends config {
     private function getUserInfos(){
     	$calque = new calqueObject();
     	 
-    	$titre = _("En tant qu'utilisateur vous pouvez :");	
-    	$urlNouveauDossier = $this->creerUrl('', 'ajoutNouveauDossier');
-    	$onMouseOverNouveauDossier = $calque->getJsContextHelpOnMouseOver(_("En ajoutant votre adresse vous contribuez au développement du site. Mais d\'abord qu\'entend t-on par \"votre adresse\" ? Et bien cela peut être l\'immeuble ou la maison que vous occupez. Un immeuble que vous aimez mais que vous ne trouvez pas sur le site. Avec le développement des appareils photo numériques,  il devient très simple de prendre une photo,  et de la copier sur l\'ordinateur. Ajouter une adresse dans www.archi-strasbourg.org ne prend pas plus de 20 secondes. Copier la photo 10 secondes de plus..."));
-    	$onMouseOverPhotos = $calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des photos afin d'illustrer une adresse."));
-    	$onMouseOverEvenement =$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des évènements sur toute adresse qu'un autre utilisateur a créée."));
-    	$onMouseOverMail =$calque->getJsContextHelpOnMouseOver(_("En activant votre alerte mail sur les adresses,  vous serez prevenu de toute modification sur une adresse dont vous êtes l'auteur"));
-    	$onMouseOverNvlAdr = $calque->getJsContextHelpOnMouseOver(_("En acceptant de recevoir les mails concernant les nouvelles adresses,  vous serez prévenu de l'ajout d'une nouvelle adresse sur le site."));
-    	$onMouseOverCommentaire = $calque->getJsContextHelpOnMouseOver(_("Grâce à l'alerte par mail sur les commentaires,  vous pouvez débattre avec les autres utilisateurs."));
-    	$onMouseOut = $calque->getJSContextHelpOnMouseOut();
-
     	$auth = new ArchiAuthentification();
     	if($auth->estConnecte()){
     	return "<b>"._("En tant qu'utilisateur vous pouvez :")."</b><ul>
@@ -2895,7 +2885,6 @@ class archiUtilisateur extends config {
 	    			HAVING idHistoriqueAdresse1 = max(idHistoriqueAdresse2)
 	    			ORDER BY dateCom DESC
     							";
-    	debug($req);
     	$res = $this->connexionBdd->requete($req);
     	$nbEnregistrementTotaux=mysql_num_rows($res);
     	$arrayPaginationCommentaires=$paginationCommentaires->pagination(
@@ -2908,8 +2897,6 @@ class archiUtilisateur extends config {
     	);
     	
     	$req = "
-    			
-
 		    			SELECT * FROM (
 		    			
 		    			SELECT 
@@ -2954,10 +2941,10 @@ class archiUtilisateur extends config {
 
 						UNION ALL
 								
-	
-								SELECT *
-								FROM (
-	    			SELECT 
+
+						SELECT *
+						FROM (
+	    				SELECT 
 		    			
 		    			distinct ha1.idAdresse as idAdresse, 
 		    			ha1.date as date,  
@@ -3321,5 +3308,58 @@ class archiUtilisateur extends config {
     	 
     }
     
+    public function displayDiff($old,$new){
+    	$utils = new archiUtils();
+    	$result = $utils->monDiff($old, $new);
+    	 
+    	$t = new Template('modules/archi/templates/');
+    	$t->set_filenames(array('diff' => "utils/diff.tpl"));
+    	 
+    	$t->assign_vars($result);
+    	 
+    	ob_start();
+    	$t->pparse('diff');
+    	$html = ob_get_contents();
+    	ob_end_clean();
+    	 
+    	$html= "<br/><p>".$result['old']. " -> ".$result['new']."</p>";
+    	
+    	return $html;
+    }
+    
+    public function diff_test(){
+    	$firstString = "This is a test";
+    	$lastString = "This test is the test new test";
+    	
+    	$utils = new archiUtils();
+    	//$result = $utils->get_decorated_diff($firstString,$lastString);
+    	$result = $utils->monDiff($firstString, $lastString);
+    	
+    	
+    	$f1 = "This test is a test test";
+    	$f2 = "This a test for";
+    	    	
+    	$test = $utils->monDiff($f1, $f2);
+    	
+    	
+    	
+    	$t = new Template('modules/archi/templates/');
+    	$t->set_filenames(array('diff' => "utils/diff.tpl"));
+    	
+    	$t->assign_vars($result);
+    	
+    	ob_start();
+    	$t->pparse('diff');
+    	$html = ob_get_contents();
+    	ob_end_clean();
+    	
+    	return $html;
+    	 
+    	
+    	
+    	
+    	//return $result['old'] . " -> " . $result['new'];
+    	return $result;
+    }
 }
 ?>

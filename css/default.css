@@ -2340,3 +2340,20 @@ Allow to display description on hover
 .interestList{
 	margin-bottom: 30px;
 }
+
+.diff{
+	width: 100%;
+}
+.diff div{
+	width: 40%;
+	float: left;
+	border: 1px solid black;
+	box-sizing: border-box;
+	margin-right: 5%;
+}
+ins{
+	background-color: #ccffcc;
+}
+del{
+	background-color: #ffcccc;
+}

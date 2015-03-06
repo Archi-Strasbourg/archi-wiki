@@ -651,8 +651,13 @@ class archiAdresse extends ArchiContenu
 		}
 		
 		
+		$listeCommentaires=$this->getListeCommentaires($idEvenementGroupeAdresse);
+		$formulaireCommentaire=$this->getFormulaireCommentaires($idEvenementGroupeAdresse,$this->getCommentairesFields());
+		
 		$t->assign_vars(array(
-				'title' => $title
+				'title' => $title,
+				'listeCommentairesAdresse' => $listeCommentaires,
+				'formulaireCommentaireAdresse' => $formulaireCommentaire
 		));
 		
 		ob_start();
@@ -1851,8 +1856,6 @@ class archiAdresse extends ArchiContenu
 			{
 				// on recherche les evenements du groupe d'adresses
 				$listeEvenementsGroupeAdresse = implode("','",$arrayListeEvenementsGroupeAdresse);
-				//debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
-				//debug($arrayListeEvenementsGroupeAdresse);
 				$queryEvenementAssocies = "
 						SELECT idEvenementAssocie FROM _evenementEvenement WHERE idEvenement in ('".$listeEvenementsGroupeAdresse."')
 								";
@@ -1974,9 +1977,6 @@ class archiAdresse extends ArchiContenu
 			}
 			if(count($arrayListeEvenementsGroupeAdresse)>0)
 			{
-				//debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
-				//debug($arrayListeEvenementsGroupeAdresse);
-				
 				// on recherche les evenements du groupe d'adresses
 				$listeEvenementsGroupeAdresse = implode("','",$arrayListeEvenementsGroupeAdresse);
 				$queryEvenementAssocies = "
@@ -2113,9 +2113,6 @@ class archiAdresse extends ArchiContenu
 
 			if(count($arrayListeEvenementsGroupeAdresse)>0)
 			{
-				//debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
-				//debug($arrayListeEvenementsGroupeAdresse);
-				
 				// on recherche les evenements du groupe d'adresses
 				$listeEvenementsGroupeAdresse = implode("','",$arrayListeEvenementsGroupeAdresse);
 				$queryEvenementAssocies = "
@@ -2235,9 +2232,6 @@ class archiAdresse extends ArchiContenu
 
 			if(count($arrayListeEvenementsGroupeAdresse)>0)
 			{
-				//debug("A MODIFIER : les 'id evenement groupe adresse' n'éxistent plus, il n'y a plus que des idEvenement");
-				//debug($arrayListeEvenementsGroupeAdresse);
-				
 				// on recherche les evenements du groupe d'adresses
 				$listeEvenementsGroupeAdresse = implode("','",$arrayListeEvenementsGroupeAdresse);
 				$queryEvenementAssocies = "
@@ -2501,8 +2495,6 @@ class archiAdresse extends ArchiContenu
 				$arrayCritereListeIdEvenementPersonne=array();
 				if(isset($this->variablesGet['selection']) && $this->variablesGet['selection']=='personne')
 				{
-					//debug("Il y aura surement un probleme ici. Wait for it !");
-					//debug($arrayListeEvenementsAssocies);
 					// voyons d'abord s'il y a des photos sur l'evenement concerné par l'architect , sinon ce n'est pas la peine d'ajouter ce critere a la recherche de la photo
 					$reqIsPhotoSurEvenement = "
 							SELECT idEvenementAssocie as idEvenementPhotoPersonne
@@ -5415,8 +5407,6 @@ class archiAdresse extends ArchiContenu
 
 		));
 
-		//debug($modeAffichageList);
-		 
 		switch($modeAffichageListe)
 		{
 			case 'parQuartiers':
@@ -8308,7 +8298,6 @@ class archiAdresse extends ArchiContenu
         
         $reqEvenements=$reqEvenementsCustom;
                 
-        //debug($reqEvenements);
         $resEvenements = $this->connexionBdd->requete($reqEvenements);
                 
         $tabAdressesEvenementsAffichees=array(); // tableau contenant les idAdresses qu'il ne faudra pas reafficher 
@@ -8647,7 +8636,6 @@ class archiAdresse extends ArchiContenu
         $reqAdresses=$reqAdressesOriginal;
         
         
-        //debug($reqAdresses);
         $resAdresses = $this->connexionBdd->requete($reqAdresses);
         $image = new archiImage();
         $isImageAdresses=false;
@@ -9417,9 +9405,7 @@ class archiAdresse extends ArchiContenu
         
         $bbCode = new bbCodeObject();
         
-
         $html.= $formulaire->afficherFromArray($tabCommentaires);
-        
     
         return $html;
     }
@@ -9436,27 +9422,24 @@ class archiAdresse extends ArchiContenu
         $t->set_filenames((array('listeCommentaires'=>'listeCommentaires.tpl')));
         
 
-                $req = "SELECT c.idCommentaire as idCommentaire,c.nom as nom,c.prenom as prenom,c.email as email,DATE_FORMAT(c.date,'"._("%d/%m/%Y à %kh%i")."') as dateF,c.commentaire as commentaire,c.idUtilisateur as idUtilisateur, u.urlSiteWeb as urlSiteWeb
-                FROM commentaires c
-                LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
-                WHERE c.idEvenementGroupeAdresse = '".$idEvenementGroupeAdresse."'
-                AND CommentaireValide=1
-                ORDER BY date DESC
-        ";
-        
-        
-        
+        $req = "SELECT c.idCommentaire as idCommentaire,c.nom as nom,c.prenom as prenom,c.email as email,DATE_FORMAT(c.date,'"._("%d/%m/%Y à %kh%i")."') as dateF,c.commentaire as commentaire,c.idUtilisateur as idUtilisateur, u.urlSiteWeb as urlSiteWeb
+        		FROM commentaires c
+        		LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
+        		WHERE c.idEvenementGroupeAdresse = '".$idEvenementGroupeAdresse."'
+        				AND CommentaireValide=1
+        				ORDER BY date DESC
+        				";
+
+
         
         $res = $this->connexionBdd->requete($req);
-
-        if(mysql_num_rows($res)==0)
+        if(mysql_num_rows($res)>0)
         {
         
 	        $t->assign_vars(array(
 	        		'tableHtmlCode'=>"  ",
 	        		'titre'=>_("Liste des commentaires concernant l'adresse")
 	        ));
-	    
 	        
 	        $authentification = new archiAuthentification();
 	        
@@ -9607,7 +9590,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             		$e = new archiEvenement();
             		$idEvenementGroupeAdresse = $e->getIdEvenementGroupeAdresseFromIdEvenement($fetch['idEvenementGroupeAdresse']);
             		
-            		//debug($idEvenementGroupEvenement);
             		$resAdresses = $this->getAdressesFromEvenementGroupeAdresses($idEvenementGroupeAdresse);
             		$arrayIntituleAdresses = array();
             		while($fetchAdresses = mysql_fetch_assoc($resAdresses))
@@ -9615,9 +9597,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             			$arrayIntituleAdresses[]=$this->getIntituleAdresse($fetchAdresses);
             		}
             		$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
-            		//debug($arrayIntituleAdresses);
             	}
-            	//debug($fetch);
             	
                 
                 $imageSurListeTousLesCommentaires="";
@@ -9679,8 +9659,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         
         if(count($error)==0)
         {
-            
-            
             $idUtilisateur=0;
             if($auth->estConnecte())
             {
@@ -9790,12 +9768,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $_POST['prenom']="";
             
             $this->variablesGet['archiIdEvenementGroupeAdresse'] = $this->variablesPost['idEvenementGroupeAdresse'];
-            echo $this->afficherDetail($idAdresse);
+            $idAdresse=$this->getIdAdresseFromIdEvenementGroupeAdresse($this->variablesGet['archiIdEvenementGroupeAdresse']);
+            
+            $this->messages->addConfirmation("Commentaire enregistré !");
+            $this->messages->display();
+            header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$this->variablesGet['archiIdEvenementGroupeAdresse']), false, false));
+            
         }
         else
         {
-            $this->erreurs->ajouter('Il y a une erreur dans le formulaire.');
-            echo $this->erreurs->afficher();
+        	$this->messages->addError("Il y a une erreur dans le formulaire.");
+        	$this->messages->display();
             echo $this->getListeCommentaires($this->variablesPost['idEvenementGroupeAdresse']);
             echo $this->getFormulaireCommentaires($this->variablesPost['idEvenementGroupeAdresse'],$fieldsCommentaires);
         }
@@ -13896,8 +13879,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         {
         	
             $bbCode = new bbCodeObject();
-            
-            debug($bbCode);
             
             $resParcours = $this->getMysqlParcours(array('sqlWhere'=>"AND idParcours='".$idParcours."'"));
 
