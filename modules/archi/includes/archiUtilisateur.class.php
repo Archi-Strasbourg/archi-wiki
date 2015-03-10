@@ -2775,8 +2775,6 @@ class archiUtilisateur extends config {
     	}
     	
     	
-    	//ORDER BY he1.idEvenement
-    	debug($req);
     	$res = $this->connexionBdd->requete($req);
     	$nbEnregistrementTotaux = mysql_num_rows($res);
     	
