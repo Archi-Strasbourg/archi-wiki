@@ -535,20 +535,24 @@ class archiEvenement extends config
 				}
 
 				// *************************************************************************************************************************************************************
-				
-				
-				
-				$adresse = new archiAdresse();
-				
-				$idGroupeAdresse = $this->getParent($idSousEvenement);
-				$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idGroupeAdresse);
-				$url= $this->creerUrl('', '',
-    						array(
-    								'archiAffichage'=>'adresseDetail',
-    								"archiIdAdresse"=>$idAdresse,
-    								"archiIdEvenementGroupeAdresse"=>$idGroupeAdresse
-    						));
-				header("Location: ".htmlspecialchars_decode($url));
+
+				if ($idPerson=archiPersonne::isPerson($idEvenementGroupeAdresse)) {
+					header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$idPerson), false, false));
+				}
+				else{
+					$adresse = new archiAdresse();
+					$idGroupeAdresse = $this->getParent($idSousEvenement);
+					$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idGroupeAdresse);
+
+					$url= $this->creerUrl('', '',
+							array(
+									'archiAffichage'=>'adresseDetail',
+									"archiIdAdresse"=>$idAdresse,
+									"archiIdEvenementGroupeAdresse"=>$idGroupeAdresse
+							));
+					header("Location: ".htmlspecialchars_decode($url));
+				}
+
 			}
 		}
 		else
@@ -7230,7 +7234,7 @@ class archiEvenement extends config
 				";
 		$result = $this->connexionBdd->requete($requete);
 		while($fetch = mysql_fetch_assoc($result)){
-			debug($fetch);	
+			//debug($fetch);	
 		}
 	}
 }

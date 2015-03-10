@@ -459,7 +459,6 @@ class archiAdresse extends ArchiContenu
 		$t->set_filenames(array('index'=>'index.tpl'));
 		$title = $this->displayTitle();
 		
-		
 		//Init auth var to check furtherly user state (connected or not)
 		$authentification = new archiAuthentification();
 		
