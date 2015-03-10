@@ -87,9 +87,8 @@ delimiter ;
 
 delimiter //
 CREATE TRIGGER trig_historique_evenement_insert
-BEFORE INSERT ON evenements FOR EACH ROW
+AFTER INSERT ON evenements FOR EACH ROW
   BEGIN
-    SET NEW.dateCreationEvenement = NOW();
     INSERT INTO historiqueEvenement
       ( idEvenement ,
 	idTypeStructure,

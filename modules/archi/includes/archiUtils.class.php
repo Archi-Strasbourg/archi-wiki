@@ -229,26 +229,85 @@ class archiUtils extends config{
 		return $html;
 	}
 	
-	public function monDiff($old,$new){
-		//Split strings in array
-		$oldArray = explode(' ' , $old);
-		$newArray = explode(' ' , $new);
 	
-		//debug(array($oldArray,$newArray));
+	public function multilineDiff($old,$new){
 		
-		//Get difference between 2 texts
-		$del = array_diff($oldArray, $newArray);
-		$ins= array_diff($newArray,$oldArray);
+		$tmp1 = str_replace("\r", '', $old);
+		$tmp2 = str_replace("\r", '', $new);
+		
+		
+		$oldArray = explode(PHP_EOL,$tmp1);
+		$newArray =  explode(PHP_EOL,$tmp2);
+		
+		
+		/*
+		$oldArray = preg_split('/[\r\n]+/', $old);
+		$newArray = preg_split('/[\r\n]+/', $new);
+		*/
+		
+		$inter = array_intersect($oldArray, $newArray);
+		debug(array('intersect'=>$inter));
+		/*
+		$del = array_diff(array_merge($oldArray, $newArray), array_intersect($oldArray, $newArray)); 
+		$ins = array_diff(array_merge($newArray,$oldArray), array_intersect($newArray,$oldArray));
+		*/
+
+		$del = array_diff($oldArray,$newArray);
+		$ins = array_diff($newArray,$oldArray);
+				//array_diff(array_merge($left, $right), array_intersect($left, $right));
+		
 
 		
+		
+		debug(array('oldArray'=>$oldArray, 'newArray'=>$newArray));
+		debug(array('del'=>$del, 'ins'=>$ins, 'intersec' => $inter));
+	}
+	
+	
+	public function monDiff($old,$new){
+		//Split strings in array
+		$tmpOld = str_replace("\r", '', $old);
+		$tmpNew = str_replace("\r", '', $new);
+		$tmpOld = str_replace("\n", ' ', $tmpOld);
+		$tmpNew = str_replace("\n", ' ', $tmpNew);
+		
+		debug(array(
+			'old'=>$old,
+			'new'=>$new
+		));
+		
+		
+		$oldArray = explode(' ',$old);
+		$newArray =  explode(' ',$new);
+		
+		$tmpOldArray = explode(' ',$tmpOld);
+		$tmpNewArray =  explode(' ',$tmpNew);
+		
+		
+		/*
+		debug(array(
+		'oldArray'=>$oldArray,
+		'tmpOldArray'=>$tmpOldArray,
+		'newArray'=>$newArray,
+		'tmpNewArray'=>$tmpNewArray
+		));
+		*/
+		
+		
+		//Get difference between 2 texts
+		$del = array_diff($tmpOldArray, $tmpNewArray);
+		$ins= array_diff($tmpNewArray,$tmpOldArray);
+
+		//debug(array('old'=> $oldArray, 'new'=> $newArray,'del'=>$del , 'ins'=>$ins));
+		debug(array('del'=>$del , 'ins'=>$ins));
 		
 		/*
 		 * Ocurrence process 
 		 * 
 		 * Still need to process  the duplicate value also present in the other string
 		 */
-		$occurOld = array_count_values($oldArray);
-		$occurNew = array_count_values($newArray);
+		$occurOld = array_count_values($tmpOldArray);
+		$occurNew = array_count_values($tmpNewArray);
 		
 		
 		//Remove the values already tagged in del
@@ -290,18 +349,19 @@ class archiUtils extends config{
 			$del[$test]=$word;
 		}
 		
-		
-		
 		foreach ($additionalIns as $word){
 			$test = $this->findAdditionnalDelIndex($newArray,$oldArray, $ins, $word);
 			$ins[$test]=$word;
 		}
-		
 
 		//Sort insertion and delete array
 		ksort($del);
 		ksort($ins);
 
+		debug(array('del'=>$del , 'ins'=>$ins));
+		
+		
+		
 		$tagOpen = 0;
 		
 		//Add tag for insertion/suppression
@@ -350,6 +410,7 @@ class archiUtils extends config{
 		$decoratedNewString = implode(" ", $decoratedNew);
 		
 
+		//debug(array('del'=> $del , 'ins'=>$ins,'old' => $decoratedOldString,'new'=>$decoratedNewString ));
 		return array('old' => $decoratedOldString,'new'=>$decoratedNewString);
 	}
 	
@@ -379,6 +440,22 @@ class archiUtils extends config{
 		else{
 			return -1;
 		}
+	}
+	
+	
+	
+	
+	public function yoloDiff($t1,$t2){
+		include 'includes/framework/frameworkClasses/finediff.php';
+
+		$opcodes = FineDiff::getDiffOpcodes($t1, $t2 , FineDiff::$wordGranularity );
+		
+		
+		debug(array(
+		'HTML'=>FineDiff::renderDiffToHTMLFromOpcodes($t1, $opcodes),
+		'text' =>FineDiff::renderToTextFromOpcodes($t1, $opcodes),
+		));
+		return FineDiff::renderDiffToHTMLFromOpcodes($t1, $opcodes);
 	}
 	
 }

@@ -2426,16 +2426,6 @@ class archiUtilisateur extends config {
     
     public function getArrayContribution($userId,$offset = 0){
     	if(isset($userId) && $userId != ''){
-    		$requeteEvenementCree = "
-    				SELECT * 
-    				FROM evenements evts
-    				WHERE idUtilisateur = $userId
-    				";
-    		$resultEvtCree = $this->connexionBdd->requete($requeteEvenementCree);
-    		while($rowEvtCree = mysql_fetch_assoc($resultEvtCree)){
-    		}
-    		
-    		
     		
     		
     		$requete = "
@@ -2583,7 +2573,7 @@ class archiUtilisateur extends config {
     	 
     	$auth = new ArchiAuthentification();
     	if($auth->estConnecte()){
-    	return "<b>"._("En tant qu'utilisateur vous pouvez :")."</b><ul>
+    	return $calque->getHtmlDivContextualHelp()."<b>"._("En tant qu'utilisateur vous pouvez :")."</b><ul>
 						<li> <a href='".$this->creerUrl('', 'ajoutNouveauDossier')."' onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En ajoutant votre adresse vous contribuez au développement du site. Mais d\'abord qu\'entend t-on par \"votre adresse\" ? Et bien cela peut être l\'immeuble ou la maison que vous occupez. Un immeuble que vous aimez mais que vous ne trouvez pas sur le site. Avec le développement des appareils photo numériques,  il devient très simple de prendre une photo,  et de la copier sur l\'ordinateur. Ajouter une adresse dans www.archi-strasbourg.org ne prend pas plus de 20 secondes. Copier la photo 10 secondes de plus..."))."\" onmouseout='".$calque->getJSContextHelpOnMouseOut()."'>"._("ajouter des adresses")."</a></li>
 						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des photos afin d'illustrer une adresse."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\"> "._("ajouter des photos à une adresse")."</span></li>
 						<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("Vous pouvez ajouter des évènements sur toute adresse qu'un autre utilisateur a créée."))."\" onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">"._("ajouter des évènements à une adresse")."</span></li>
@@ -2716,7 +2706,7 @@ class archiUtilisateur extends config {
      * @return string
      */
     private function getEvenementsCrees($userId){
-    	return $this->getEvenements($userId,'MAX');
+    	return $this->getEvenements($userId,'crees');
     }    
     
     /**
@@ -2725,7 +2715,7 @@ class archiUtilisateur extends config {
      * @return string
      */
     private function getEvenementsModifies($userId){
-    	return $this->getEvenements($userId,'MIN');
+    	return $this->getEvenements($userId,'modifies');
     }
     
     
@@ -2735,26 +2725,58 @@ class archiUtilisateur extends config {
      * @param string $strategy
      * @return string
      */
-    private function getEvenements($userId , $strategy = 'MAX'){
+    
+    private function getEvenements($userId,$typeEvenement){
+    	include_once 'includes/framework/frameworkClasses/finediff.class.php';
     	$date = new dateObject();
     	$paginationEvenements = new paginationObject();
     	$adresse = new archiAdresse();
-    	
+    	$calque = new calqueObject();
+    	$monArchi = $calque->getHtmlDivContextualHelp();
     	// calcul du nombre d'evenements ajoutes ou modifies pour la pagination
-    	$req = "
-						SELECT distinct ha1.idAdresse, he1.dateCreationEvenement as dateCreationEvenement,he1.idHistoriqueEvenement,he2.idHistoriqueEvenement
     	
+    	if($typeEvenement=="crees"){
+    		$req = "
+						SELECT distinct ha1.idAdresse, he1.dateCreationEvenement as dateCreationEvenement,hev.idHistoriqueEvenement 
+   
+						FROM evenements he2,  evenements he1
+    					LEFT JOIN _evenementEvenement ee1 ON ee1.idEvenementAssocie = he1.idEvenement
+						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee1.idEvenement
+						LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
+						LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
+    			
+    					LEFT JOIN historiqueEvenement hev on hev.idEvenement = he1.idEvenement 
+   
+						WHERE he2.idEvenement = he1.idEvenement
+						AND he1.idUtilisateur = '".$userId."'
+						GROUP BY he1.idEvenement,  ha1.idAdresse,  ha1.idHistoriqueAdresse
+						HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
+						ORDER BY dateCreationEvenement DESC
+																";
+    		
+    	}
+    	else if($typeEvenement=='modifies'){
+    		$req = "
+						SELECT distinct ha1.idAdresse, he1.dateCreationEvenement as dateCreationEvenement,he1.idHistoriqueEvenement,he2.idHistoriqueEvenement
+   
 						FROM historiqueEvenement he2,  historiqueEvenement he1
     					LEFT JOIN _evenementEvenement ee1 ON ee1.idEvenementAssocie = he1.idEvenement
 						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee1.idEvenement
 						LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
 						LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
-    	
+   
 						WHERE he2.idEvenement = he1.idEvenement
 						AND he1.idUtilisateur = '".$userId."'
 						GROUP BY he1.idEvenement,  ha1.idAdresse,  ha1.idHistoriqueAdresse
-						HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) and he1.idHistoriqueEvenement = $strategy(he2.idHistoriqueEvenement)
+						HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) and he1.idHistoriqueEvenement = MIN(he2.idHistoriqueEvenement)
+						ORDER BY dateCreationEvenement DESC
 																";
+    		
+    	}
+    	
+    	
+    	//ORDER BY he1.idEvenement
+    	debug($req);
     	$res = $this->connexionBdd->requete($req);
     	$nbEnregistrementTotaux = mysql_num_rows($res);
     	
@@ -2768,9 +2790,59 @@ class archiUtilisateur extends config {
     			)
     	);
     	
-    	
+    	if($typeEvenement=="modifies"){
+    		 
     	$request = "
-						SELECT distinct ha1.idAdresse as idAdresse, he1.dateCreationEvenement as dateCreationEvenement,  ha1.numero,  ha1.idRue,  ha1.idSousQuartier,  ha1.idQuartier,  ha1.idVille, ha1.idIndicatif,
+    					SELECT distinct ha1.idAdresse as idAdresse, he1.dateCreationEvenement as dateCreationEvenement,  ha1.numero,  ha1.idRue,  ha1.idSousQuartier,  ha1.idQuartier,  ha1.idVille, ha1.idIndicatif,
+    	
+						ha1.idAdresse as idAdresse,  ha1.numero,  ha1.idQuartier,  ha1.idVille, ind.nom,
+    	
+						r.nom as nomRue,
+						sq.nom as nomSousQuartier,
+						q.nom as nomQuartier,
+						v.nom as nomVille,
+						p.nom as nomPays,
+						ha1.numero as numeroAdresse,
+						ha1.idRue,
+						r.prefixe as prefixeRue,
+    					he1.titre as titre,
+    					he1.description as description,
+						ha1.idSousQuartier AS idSousQuartier,
+						ha1.idQuartier AS idQuartier,
+						ha1.idVille AS idVille,
+						ha1.idPays AS idPays,
+    	
+						ha1.numero as numero,
+						ha1.idHistoriqueAdresse,
+						ha1.idIndicatif as idIndicatif,
+    					he1.idHistoriqueEvenement,
+    					he2.idHistoriqueEvenement
+    	
+						FROM historiqueEvenement he2,  historiqueEvenement he1
+						LEFT JOIN _evenementEvenement ee1 ON ee1.idEvenementAssocie = he1.idEvenement
+						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee1.idEvenement
+						LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
+						LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
+						LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
+						LEFT JOIN rue r         ON r.idRue = ha1.idRue
+						LEFT JOIN sousQuartier sq    ON sq.idSousQuartier =  ha1.idSousQuartier 
+						LEFT JOIN quartier q        ON q.idQuartier =  ha1.idQuartier 
+						LEFT JOIN ville v        ON v.idVille = ha1.idVille 
+						LEFT JOIN pays p        ON p.idPays = ha1.idPays 
+    	
+						WHERE he2.idEvenement = he1.idEvenement
+						AND he1.idUtilisateur = '$userId'
+
+						GROUP BY he1.idHistoriqueEvenement,ha1.idAdresse,ha1.idHistoriqueAdresse
+						HAVING count(he1.idHistoriqueEvenement) >1 and he1.idHistoriqueEvenement = max(he2.idHistoriqueEvenement)
+						ORDER BY he1.dateCreationEvenement DESC
+    	    			
+								";
+    	    	
+    	}
+    	else if($typeEvenement=="crees"){
+    		$request = "
+    					SELECT distinct ha1.idAdresse as idAdresse, he1.dateCreationEvenement as dateCreationEvenement,  ha1.numero,  ha1.idRue,  ha1.idSousQuartier,  ha1.idQuartier,  ha1.idVille, ha1.idIndicatif,
     	
 						ha1.idAdresse as idAdresse,  ha1.numero,  ha1.idQuartier,  ha1.idVille, ind.nom,
     	
@@ -2812,15 +2884,19 @@ class archiUtilisateur extends config {
 						GROUP BY he1.idEvenement,  ha1.idAdresse,  ha1.idHistoriqueAdresse
 						HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) and he1.idHistoriqueEvenement = $strategy(he2.idHistoriqueEvenement)
 						ORDER BY he1.dateCreationEvenement DESC
-								";
-    	
+    		    		";
+    		
+    	}
     	$req = $paginationEvenements->addLimitToQuery($request);
     	
     	$res = $this->connexionBdd->requete($req);
-    	if($strategy=='MAX'){
-    	$monArchi.="<b>"._("Liste de vos derniers événements crées :")."</b><br>";
-    	}else{
-    		$monArchi.="<b>"._("Liste de vos derniers événements modifiés :")."</b><br>";
+    	
+    	
+    	if($typeEvenement=="modifies"){
+    	$monArchi.="<b>"._("Liste de vos derniers événements modifiés :")."</b><br>";
+    	}
+    	else if($typeEvenement=="crees"){
+    		$monArchi.="<b>"._("Liste de vos derniers événements créés  :")."</b><br>";
     	}
     	$monArchi.=$arrayPaginationEvenements['html'];
     	$tableauEvenements = new tableau();
@@ -2828,14 +2904,120 @@ class archiUtilisateur extends config {
     		$monArchi.="<br>"._("Vous n'avez pas encore ajouté d'évènement.")."<br>";
     	}
     	while ($fetch = mysql_fetch_assoc($res)) {
+    		$idHistoriqueEvenement = $fetch['idHistoriqueEvenement'];
+    		$requeteDiff = "
+    		SELECT he1.idTypeEvenement , he1.idTypeStructure, he1.idUtilisateur,he1.idSource,he1.titre, he1.description,he1.dateDebut,he1.isDateDebutEnviron,he1.dateFin,he1.nbEtages,he1.ISMH,he1.MH,he1.numeroArchive,he1.idEvenementRecuperationTitre,he1.idImagePrincipale,he1.parent
+    		FROM historiqueEvenement he1 ,historiqueEvenement he2
+    		WHERE he1.idEvenement = he2.idEvenement
+    		AND he2.idHistoriqueEvenement = $idHistoriqueEvenement
+    		ORDER BY he1.idHistoriqueEvenement DESC
+    		LIMIT 2
+    		";
+    		$resDiff=$this->connexionBdd->requete($requeteDiff);
+    		 
+    		 
+    		 
+    		 
+    		if(mysql_num_rows($resDiff)==2){
+    			$newEvenement = mysql_fetch_assoc($resDiff);
+    			$oldEvenement = mysql_fetch_assoc($resDiff);
+
+    			$diff = array_diff($newEvenement,$oldEvenement);
+
+    			$keysDiff = array_keys($diff);
+    			$u = new archiUtils();
+    			//debug(array($requeteDiff,$keysDiff));
+    			/*foreach ($keysDiff as $key){
+    			echo "<div>".$key."</div>";
+    			$opcodes = FineDiff::getDiffOpcodes($oldEvenement[$key], $newEvenement[$key] , FineDiff::$wordGranularity);
+    			//echo "<pre>".FineDiff::renderDiffToHTMLFromOpcodes($oldEvenement[$key], $opcodes)."</pre>";
+    			}*/
+    			/*
+    			 * $calque->getHtmlDivContextualHelp()."<b>"._("En tant qu'utilisateur vous pouvez :")."</b><ul>
+    			<li> <a href='".$this->creerUrl('', 'ajoutNouveauDossier')."' onmouseover=\"".$calque->getJsContextHelpOnMouseOver(_("En ajoutant votre adresse vous contribuez au développement du site. Mais d\'abord qu\'entend t-on par \"votre adresse\" ? Et bien cela peut être l\'immeuble ou la maison que vous occupez. Un immeuble que vous aimez mais que vous ne trouvez pas sur le site. Avec le développement des appareils photo numériques,  il devient très simple de prendre une photo,  et de la copier sur l\'ordinateur. Ajouter une adresse dans www.archi-strasbourg.org ne prend pas plus de 20 secondes. Copier la photo 10 secondes de plus..."))."\" onmouseout='".$calque->getJSContextHelpOnMouseOut()."'>"._("ajouter des adresses")."</a></li>
+    			<li> <span onmouseover=\"".$calque->getJsContextHelpOnMouseOver
+    			*/
+
+    			/*$modifications="Type de modifications : ";
+    			 $modifications .= implode(' , ',$keysDiff);
+    			 debug($keysDiff);
+    			*/
+    			$modifications = $this->getIntituleModif($keysDiff);
+    		}
+    		else{
+
+    		}
     		$tableauEvenements->addValue($date->toFrench($fetch['dateCreationEvenement']));
-    		$tableauEvenements->addValue("<a href='".$this->creerUrl('', 'adresseDetail', array('archiIdAdresse'=>$fetch['idAdresse']))."'>".stripslashes($adresse->getIntituleAdresse($fetch))."</a>");
+    		if($typeEvenement=="modifies"){
+    			$tableauEvenements->addValue("<a href='".$this->creerUrl('', 'adresseDetail', array('archiIdAdresse'=>$fetch['idAdresse']))."' onmouseover=\"".$calque->getJsContextHelpOnMouseOver($modifications)."\"  onmouseout=\"".$calque->getJSContextHelpOnMouseOut()."\">".stripslashes($adresse->getIntituleAdresse($fetch))."</a>");
+    		}
+    		else if($typeEvenement=="crees"){
+    			$tableauEvenements->addValue("<a href='".$this->creerUrl('', 'adresseDetail', array('archiIdAdresse'=>$fetch['idAdresse']))."' >".stripslashes($adresse->getIntituleAdresse($fetch))."</a>");
+    		}
     	}
     	
     	$monArchi.= $tableauEvenements->createHtmlTableFromArray(2, "font-size:12px;");
     	return $monArchi;
     }
     
+    
+    
+    private function getIntituleModif($arrayModif){
+    	$modif="";
+		if(count($arrayModif)==1){
+			$modif="Type de modification : ";
+		}
+		else if(count($arrayModif)>1){
+			$modif="Type de modifications : ";
+		}
+		foreach ($arrayModif as $key => $mod){
+			switch($mod){
+				case 'idUtilisateur':
+					$arrayModif[$key] = "utilisateur";
+					break;
+				case 'idTypeEvenement':
+					$arrayModif[$key]  ="type d\'événement";
+					break;
+				case 'idSource':
+					$arrayModif[$key] ="source";
+					break;
+				case 'dateDebut':
+					$arrayModif[$key]  = "date de début";
+					break;
+				case 'isDateDebutEnviron':
+					$arrayModif[$key]  = 'date de début (environ)';
+					break;
+				case 'dateFin':
+					$arrayModif[$key] ="date de fin";
+					break;
+				case 'nbEtages':
+					$arrayModif[$key] ="nombre d\'étage";
+					break;
+				case 'ISMH':
+					$arrayModif[$key] ="";
+					break;
+				case 'MH':
+					$arrayModif[$key] ="";
+					break;
+				case 'numeroArchive' :
+					$arrayModif[$key] ="numero d'archives";
+					break;
+				case 'parent':
+					$arrayModif[$key] ="evenement parent";
+					break;
+				case 'idEvenementRecuperationTitre':
+					$arrayModif[$key] ="evenement source pour le titre";
+					break;
+				case 'idImagePrincipale':
+					$arrayModif[$key] ="image principale";
+					break;
+				default:
+			}
+		}
+		$modif .= implode(" , ", $arrayModif);
+		return $modif;
+    }
+  
     private function getUserCommentaires($userId){
     	$paginationCommentaires = new paginationObject();
     	$utilisateur = new archiUtilisateur();
@@ -3286,8 +3468,6 @@ class archiUtilisateur extends config {
     		$form = $this->getUserForm();
     		 
     		//Get contributions
-    		$arrayContributions  = $this->getArrayContribution($userId);
-    		 
     		$contributions = $this->getAllContribution($userId);
     
     		$t->assign_vars(array(

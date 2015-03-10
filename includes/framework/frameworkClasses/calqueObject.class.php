@@ -101,7 +101,7 @@ class calqueObject extends config
 		
 		
 		
-		// renvoi une "popup" qui ne peut pas etre bougé et dont le fond couvre toute la page internet , et transparent
+		// renvoi une "popup" qui ne peut pas etre bougï¿½ et dont le fond couvre toute la page internet , et transparent
 		public function getDivNoDraggableWithBackgroundOpacity($params = array())
 		{
 			$width = 500;
@@ -289,7 +289,7 @@ class calqueObject extends config
 		
 		
 		// rendre un calque deplacable avec la souris
-		// a placer a la fin du code de la page, permet de deplace la fenetre créée par l'objet
+		// a placer a la fin du code de la page, permet de deplace la fenetre crï¿½ï¿½e par l'objet
 		public function getJsToDragADiv()
 		{
 			$html="";
@@ -319,14 +319,14 @@ class calqueObject extends config
 			function gereEvenements".$this->idPopup."(e) {
 
 			if (ie".$this->idPopup.") {
-            //Récupération de la position de la souris
+            //Rï¿½cupï¿½ration de la position de la souris
             window.lastX=event.clientX;
             window.lastY=event.clientY;
             // lance doDrag tant que l'on appuie sur le bouton de la souris en la bougeant
             document.onmousemove=doDrag".$this->idPopup.";
             // lance endDrag quand on relache le bouton de la souris
             document.onmouseup=endDrag".$this->idPopup."; }else if (ns4".$this->idPopup.") {
-            //Récupération de la position de la souris
+            //Rï¿½cupï¿½ration de la position de la souris
             window.lastX=e.pageX;
             window.lastY=e.pageY;
             // lance doDrag tant que l'on appuie sur le bouton de la souris en la bougeant
@@ -335,7 +335,7 @@ class calqueObject extends config
             // lance endDrag quand on relache le bouton de la souris
             document.captureEvents(Event.MOUSEUP)
             document.onmouseup=endDrag".$this->idPopup."; }else if (ns6".$this->idPopup.") {
-            //Récupération de la position de la souris
+            //Rï¿½cupï¿½ration de la position de la souris
             window.lastX=e.clientX;
             window.lastY=e.clientY;
             // lance doDrag tant que l'on appuie sur le bouton de la souris en la bougeant
@@ -348,40 +348,40 @@ class calqueObject extends config
 			function doDrag".$this->idPopup."(e) {
 				
 			if (ie".$this->idPopup.") {
-            // Calcul de l'écart de position de la souris
+            // Calcul de l'ï¿½cart de position de la souris
             var difX=event.clientX-window.lastX;
             var difY=event.clientY-window.lastY;
-            //Récupération de la position du div et ajout de l'écart de position de la souris
+            //Rï¿½cupï¿½ration de la position du div et ajout de l'ï¿½cart de position de la souris
             var newX1 = parseInt(".$this->getJSDivId().".style.left)+difX;
             var newY1 = parseInt(".$this->getJSDivId().".style.top)+difY;
-            // Assignation des nouvelles coordonnées au div
+            // Assignation des nouvelles coordonnï¿½es au div
             ".$this->getJSDivId().".style.left=newX1+'px';
             ".$this->getJSDivId().".style.top=newY1+'px';
-            //Assignation de l'anciènne position de la souris
+            //Assignation de l'anciï¿½nne position de la souris
             window.lastX=event.clientX;
             window.lastY=event.clientY; }else if (ns4".$this->idPopup.") {
-            // Calcul de l'écart de position de la souris
+            // Calcul de l'ï¿½cart de position de la souris
             var difX=e.pageX-window.lastX;
             var difY=e.pageY-window.lastY;
-            //Récupération de la position du div et ajout de l'écart de position de la souris
+            //Rï¿½cupï¿½ration de la position du div et ajout de l'ï¿½cart de position de la souris
             var newX1 = parseInt(document.layers.".$this->getJSDivId().".left)+difX;
             var newY1 = parseInt(document.layers.".$this->getJSDivId().".top)+difY;
-            // Assignation des nouvelles coordonnées au div
+            // Assignation des nouvelles coordonnï¿½es au div
             document.layers.".$this->getJSDivId().".left=newX1;
             document.layers.".$this->getJSDivId().".top=newY1;
-            //Assignation de l'anciènne position de la souris
+            //Assignation de l'anciï¿½nne position de la souris
             window.lastX=e.pageX;
             window.lastY=e.pageY; }else if (ns6".$this->idPopup.") {
-            // Calcul de l'écart de position de la souris
+            // Calcul de l'ï¿½cart de position de la souris
             var difX=e.clientX-window.lastX;
             var difY=e.clientY-window.lastY;
-            //Récupération de la position du div et ajout de l'écart de position de la souris
+            //Rï¿½cupï¿½ration de la position du div et ajout de l'ï¿½cart de position de la souris
             var newX1 = parseInt(document.getElementById('".$this->getJSDivId()."').style.left)+difX;
             var newY1 = parseInt(document.getElementById('".$this->getJSDivId()."').style.top)+difY;
-            // Assignation des nouvelles coordonnées au div
+            // Assignation des nouvelles coordonnï¿½es au div
             document.getElementById('".$this->getJSDivId()."').style.left=newX1+'px';
             document.getElementById('".$this->getJSDivId()."').style.top=newY1+'px';
-            //Assignation de l'anciènne position de la souris
+            //Assignation de l'anciï¿½nne position de la souris
             window.lastX=e.clientX;
             window.lastY=e.clientY; } 
 
@@ -391,9 +391,9 @@ class calqueObject extends config
 			function endDrag".$this->idPopup."(e) {
 
 		    if (ie".$this->idPopup." || ns4".$this->idPopup.") {
-				//Réinitialisation du onmousemove
+				//Rï¿½initialisation du onmousemove
 				document.onmousemove=null; }else if (ns6".$this->idPopup.") {
-				//Réinitialisation du onmousemove
+				//Rï¿½initialisation du onmousemove
 				window.onmousemove=null; }
 
 			}
@@ -411,7 +411,7 @@ class calqueObject extends config
 		// rentrer en parametre les limites de scroll dans la page
 		// la condition (conditionsToScrollBegin) est du type :
 		// if((document.getElementById('texteSuite').style.display=='block' && y_<4731) || (document.getElementById('texteSuite').style.display=='none' && y_<175))
-		// ici si un div de la page est afficher , on va scoller jusqua 4731 , sinon si le div est fermé on scroll jusqu'a 175
+		// ici si un div de la page est afficher , on va scoller jusqua 4731 , sinon si le div est fermï¿½ on scroll jusqu'a 175
 		// ***************************************************************************************************************************************
 		public function getJsScrollDivWithPage($params = array())
 		{
@@ -426,7 +426,7 @@ class calqueObject extends config
 			$conditionsToScrollEnd="";
 			if(isset($params['conditionsToScrollBegin']) && $params['conditionsToScrollBegin']!='')
 			{
-				$conditionsToScrollBegin=$params['conditionsToScrollBegin']."{"; // les accolades de la condition sont ajoutées automatiquement
+				$conditionsToScrollBegin=$params['conditionsToScrollBegin']."{"; // les accolades de la condition sont ajoutï¿½es automatiquement
 				$conditionsToScrollEnd="}";
 			}
 			
@@ -447,7 +447,7 @@ class calqueObject extends config
 		     // Objet : menu flottant
 		     // Creation : 01.01.2007
 		     //---------------------------------------------------------
-		     // Mise à Jour : 01.11.2007
+		     // Mise ï¿½ Jour : 01.11.2007
 		     //---------------------------------------------------------
 		     // OUTILS /////////////////////////////
 		     //---------------------------------------------

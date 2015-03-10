@@ -1520,8 +1520,13 @@ if (isset($_GET['archiAffichage'])) {
 			$u->getPrivateProfil();
         	break;
         case 'diff':
+        	/*
         	$u = new archiUtilisateur();
         	echo $u->displayDiff("thi is a test" , "This test is the test new test");
+        	*/
+        	$util = new archiUtils();
+        	$plop= $util->yoloDiff("thi is a test" , "This test is the test new test");
+        	debug($plop);
         	break;
         }
     }

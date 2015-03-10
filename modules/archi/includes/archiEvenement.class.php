@@ -7221,6 +7221,18 @@ class archiEvenement extends config
 		}
 		return $arrayIdEvenement;
 	}
+	
+	public function getDiffEvenement($idEvenement){
+		$requete = "
+				SELECT * 
+				FROM historiqueEvenement 
+				WHERE idEvenement = $idEvenement 
+				";
+		$result = $this->connexionBdd->requete($requete);
+		while($fetch = mysql_fetch_assoc($result)){
+			debug($fetch);	
+		}
+	}
 }
 
 
