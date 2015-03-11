@@ -521,6 +521,7 @@ class ArchiAccueil extends config
 
 				//Gestion des dernieres modifs
 				$lastModifs = $this->getLatestModification(8);
+				debug($lastModifs);
 				foreach ($lastModifs as $modif){
 					$e = new archiEvenement();
 					$adresseArray = $e->getArrayAdresse($modif['idEvenement']);
@@ -707,6 +708,7 @@ class ArchiAccueil extends config
 						);
 						$t->assign_block_vars('message', $favoris);
 					}
+					debug($latestFav);
 					foreach ($latestFav as $fav){
 						$e = new archiEvenement();
 						$adresseArray = $e->getArrayAdresse($fav['idEvenement']);
@@ -2313,7 +2315,7 @@ class ArchiAccueil extends config
 		$result = $this->connexionBdd->requete($requete);
 		$arrayComment = array();
 		$e = new archiEvenement();
-
+debug($latestComment);
 		while($latestComment = mysql_fetch_assoc($result)){
 
 			$idEvenement = "";
