@@ -2396,10 +2396,10 @@ class ArchiAccueil extends config
 					ae.idAdresse AS idAdresse,
 					te.nom as typeEvenement,
 					date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,,
-					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
-					evt.description,
-	    			evt.idImagePrincipale
-							 
+							DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
+							evt.description,
+							evt.idImagePrincipale
+
 	    		FROM evenements evt
 							LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
 							LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
@@ -2409,7 +2409,7 @@ class ArchiAccueil extends config
 							AND ae.idAdresse IS NOT NULL
 							".
 							"
-				GROUP BY ae.idAdresse,ee.idEvenement
+							GROUP BY ae.idAdresse,ee.idEvenement
 	    		ORDER BY  DateTri DESC
 	    		LIMIT $nbElts
 	    		";
@@ -2431,6 +2431,7 @@ class ArchiAccueil extends config
 					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
 					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
 					WHERE evt.idEvenement IN ($fieldsList)
+					AND ae.idAdresse IS NOT NULL
 					ORDER BY  DateTri DESC, FIELD(evt.idEvenement , ".$fieldsList.")
 					LIMIT $nbElts
 					";
@@ -2450,6 +2451,7 @@ class ArchiAccueil extends config
 				
 			$arrayLastModif[]=$tmp;
 		}
+		debug($arrayLastModif);
 		return $arrayLastModif;
 	}
 
