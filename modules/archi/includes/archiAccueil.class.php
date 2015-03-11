@@ -2329,6 +2329,7 @@ class ArchiAccueil extends config
 					$url = $this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$idPerson));
 				}
 				else{
+					debug($latestComment);
 					$idAdresse = $e->getIdAdresse($latestComment['idEvenement']);
 				}
 			}
