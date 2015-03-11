@@ -2387,6 +2387,7 @@ class ArchiAccueil extends config
 				$arrayIdEvenement[] = $rowRemainingId['idEvenement'];
 			}
 		}
+		debug($arrayIdEvenement);
 		$fieldsList =implode(',', $arrayIdEvenement);
 
 		if(empty($arrayIdEvenement)){
@@ -2398,9 +2399,10 @@ class ArchiAccueil extends config
 					evt.idImagePrincipale AS idHistoriqueImage,
 					ae.idAdresse AS idAdresse,
 					te.nom as typeEvenement,
-					date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
-							evt.description,
-	    		evt.idImagePrincipale
+					date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,,
+					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
+					evt.description,
+	    			evt.idImagePrincipale
 							 
 	    		FROM evenements evt
 							LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
@@ -2411,8 +2413,8 @@ class ArchiAccueil extends config
 							AND ae.idAdresse IS NOT NULL
 							".
 							"
-	    		GROUP BY ee.idEvenement
-	    		ORDER BY  evt.dateCreationEvenement DESC
+				GROUP BY ae.idAdresse,ee.idEvenement
+	    		ORDER BY  DateTri DESC
 	    		LIMIT $nbElts
 	    		";
 		}
@@ -2426,17 +2428,20 @@ class ArchiAccueil extends config
 					evt.idImagePrincipale AS idHistoriqueImage,
 					te.nom as typeEvenement,
 					date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
+					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
 					evt.description
 					FROM evenements evt
 					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
 					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
 					WHERE ee.idEvenement IN ($fieldsList)
-					GROUP BY ee.idEvenement
-					ORDER BY dateCreationEvenement DESC,  FIELD(ee.idEvenement , ".$fieldsList.")
+					GROUP BY ae.idAdresse,ee.idEvenement
+					ORDER BY DateTri DESC,  FIELD(ee.idEvenement , ".$fieldsList.")
 					LIMIT $nbElts
 					";
 		}
 		 
+		debug($requete);
 		$result = $this->connexionBdd->requete($requete);
 		$arrayLastModif = array();
 		while($lastModif = mysql_fetch_assoc($result)){
