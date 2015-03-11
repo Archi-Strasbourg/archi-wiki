@@ -7201,8 +7201,6 @@ class archiEvenement extends config
 	 * @return Ambigous <>
 	 */
 	public function getIdAdresse($idEvenement){
-		debug(debug_backtrace());
-		
 		$idEvenementGroup = $this->getIdGroupeEvenement($idEvenement);
 		$requete ="
 				SELECT idAdresse 
