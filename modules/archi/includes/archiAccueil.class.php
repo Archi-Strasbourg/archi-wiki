@@ -521,7 +521,6 @@ class ArchiAccueil extends config
 
 				//Gestion des dernieres modifs
 				$lastModifs = $this->getLatestModification(8);
-				debug($lastModifs);
 				foreach ($lastModifs as $modif){
 					$e = new archiEvenement();
 					$adresseArray = $e->getArrayAdresse($modif['idEvenement']);
@@ -708,7 +707,6 @@ class ArchiAccueil extends config
 						);
 						$t->assign_block_vars('message', $favoris);
 					}
-					debug($latestFav);
 					foreach ($latestFav as $fav){
 						$e = new archiEvenement();
 						$adresseArray = $e->getArrayAdresse($fav['idEvenement']);
@@ -2315,9 +2313,7 @@ class ArchiAccueil extends config
 		$result = $this->connexionBdd->requete($requete);
 		$arrayComment = array();
 		$e = new archiEvenement();
-debug($latestComment);
 		while($latestComment = mysql_fetch_assoc($result)){
-
 			$idEvenement = "";
 			$idEvenementGroup = "";
 			$idAdresse="";
@@ -2325,7 +2321,14 @@ debug($latestComment);
 			if(strcmp($latestComment['typeCommentaire'] , 'commentaireEvenement')){
 				$idEvenement = $latestComment['idEvenement'];
 				$idEvenementGroup = $e->getIdGroupeEvenement($latestComment['idEvenement']);
-				$idAdresse = $e->getIdAdresse($latestComment['idEvenement']);
+				if($idPersonne = archiPersonne::isPerson($idEvenementGroup)){
+					$nom = ArchiPersonne::getName($idPersonne);
+					$adresse = $nom->nom. " " . $nom->prenom;
+					$url = $this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$idPerson));
+				}
+				else{
+					$idAdresse = $e->getIdAdresse($latestComment['idEvenement']);
+				}
 			}
 			else{
 				$idEvenementGroup = $latestComment['idEvenement'];
@@ -2341,20 +2344,24 @@ debug($latestComment);
 			}
 
 
+			if(!archiPersonne::isPerson($idEvenementGroup)){
+				$adresseArray = $e->getArrayAdresse($idEvenement);
+				$adresse = '';
+				if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
+					$adresse.=$adresseArray['numero'];
+				}
+				if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
+					$adresse.=' '.$adresseArray['prefixe'];
+				}
+				if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
+					$adresse.=' '.$adresseArray['nomRue'];
+				}
 
-			$adresseArray = $e->getArrayAdresse($idEvenement);
-			$adresse = '';
-			if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
-				$adresse.=$adresseArray['numero'];
+				$url = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail',"archiIdAdresse"=>$idAdresse,"archiIdEvenementGroupeAdresse"=>$idEvenementGroup));
 			}
-			if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-				$adresse.=' '.$adresseArray['prefixe'];
-			}
-			if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
-				$adresse.=' '.$adresseArray['nomRue'];
-			}
-
-			$url = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail',"archiIdAdresse"=>$idAdresse,"archiIdEvenementGroupeAdresse"=>$idEvenementGroup));
+				
+				
+				
 			$urlPersonne = $this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$latestComment['idUtilisateur'],'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroup));
 
 			$latestComment['typeCommentaire'] = 'commentaireEvenement';
@@ -2453,7 +2460,6 @@ debug($latestComment);
 				
 			$arrayLastModif[]=$tmp;
 		}
-		debug($arrayLastModif);
 		return $arrayLastModif;
 	}
 
