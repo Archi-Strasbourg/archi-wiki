@@ -2310,10 +2310,12 @@ class ArchiAccueil extends config
 					LIMIT $nbComment
 					";
 			
+		debug($requete);
 		$result = $this->connexionBdd->requete($requete);
 		$arrayComment = array();
 		$e = new archiEvenement();
 		while($latestComment = mysql_fetch_assoc($result)){
+			debug($latestComment);
 			$idEvenement = "";
 			$idEvenementGroup = "";
 			$idAdresse="";
