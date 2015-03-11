@@ -436,20 +436,24 @@ class archiInterest extends config{
 			}
 			
 		}
+		
+		
 		//Array_unique enable to remove double value get from multiple select
 		$idEvenementGA = array_unique($idEvenementArray);
 		$array_in = '('.implode(',', $idEvenementGA).')';
 		
-		
 		$array_return = array();
 		foreach ($idEvenementGA as $idEvt){
 			$requete = "
-			SELECT evt.idEvenement ,
+			SELECT DISTINCT ae.idAdresse,
+			evt.idEvenement ,
 			DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
 			evt.titre,
 			evt.description
+			
 			FROM evenements evt
 			LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+			LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
 			WHERE ee.idEvenement = $idEvt
 			ORDER BY DateTri DESC
 			LIMIT 1

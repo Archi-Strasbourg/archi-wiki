@@ -2398,7 +2398,8 @@ class ArchiAccueil extends config
 		if(empty($arrayIdEvenement)){
 			$requete ="
 					SELECT
-					DISTINCT ee.idEvenement AS idEvenementGroupeAdresse,
+					DISTINCT ae.idAdresse, 
+					ee.idEvenement AS idEvenementGroupeAdresse,
 					evt.idEvenement AS idEvenement,
 					evt.idEvenementRecuperationTitre ,
 					evt.idImagePrincipale AS idHistoriqueImage,
@@ -2427,7 +2428,8 @@ class ArchiAccueil extends config
 			 
 			$requete ="
 					SELECT
-					DISTINCT ee.idEvenement as idEvenementGroupeAdresse,
+					DISTINCT ae.idAdresse, 
+					ee.idEvenement as idEvenementGroupeAdresse,
 					evt.idEvenement AS idEvenement,
 					evt.idEvenementRecuperationTitre ,
 					evt.idImagePrincipale AS idHistoriqueImage,
@@ -2441,11 +2443,13 @@ class ArchiAccueil extends config
 					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
 					WHERE evt.idEvenement IN ($fieldsList)
 					AND ae.idAdresse IS NOT NULL
+					GROUP BY ae.idAdresse
 					ORDER BY  DateTri DESC, FIELD(evt.idEvenement , ".$fieldsList.")
 					LIMIT $nbElts
 					";
 		}
 		 
+		
 		$result = $this->connexionBdd->requete($requete);
 		$arrayLastModif = array();
 		while($lastModif = mysql_fetch_assoc($result)){
