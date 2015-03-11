@@ -7164,8 +7164,6 @@ class archiEvenement extends config
 	 * @return idEvenement of the groupe evenement corresponding
 	 */
 	public function getIdGroupeEvenement($idEvenement){
-		
-
 		$requete = "
 		SELECT idEvenement
 		FROM _evenementEvenement
@@ -7185,7 +7183,15 @@ class archiEvenement extends config
 				";
 		$result =  $this->connexionBdd->requete($requete);
 		$res = mysql_fetch_assoc($result);
-		return $res['idEvenement'];
+		if(mysql_num_rows($result)>0){
+			debug($res['idEvenement']);
+			return $res['idEvenement'];
+		}
+		else{
+			$this->messages->addError("Cet evenement n'est relié à aucun groupe");
+			$this->messages->display();
+			return false;
+		}
 	}
 
 	/**
@@ -7197,17 +7203,25 @@ class archiEvenement extends config
 	public function getIdAdresse($idEvenement){
 		$idEvenementGroup = $this->getIdGroupeEvenement($idEvenement);
 		$requete ="
-				SELECT idAdresse 
-				FROM _adresseEvenement
-				WHERE  idEvenement = $idEvenementGroup
-				";
+		SELECT idAdresse
+		FROM _adresseEvenement
+		WHERE  idEvenement = $idEvenementGroup
+		";
 		$result = $this->connexionBdd->requete($requete);
 		$res = mysql_fetch_assoc($result);
-		return $res['idAdresse'];		
+		if(mysql_num_rows($result)){
+			debug($res['idAdresse']); 
+			return $res['idAdresse'];
+		}
+		else{
+			$this->messages->addError("Aucune adresse associée à ce groupe d'evenement");
+			$this->messages->display();
+			return false;
+		}
 	}
 	/**
-	 * Get an array of idEvenement related to an idEvenementGroupeAdresse 
-	 * 
+	 * Get an array of idEvenement related to an idEvenementGroupeAdresse
+	 *
 	 * @param unknown $idEvenementGroupeAdresse
 	 * @return array of idEvenement
 	 */
