@@ -2380,11 +2380,17 @@ class ArchiAccueil extends config
 		$interest = new archiInterest();
 		$arrayIdEvenement = $interest->getFavorisIdEvenementGroupeAdresse(0);
 		$fieldsList =implode(',', $arrayIdEvenement);
+		$whereClause = "";
+		
+		if(count($arrayIdEvenement)>0){
+			$whereClause ="WHERE evts.idEvenement in ($fieldsList)";
+		}
+		
 		$requeteAdditionnalAdresses = "
 				SELECT DISTINCT ee.idEvenement 
 				FROM evenements evts
 				LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evts.idEvenement
-				WHERE evts.idEvenement in ($fieldsList)
+				$whereClause
 				";
 		$result = $this->connexionBdd->requete($requeteAdditionnalAdresses);
 		$test = mysql_fetch_assoc($result);
