@@ -7173,22 +7173,12 @@ class archiEvenement extends config
 		";
 		$result =  $this->connexionBdd->requete($requete);
 		$res = mysql_fetch_assoc($result);
-		
-		$requete = "
-				SELECT idEvenement 
-				FROM _evenementEvenement
-				WHERE idEvenementAssocie = $idEvenement
-				ORDER BY idEvenement DESC
-				LIMIT 1
-				";
-		$result =  $this->connexionBdd->requete($requete);
-		$res = mysql_fetch_assoc($result);
 		if(mysql_num_rows($result)>0){
 			debug($res['idEvenement']);
 			return $res['idEvenement'];
 		}
 		else{
-			$this->messages->addError("Cet evenement n'est relié à aucun groupe");
+			$this->messages->addError("Cet evenement n'est relié à aucun groupe : idEvenement".$idEvenement);
 			$this->messages->display();
 			return false;
 		}
@@ -7214,7 +7204,7 @@ class archiEvenement extends config
 			return $res['idAdresse'];
 		}
 		else{
-			$this->messages->addError("Aucune adresse associée à ce groupe d'evenement");
+			$this->messages->addError("Aucune adresse associée à ce groupe d'evenement. IdGroupeEvenement : " . $idEvenementGroup . " idEvt : " .$idEvenement);
 			$this->messages->display();
 			return false;
 		}
