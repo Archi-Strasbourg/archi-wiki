@@ -2379,12 +2379,22 @@ class ArchiAccueil extends config
 		 
 		$interest = new archiInterest();
 		$arrayIdEvenement = $interest->getFavorisIdEvenementGroupeAdresse(0);
-		 
-		$remainingIdNB = $nbElts - count($arrayIdEvenement);
+		$fieldsList =implode(',', $arrayIdEvenement);
+		$requeteAdditionnalAdresses = "
+				SELECT DISTINCT ee.idEvenement 
+				FROM evenements evts
+				LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evts.idEvenement
+				WHERE evts.idEvenement in ($fieldsList)
+				";
+		$result = $this->connexionBdd->requete($requeteAdditionnalAdresses);
+		$test = mysql_fetch_assoc($result);
+		
+		$remainingIdNB = $nbElts - mysql_num_rows($result);
 		if($remainingIdNB>0){
 			$requeteRemainingId = "
 			SELECT  evt.idEvenement
 			FROM evenements evt
+			WHERE evt.idEvenement not in ($fieldsList)
 			ORDER BY evt.idEvenement desc
 			LIMIT  $remainingIdNB
 			";
