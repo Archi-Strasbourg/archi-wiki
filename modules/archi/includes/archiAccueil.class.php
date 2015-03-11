@@ -2371,14 +2371,11 @@ class ArchiAccueil extends config
 		$interest = new archiInterest();
 		$arrayIdEvenement = $interest->getFavorisIdEvenementGroupeAdresse(0);
 		 
-		 
 		$remainingIdNB = $nbElts - count($arrayIdEvenement);
 		if($remainingIdNB>0){
 			$requeteRemainingId = "
-			SELECT DISTINCT ee.idEvenement
+			SELECT  evt.idEvenement
 			FROM evenements evt
-			LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
-			WHERE ee.idEvenement is NOT NULL
 			ORDER BY evt.idEvenement desc
 			LIMIT  $remainingIdNB
 			";
@@ -2387,7 +2384,6 @@ class ArchiAccueil extends config
 				$arrayIdEvenement[] = $rowRemainingId['idEvenement'];
 			}
 		}
-		debug($arrayIdEvenement);
 		$fieldsList =implode(',', $arrayIdEvenement);
 
 		if(empty($arrayIdEvenement)){
@@ -2434,14 +2430,12 @@ class ArchiAccueil extends config
 					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
 					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
 					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-					WHERE ee.idEvenement IN ($fieldsList)
-					GROUP BY ae.idAdresse,ee.idEvenement
-					ORDER BY DateTri DESC,  FIELD(ee.idEvenement , ".$fieldsList.")
+					WHERE evt.idEvenement IN ($fieldsList)
+					ORDER BY  DateTri DESC, FIELD(evt.idEvenement , ".$fieldsList.")
 					LIMIT $nbElts
 					";
 		}
 		 
-		debug($requete);
 		$result = $this->connexionBdd->requete($requete);
 		$arrayLastModif = array();
 		while($lastModif = mysql_fetch_assoc($result)){

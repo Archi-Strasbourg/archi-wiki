@@ -437,7 +437,29 @@ class archiInterest extends config{
 			
 		}
 		//Array_unique enable to remove double value get from multiple select
-		return array_unique($idEvenementArray);
+		$idEvenementGA = array_unique($idEvenementArray);
+		$array_in = '('.implode(',', $idEvenementGA).')';
+		
+		
+		$array_return = array();
+		foreach ($idEvenementGA as $idEvt){
+			$requete = "
+			SELECT evt.idEvenement ,
+			DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
+			evt.titre,
+			evt.description
+			FROM evenements evt
+			LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+			WHERE ee.idEvenement = $idEvt
+			ORDER BY DateTri DESC
+			LIMIT 1
+			";
+			$result=$this->connexionBdd->requete($requete);
+			$row = mysql_fetch_assoc($result);
+			$array_return[]=$row['idEvenement'];
+		}
+
+		return array_unique($array_return);
 	}
 	
 	
