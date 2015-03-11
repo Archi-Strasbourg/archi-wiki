@@ -440,7 +440,6 @@ class archiInterest extends config{
 		$idEvenementGA = array_unique($idEvenementArray);
 		$array_in = '('.implode(',', $idEvenementGA).')';
 		
-		
 		$array_return = array();
 		foreach ($idEvenementGA as $idEvt){
 			$requete = "
