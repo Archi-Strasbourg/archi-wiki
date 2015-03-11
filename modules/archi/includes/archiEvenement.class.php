@@ -1060,7 +1060,13 @@ class archiEvenement extends config
 
 			$resAdresse = $this->connexionBdd->requete($reqAdresse);
 			$fetchAdresse = mysql_fetch_assoc($resAdresse);
-			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
+			if ($idPerson=archiPersonne::isPerson($idEvenementGroupeAdresse)) {
+				header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$idPerson), false, false));
+			}
+				
+			else{
+				header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
+			}
 			//$html = $adresse->afficherDetail('',$idEvenementGroupeAdresse);
 			/*$arrayAffichage = $this->afficher($id);
 			 $html .= $arrayAffichage['html'];
@@ -7164,6 +7170,8 @@ class archiEvenement extends config
 	 * @return idEvenement of the groupe evenement corresponding
 	 */
 	public function getIdGroupeEvenement($idEvenement){
+		
+
 		$requete = "
 		SELECT idEvenement
 		FROM _evenementEvenement
@@ -7173,15 +7181,17 @@ class archiEvenement extends config
 		";
 		$result =  $this->connexionBdd->requete($requete);
 		$res = mysql_fetch_assoc($result);
-		if(mysql_num_rows($result)>0){
-			debug($res['idEvenement']);
-			return $res['idEvenement'];
-		}
-		else{
-			$this->messages->addError("Cet evenement n'est relié à aucun groupe : idEvenement".$idEvenement);
-			$this->messages->display();
-			return false;
-		}
+		
+		$requete = "
+				SELECT idEvenement 
+				FROM _evenementEvenement
+				WHERE idEvenementAssocie = $idEvenement
+				ORDER BY idEvenement DESC
+				LIMIT 1
+				";
+		$result =  $this->connexionBdd->requete($requete);
+		$res = mysql_fetch_assoc($result);
+		return $res['idEvenement'];
 	}
 
 	/**
@@ -7193,25 +7203,17 @@ class archiEvenement extends config
 	public function getIdAdresse($idEvenement){
 		$idEvenementGroup = $this->getIdGroupeEvenement($idEvenement);
 		$requete ="
-		SELECT idAdresse
-		FROM _adresseEvenement
-		WHERE  idEvenement = $idEvenementGroup
-		";
+				SELECT idAdresse 
+				FROM _adresseEvenement
+				WHERE  idEvenement = $idEvenementGroup
+				";
 		$result = $this->connexionBdd->requete($requete);
 		$res = mysql_fetch_assoc($result);
-		if(mysql_num_rows($result)){
-			debug($res['idAdresse']); 
-			return $res['idAdresse'];
-		}
-		else{
-			$this->messages->addError("Aucune adresse associée à ce groupe d'evenement. IdGroupeEvenement : " . $idEvenementGroup . " idEvt : " .$idEvenement);
-			$this->messages->display();
-			return false;
-		}
+		return $res['idAdresse'];		
 	}
 	/**
-	 * Get an array of idEvenement related to an idEvenementGroupeAdresse
-	 *
+	 * Get an array of idEvenement related to an idEvenementGroupeAdresse 
+	 * 
 	 * @param unknown $idEvenementGroupeAdresse
 	 * @return array of idEvenement
 	 */

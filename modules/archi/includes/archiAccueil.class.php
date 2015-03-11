@@ -526,6 +526,7 @@ class ArchiAccueil extends config
 					$adresseArray = $e->getArrayAdresse($modif['idEvenement']);
 					$idAdresse = $e->getIdAdresse($modif['idEvenement']);
 
+
 					//Adresse
 					$adresse = '';
 					if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero'] !='0'){
@@ -2430,7 +2431,6 @@ class ArchiAccueil extends config
 					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
 					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
 					WHERE evt.idEvenement IN ($fieldsList)
-					AND ae.idAdresse IS NOT NULL
 					ORDER BY  DateTri DESC, FIELD(evt.idEvenement , ".$fieldsList.")
 					LIMIT $nbElts
 					";
@@ -2450,7 +2450,6 @@ class ArchiAccueil extends config
 				
 			$arrayLastModif[]=$tmp;
 		}
-		debug($arrayLastModif);
 		return $arrayLastModif;
 	}
 
