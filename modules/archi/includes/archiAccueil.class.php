@@ -2450,6 +2450,7 @@ class ArchiAccueil extends config
 				
 			$arrayLastModif[]=$tmp;
 		}
+		debug($arrayLastModif);
 		return $arrayLastModif;
 	}
 
