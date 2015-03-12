@@ -2484,7 +2484,6 @@ class ArchiAccueil extends config
 		$resultAdditionnelle = $this->connexionBdd->requete($requeteAdditionnelle);
 		$arrayLastModifAdditionnelle = array();
 		while($lastModif = mysql_fetch_assoc($resultAdditionnelle)){
-			debug($lastModif);
 			$tmp = $lastModif;
 			$requeteTitre = "SELECT titre
 					FROM evenements
