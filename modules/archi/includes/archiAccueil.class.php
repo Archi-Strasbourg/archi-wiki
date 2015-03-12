@@ -522,9 +522,9 @@ class ArchiAccueil extends config
 				//Gestion des dernieres modifs
 				$lastModifs = $this->getLatestModification(8);
 				foreach ($lastModifs as $modif){
+					$idAdresse = $modif['idAdresse'];
 					$e = new archiEvenement();
-					$adresseArray = $e->getArrayAdresse($modif['idEvenement']);
-					$idAdresse = $e->getIdAdresse($modif['idEvenement']);
+					$adresseArray = $e->getArrayAdresse($idAdresse,'idAdresse');
 
 
 					if(!isset($modif['titre']) || empty($modif['titre']) || $modif['titre']==""){
@@ -2511,50 +2511,7 @@ class ArchiAccueil extends config
 			}
 			$arrayLastModif[]=$tmp;
 		}
-		/*
-		$nbEltsRestant = ($nbElts - count($arrayLastModif));
-		$requeteAdditionnelle = "
-				SELECT
-				ae.idAdresse,
-				ee.idEvenement as idEvenementGroupeAdresse,
-				evt.idEvenement AS idEvenement,
-				evt.idEvenementRecuperationTitre ,
-				evt.idImagePrincipale AS idHistoriqueImage,
-				te.nom as typeEvenement,
-				date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
-				DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
-				evt.description
-				FROM evenements evt
-				LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
-				LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
-				LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-				LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
-				LEFT JOIN _evenementEvenement ee2 on ee2.idEvenement = ee.idEvenement
-				LEFT JOIN evenements evt2 on evt2.idEvenement = ee2.idEvenementAssocie
-								
-				WHERE ae.idAdresse IS NOT NULL
-				GROUP BY evt.idEvenement,ee.idEvenement, ae.idAdresse
-				HAVING evt.idEvenement = max(evt2.idEvenement)
-				ORDER BY  DateTri DESC
-				LIMIT $nbEltsRestant
-				";
-		
-		debug(array($requete,$requeteAdditionnelle));
-		$resultAdditionnelle = $this->connexionBdd->requete($requeteAdditionnelle);
-		$arrayLastModifAdditionnelle = array();
-		while($lastModif = mysql_fetch_assoc($resultAdditionnelle)){
-			$tmp = $lastModif;
-			$requeteTitre = "SELECT titre
-					FROM evenements
-					WHERE idEvenement = ".$lastModif['idEvenementRecuperationTitre']."";
-			$restitre = $this->connexionBdd->requete($requeteTitre);
-			$titreArray = mysql_fetch_assoc($restitre);
-			$tmp['titre'] = $titreArray['titre'];
-
-			$arrayLastModifAdditionnelle[]=$tmp;
-		}
-		return array_merge($arrayLastModif,$arrayLastModifAdditionnelle);
-		*/
+	
 		return $arrayLastModif;
 	}
 

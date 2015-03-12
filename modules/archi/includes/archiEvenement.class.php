@@ -7111,7 +7111,7 @@ class archiEvenement extends config
 	 * @param unknown $idEvenement related to the address
 	 * @return multitype:array of string composing the address
 	 */
-	public function getArrayAdresse($idEvenement,$type ='idEvenement'){
+	public function getArrayAdresse($id,$type ='idEvenement'){
 		switch($type){
 			case 'idEvenement':
 				$requete = "SELECT ha.numero,
@@ -7131,7 +7131,7 @@ class archiEvenement extends config
 						LEFT JOIN quartier q on q.idQuartier = ha.idQuartier
 						LEFT JOIN ville v on v.idVille = ha.idVille
 						LEFT JOIN pays p on p.idPays = ha.idPays
-						WHERE evt.idEvenement = ".$idEvenement."
+						WHERE evt.idEvenement = ".$id."
 								LIMIT 1
 								";
 				break;
@@ -7151,8 +7151,26 @@ class archiEvenement extends config
 						LEFT JOIN quartier q on q.idQuartier = ha.idQuartier
 						LEFT JOIN ville v on v.idVille = ha.idVille
 						LEFT JOIN pays p on p.idPays = ha.idPays
-						WHERE ae.idEvenement = ".$idEvenement."
+						WHERE ae.idEvenement = ".$id."
 								LIMIT 1
+								";
+			case 'idAdresse':
+				$requete = "SELECT ha.numero,
+						r.nom as nomRue,
+						r.prefixe,
+						sq.nom as nomSousQuartier ,
+						q.nom as nomQuartier,
+						v.codepostal as codepostal ,
+						v.nom as nomVille,
+						p.nom as nomPays
+						FROM  historiqueAdresse ha
+						LEFT JOIN rue r on r.idRue = ha.idRue
+						LEFT JOIN sousQuartier sq on sq.idSousQuartier = ha.idSousQuartier
+						LEFT JOIN quartier q on q.idQuartier = ha.idQuartier
+						LEFT JOIN ville v on v.idVille = ha.idVille
+						LEFT JOIN pays p on p.idPays = ha.idPays
+						WHERE ha.idAdresse = ".$id."
+						LIMIT 1
 								";
 				break;
 		}
