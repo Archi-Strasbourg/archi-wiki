@@ -14822,6 +14822,22 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
 		}
 	}
+	
+	/**
+	 * Get titre of an adresse
+	 * @param unknown $idAdresse
+	 * @return titre
+	 */
+	public function getTitre($idAdresse){
+		$requete ="SELECT e2.titre
+				FROM evenements e1, evenements e2
+				LEFT JOIN _adresseEvenement ae on ae.idEvenement = e1.idEvenement
+				WHERE ae.idAdresse = $idAdresse
+				AND e2.idEvenement = e1.`idEvenementRecuperationTitre` ";
+		$result = $this->connexionBdd->requete($requete);
+		$retValue = mysql_fetch_assoc($result);
+		return $retValue['titre'];
+	}
 
 
 }

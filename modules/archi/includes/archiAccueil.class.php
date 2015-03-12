@@ -527,28 +527,37 @@ class ArchiAccueil extends config
 					$idAdresse = $e->getIdAdresse($modif['idEvenement']);
 
 
-					//Adresse
-					$adresse = '';
-					if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero'] !='0'){
-						$adresse.=$adresseArray['numero'].' ';
-					}
-					if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-						$adresse.=$adresseArray['prefixe'];
-					}
-					if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
-						$adresse.=' '.$adresseArray['nomRue'];
-					}
-
-					//Image
-					$a = new archiAdresse();
-					$resImage = $a->getUrlImageFromAdresse($idAdresse,'moyen');
-
-					if($resImage['trouve'] != 1){
-						$resImgEvt = $a->getUrlImageFromEvenement($modif['idEvenement']);
-						$infoImage = $resImgEvt;
+					if(!isset($modif['titre']) || empty($modif['titre']) || $modif['titre']==""){
+						//Adresse
+						$adresse = '';
+						if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero'] !='0'){
+							$adresse.=$adresseArray['numero'].' ';
+						}
+						if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
+							$adresse.=$adresseArray['prefixe'];
+						}
+						if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
+							$adresse.=' '.$adresseArray['nomRue'];
+						}
 					}
 					else{
-						$infoImage = $resImage;
+						$adresse=$modif['titre'];
+					}
+					//Image
+					$a = new archiAdresse();
+					if($modif['idHistoriqueImage']==0 || !isset($modif['idHistoriqueImage']) || $modif['idHistoriqueImage']==''){
+						$resImage = $a->getUrlImageFromAdresse($idAdresse,'moyen');
+						if($resImage['trouve'] != 1){
+							$resImgEvt = $a->getUrlImageFromEvenement($modif['idEvenement']);
+							$infoImage = $resImgEvt;
+						}
+						else{
+							$infoImage = $resImage;
+						}
+						
+					}
+					else{
+						$infoImage['idHistoriqueImage']=$modif['idHistoriqueImage'];
 					}
 					$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
 					 
@@ -2413,48 +2422,96 @@ class ArchiAccueil extends config
 
 		}
 		$requete ="
-				SELECT
-				ae.idAdresse,
-				ee.idEvenement as idEvenementGroupeAdresse,
-				evt.idEvenement AS idEvenement,
-				evt.idEvenementRecuperationTitre ,
-				evt.idImagePrincipale AS idHistoriqueImage,
-				te.nom as typeEvenement,
-				date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
-				DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
-				evt.description
 				
-				FROM
-
-				evenements evt 
-				LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
-				LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
-				LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-				LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
-				LEFT JOIN _evenementEvenement ee2 on ee2.idEvenement = ee.idEvenement
-				LEFT JOIN evenements evt2 on evt2.idEvenement = ee2.idEvenementAssocie
-				$whereClause
-				GROUP BY evt.idEvenement,ee.idEvenement, ae.idAdresse
-				HAVING evt.idEvenement = max(evt2.idEvenement)
-				ORDER BY  DateTri DESC
+				SELECT * from (
+				
+					SELECT
+					ae.idAdresse,
+					ee.idEvenement as idEvenementGroupeAdresse,
+					evt.idEvenement AS idEvenement,
+					evt.idEvenementRecuperationTitre ,
+					evt.idImagePrincipale AS idHistoriqueImage,
+					te.nom as typeEvenement,
+					date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
+					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
+					evt.description,
+					1 as priorite
+					
+					FROM
+	
+					evenements evt 
+					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
+					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
+					LEFT JOIN _evenementEvenement ee2 on ee2.idEvenement = ee.idEvenement
+					LEFT JOIN evenements evt2 on evt2.idEvenement = ee2.idEvenementAssocie
+					$whereClause
+					GROUP BY evt.idEvenement,ee.idEvenement, ae.idAdresse
+					HAVING evt.idEvenement = max(evt2.idEvenement)
+					
+					UNION ALL
+					
+					SELECT
+					ae.idAdresse,
+					ee.idEvenement as idEvenementGroupeAdresse,
+					evt.idEvenement AS idEvenement,
+					evt.idEvenementRecuperationTitre ,
+					evt.idImagePrincipale AS idHistoriqueImage,
+					te.nom as typeEvenement,
+					date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
+					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
+					evt.description,
+					0 as priorite
+					
+					
+					FROM evenements evt
+					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
+					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
+					LEFT JOIN _evenementEvenement ee2 on ee2.idEvenement = ee.idEvenement
+					LEFT JOIN evenements evt2 on evt2.idEvenement = ee2.idEvenementAssocie
+									
+					WHERE ae.idAdresse IS NOT NULL
+					GROUP BY evt.idEvenement,ee.idEvenement, ae.idAdresse
+					HAVING evt.idEvenement = max(evt2.idEvenement)
+				) as tmp
+				
+				ORDER BY tmp.priorite DESC, tmp.DateTri DESC
 				LIMIT $nbElts
 				";
-
 		$result = $this->connexionBdd->requete($requete);
 		$arrayLastModif = array();
 		while($lastModif = mysql_fetch_assoc($result)){
 			$tmp = $lastModif;
-			$requeteTitre = "SELECT titre
-					FROM evenements
-					WHERE idEvenement = ".$lastModif['idEvenementRecuperationTitre']."";
+			$requeteTitre = "SELECT e1.titre , e2.idImagePrincipale
+					FROM evenements e1,evenements e2
+					WHERE e2.idEvenement = ".$lastModif['idEvenementGroupeAdresse']."
+					AND e1.idEvenement = e2.idEvenementRecuperationTitre
+							";
 			$restitre = $this->connexionBdd->requete($requeteTitre);
 			$titreArray = mysql_fetch_assoc($restitre);
 
 			$tmp['titre'] = $titreArray['titre'];
+			$idImagePrincipale = $titreArray['idImagePrincipale'];
 
+			
+			if(isset($idImagePrincipale) && !empty($idImagePrincipale)){
+				$requeteIdHistoImage = "
+						SELECT idHistoriqueImage
+						FROM historiqueImage hi 
+						WHERE idImage = $idImagePrincipale
+						ORDER BY idHistoriqueImage DESC
+						LIMIT 1
+						";
+				$resIdImg = $this->connexionBdd->requete($requeteIdHistoImage);
+				$arrayIdHistoImg = mysql_fetch_assoc($resIdImg);
+				$tmp['idHistoriqueImage'] = $arrayIdHistoImg['idHistoriqueImage'];
+			}
 			$arrayLastModif[]=$tmp;
 		}
-		
+		/*
 		$nbEltsRestant = ($nbElts - count($arrayLastModif));
 		$requeteAdditionnelle = "
 				SELECT
@@ -2481,6 +2538,8 @@ class ArchiAccueil extends config
 				ORDER BY  DateTri DESC
 				LIMIT $nbEltsRestant
 				";
+		
+		debug(array($requete,$requeteAdditionnelle));
 		$resultAdditionnelle = $this->connexionBdd->requete($requeteAdditionnelle);
 		$arrayLastModifAdditionnelle = array();
 		while($lastModif = mysql_fetch_assoc($resultAdditionnelle)){
@@ -2494,6 +2553,8 @@ class ArchiAccueil extends config
 
 			$arrayLastModifAdditionnelle[]=$tmp;
 		}
+		return array_merge($arrayLastModif,$arrayLastModifAdditionnelle);
+		*/
 		return $arrayLastModif;
 	}
 
