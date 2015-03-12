@@ -467,6 +467,95 @@ class archiInterest extends config{
 	}
 	
 	
+	public function getFavorisByCategories(){
+		$returnArray = array();
+		$auth = new ArchiAuthentification();
+		if(!$auth->estConnecte()){
+			$this->messages->addError('Impossible de récupérer vos favoris, vous n\'êtes pas connecté.');
+			$this->messages->display();
+			return false;
+		}
+		$userId = $auth->getIdUtilisateur();
+		//Rues
+		$requete = "
+		SELECT idRue
+		FROM _interetRue
+		WHERE idUtilisateur = $userId
+		";
+		$result = $this->connexionBdd->requete($requete);
+		$array = array();
+		while($row = mysql_fetch_assoc($result)){
+			$array[]=$row['idRue'];
+		}
+		if(!empty($array)){
+			$returnArray['rue'] = $array;
+		}
+
+		//Sous-quartier
+		$requete = "
+		SELECT idSousQuartier
+		FROM _interetSousQuartier
+		WHERE idUtilisateur = $userId
+		";
+		$result = $this->connexionBdd->requete($requete);
+		$array = array();
+		while($row = mysql_fetch_assoc($result)){
+			$array[]=$row['idSousQuartier'];
+		}
+		if(!empty($array)){
+			$returnArray['sousQuartier'] = $array;
+		}
+
+		//Quartier
+		$requete = "
+		SELECT idQuartier
+		FROM _interetQuartier
+		WHERE idUtilisateur = $userId
+		";
+		$result = $this->connexionBdd->requete($requete);
+		$array = array();
+		while($row = mysql_fetch_assoc($result)){
+			$array[]=$row['idQuartier'];
+		}
+		if(!empty($array)){
+			$returnArray['quartier'] = $array;
+		}
+
+		//Villes
+		$requete = "
+		SELECT idVille
+		FROM _interetVille
+		WHERE idUtilisateur = $userId
+		";
+		$result = $this->connexionBdd->requete($requete);
+		$array = array();
+		while($row = mysql_fetch_assoc($result)){
+			$array[]=$row['idVille'];
+		}
+		if(!empty($array)){
+			$returnArray['ville'] = $array;
+		}
+
+		//Pays
+		$requete = "
+		SELECT idPays
+		FROM _interetPays
+		WHERE idUtilisateur = $userId
+		";
+		$result = $this->connexionBdd->requete($requete);
+		$array = array();
+		while($row = mysql_fetch_assoc($result)){
+			$array[]=$row['idPays'];
+		}
+		if(!empty($array)){
+			$returnArray['pays'] = $array;
+		}
+		return $returnArray;
+	}
+	
+	
+	
+	
 	/*
 	 * Private functions
 	*/
