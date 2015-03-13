@@ -9547,7 +9547,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 ORDER BY date DESC
                 $sqlLimit
             ";
-           debug($req); 
         $res = $this->connexionBdd->requete($req);
         
         
