@@ -7181,7 +7181,6 @@ class archiEvenement extends config
 				));
 			}
 		}
-		debug(array('evenementData' => $evenementData, 'menuArray' => $menuArray, 'arrayPersonne'=>$arrayPersonne,'arrayFormEvent' => $arrayFormEvenement,'arrayCourantArchi' => $arrayCourantArchi));
 		return array('evenementData' => $evenementData, 'menuArray' => $menuArray, 'arrayPersonne'=>$arrayPersonne,'arrayFormEvent' => $arrayFormEvenement,'arrayCourantArchi' => $arrayCourantArchi);
 	}
 
