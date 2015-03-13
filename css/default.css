@@ -2110,9 +2110,13 @@ Page d'accueil
   	text-overflow: ellipsis; /* pour le reste du monde */
   	word-space: nowarp;
 }
-.textNews div:first-child a , .favorisTextWrapper div:first-child a, .titreLastModif a , .adresseLastModif a {
-	color: #273638;
-	font-size: 14px;
+.textNews div:first-child a , .favorisTextWrapper div:first-child a,.titreLastModif a, .description a, .adresseLastModif a {
+	color: white;
+	font-size: 12px;
+}
+.titreLastModif a{
+	color: black;
+	font-weight: bold;
 }
 .textNews div:first-child a {
 	font-weight: bold;

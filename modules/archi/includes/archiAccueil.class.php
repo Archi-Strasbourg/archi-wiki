@@ -521,13 +521,13 @@ class ArchiAccueil extends config
 
 				//Gestion des dernieres modifs
 				$lastModifs = $this->getLatestModification(8);
+				debug($lastModifs);
 				foreach ($lastModifs as $modif){
 					$idAdresse = $modif['idAdresse'];
 					$e = new archiEvenement();
 					$adresseArray = $e->getArrayAdresse($idAdresse,'idAdresse');
 
 
-					if(!isset($modif['titre']) || empty($modif['titre']) || $modif['titre']==""){
 						//Adresse
 						$adresse = '';
 						if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero'] !='0'){
@@ -539,10 +539,6 @@ class ArchiAccueil extends config
 						if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
 							$adresse.=' '.$adresseArray['nomRue'];
 						}
-					}
-					else{
-						$adresse=$modif['titre'];
-					}
 					//Image
 					$a = new archiAdresse();
 					if($modif['idHistoriqueImage']==0 || !isset($modif['idHistoriqueImage']) || $modif['idHistoriqueImage']==''){
@@ -579,7 +575,8 @@ class ArchiAccueil extends config
 							'adresse' => ucfirst($adresse),
 							'urlMiniature' => $urlImage,
 							'urlEvenement' => $urlEvenement,
-							'description' => $description
+							'description' => $description,
+							'titre'=> $modif['titre']
 					));
 				}
 
