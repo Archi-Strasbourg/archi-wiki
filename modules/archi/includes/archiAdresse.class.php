@@ -9547,7 +9547,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 ORDER BY date DESC
                 $sqlLimit
             ";
-            
+           debug($req); 
         $res = $this->connexionBdd->requete($req);
         
         
@@ -14244,8 +14244,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		$t->set_filenames(array('addressesList'=>'addressesList.tpl'));
 
 		if(empty($idList)){
-			$this->erreurs->ajouter("Aucune adresse à afficher.");
-			$html = $this->erreurs->afficher();
+			$t->assign_vars(array(
+					'nbReponses' => "Aucune adresse !",
+					'titre' => 'Adresses'
+			));
+			
+			
+			$this->messages->addWarning("Aucune adresse à afficher.");
+			$this->messages->display();
 		}
 		else{
 			

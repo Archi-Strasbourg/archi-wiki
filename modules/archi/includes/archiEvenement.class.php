@@ -1167,6 +1167,7 @@ class archiEvenement extends config
 					FROM evenements he
 					LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = he.idEvenement
 					WHERE idEvenement ='".$idHistoriqueEvenement."'";
+			debug($reqRecupIdEvenementGroupeAdresse); 
 			$resRecupIdEvenementGroupeAdresse = $this->connexionBdd->requete($reqRecupIdEvenementGroupeAdresse);
 			$fetchRecupIdEvenementGroupeAdresse = mysql_fetch_assoc($resRecupIdEvenementGroupeAdresse);
 			$idEvenementGroupeAdresse = $fetchRecupIdEvenementGroupeAdresse['idEvenementGroupeAdresse'];
@@ -1174,6 +1175,7 @@ class archiEvenement extends config
 
 			// recup d'idAdresse pour l'affichage du detail de l'adresse a la fin de la suppression
 			$reqSuppHistorique = "DELETE FROM evenements WHERE idEvenement = '".idEvenement."'";
+			debug($reqSuppHistorique);
 			$resSupprHistorique = $this->connexionBdd->requete($reqSuppHistorique);
 
 
@@ -1202,6 +1204,7 @@ class archiEvenement extends config
 					FROM _evenementEvenement
 					WHERE idEvenementAssocie = '".$idEvenement."'
 							";
+			//debug($reqVerifParent);
 
 			$resVerifParent = $this->connexionBdd->requete($reqVerifParent);
 			if(mysql_num_rows($resVerifParent)==1)
@@ -1211,6 +1214,7 @@ class archiEvenement extends config
 				{
 					// comptage du nombre d'elements du groupe d'adresse
 					$req = "select idEvenementAssocie from _evenementEvenement where idEvenement = '".$idEvenementGroupeAdresse."'";
+					//debug($req);
 					$res = $this->connexionBdd->requete($req);
 
 					if(mysql_num_rows($res)==1)
@@ -1306,21 +1310,26 @@ class archiEvenement extends config
 
 				// s'il n'y a aucun evenement lié au groupe d'adresses , on peut supprimer le groupe d'adresse et les liaisons vers celui ci
 				$reqDeleteGroupeAdresseHistorique = "DELETE FROM evenements WHERE idEvenement = '".$idEvenementGroupeAdresse."'";
+				//debug($reqDeleteGroupeAdresseHistorique);
 				$resDeleteGroupeAdresseHistorique = $this->connexionBdd->requete($reqDeleteGroupeAdresseHistorique);
 
 				$reqDeleteAdresseGroupeAdresse = "DELETE FROM _adresseEvenement WHERE idEvenement = '".$idEvenementGroupeAdresse."'";
+				//debug($reqDeleteAdresseGroupeAdresse);
 				$resDeleteAdresseGroupeAdresse = $this->connexionBdd->requete($reqDeleteAdresseGroupeAdresse);
 
 				// on supprime aussi les liaisons vers le groupe d'adresse dans les adresses liés
 				$reqDeleteLiaisonsAdressesLiees = "DELETE FROM _evenementAdresseLiee WHERE idEvenementGroupeAdresse='".$idEvenementGroupeAdresse."'";
+				//debug($reqDeleteLiaisonsAdressesLiees);
 				$resDeleteAdresseGroupeAdresse = $this->connexionBdd->requete($reqDeleteLiaisonsAdressesLiees);
 
 				// supprimons aussi les liaisons vueSur et prisDepuis sur le groupe d'adresse
 				$reqDeleteVueSurPrisDepuis = "DELETE FROM _adresseImage WHERE idEvenementGroupeAdresse = '".$idEvenementGroupeAdresse."' AND (vueSur='1' OR prisDepuis='1')";
+				//debug($reqDeleteVueSurPrisDepuis);
 				$resDeleteVueSurPrisDepuis = $this->connexionBdd->requete($reqDeleteVueSurPrisDepuis);
 
 				// suppression des liaisons entre evenement et evenement groupe d'adresse
 				$reqDeleteEvenementGAEvenementAssocie = "DELETE FROM _evenementEvenement WHERE idEvenement='".$idEvenementGroupeAdresse."'";
+				//debug($reqDeleteEvenementGAEvenementAssocie);
 				$resDeleteEvenementGAEvenementAssocie = $this->connexionBdd->requete($reqDeleteEvenementGAEvenementAssocie);
 			}
 		}
@@ -1330,17 +1339,15 @@ class archiEvenement extends config
 		
 		
 		
-	
 		$idEvenementGroupeAdresse=$this->getParent($idEvenement);
 		if($idEvenementGroupeAdresse == 0){
 			$accueil = new archiAccueil();
-			echo $accueil->afficheAccueil();			
+			echo $accueil->afficheAccueil();
 		}
 		else{
 			$adresse = new archiAdresse();
 			echo $adresse->afficherDetailAdresse($idAdresse, $this->getParent($idEvenement));
 		}
-
 	}
 
 
@@ -7270,17 +7277,6 @@ class archiEvenement extends config
 	 */
 	public function getIdGroupeEvenement($idEvenement){
 		
-
-		$requete = "
-		SELECT idEvenement
-		FROM _evenementEvenement
-		WHERE idEvenementAssocie = $idEvenement
-		ORDER BY idEvenement DESC
-		LIMIT 1
-		";
-		$result =  $this->connexionBdd->requete($requete);
-		$res = mysql_fetch_assoc($result);
-		
 		$requete = "
 				SELECT idEvenement 
 				FROM _evenementEvenement
@@ -7290,7 +7286,14 @@ class archiEvenement extends config
 				";
 		$result =  $this->connexionBdd->requete($requete);
 		$res = mysql_fetch_assoc($result);
-		return $res['idEvenement'];
+		if(isset($res['idEvenement']) && $res['idEvenement'] != ''){
+			return $res['idEvenement'];
+		}
+		else{
+			$this->messages->addError("Impossible de récupérer le groupe d'evenement, le groupe n'existe pas!");
+			$this->messages->display();
+			return false;
+		}
 	}
 
 	/**

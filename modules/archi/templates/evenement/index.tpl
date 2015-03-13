@@ -31,7 +31,7 @@
 <div class="part_two">
 <!-- BEGIN sommaireEvenements -->
 	<div class="sommaireEvenements inline-div">
-	<h2 class="black">Historique des évènements</h2>
+	<h2 class="black">Historique des événements</h2>
 		<ul>
 		<!-- BEGIN sommaireItem -->
 		<li>
