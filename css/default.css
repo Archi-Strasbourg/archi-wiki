@@ -2116,10 +2116,12 @@ Page d'accueil
 }
 .titreLastModif a{
 	color: black;
-	font-weight: bold;
+}
+.titreLastVisit a{
+	color: black;
 }
 .textNews div:first-child a {
-	font-weight: bold;
+	font-size: 13px;
 }
 
 .textNews div:last-child a{
@@ -2221,6 +2223,7 @@ Allow to display description on hover
 .lastVisitElement{
 	height: 100px;
 	float: left;
+	margin-right: 10px;
 }
 .favorisTextWrapper , .textLastVisit{
 	width: 190px;
