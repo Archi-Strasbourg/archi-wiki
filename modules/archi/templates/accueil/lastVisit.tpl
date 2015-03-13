@@ -22,7 +22,7 @@
 		</a>
 	</div>
 	<div class="textLastVisit">
-		<div class="titreLastModif">
+		<div class="titreLastvisit">
 		<a href="{lastVisit.urlEvenement}">{lastVisit.titre}</a>
 		</div>
 		<div class="adresseLastModif">

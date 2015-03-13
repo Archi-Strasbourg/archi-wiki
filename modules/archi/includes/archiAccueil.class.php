@@ -521,7 +521,6 @@ class ArchiAccueil extends config
 
 				//Gestion des dernieres modifs
 				$lastModifs = $this->getLatestModification(8);
-				debug($lastModifs);
 				foreach ($lastModifs as $modif){
 					$idAdresse = $modif['idAdresse'];
 					$e = new archiEvenement();

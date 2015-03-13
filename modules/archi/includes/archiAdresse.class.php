@@ -14441,7 +14441,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					$titreEvenements = 	implode(" - ", $info['titresEvenements']); // Getting all the events links on one line
 				}
 								
-				
 				$t->assign_block_vars(
 						'adresses',
 						array(
@@ -14500,12 +14499,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$limit =" LIMIT " .$indexResult . " , " . $optionsPagination['nbResultPerPage']. " ";
 			}
 			
-			
-			
 			/*
 			 * Previous request
 			 */
-			
 			$req="
 					SELECT ha.nom ,
 					ha.idHistoriqueAdresse ,
@@ -14530,6 +14526,19 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 						";
 				$resTitre = $this->connexionBdd->requete($titreRequest);
 				$arrayTitre = mysql_fetch_assoc($resTitre);
+				
+				if(!isset($arrayTitre['titre']) || $arrayTitre['titre'] == '' || empty($arrayTitre['titre'])){
+					$requeteAutreTitre ="
+							SELECT evt.titre
+							FROM evenements evt 
+							LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+							WHERE ee.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
+							";
+					$resultAutreTitre = $this->connexionBdd->requete($requeteAutreTitre);
+					if(mysql_num_rows($resultAutreTitre)==1){ //Si il n'y a qu'un résultat...
+						$arrayTitre = mysql_fetch_assoc($resultAutreTitre);
+					}
+				}
 				$fetch['titre'] = stripslashes($arrayTitre['titre']);
 				
 				$reqTitresEvenements ="
@@ -14539,7 +14548,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
 					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 					WHERE ha.idAdresse =  ".$fetch['idAdresse']."
-						
+					AND TRIM(he1.titre) <> ''
 						";
 				
 				$resTitresEvenements = $this->connexionBdd->requete($reqTitresEvenements);
@@ -14549,7 +14558,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				
 				//Generating all the link to the events linked to current address 
 				while ($row = mysql_fetch_assoc($resTitresEvenements)) {
-					$titre = ($row['titre']=="") ? $defaultEventTitle : ucfirst($row['titre']); //Assigning default title to event which doesn't have one 
+					$titre = ($row['titre']=="") ? $defaultEventTitle : ucfirst($row['titre']); //Assigning default title to event which doesn't have one
 					//Link creation with the ancre to each event
 					$titresEvenements[] =
 				 	"<a href='".
