@@ -24,6 +24,7 @@
 {ajaxFunctions}
 {calqueFunctions}
 <script src='includes/common.js'></script>
+<script src="js/jquery-ui/js/jquery-1.7.2.min.js" type="text/javascript">
 {jsHeader}
 <!-- BEGIN utilisateurNonConnecte -->
 <script src="https://browserid.org/include.js" type="text/javascript"></script>  

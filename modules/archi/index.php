@@ -1493,16 +1493,6 @@ if (isset($_GET['archiAffichage'])) {
         	$i = new archiInterest();
         	echo $i->deleteInterest();
         	break;
-        case 'showEvenement':
-        	$e = new archiEvenement();
-        	if(isset($_GET['idEvenement'])){
-        		$idEvenement = $_GET['idEvenement'];
-        		echo $e->displaySingleEvent($idEvenement,array('displayMenu' => true));
-        	}
-        	else{
-        		echo "no id specified";
-        	}
-        	break;
         case 'lienOpendata':
        		$s = new archiAccueil();
        		echo $s->afficherOpendata();
@@ -1527,6 +1517,10 @@ if (isset($_GET['archiAffichage'])) {
         	$util = new archiUtils();
         	$plop= $util->yoloDiff("thi is a test" , "This test is the test new test");
         	debug($plop);
+        	break;
+        case 'historiqueEvenement':
+        	$e = new archiEvenement();
+        	$e->afficherHistoriqueEvenement($_GET['idEvenement']);
         	break;
         }
     }

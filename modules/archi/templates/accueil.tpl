@@ -1,11 +1,12 @@
-﻿<div style='display:table;'>
-<!--
+﻿<div style='display: table;'>
+	<!--
 <div class="pub">
     <strong><a href="http://m.archi-strasbourg.org/"><?_("Découvrez la version smartphone de notre site sur ")?><i>m.archi-strasbourg.org</i></a></strong><br/><br/>
     <a href="https://itunes.apple.com/fr/app/id557893157?mt=8&affId=1578782"><img src="images/Advisa/AR_appstore.jpg" alt="<?_("Disponible sur l'App Store")?>" /></a> <a href="https://play.google.com/store/apps/details?id=archi.strasbourg.dev&feature=search_result#?t=W251bGwsMSwyLDEsImFyY2hpLnN0cmFzYm91cmcuZGV2Il0."><img src="images/Advisa/AR_googleplay.jpg" alt="<?_("Disponible sur Google Play")?>" /></a>
 </div>
 -->
 <script src="js/homeSearch.js"></script>
+<script src="js/jquery-ui/js/jquery-1.7.2.min.js"type="text/javascript"></script>
 <script type="js/utils.js"></script>
 
 
