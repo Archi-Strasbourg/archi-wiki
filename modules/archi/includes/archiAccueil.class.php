@@ -677,16 +677,6 @@ class ArchiAccueil extends config
 
 
 
-
-
-
-
-
-
-
-
-
-
 				//Gestion des dernieres modifications
 				$t->assign_vars(array(
 						'lastModifTitle' => _("Dernières modifications"),

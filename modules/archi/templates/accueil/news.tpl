@@ -13,9 +13,13 @@
 			</div>
 		</a>
 		<div class="textNews">
-			<div><a class="" href="{newsAccueil.urlNews}">{newsAccueil.titre}</a></div>
-			<div class="descriptionNews"><a class="" href="{newsAccueil.urlNews}">{newsAccueil.description}</a></div>
-			<div><a href="{newsAccueil.urlNews}">Lire la suite</a></div>
+			<div class="titreNews"><a  href="{newsAccueil.urlNews}">{newsAccueil.titre}</a></div>
+			<div class="descriptionNews ellipsis">
+			<div>
+			<a class="" href="{newsAccueil.urlNews}">{newsAccueil.description}</a>
+			</div>
+			</div >
+			<div class="readMore"><a href="{newsAccueil.urlNews}">Lire la suite</a></div>
 		</div>
 	</div>
 

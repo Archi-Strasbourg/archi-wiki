@@ -2103,6 +2103,11 @@ Page d'accueil
 .textNews > div:first-child,.textNews > div:last-child{
 	height: 16px;
 }
+
+.readMore a{
+	color: black !important;
+	text-decoration: underline;	
+}
 .textNews > div{
 	line-height: 16px;
 	overflow: hidden;
@@ -2110,27 +2115,26 @@ Page d'accueil
   	text-overflow: ellipsis; /* pour le reste du monde */
   	word-space: nowarp;
 }
-.textNews div:first-child a , .favorisTextWrapper div:first-child a,.titreLastModif a, .description a, .adresseLastModif a {
-	color: white;
-	font-size: 12px;
+
+.titreNews a{ 
+	color: #273638;
+	font-weight: bold;
+	font-size: 15px;
 }
-.titreLastModif a{
+
+.titreLastModif a , .newsTitle a{
 	color: black;
 }
-.titreLastVisit a{
-	color: black;
-}
+
+/*
 .textNews div:first-child a {
 	font-size: 13px;
 }
+*/
 
-.textNews div:last-child a{
-	color: black;
-	text-decoration: underline;
-}
-
-.newsTitle a{
-	color: black;
+.descriptionNews{
+	color: white;
+	text-decoration: none;
 }
 
 .miniatureWrapper , .newsMiniature{
@@ -2157,7 +2161,6 @@ Page d'accueil
 .miniatureWrapper a , .miniatureWrapper a:hover{
 	color: white;
 }
-
 
 .miniature{
 	position: absolute;
@@ -2196,30 +2199,15 @@ Page d'accueil
 	margin-bottom: 20px; 
 }
 
-
-/*
-
-Allow to display description on hover
-.lastModifElement:hover .description{
-	//display: inline-block;
-	visibility: visible;
-}
-.lastModifElement .description{
-	//display: none;
-	visibility: hidden;
-}
-*/
 .textLastModif , .textLastVisit{
 	width: 200px;
 }
-
 
 .favorisMiniatureWrapper , .favorisMiniature , .lastVisitElement >div:first-child {
 	//position: absolute;
 	width: 100px;
 	height: 100px;
 }
-
 .lastVisitElement{
 	height: 100px;
 	float: left;
@@ -2237,7 +2225,6 @@ Allow to display description on hover
 	float: left;
 	
 }
-
 
 .listeFavoris > div:first-child  , .lastVisitMessage{
 	margin-top: 10px;
@@ -2264,7 +2251,6 @@ Allow to display description on hover
 	text-decoration: underline;
 }
 
-
 .push-menu-top-search form{
 	float:left;
 	margin-right: 10px;
@@ -2284,7 +2270,6 @@ Allow to display description on hover
 }
 .push-menu-top-search .switchSearch a,.push-menu-top-search .switchSearch a:hover {
 		color: #BCBFBE;
-	
 }
 
 .push-menu-top-search .searchInput{
@@ -2363,4 +2348,43 @@ ins{
 }
 del{
 	background-color: #ffcccc;
+}
+
+
+.ellipsis {
+  	overflow: hidden;
+	height: 64px; 
+	line-height: 16px;
+}
+
+.ellipsis:before {
+	content:"";
+	float: left;
+	width: 5px; 
+	height: 72px; 
+}
+
+.ellipsis > *:first-child {
+	float: right;
+	width: 100%;
+	margin-left: -5px; 
+}		
+
+.ellipsis:after {
+	content: "\02026";  
+
+	box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+
+	float: right; position: relative;
+	top: -25px; left: 100%; 
+	width: 3em; margin-left: -3em;
+	padding-right: 5px;
+	
+	text-align: right;
+
+}
+.ellipsis:hover:after{
+	color: black;
 }
