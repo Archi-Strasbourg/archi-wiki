@@ -2773,6 +2773,7 @@ class archiEvenement extends config
 			}
 			elseif($fetch['idEvenementRecuperationTitre']!='0')
 			{
+				debug(debug_backtrace());
 				$reqVerifEvenementTitre = "SELECT idEvenement from evenements WHERE idEvenement=".$fetch['idEvenementRecuperationTitre'];
 				$resVerifEvenementTitre = $this->connexionBdd->requete($reqVerifEvenementTitre);
 				if(mysql_num_rows($resVerifEvenementTitre)>0)

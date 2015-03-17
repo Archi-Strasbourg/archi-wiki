@@ -2410,7 +2410,23 @@ class archiUtilisateur extends config {
     			$alreadyExist = true;
     		}
     	}
-    	if($alreadyExist== false){
+    	
+    	$idConsistency = false;
+    	//Check if idAdresse and idEvenementGroupeAdresse are consistent
+    	$requeteCheck = "
+    			SELECT idAdresse 
+    			FROM _adresseEvenement 
+    			WHERE idEvenement = $idEvenementGroupeAdresse
+    			";
+    	$resultCheck = $this->connexionBdd->requete($requeteCheck);
+    	while($rowCheck = mysql_fetch_assoc($resultCheck)){
+    		if($rowCheck['idAdresse'] == $idAdresse){
+    			$idConsistency = true;	
+    		}
+    	}
+    	
+    	
+    	if($alreadyExist == false && $idConsistency == true){
 	    	//Add ids to session array
 	    	//Flush the last url if 3 url are already registered
 	    	while(count($lastVisitedLinks) >=3){
@@ -2418,6 +2434,12 @@ class archiUtilisateur extends config {
 	    	}
 	    	//Append new url at the begining 
 	   		array_unshift($lastVisitedLinks, $subArray);
+    	}
+    	else{
+    		if($idConsistency == false){
+    			$this->messages->addWarning("Identifiant de groupe d'événements et d'adresse non consistants.");
+    			$this->messages->display();
+    		}
     	}
     	$_SESSION['lastVisited']=$lastVisitedLinks ;
     }
