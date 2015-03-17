@@ -1065,7 +1065,7 @@ class archiEvenement extends config
 			}
 				
 			else{
-				header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
+				header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$fetchAdresse['idAdresse'], 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
 			}
 			//$html = $adresse->afficherDetail('',$idEvenementGroupeAdresse);
 			/*$arrayAffichage = $this->afficher($id);
