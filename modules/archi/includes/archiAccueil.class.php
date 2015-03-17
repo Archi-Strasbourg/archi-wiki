@@ -608,18 +608,38 @@ class ArchiAccueil extends config
 							}
 
 
+							
+							
 							//Image
+							
+							$requeteImage = "
+									SELECT hi.idHistoriqueImage , e.idEvenement
+									FROM historiqueImage hi
+									LEFT JOIN evenements e on e.idImagePrincipale = hi.idImage
+									WHERE e.idEvenement = ".$lastVisit['idEvenementGroupeAdresse']."
+									AND e.idImagePrincipale !=0 
+									";
+							$resultImage = $this->connexionBdd->requete($requeteImage);
+							$array_image = mysql_fetch_assoc($resultImage);
+							
+								
 							$a = new archiAdresse();
-							$resImage = $a->getUrlImageFromAdresse($idAdresse,'moyen');
-
-							if($resImage['trouve'] != 1){
-								$resImgEvt = $a->getUrlImageFromEvenement($lastVisit['idEvenement']);
-								$infoImage = $resImgEvt;
+							if($array_image['idHistoriqueImage']==0 || !isset($array_image['idHistoriqueImage']) || $array_image['idHistoriqueImage']==''){
+								$resImage = $a->getUrlImageFromAdresse($idAdresse,'moyen');
+								if($resImage['trouve'] != 1){
+									$resImgEvt = $a->getUrlImageFromEvenement($lastVisit['idEvenementGroupeAdresse']);
+									$infoImage = $resImgEvt;
+								}
+								else{
+									$infoImage = $resImage;
+								}
 							}
 							else{
-								$infoImage = $resImage;
+								
+								$infoImage['idHistoriqueImage']=$array_image['idHistoriqueImage'];
 							}
-							$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
+							$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
+
 
 							//Url Evenement
 							$idEvenementGroupeAdresses = $lastVisit['idEvenementGroupeAdresse'];
