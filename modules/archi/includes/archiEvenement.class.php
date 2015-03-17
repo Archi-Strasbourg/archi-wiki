@@ -7037,6 +7037,10 @@ class archiEvenement extends config
 		$nomTypeEvenement = $fetch['nomTypeEvenement'];
 		$lienTypeEvenement = "<a href=$urlTypeEvenement>$nomTypeEvenement</a>";
 		
+		//Structure type
+		$urlTypeStructure = $this->creerUrl('' , 'listeStructure' , array('idTypeStructure'=>$fetch['idTypeStructure']));
+		$nomTypeStructure = $fetch['nomTypeStructure'];
+		$typeStructure = "<a href=\"$urlTypeStructure\">$nomTypeStructure</a> ";
 
 		//Info used for menu display
 		$cityId = $fetch['idVille'];
@@ -7093,7 +7097,7 @@ class archiEvenement extends config
 				'dates'=>$dateTxt,
 				'sources'=>$fetch['nomSource'],
 				'labelStructure' =>"Structure  : ",
-				'typeStructure'=>$fetch['nomTypeStructure'],
+				'typeStructure'=>$typeStructure,
 				'labelTypeEvenement' => 'Type d\'Évènement : ',
 				'urlTypeEvenement'=>$this->creerUrl('', 'evenementListe', array('selection' => 'typeEvenement', 'id' => $fetch['idTypeEvenement'])),
 				'lienTypeEvenement'=> $lienTypeEvenement,

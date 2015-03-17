@@ -458,61 +458,23 @@ class archiAdresse extends ArchiContenu
 		$t = new Template('modules/archi/templates/evenement');
 		$t->set_filenames(array('index'=>'index.tpl'));
 		$title = $this->displayTitle();
-		
+
 		//Init auth var to check furtherly user state (connected or not)
 		$authentification = new archiAuthentification();
-		
-		
-	//	debug(array('get'=>$this->variablesGet  , 'idAdresse ' => $idAdresse,'idEvt' => $idEvenementGroupeAdresse));
-		
+
+
+
 		//Setting idAdresse
-		
-		//if(!isset($idAdresse,$idEvenementGroupeAdresse)){
-			if(isset($idAdresse) && $idAdresse!=''){//Setting idEvenementGroupeAdresse
-				$requete = "SELECT idEvenement FROM _adresseEvenement WHERE idAdresse = ".$idAdresse;
-				$result = $this->connexionBdd->requete($requete);
-				$fetch = mysql_fetch_assoc($result);
-				$oldIdEvt = $idEvenementGroupeAdresse;
-				$idEvenementGroupeAdresse = $fetch['idEvenement'];
-				//debug(array( $oldIdEvt,$idEvenementGroupeAdresse));
-			}
-			/*
-			if(isset($idEvenementGroupeAdresse) && $idEvenementGroupeAdresse!=''){//Setting idAdresse
-				$requete = "SELECT idAdresse FROM _adresseEvenement WHERE idEvenement = ".$idEvenementGroupeAdresse;
-				$result = $this->connexionBdd->requete($requete);
-				$fetch = mysql_fetch_assoc($result);
-				$idAdresse = $fetch['idAdresse'];
-			}
-			*/
-		//}
-		
-		
-		
-		
-		/*
-		if(isset($this->variablesGet['archiIdAdresse']) && ! empty($this->variablesGet['archiIdAdresse'])){
-			$idAdresse=$this->variablesGet['archiIdAdresse'];
-		}
-		debug(array('get'=>$this->variablesGet  , 'idAdresse ' => $idAdresse,'idEvt' => $idEvenementGroupeAdresse));
-		debug(isset($idEvenementGroupeAdresse) && !empty($idEvenementGroupeAdresse));
-		if(isset($idEvenementGroupeAdresse) && !empty($idEvenementGroupeAdresse)){
-			//Getting idAdresse
-			$requete = "SELECT idAdresse FROM _adresseEvenement WHERE idEvenement = ".$idEvenementGroupeAdresse;
-			$result = $this->connexionBdd->requete($requete);
-			$fetch = mysql_fetch_assoc($result);
-			$idAdresse = $fetch['idAdresse'];
-		}
-		
-		elseif(isset($idAdresse) && !empty($idAdresse) && $idAdresse != ''){
+
+		if(isset($idAdresse) && $idAdresse!=''){//Setting idEvenementGroupeAdresse
 			$requete = "SELECT idEvenement FROM _adresseEvenement WHERE idAdresse = ".$idAdresse;
 			$result = $this->connexionBdd->requete($requete);
 			$fetch = mysql_fetch_assoc($result);
+			$oldIdEvt = $idEvenementGroupeAdresse;
 			$idEvenementGroupeAdresse = $fetch['idEvenement'];
+			//debug(array( $oldIdEvt,$idEvenementGroupeAdresse));
 		}
-		*/
-		//debug(array('get'=>$this->variablesGet  , 'idAdresse ' => $idAdresse,'idEvt' => $idEvenementGroupeAdresse));
-		
-		
+
 		//Getting coordo for the current address
 		$requete = "SELECT latitude , longitude FROM historiqueAdresse WHERE idAdresse = ".$idAdresse;
 		$result = $this->connexionBdd->requete($requete);
@@ -530,7 +492,7 @@ class archiAdresse extends ArchiContenu
 				'idEvenementGroupeAdresseCourant'=>$idEvenement
 		));
 
-		//Getting neighbors addresses 
+		//Getting neighborhood addresses 
 		$arrayEncartAdresses = $this->getArrayEncartAdressesImmeublesAvantApres(array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
 		$urlAutreBiens = $this->getArrayRetourLiensVoirBatiments($idAdresse);
 		
