@@ -1522,11 +1522,21 @@ if (isset($_GET['archiAffichage'])) {
         	$e = new archiEvenement();
         	$e->afficherHistoriqueEvenement($_GET['idEvenement']);
         	break;
+        case 'listeQuartiers':
+        	$criteres = array('typeStructure'=>22);
+        	$s = new archiRecherche();
+        	echo $s->advancedSearch($criteres);
+        	break;
+        case 'listeStructure':
+			$criteres = array('typeStructure'=>$_GET['idTypeStructure']);
+			$s = new archiRecherche();
+			echo $s->advancedSearch($criteres);
+        	break;
         }
     }
 }
 
-if ((count($_POST)==0 && count($_GET)==0) 
+if ((count($_POST)==0 && count($_GET)==0)
     || (count($_GET)==1 && isset($_GET["lang"]))
     || (isset($_GET['archiAffichage'])
     && $_GET['archiAffichage']=='afficheAccueil')

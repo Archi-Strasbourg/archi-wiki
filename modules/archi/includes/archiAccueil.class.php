@@ -2319,7 +2319,7 @@ class ArchiAccueil extends config
 				if($idPersonne = archiPersonne::isPerson($idEvenementGroup)){
 					$nom = ArchiPersonne::getName($idPersonne);
 					$adresse = $nom->nom. " " . $nom->prenom;
-					$url = $this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$idPerson));
+					$url = $this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$idPersonne));
 				}
 				else{
 					$idAdresse = $e->getIdAdresse($latestComment['idEvenement']);
@@ -2342,11 +2342,11 @@ class ArchiAccueil extends config
 			if(!archiPersonne::isPerson($idEvenementGroup)){
 				$adresseArray = $e->getArrayAdresse($idEvenement);
 				$adresse = '';
-				if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''){
-					$adresse.=$adresseArray['numero'];
+				if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero']!=0){
+					$adresse.=$adresseArray['numero'].' ';
 				}
 				if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-					$adresse.=' '.$adresseArray['prefixe'];
+					$adresse.=$adresseArray['prefixe'];
 				}
 				if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
 					$adresse.=' '.$adresseArray['nomRue'];
