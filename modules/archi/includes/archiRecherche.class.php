@@ -1869,7 +1869,6 @@ class archiRecherche extends config {
 				LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
 
 
-				WHERE ha1.idPays=0
 
 				GROUP BY ha1.idAdresse,ae.idAdresse,ha1.idHistoriqueAdresse
 				HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) AND count(ae.idAdresse)>0
@@ -1880,11 +1879,6 @@ class archiRecherche extends config {
 		$coordonnees=array();
 		while($fetch = mysql_fetch_assoc($res))
 		{
-			//$reqVille = "SELECT nom FROM ville WHERE idVille='".$fetch['idVilleAdresse']."'";
-			//$resVille = $this->connexionBdd->requete($reqVille);
-			//$fetchVille = mysql_fetch_assoc($resVille);
-			//if($fetchVille['nom']!='autre')
-			//{
 			$arrayIdVilles[] = $fetch['idVilleAdresse'];
 			$villeCoordonnees = "";
 
@@ -1892,7 +1886,6 @@ class archiRecherche extends config {
 
 			if(!isset($coords[$fetch['idVilleAdresse']]) && $fetchInfosVille['latitude']!='' && $fetchInfosVille['longitude']!='')
 				$coords[$fetch['idVilleAdresse']] = array('latitude'=>$fetchInfosVille['latitude'],'longitude'=>$fetchInfosVille['longitude'],'idPays'=>$fetchInfosVille['idPays']); // recupere les coordonnées d'une adresse appartenant a la ville
-			//}
 		}
 
 		$arrayIdVilles = array_unique($arrayIdVilles);

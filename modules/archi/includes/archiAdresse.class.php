@@ -5380,7 +5380,6 @@ class archiAdresse extends ArchiContenu
 		} else {
 			$modeAffichageListe = 'default';
 		}
-
 		$idVilleGeneral = 1;  // strasbourg par defaut
 		$s = new objetSession();
 
@@ -5543,7 +5542,6 @@ class archiAdresse extends ArchiContenu
 								";
 				$resNbVilles = $this->connexionBdd->requete($reqNbVilles);
 				$nbEnregistrementTotaux = mysql_num_rows($resNbVilles);
-
 				// nombre d'images affichées sur une page
 				$nbEnregistrementsParPage = 12;
 				$arrayPagination=$this->pagination(array(
@@ -5573,28 +5571,6 @@ class archiAdresse extends ArchiContenu
 
 				while($fetch = mysql_fetch_assoc($res))
 				{
-					// pour chaque ville on va compter les adresses qui correspondent
-					/*$reqCount = "
-					 SELECT count(distinct ha.idAdresse) as nbAdresses,ha.idAdresse
-					FROM historiqueAdresse ha2, historiqueAdresse ha
-					LEFT JOIN quartier q ON q.idVille = '".$fetch['idVille']."'
-					LEFT JOIN sousQuartier sq ON sq.idQuartier = q.idQuartier
-					LEFT JOIN rue r ON r.idSousQuartier = sq.idSousQuartier
-					WHERE
-					(   (ha.idRue = IFNULL(r.idRue , 0) and ha.idQuartier=0 and ha.idSousQuartier=0 and ha.idVille=0)
-							OR
-							(ha.idRue=0 and ha.idQuartier = IFNULL(q.idQuartier,0) and ha.idSousQuartier=0 and ha.idVille=0)
-							OR
-							(ha.idRue=0 and ha.idQuartier=0 and ha.idSousQuartier = IFNULL(sq.idSousQuartier,0) and ha.idVille=0)
-							OR
-							(ha.idRue=0 and ha.idQuartier=0 and ha.idSousQuartier =0 and ha.idVille = '".$fetch['idVille']."')
-					)
-					AND
-					ha2.idHistoriqueAdresse = ha.idHistoriqueAdresse
-					GROUP BY ha.idAdresse, ha.idHistoriqueAdresse
-					HAVING ha.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-					";*/
-
 
 					$listeRuesVille = "SELECT idRue FROM rue WHERE idSousQuartier IN (SELECT idSousQuartier FROM sousQuartier WHERE idQuartier IN (SELECT idQuartier FROM quartier WHERE idVille='".$fetch['idVille']."'))";
 					$listeSousQuartiersVille = "SELECT idSousQuartier FROM sousQuartier WHERE idQuartier IN (SELECT idQuartier FROM quartier WHERE idVille='".$fetch['idVille']."')";
