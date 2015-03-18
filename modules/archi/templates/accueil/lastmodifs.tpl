@@ -21,7 +21,7 @@
 		<a href="{lastModif.urlEvenement}">{lastModif.titre}</a>
 		</div>
 		<div class="adresseLastModif">
-		<a href="{lastModif.urlEvenement}">{lastModif.adresse}</a>
+		<a class="lienAdresse" href="{lastModif.urlEvenement}">{lastModif.adresse}</a> <a class="lienVille" href="{lastModif.urlEvenement}">{lastModif.ville}</a>
 		</div>
 		<div class="description">
 		<a href="{lastModif.urlEvenement}">{lastModif.description}</a>

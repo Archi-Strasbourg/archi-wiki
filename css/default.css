@@ -2388,3 +2388,12 @@ del{
 .ellipsis:hover:after{
 	color: black;
 }
+
+
+.adresseLastModif .lienAdresse,.adresseLastModif .lienVille{
+	color:#363636;
+}
+
+.adresseLastModif .lienVille{
+	font-size: 12px;	
+}

@@ -526,7 +526,6 @@ class ArchiAccueil extends config
 					$e = new archiEvenement();
 					$adresseArray = $e->getArrayAdresse($idAdresse,'idAdresse');
 
-
 						//Adresse
 						$adresse = '';
 						if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero'] !='0'){
@@ -567,11 +566,12 @@ class ArchiAccueil extends config
 					$description = $so->sansBalises($modif['description']);
 					$description = stripslashes($description);
 					$description = mb_substr($description, 0,130);;
-					 
+
 					$t->assign_block_vars('lastModif', array(
 							'miniatureLabelLeft'=>$modif['typeEvenement'],
 							'miniatureLabelRight' => $modif['dateCreationEvenement'],
 							'adresse' => ucfirst($adresse),
+							'ville'=>ucfirst($adresseArray['nomVille']),
 							'urlMiniature' => $urlImage,
 							'urlEvenement' => $urlEvenement,
 							'description' => $description,
