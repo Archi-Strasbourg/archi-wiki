@@ -2483,7 +2483,7 @@ class ArchiAccueil extends config
 					GROUP BY evt.idEvenement,ee.idEvenement, ae.idAdresse
 					HAVING evt.idEvenement = max(evt2.idEvenement)
 				) as tmp
-				
+				GROUP BY tmp.idEvenementGroupeAdresse
 				ORDER BY tmp.priorite DESC, tmp.DateTri DESC
 				LIMIT $nbElts
 				";
