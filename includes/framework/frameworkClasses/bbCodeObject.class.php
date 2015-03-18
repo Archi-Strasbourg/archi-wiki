@@ -230,7 +230,10 @@ class BBCodeObject extends config
             $description = preg_replace("#\\[lang\\=(.+)\\](.+)\\[/lang\\]#isU", "<span lang=\"\\1\">\\2</span>",  $description);
             $description = ($description);
         } else {
-            echo "<br>attention le parametre 'text' n'est pas defini dans la fonction convertToDisplay.<br>";
+        	$this->messages->addError("Problème de conversion du texte, aucun texte spécifié pour la fonction convertToDisplay");
+        	$this->messages->display();
+            //echo "<br>attention le parametre 'text' n'est pas defini dans la fonction convertToDisplay.<br>";
+            return false;
         }
         
         

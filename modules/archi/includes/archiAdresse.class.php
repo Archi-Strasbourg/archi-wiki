@@ -6425,7 +6425,6 @@ class archiAdresse extends ArchiContenu
 						if ($authentification->estAdmin()) {
 							$description.="<li><a href='".$this->creerUrl("", "deletePerson", array("id"=>$_GET["id"]))."'>"._("Supprimer")."</a></li>";
 						}
-						$description.="<li><a href='".$this->creerUrl("", "saveInterest", array("personne"=>$this->variablesGet["id"]))."'>"._("Ajouter aux favoris")."</a></li>";
 						$description.='</ul>';
 					}
 					$description.="<img src='".archiPersonne::getImage($this->variablesGet['id'])."' alt=''/>
@@ -9554,49 +9553,75 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             			$arrayIntituleAdresses[]=$this->getIntituleAdresse($fetchAdresses);
             		}
             		$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
+            		$urlAdresse = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
+            		$labelItemCommented = str_replace("( - )", "", implode(" / ", $arrayIntituleAdresses));
             		
             	}
             	elseif($fetch['typeCommentaires'] == 'commentairesEvenement'){
             		$e = new archiEvenement();
             		$idEvenementGroupeAdresse = $e->getIdEvenementGroupeAdresseFromIdEvenement($fetch['idEvenementGroupeAdresse']);
-            		
-            		$resAdresses = $this->getAdressesFromEvenementGroupeAdresses($idEvenementGroupeAdresse);
-            		$arrayIntituleAdresses = array();
-            		while($fetchAdresses = mysql_fetch_assoc($resAdresses))
-            		{
-            			$arrayIntituleAdresses[]=$this->getIntituleAdresse($fetchAdresses);
+
+            		if($idPersonne = archiPersonne::isPerson($idEvenementGroupeAdresse)){
+            			$nom = archiPersonne::getName($idPersonne) ;
+            			$labelItemCommented = $nom->prenom." ".$nom->nom;
+            			$urlAdresse = $this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$idPersonne));
+            			$urlImage = archiPersonne::getImage($idPersonne,'mini',false);
+            			if(!isset($urlImage) || empty($urlImage)){
+            				$array_image = archiPersonne::getImages($idPersonne);
+            				if(isset($array_image) && !empty($array_image)){
+            					$img = $array_image[0];
+            					$urlImage = "photos--".$img->dateUpload."-".$img->idHistoriqueImage."-mini.jpg";
+            				}
+            			}
             		}
-            		$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
+            		else{
+            			$resAdresses = $this->getAdressesFromEvenementGroupeAdresses($idEvenementGroupeAdresse);
+            			$arrayIntituleAdresses = array();
+            			while($fetchAdresses = mysql_fetch_assoc($resAdresses))
+            			{
+            				$arrayIntituleAdresses[]=$this->getIntituleAdresse($fetchAdresses);
+            			}
+            			 
+            			$labelItemCommented = str_replace("( - )", "", implode(" / ", $arrayIntituleAdresses));
+            			$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
+            			$urlAdresse = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
+            		}
             	}
-            	
-                
-                $imageSurListeTousLesCommentaires="";
-                $urlAdresse = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
-                if(isset($params['afficherTous']) && $params['afficherTous']==true)
-                {
-                    $txtCommentaire = stripslashes(stripslashes($fetch['commentaire']));
-                    $arrayImage = $this->getUrlImageFromAdresse($idAdresse,'mini',array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
-                    $imageSurListeTousLesCommentaires="<div style='float:left;display:block;overflow:visible;padding-right:3px;width:80px;text-align:center;'><a href='".$urlAdresse."'><img src='".$arrayImage['url']."' border=0 align=middle></a></div>";
-                }
-                else
-                {
-                    $txtCommentaire = stripslashes($fetch['commentaire']);
-                    
-                    $arrayTxtCommentaire = explode(" ",$txtCommentaire);
-                    foreach($arrayTxtCommentaire as $indice => $value)
-                    {
-                        if(pia_strlen($arrayTxtCommentaire[$indice])>30)
-                        {
-                            $arrayTxtCommentaire[$indice] = pia_substr($arrayTxtCommentaire[$indice],0,30)."...";
-                        }
+
+
+            	$imageSurListeTousLesCommentaires="";
+            	if(isset($params['afficherTous']) && $params['afficherTous']==true)
+            	{
+            		$txtCommentaire = stripslashes(stripslashes($fetch['commentaire']));
+            		if(!archiPersonne::isPerson($idEvenementGroupeAdresse)){
+            			$arrayImage = $this->getUrlImageFromAdresse($idAdresse,'mini',array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
+            			$urlImage = $arrayImage['url'];
+            		}
+            		if(!empty($urlImage)){
+            			$imageSurListeTousLesCommentaires="<div style='float:left;display:block;overflow:visible;padding-right:3px;width:80px;text-align:center;'><a href='".$urlAdresse."'><img src='".$urlImage."' border=0 align=middle></a></div>";
+            		}
+            	}
+            	else
+            	{
+            		$txtCommentaire = stripslashes($fetch['commentaire']);
+
+            		$arrayTxtCommentaire = explode(" ",$txtCommentaire);
+            		foreach($arrayTxtCommentaire as $indice => $value)
+            		{
+            			if(pia_strlen($arrayTxtCommentaire[$indice])>30)
+            			{
+            				$arrayTxtCommentaire[$indice] = pia_substr($arrayTxtCommentaire[$indice],0,30)."...";
+            			}
                     }
-                    
+
                     $txtCommentaire = $string->coupureTexte(implode(" ",$arrayTxtCommentaire),10);
                 }
-                $t->assign_block_vars('commentaires',array(
-                                                    'commentaire'=>$bbCode->convertToDisplay(array('text'=>$txtCommentaire)),
-                                                    'pseudo'=>"<div style='display:block;overflow:auto;text-decoration:none;font-weight:normal;'>".$imageSurListeTousLesCommentaires."<span style='display:block;font-weight:normal;'>".$fetch['dateF']." "._("de")." <span style='color:#507391;font-size:9px;font-weight:normal;'>".$fetch['nom'].' '.$fetch['prenom']."</span>"."<br>"._("pour")." <a href=\"".$urlAdresse."\" style='color:#507391;font-size:9px;'>".str_replace("( - )", "", implode(" / ", $arrayIntituleAdresses))."</a></span></div><div style='clear:both;'></div>"
-                                                    ));
+                $t->assign_block_vars(
+                		'commentaires',
+                		array(
+                				'commentaire'=>$bbCode->convertToDisplay(array('text'=>$txtCommentaire)),
+                				'pseudo'=>"<div style='display:block;overflow:auto;text-decoration:none;font-weight:normal;'>".$imageSurListeTousLesCommentaires."<span style='display:block;font-weight:normal;'>".$fetch['dateF']." "._("de")." <span style='color:#507391;font-size:9px;font-weight:normal;'>".$fetch['nom'].' '.$fetch['prenom']."</span>"."<br>"._("pour")." <a href=\"".$urlAdresse."\" style='color:#507391;font-size:9px;'>".$labelItemCommented."</a></span></div><div style='clear:both;'></div>"
+                		));
             }
 
             ob_start();
