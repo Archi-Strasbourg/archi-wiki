@@ -279,7 +279,7 @@ class archiInterest extends config{
 		$t->assign_vars(array(
 				'message' => $this->messages->display(),
 				'urlBack'=> $this->creerUrl('', 'mesInterets', array()),
-				'textLink' => _("Revenir à la page précédante")
+				'textLink' => _("Revenir à la page précédente")
 		));
 
 		ob_start();

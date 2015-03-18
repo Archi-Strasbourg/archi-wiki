@@ -2063,7 +2063,7 @@ class archiRecherche extends config {
 		 * Detecting parameters selected in the form and build the query with those criterias
 		*/
 		$tabForm=array(
-				'motcle'       => array('default'=> '' , 'value' => '', 'required'=>false, 'error'=>'', 'type'=>'text'),
+				'motcle'       => array('default'=> $motcle, 'value' => $motcle, 'required'=>false, 'error'=>'', 'type'=>'text'),
 				'pays'         => array('default'=> '0', 'value' => '', 'required'=>false, 'error'=>'','type'=>'numeric', 'checkExist'=>
 						array('table'=> 'pays', 'primaryKey'=> 'idPays')),
 				'ville'           => array('default'=> '0', 'value' => '', 'required'=>false ,'error'=>'','type'=>'numeric', 'checkExist'=>
@@ -2255,6 +2255,8 @@ class archiRecherche extends config {
 			 *  
 			 *  Concat 2 + idTypeStructure=12 refers to a street 
 			 *  
+			 *  idTypeStructure=22 refers to a neighborhood
+			 *  
 			 *  
 			 *  The lower level correspond to
 			 *  Title  of the event
@@ -2274,22 +2276,6 @@ class archiRecherche extends config {
 			
 			
 			
-			/*
-			 * 
-			 * 
-			 * 
-			 * 
-			 * /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ 
-			 * Quartier : tous les id set a 0 : a tester, gl hf 
-			 * /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ 
-			 * 
-			 * 
-			 * 
-			 * 
-			 * 
-			 * 10000000000000 * ((MATCH (concat3) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
-			10000000000000 * ((MATCH (concat3) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
-			*/
 			
 			
 			//				10000000000000 * ((MATCH (concat1) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
