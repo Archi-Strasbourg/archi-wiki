@@ -1043,24 +1043,17 @@ class archiAdresse extends ArchiContenu
 	// ***************************************************************************************************************************************
 	// renvoi l'adresse mise en forme
 	// ***************************************************************************************************************************************
-	public function getIntituleAdresse($fetch=array(),$params=array())
-	{
+	public function getIntituleAdresse($fetch=array(),$params=array()){
 		$idAdresse = 0;
 		// pour pouvoir afficher plusieurs adresses d'un meme groupe d'adresse si c'est le cas , on verifie si le parametre est precisé, sinon on garde le parametre d'origine en le placant juste dans un tableau
-		if(isset($params['arrayIdAdressesSurMemeGroupeAdresse']) && count($params['arrayIdAdressesSurMemeGroupeAdresse'])>0)
-		{
+		if(isset($params['arrayIdAdressesSurMemeGroupeAdresse']) && count($params['arrayIdAdressesSurMemeGroupeAdresse'])>0){
 			$arrayFetch = $params['arrayIdAdressesSurMemeGroupeAdresse'];
 		}
-		else
-		{
+		else{
 			$arrayFetch[] = $fetch;
 		}
 
-
-
-
-		if(isset($params['idAdresseReference']) && $params['idAdresseReference']!=0)
-		{
+		if(isset($params['idAdresseReference']) && $params['idAdresseReference']!=0){
 			// si on passe une adresse de reference en parametres (idAdresse de la page courante par exemple) , on a la regle suivante
 			// si le quartier et la ville sont les memes que ceux de l'adresse de reference on affiche pas le quartier et la ville de l'adresse en sortie
 			$arrayAdresse=$this->getArrayAdresseFromIdAdresse($params['idAdresseReference']);
@@ -1070,8 +1063,7 @@ class archiAdresse extends ArchiContenu
 		}
 
 		$separatorAfterTitle ='';
-		if(isset($params['setSeparatorAfterTitle']))
-		{
+		if(isset($params['setSeparatorAfterTitle'])){
 			$separatorAfterTitle = $params['setSeparatorAfterTitle'];
 		}
 
@@ -1079,28 +1071,23 @@ class archiAdresse extends ArchiContenu
 		$styleCSSTitre ='font-weight:bold;';
 		$styleCSSAdresse ='';
 		$classCSS='';
-		if(isset($params['classCSSTitreAdresse']))
-		{
+		if(isset($params['classCSSTitreAdresse']))	{
 			$classCSS="class='".$params['classCSSTitreAdresse']."'";
 		}
 
 
-		if(isset($params['styleCSSTitreAdresse']))
-		{
+		if(isset($params['styleCSSTitreAdresse'])){
 			$styleCSSTitre = $params['styleCSSTitreAdresse'];
 		}
 
 
-		if(isset($params['styleCSSAdresse']))
-		{
+		if(isset($params['styleCSSAdresse'])){
 			$styleCSSAdresse = $params['styleCSSAdresse'];
 		}
 
-		if(isset($params['displayFirstTitreAdresse']) && $params['displayFirstTitreAdresse']==true || (isset($params['ifTitreAfficheTitreSeulement']) && $params['ifTitreAfficheTitreSeulement']==true) || (isset($params['afficheTitreSiTitreSinonRien']) && $params['afficheTitreSiTitreSinonRien']==true))
-		{
+		if(isset($params['displayFirstTitreAdresse']) && $params['displayFirstTitreAdresse']==true || (isset($params['ifTitreAfficheTitreSeulement']) && $params['ifTitreAfficheTitreSeulement']==true) || (isset($params['afficheTitreSiTitreSinonRien']) && $params['afficheTitreSiTitreSinonRien']==true)){
 			$sqlGroupeAdresse ="";
-			if(isset($params['idEvenementGroupeAdresse']) && $params['idEvenementGroupeAdresse']!='' && $params['idEvenementGroupeAdresse']!='0')
-			{
+			if(isset($params['idEvenementGroupeAdresse']) && $params['idEvenementGroupeAdresse']!='' && $params['idEvenementGroupeAdresse']!='0'){
 				$sqlGroupeAdresse = " AND ae.idEvenement = '".$params['idEvenementGroupeAdresse']."' ";
 				$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($params['idEvenementGroupeAdresse']);
 			}
@@ -1123,21 +1110,17 @@ class archiAdresse extends ArchiContenu
 			";
 
 			$resVerif = $this->connexionBdd->requete($reqVerif);
-			if(mysql_num_rows($resVerif)>0)
-			{
+			if(mysql_num_rows($resVerif)>0){
 				$fetchVerif = mysql_fetch_assoc($resVerif);
-				if($fetchVerif['idEvenementRecuperationTitre']=='0')
-				{
+				if($fetchVerif['idEvenementRecuperationTitre']=='0'){
 					$trouve=false;
 				}
-				elseif($fetchVerif['idEvenementRecuperationTitre']=='-1')
-				{
+				elseif($fetchVerif['idEvenementRecuperationTitre']=='-1'){
 					$params['ifTitreAfficheTitreSeulement']=true;
 					$titre='';
 					$trouve=true;
 				}
-				elseif($fetchVerif['idEvenementRecuperationTitre']!='0')
-				{
+				elseif($fetchVerif['idEvenementRecuperationTitre']!='0'){
 					$reqTitre = "
 							SELECT he1.titre as titre
 							FROM evenements he2, evenements he1
@@ -1150,25 +1133,22 @@ class archiAdresse extends ArchiContenu
 					$fetchTitre = mysql_fetch_assoc($resTitre);
 					if (isset($params["noHTML"])) {
 						$titre=stripslashes($fetchTitre['titre']);
-					} else {
+					} 
+					else {
 						$titre = "<span $classCSS style='$styleCSSTitre'>".stripslashes($fetchTitre['titre'])."</span> ";
 					}
-					if(trim($fetchTitre['titre'])!='')
-					{
+					if(trim($fetchTitre['titre'])!=''){
 						$trouve=true;
 
 					}
-					else
-					{
+					else{
 						$trouve=true; // meme si pas de titre , ceci va permettre d'afficher l'adresse
 						$titre='';
 					}
-
 				}
 			}
 
-			if(!$trouve)
-			{
+			if(!$trouve){
 				// avec ce parametre , on va aller chercher le premier titre rencontré sur la liste des evenements du groupe d'adresse de l'adresse
 
 				$reqTitre = "
@@ -1187,24 +1167,21 @@ class archiAdresse extends ArchiContenu
 
 						";
 				$resTitre = $this->connexionBdd->requete($reqTitre);
-				if(mysql_num_rows($resTitre)==1)
-				{
+				if(mysql_num_rows($resTitre)==1){
 					$fetchTitre = mysql_fetch_assoc($resTitre);
 					if (isset($params["noHTML"])) {
 						$titre=stripslashes($fetchTitre['titre']);
-					} else {
+					} 
+					else {
 						$titre = "<b $classCSS>".stripslashes($fetchTitre['titre'])."</b> ";
 					}
-					if(trim($fetchTitre['titre'])=='')
-					{
+					if(trim($fetchTitre['titre'])==''){
 						$noTitreDetected=true;
 						$titre='';
 					}
 				}
 			}
 		}
-
-
 
 		$arrayNomAdresse = array();
 		$arrayNomRue = array();
@@ -1222,21 +1199,15 @@ class archiAdresse extends ArchiContenu
 
 		$i=0;
 
-
-
-
-		foreach($arrayFetch as $indice => $fetch)
-		{
-			if((isset($params['displayLibelleAdresseFromGroupeAdresseOnlyIdAdresse']) && $params['displayLibelleAdresseFromGroupeAdresseOnlyIdAdresse']==$fetch['idAdresse'] )|| !isset($params['displayLibelleAdresseFromGroupeAdresseOnlyIdAdresse']))
-			{
+		foreach($arrayFetch as $indice => $fetch){
+			if((isset($params['displayLibelleAdresseFromGroupeAdresseOnlyIdAdresse']) && $params['displayLibelleAdresseFromGroupeAdresseOnlyIdAdresse']==$fetch['idAdresse'] )|| !isset($params['displayLibelleAdresseFromGroupeAdresseOnlyIdAdresse'])){
 				$nomAdresse = "";
 				if(isset($fetch['numero']) && $fetch['numero']!='' && $fetch['numero']!='0')
 					$nomAdresse .= $fetch['numero'];
 
 
 				// recherche de l'indicatif
-				if(isset($fetch['idIndicatif']) && $fetch['idIndicatif']!='0')
-				{
+				if(isset($fetch['idIndicatif']) && $fetch['idIndicatif']!='0'){
 					$reqIndicatif = "SELECT nom FROM indicatif WHERE idIndicatif='".$fetch['idIndicatif']."'";
 					$resIndicatif = $this->connexionBdd->requete($reqIndicatif);
 					$fetchIndicatif = mysql_fetch_assoc($resIndicatif);
@@ -1244,15 +1215,13 @@ class archiAdresse extends ArchiContenu
 					$nomAdresse .=$fetchIndicatif['nom'];
 					$fetch['indicatif'] = $fetchIndicatif['nom']; // pour le regroupement , pour avoir l'indicatif
 				}
-				else
-				{
+				else{
 					$fetch['indicatif'] = '';
 				}
 
 				$arrayNomAdresseSansQuartierSsQuartierVilleRue[$i] = $nomAdresse;
 
-				if(isset($fetch['prefixeRue']))
-				{
+				if(isset($fetch['prefixeRue'])){
 					if(pia_substr($fetch['prefixeRue'],0,pia_strlen($fetch['prefixeRue']))=="'")
 						$nomAdresse.=' '.stripslashes($fetch['prefixeRue']).stripslashes(ucfirst($fetch['nomRue']));
 					else
@@ -1265,16 +1234,12 @@ class archiAdresse extends ArchiContenu
 
 				$arrayNomAdresseSansQuartierSsQuartierVille[$i] = $nomAdresse;
 
-				if(!isset($params['noSousQuartier']) || $params['noSousQuartier']==false)
-				{
-					if(isset($fetch['nomSousQuartier']) && $fetch['nomSousQuartier']!='autre')
-					{
-						if(isset($params['idAdresseReference']) && $params['idAdresseReference']!=0 && $idSousQuartierAdresseReference ==$fetch['idSousQuartier'])
-						{
+				if(!isset($params['noSousQuartier']) || $params['noSousQuartier']==false){
+					if(isset($fetch['nomSousQuartier']) && $fetch['nomSousQuartier']!='autre'){
+						if(isset($params['idAdresseReference']) && $params['idAdresseReference']!=0 && $idSousQuartierAdresseReference ==$fetch['idSousQuartier']){
 							// on ne precise pas le sous quartier si c'est le meme que l'adresse de reference
 						}
-						else
-						{
+						else{
 							$sousquartier=true;
 							if (!empty($fetch['nomSousQuartier'])) {
 								$nomAdresse .= ' ('.ucfirst($fetch['nomSousQuartier']);
@@ -1290,14 +1255,10 @@ class archiAdresse extends ArchiContenu
 					$arrayNomSousQuartiersRegroupes[$fetch['idSousQuartier'].$fetch['nomSousQuartier']][]=1;
 				}
 
-
-				if((!isset($params['noQuartier']) || $params['noQuartier']==false) || (isset($params['noQuartier']) && $params['noQuartier']==true && (!isset($fetch['idSousQuartier']) ||$fetch['idSousQuartier']=='0') || (!isset($fetch['idRue']) || $fetch['idRue']=='0') && isset($fetch['idQuartier']) && $fetch['idQuartier']!='0'))
-				{
-
+				if((!isset($params['noQuartier']) || $params['noQuartier']==false) || (isset($params['noQuartier']) && $params['noQuartier']==true && (!isset($fetch['idSousQuartier']) ||$fetch['idSousQuartier']=='0') || (!isset($fetch['idRue']) || $fetch['idRue']=='0') && isset($fetch['idQuartier']) && $fetch['idQuartier']!='0')){
 					if(isset($fetch['nomQuartier']) && $fetch['nomQuartier']!='autre')
 					{
-						if(isset($params['noQuartierCentreVille']) && $params['noQuartierCentreVille']==true && pia_strtolower($fetch['nomQuartier'])=="centre ville")
-						{
+						if(isset($params['noQuartierCentreVille']) && $params['noQuartierCentreVille']==true && pia_strtolower($fetch['nomQuartier'])=="centre ville"){
 							//$nomAdresse .= ' '.ucfirst($fetch['nomQuartier']);
 							if ($fetch['nomSousQuartier']=="autre") {
 								$nomAdresse .=" - ";
@@ -1305,10 +1266,8 @@ class archiAdresse extends ArchiContenu
 								$nomAdresse .=") ";
 							}
 						}
-						else
-						{
-							if(isset($params['idAdresseReference']) && $params['idAdresseReference']!=0 && $idQuartierAdresseReference==$fetch['idQuartier'])
-							{
+						else{
+							if(isset($params['idAdresseReference']) && $params['idAdresseReference']!=0 && $idQuartierAdresseReference==$fetch['idQuartier']){
 								// on ne precise pas le quartier si c'est le meme que l'adresse de reference ( si celle ci est précisée)
 								if((!isset($fetch['idRue']) || $fetch['idRue']=='0')) // sauf s'il n'y a pas d'idRue , sinon on afficherait rien
 								{
@@ -1318,8 +1277,7 @@ class archiAdresse extends ArchiContenu
 									//$nomAdresse .=") ";
 								}
 							}
-							else
-							{
+							else{
 								if (!empty($fetch['nomQuartier'])) {
 									if (!empty($fetch['nomSousQuartier'])) {
 										$nomAdresse .= isset($sousquartier)?' - ':' (';
@@ -1332,46 +1290,34 @@ class archiAdresse extends ArchiContenu
 							}
 						}
 					}
-
 				}
 
 				if(isset($fetch['idQuartier']))
 					$arrayNomQuartiersRegroupes[$fetch['idQuartier'].$fetch['nomQuartier']][]=1;
 
 
-
-
-
-				if(!isset($params['noVille']) ||$params['noVille']==false)
-				{
-					if(isset($fetch['nomVille'])) //  && $fetch['nomVille']!='Strasbourg'
-					{
-						if(isset($params['idAdresseReference']) && $params['idAdresseReference']!=0 && $idVilleAdresseReference ==$fetch['idVille'])
-						{
+				if(!isset($params['noVille']) ||$params['noVille']==false){
+					if(isset($fetch['nomVille'])) {//  && $fetch['nomVille']!='Strasbourg'	
+						if(isset($params['idAdresseReference']) && $params['idAdresseReference']!=0 && $idVilleAdresseReference ==$fetch['idVille']){
 							// on ne precise pas la ville si c'est la meme que la ville de l'adresse de reference
 						}
-						else
-						{
+						else{
 							$nomAdresse.= ' '.ucfirst($fetch['nomVille']);
 							$arrayNomVille[$i] = ucfirst($fetch['nomVille']);
 						}
 					}
-
-
 				}
 				if(isset($fetch['idVille']))
 					$arrayNomVillesRegroupes[$fetch['idVille'].$fetch['nomVille']][]=1;
 
-				if(isset($params['isAfficheAdresseStyle']) && $titre!='' && !isset($noTitreDetected))
-				{
+				if(isset($params['isAfficheAdresseStyle']) && $titre!='' && !isset($noTitreDetected)){
 					$nomAdresse="<span $styleCSSAdresse>".$nomAdresse."</span>";
 					$htmlStyleDebut = "<span $styleCSSAdresse>";
 					$htmlStyleFin = "</span>";
 				}
 
 				$arrayNomAdresse[$i] = $nomAdresse;
-				if(isset($arrayNomRue[$i]))
-				{
+				if(isset($arrayNomRue[$i]))	{
 					$arrayAdressesRegroupees[$arrayNomRue[$i]][] = $fetch;
 				}
 				$i++;
@@ -1380,126 +1326,22 @@ class archiAdresse extends ArchiContenu
 
 
 
-
 		$retour="";
 		if(isset($params['afficheTitreSiTitreSinonRien']) && $params['afficheTitreSiTitreSinonRien']==true) {
 			$retour = $titre;
 		} else {
-			if(isset($params['ifTitreAfficheTitreSeulement']) && $params['ifTitreAfficheTitreSeulement']==true && $titre!='')
-			{
+			if(isset($params['ifTitreAfficheTitreSeulement']) && $params['ifTitreAfficheTitreSeulement']==true && $titre!=''){
 				$retour = $titre;
 			}
-			else
-			{
+			else{
 				// on regarde si tous les quartiers et sous quartiers et villes des adresses du groupe d'adresse sont les memes , s'il y a plusieurs adresses , on factorises le quartier le sous quartier et la ville
-				if(count($arrayNomAdresse)>1)
-				{
-					/*
-					 $ok = true;
-					$okRue = true;
-					$quartier = "";
-					$sousQuartier = "";
-					$ville = "";
-					$rue = "";
-
-					$arrayUniqueRue = array_unique($arrayNomRue);
-					if(count($arrayUniqueRue)==1 && count($arrayNomRue)>1)
-					{
-					if(count($arrayUniqueRue)==1)
-					{
-					$rue = " ".$arrayNomRue[0];
-					}
-					}
-					else
-					{
-					$ok = false;
-					}
-
-					$arrayUniqueQuartier = array_unique($arrayNomQuartier);
-					if(count($arrayUniqueQuartier)==1 && count($arrayNomQuartier)>1 && isset($arrayNomQuartier[0]))
-					{
-					if(count($arrayUniqueQuartier)==1 )
-						$quartier = " ".$arrayNomQuartier[0];
-					}
-					else
-					{
-					$ok = false;
-					$okRue = false;
-					}
-
-					$arrayUniqueSousQuartier = array_unique($arrayNomSousQuartier);
-					if(count($arrayUniqueSousQuartier)==1 && count($arrayNomSousQuartier)>1)
-					{
-					if( count($arrayUniqueSousQuartier)==1 && isset($arrayNomSousQuartier[0]))
-						$sousQuartier = " ".$arrayNomSousQuartier[0];
-					else
-					{
-					$ok=false;
-					$okRue = false;
-					}
-					}
-					else
-					{
-					$ok = false;
-					$okRue = false;
-					}
-
-
-
-					$arrayUniqueVille = array_unique($arrayNomVille);
-					if(count($arrayUniqueVille)==1 && count($arrayNomVille)>1)
-					{
-					if(count($arrayUniqueVille)==1)
-						$ville = " ".$arrayNomVille[0];
-					}
-					else
-					{
-					$ok = false;
-					$okRue = false;
-					}
-
-					if($okRue)
-					{   // sans la rue
-					if($titre!='')
-					{
-					$retour = "<span style='$styleCSSTitre'>".$titre."</span>".$separatorAfterTitle.$htmlStyleDebut.implode("/",$arrayNomAdresseSansQuartierSsQuartierVille).$sousQuartier.$quartier.$ville.$htmlStyleFin;
-					}
-					else
-					{
-					$retour = $htmlStyleDebut.implode("/",$arrayNomAdresseSansQuartierSsQuartierVille).$sousQuartier.$quartier.$ville.$htmlStyleFin;
-					}
-					}
-					elseif($ok)
-					{   // on factorise , rue comprise
-					if($titre!='')
-					{
-					$retour  = "<span style='$styleCSSTitre'>".$titre."</span>".$separatorAfterTitle.$htmlStyleDebut.implode("/",$arrayNomAdresseSansQuartierSsQuartierVilleRue).$rue.$sousQuartier.$quartier.$ville.$htmlStyleFin;
-					}
-					else
-					{
-					$retour  = $htmlStyleDebut.implode("/",$arrayNomAdresseSansQuartierSsQuartierVilleRue).$rue.$sousQuartier.$quartier.$ville.$htmlStyleFin;
-					}
-					}
-					else
-					{   // pas de factorisation
-					if($titre!='')
-					{
-					$retour  = "<span style='$styleCSSTitre'>".$titre."</span>".$separatorAfterTitle.implode("/",$arrayNomAdresse);
-					}
-					else
-					{
-					$retour  = implode("/",$arrayNomAdresse);
-					}
-					}
-					*/
+				if(count($arrayNomAdresse)>1){
 					$nomQuartierFactorise = "";
 					$nomVilleFactorise = "";
 					$nomSousQuartierFactorise = "";
-					foreach($arrayAdressesRegroupees as $intituleRue => $fetchRues)
-					{
+					foreach($arrayAdressesRegroupees as $intituleRue => $fetchRues)	{
 
-						foreach($fetchRues as $indice => $fetchRue)
-						{
+						foreach($fetchRues as $indice => $fetchRue)	{
 							if($fetchRue['numero']=='0' ||$fetchRue['numero']=='')
 								$retour.='';
 							else
@@ -1513,29 +1355,22 @@ class archiAdresse extends ArchiContenu
 
 						$retour .= $intituleRue." ";
 
-						if($fetchRue['nomSousQuartier']!='' && $fetchRue['nomSousQuartier']!='autre' && count($arrayNomSousQuartiersRegroupes)>1)
-						{
+						if($fetchRue['nomSousQuartier']!='' && $fetchRue['nomSousQuartier']!='autre' && count($arrayNomSousQuartiersRegroupes)>1){
 							$retour.= $fetchRue['nomSousQuartier']." ";
 						}
-						else
-						{
+						else{
 							$nomSousQuartierFactorise = "";
-							if(isset($fetchRue['idSousQuartier']) && $fetchRue['nomSousQuartier']!='' && $fetchRue['nomSousQuartier']!='autre')
-							{
+							if(isset($fetchRue['idSousQuartier']) && $fetchRue['nomSousQuartier']!='' && $fetchRue['nomSousQuartier']!='autre'){
 								$nomSousQuartierFactorise = "(".$fetch['nomSousQuartier']." ";
 							}
 						}
 
-						if($fetchRue['nomQuartier']!='' && $fetchRue['nomQuartier']!='autre' && count($arrayNomQuartiersRegroupes)>1)
-						{
+						if($fetchRue['nomQuartier']!='' && $fetchRue['nomQuartier']!='autre' && count($arrayNomQuartiersRegroupes)>1){
 							$retour.= $fetchRue['nomQuartier'];
-
 						}
-						else
-						{
+						else{
 							$nomQuartierFactorise = "";
-							if($fetchRue['nomQuartier']!='' && $fetchRue['nomQuartier']!='autre')
-							{
+							if($fetchRue['nomQuartier']!='' && $fetchRue['nomQuartier']!='autre'){
 								$nomQuartierFactorise = empty($nomSousQuartierFactorise)?"(":"- ";
 								$nomQuartierFactorise.=$fetchRue['nomQuartier'].") ";
 							} else {
@@ -1543,54 +1378,42 @@ class archiAdresse extends ArchiContenu
 							}
 						}
 
-						if($fetchRue['nomVille']!='' && count($arrayNomVillesRegroupes)>1)
-						{
+						if($fetchRue['nomVille']!='' && count($arrayNomVillesRegroupes)>1)						{
 							$retour.= $fetchRue['nomVille']." ";
 						}
-						else
-						{
+						else{
 							$nomVilleFactorise = $fetchRue['nomVille']." ";
 						}
 
 						$retour.="/ ";
-
 					}
-
 					$retour= pia_substr($retour,0,-(pia_strlen("/ ")));
-
-					if(count($arrayNomSousQuartiersRegroupes)==1)
-					{
+					if(count($arrayNomSousQuartiersRegroupes)==1){
 						$retour .= $nomSousQuartierFactorise;
 					}
 
-					if(count($arrayNomQuartiersRegroupes)==1)
-					{
+					if(count($arrayNomQuartiersRegroupes)==1){
 						$retour .= $nomQuartierFactorise;
 					}
 
-					if(count($arrayNomVillesRegroupes)==1)
-					{
+					if(count($arrayNomVillesRegroupes)==1){
 						$retour .= $nomVilleFactorise;
 					}
 
 					$retour.="";
 
-					if($titre!='')
-					{
+					if($titre!=''){
 						$retour = "<span style='$styleCSSTitre'>".$titre."</span>".$separatorAfterTitle.$htmlStyleDebut.$retour.$htmlStyleFin;
 					}
-					else
-					{
+					else{
 						// retour = retour
 					}
-
-				} else {
-					if($titre!='')
-					{
+				} 
+				else {
+					if($titre!=''){
 						$retour = "<span style='$styleCSSTitre'>".$titre."</span>".$separatorAfterTitle.implode("/",$arrayNomAdresse);
 					}
-					else
-					{
+					else{
 						$retour = implode("/",$arrayNomAdresse);
 					}
 				}
@@ -12618,13 +12441,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         // recherche de l'image principale courante , sinon celle de position 1 , sinon celle par defaut
         // image centrale = image2
         $arrayImage2 = $this->getUrlImageFromAdresse(0,'moyen',array('idEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']));
-        
         $isPhotoCentrale = false;
         $dimensions = array();
         if($arrayImage2['trouve'])
         {
             $isPhotoCentrale = true;
-            list($w,$h) = getimagesize($this->getCheminPhysique()."images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg");
+            //list($w,$h) = getimagesize($this->getCheminPhysique()."images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg");
+            //TODO : Change back URL for production
+            list($w,$h) = getimagesize("http://archi-strasbourg.org/images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg");
             $newWGrand = round(75*$w/100);
             $newHGrand = round(75*$h/100);
             
@@ -13076,20 +12900,20 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             
             if($arrayImage['trouve'])
             {
-                list($w,$h) = getimagesize($this->getCheminPhysique()."images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
-                    
+            	//TODO : Change back URL for production
+                list($w,$h) = getimagesize("http://archi-strasbourg.org/images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
+                //list($w,$h) = getimagesize($this->getCheminPhysique()."images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
+				debug(array('w' => $w , 'h'=> $h)) ;
+				debug("http://archi-strasbourg.org/images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
                 $newWGrand = round(75*$w/100);
                 $newHGrand = round(75*$h/100);
                     
                 $newWPetit = round(35*$w/100);
                 $newHPetit = round(35*$h/100);
-                
-                
                 $image = "<div id='divImagePetit".$numeroImage."' style='display:block;'><img src='".$arrayImage['url']."'  width=$newWPetit height=$newHPetit id='image".$numeroImage."Petit' alt=''></div><div id='divImageGrand".$numeroImage."' style='display:none;'><a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$params['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'><img src='resizeImage.php?id=".$arrayImage['idHistoriqueImage']."'   height=$newHGrand alt='' id='image".$numeroImage."Grand'></a></div>";
             }
             else
             {
-                
                 $image = "<div id='divImagePetit".$numeroImage."' style='display:block;'><img src='resizeImage.php' alt='' width='70' id='image".$numeroImage."Petit'></div><div id='divImageGrand".$numeroImage."' style='display:none;'><a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$params['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'><img alt='' src='resizeImage.php' id='image".$numeroImage."Grand'></a></div>";
             }
             $adresse = "<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$params['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'>".$this->getIntituleAdresseFrom($params['idAdresse'],'idAdresse',array('noSousQuartier'=>true,'noQuartier'=>true,'noVille'=>true))."</a>";
@@ -14386,6 +14210,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				//Processing name of the address
 				$nom = ucfirst($info['nom']);
 				$fulladdress =  ucfirst($this->getIntituleAdresseFrom($info['idEvenementGroupeAdresse'],$type='idEvenementGroupeAdresse'));
+				$fulladdress2 =  ucfirst($this->getIntituleAdresseFrom($info['idAdresse'],$type='idAdresse'));
+				debug($fulladdress);
+				debug($fulladdress2);
 				$titre = $info['titre'];
 				
 				//If prisdepuis

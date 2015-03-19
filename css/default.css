@@ -2281,27 +2281,32 @@ Page d'accueil
 	width: 500px;	
 }
 
-
-.rechercheBottomElements{
+.rechercheBottomElements {
 	margin-top: 10px;
 	color: white;
 }
 
-.rechercheBlock{
-	width: 700px;	
-	height: 100px;
+.push-menu-top-search .rechercheBlock {
 	margin: auto;
+	width: 700px;
+	
 }
 
-.rechercheBottomElements > span:nth-child(1){
+.rechercheBottomElements>span:nth-child(1) {
 	float: left;
 }
 
-.lienRechercheAvancee{
+.push-menu-top-search .lienRechercheAvancee {
 	float: right;
 }
 
-.lienRechercheAvancee , .lienRechercheAvancee:hover{
+.lienRechercheAvancee {
+	float: left;
+	margin-left: 20px;
+}
+
+
+.lienRechercheAvancee,.lienRechercheAvancee:hover {
 	color: #FC802C;	
 }
 
