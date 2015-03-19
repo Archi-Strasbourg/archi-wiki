@@ -524,19 +524,20 @@ class ArchiAccueil extends config
 				foreach ($lastModifs as $modif){
 					$idAdresse = $modif['idAdresse'];
 					$e = new archiEvenement();
-					$adresseArray = $e->getArrayAdresse($idAdresse,'idAdresse');
+					$adresseArray = $e->getArrayAdresse($modif['idEvenementGroupeAdresse'],'idEvenementGroupeAdresse');
 
-						//Adresse
-						$adresse = '';
-						if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero'] !='0'){
-							$adresse.=$adresseArray['numero'].' ';
-						}
-						if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-							$adresse.=$adresseArray['prefixe'];
-						}
-						if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
-							$adresse.=' '.$adresseArray['nomRue'];
-						}
+					//Adresse
+					$adresse = '';
+					if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero'] !='0'){
+						$adresse.=$adresseArray['numero'].' ';
+					}
+					if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
+						$adresse.=$adresseArray['prefixe'];
+					}
+					if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
+						$adresse.=' '.$adresseArray['nomRue'];
+					}
+
 					//Image
 					$a = new archiAdresse();
 					if($modif['idHistoriqueImage']==0 || !isset($modif['idHistoriqueImage']) || $modif['idHistoriqueImage']==''){

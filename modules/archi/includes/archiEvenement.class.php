@@ -99,8 +99,6 @@ class archiEvenement extends config
 			// *****************************************************
 			// ajout de l'evenement groupe d'adresses
 			$idEvenementGroupeAdresse = $this->getNewIdEvenement();
-
-
 			// creation de l'evenement parent groupe d'adresse
 			$sql = "INSERT INTO evenements (idEvenement, titre, description, dateDebut, dateFin, idSource, idUtilisateur, idTypeStructure, idTypeEvenement,dateCreationEvenement)
 					VALUES (".$idEvenementGroupeAdresse.", '', '', '', '', ".$tabForm['source']['value'].", ".$idUtilisateur.", 0, ".$this->getIdTypeEvenementGroupeAdresse().",now())";
@@ -416,6 +414,7 @@ class archiEvenement extends config
 								insert into _evenementEvenement (idEvenement,idEvenementAssocie)
 								values ('".$idEvenement."','".$idSousEvenement."');
 										";
+						debug($sqlEvenementEvenement);
 						$this->connexionBdd->requete($sqlEvenementEvenement);
 					}
 					else
@@ -425,6 +424,7 @@ class archiEvenement extends config
 								insert into _evenementEvenement (idEvenement,idEvenementAssocie)
 								values ('".$this->variablesPost['evenementGroupeAdresse']."','".$idSousEvenement."')
 										";
+						debug($sqlEvenementEvenement);
 						$this->connexionBdd->requete($sqlEvenementEvenement);
 					}
 
@@ -4641,6 +4641,7 @@ class archiEvenement extends config
 
 			// association entre l'evenement et le groupe d'adresse
 			$sqlEvenementEvenement = "INSERT INTO _evenementEvenement (idEvenement,idEvenementAssocie) VALUES ('".$idNouveauGroupeAdresse."','".$idEvenement."')";
+			debug($sqlEvenementEvenement);
 			$resEvenementEvenement = $this->connexionBdd->requete($sqlEvenementEvenement);
 
 			// suppression de l'ancienne liaison avec l'ancien groupe d'adresse
@@ -4721,7 +4722,7 @@ class archiEvenement extends config
 
 				// on ajoute la liaison de l'evenement et du nouveau groupe d'adresse dans la table _evenementEvenement
 				$reqEvenementEvenement = "INSERT INTO _evenementEvenement (idEvenement,idEvenementAssocie) VALUES ('".$deplacerVersIdGroupeAdresse."','".$idEvenementADeplacer."')";
-
+debug($reqEvenementEvenement);
 				$resEvenementEvenement = $this->connexionBdd->requete($reqEvenementEvenement);
 
 				// et on rafraichit les positions des evenements du groupe d'adresses de destination avec le nouvel evenement ajouté
@@ -7225,7 +7226,6 @@ class archiEvenement extends config
 						LEFT JOIN ville v on v.idVille = ha.idVille
 						LEFT JOIN pays p on p.idPays = ha.idPays
 						WHERE evt.idEvenement = ".$id."
-								LIMIT 1
 								";
 				break;
 			case 'idEvenementGroupeAdresse' :
@@ -7245,8 +7245,8 @@ class archiEvenement extends config
 						LEFT JOIN ville v on v.idVille = ha.idVille
 						LEFT JOIN pays p on p.idPays = ha.idPays
 						WHERE ae.idEvenement = ".$id."
-								LIMIT 1
 								";
+				break;
 			case 'idAdresse':
 				$requete = "SELECT ha.numero,
 						r.nom as nomRue,
@@ -7263,13 +7263,19 @@ class archiEvenement extends config
 						LEFT JOIN ville v on v.idVille = ha.idVille
 						LEFT JOIN pays p on p.idPays = ha.idPays
 						WHERE ha.idAdresse = ".$id."
-						LIMIT 1
 								";
 				break;
 		}
 		$result = $this->connexionBdd->requete($requete);
-		$fetch = mysql_fetch_assoc($result);
-		return $fetch;
+		$array_numero = array();
+		$return_array = array();
+		while($row = mysql_fetch_assoc($result)){
+			$return_array = $row;
+			$array_numero[]=$row['numero'];
+		}
+		$numero = implode('-', $array_numero);
+		$return_array['numero'] = $numero;
+		return $return_array;
 	}
 
 
