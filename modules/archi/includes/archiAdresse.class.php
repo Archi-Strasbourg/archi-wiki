@@ -14208,9 +14208,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				//Processing name of the address
 				$nom = ucfirst($info['nom']);
 				$fulladdress =  ucfirst($this->getIntituleAdresseFrom($info['idEvenementGroupeAdresse'],$type='idEvenementGroupeAdresse'));
-				$fulladdress2 =  ucfirst($this->getIntituleAdresseFrom($info['idAdresse'],$type='idAdresse'));
-				debug($fulladdress);
-				debug($fulladdress2);
 				$titre = $info['titre'];
 				
 				//If prisdepuis
