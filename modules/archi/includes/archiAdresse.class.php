@@ -12903,8 +12903,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             	//TODO : Change back URL for production
                 list($w,$h) = getimagesize("http://archi-strasbourg.org/images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
                 //list($w,$h) = getimagesize($this->getCheminPhysique()."images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
-				debug(array('w' => $w , 'h'=> $h)) ;
-				debug("http://archi-strasbourg.org/images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
                 $newWGrand = round(75*$w/100);
                 $newHGrand = round(75*$h/100);
                     
