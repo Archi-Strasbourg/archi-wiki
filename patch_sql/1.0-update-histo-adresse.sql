@@ -21,7 +21,8 @@ SET idSousQuartier = (SELECT rue.idSousQuartier
             WHERE rue.idRue = historiqueAdresse.idRue)
 WHERE EXISTS (SELECT rue.idRue
               FROM rue
-              WHERE rue.idRue = historiqueAdresse.idRue);
+              WHERE rue.idRue = historiqueAdresse.idRue
+              AND rue.idRue!=0);
 ;
 
 
@@ -32,7 +33,8 @@ SET idQuartier = (SELECT sousQuartier.idQuartier
             WHERE sousQuartier.idSousQuartier = historiqueAdresse.idSousQuartier)
 WHERE EXISTS (SELECT sousQuartier.idSousQuartier
               FROM sousQuartier
-              WHERE sousQuartier.idSousQuartier = historiqueAdresse.idSousQuartier);
+              WHERE sousQuartier.idSousQuartier = historiqueAdresse.idSousQuartier
+              AND sousQuartier.idSousQuartier!=0);
 ;
 
 
@@ -43,7 +45,8 @@ SET idVille = (SELECT quartier.idVille
             WHERE quartier.idQuartier = historiqueAdresse.idQuartier)
 WHERE EXISTS (SELECT quartier.idVille
               FROM quartier
-              WHERE quartier.idQuartier = historiqueAdresse.idQuartier);
+              WHERE quartier.idQuartier = historiqueAdresse.idQuartier
+              AND quartier.idVille != 0);
 ;
 
 
@@ -54,7 +57,8 @@ SET idPays = (SELECT ville.idPays
             WHERE ville.idVille = historiqueAdresse.idVille)
 WHERE EXISTS (SELECT ville.idPays
               FROM ville
-              WHERE ville.idVille = historiqueAdresse.idVille);
+              WHERE ville.idVille = historiqueAdresse.idVille
+              AND ville.idPays != 0);
 ;
 SET FOREIGN_KEY_CHECKS = 1;
 
