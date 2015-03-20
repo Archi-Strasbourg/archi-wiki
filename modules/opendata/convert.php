@@ -23,7 +23,7 @@ $typeConversion = $_POST['typeConversion'];
 echo "<div><h2>$typeConversion</h2></div>";
 
 //Using a strategy pattern
-$config = new Config('archi_u_preprod', 'archi_pwd_preprod', 'archi_dbname_preprod', 'localhost');
+$config = new ConfigOD('archi_u_preprod', 'archi_pwd_preprod', 'archi_dbname_preprod', 'localhost');
 $rp = new RequestProcessor(NULL,$config);
 $rp->executeStrategy($typeConversion);
 

@@ -2430,7 +2430,10 @@ class ArchiAccueil extends config
 		}
 		$requete ="
 				
-				SELECT * from (
+				SELECT *
+				
+				
+				from (
 				
 					SELECT
 					ae.idAdresse,
@@ -2446,13 +2449,17 @@ class ArchiAccueil extends config
 					
 					FROM
 	
-					evenements evt 
-					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
-					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
-					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
+					
+					historiqueAdresse ha
+					LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
+					LEFT JOIN _evenementEvenement ee on ee.idEvenement = ae.idEvenement
+					LEFT JOIN evenements evt on evt.idEvenement = ee.idEvenementAssocie
 					LEFT JOIN _evenementEvenement ee2 on ee2.idEvenement = ee.idEvenement
 					LEFT JOIN evenements evt2 on evt2.idEvenement = ee2.idEvenementAssocie
+					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
+					
+					
+					
 					$whereClause
 					GROUP BY evt.idEvenement,ee.idEvenement, ae.idAdresse
 					HAVING evt.idEvenement = max(evt2.idEvenement)
@@ -2471,14 +2478,15 @@ class ArchiAccueil extends config
 					evt.description,
 					0 as priorite
 					
+					FROM
 					
-					FROM evenements evt
-					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
-					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
-					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
+					historiqueAdresse ha
+					LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
+					LEFT JOIN _evenementEvenement ee on ee.idEvenement = ae.idEvenement
+					LEFT JOIN evenements evt on evt.idEvenement = ee.idEvenementAssocie
 					LEFT JOIN _evenementEvenement ee2 on ee2.idEvenement = ee.idEvenement
 					LEFT JOIN evenements evt2 on evt2.idEvenement = ee2.idEvenementAssocie
+					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
 									
 					WHERE ae.idAdresse IS NOT NULL
 					GROUP BY evt.idEvenement,ee.idEvenement, ae.idAdresse
@@ -2641,58 +2649,73 @@ class ArchiAccueil extends config
 
 		$t = new Template('modules/archi/templates/');
 		$t->set_filenames(array('opendata'=>'opendata/index.tpl'));
-
+		$t->assign_vars(array(
+				'urlContact'=>$this->creerUrl('','contact')
+		));
+		
+		
 		$filesArray = array(
 				array(
 						'name'=>'Adresses par architectes',
 						'xml'=>'opendata-adressesArchitecte.xml',
-						'csv'=>'opendata-adressesArchitecte.csv'
-						 
+						'csv'=>'opendata-adressesArchitecte.csv',
+						'filename'=>'adressesArchitecte'
 				),
 				array(
 						'name'=>'Adresses par quartier',
 						'xml'=>'opendata-adressesQuartier.xml',
-						'csv'=>'opendata-adressesQuartier.csv'
+						'csv'=>'opendata-adressesQuartier.csv',
+						'filename'=>'adressesQuartier'
 				),
 				array(
 						'name'=>'Adresses par rues',
 						'xml'=>'opendata-adressesRue.xml',
-						'csv'=>'opendata-adressesRue.csv'
+						'csv'=>'opendata-adressesRue.csv',
+						'filename'=>'adressesRue'
+						
 				),
 				array(
 						'name'=>'Quartiers par ville',
 						'xml'=>'opendata-quartiersVille.xml',
-						'csv'=>'opendata-quartiersVille.csv'
+						'csv'=>'opendata-quartiersVille.csv',
+						'filename'=>'quartiersVille'
 				),
 				array(
 						'name'=>'Rues par quartier',
 						'xml'=>'opendata-ruesQuartier.xml',
-						'csv'=>'opendata-ruesQuartier.csv'
+						'csv'=>'opendata-ruesQuartier.csv',
+						'filename'=>'ruesQuartier'
 				),
 				array(
 						'name'=>'Rues par sous quartier',
 						'xml'=>'opendata-ruesSousQuartier.xml',
-						'csv'=>'opendata-ruesSousQuartier.csv'
+						'csv'=>'opendata-ruesSousQuartier.csv',
+						'filename'=>'ruesSousQuartier'
 				),
 				array(
 						'name'=>'Rues par villes',
 						'xml'=>'opendata-ruesVille.xml',
-						'csv'=>'opendata-ruesVille.csv'
+						'csv'=>'opendata-ruesVille.csv',
+						'filename'=>'ruesVille'
 				),
 				array(
 						'name'=>'Photos par quartier',
 						'xml'=>'opendata-urlPhotosQuartier.xml',
-						'csv'=>'opendata-urlPhotosQuartier.csv'
+						'csv'=>'opendata-urlPhotosQuartier.csv',
+						'filename'=>'urlPhotosQuartier'
 				),
 				array(
 						'name'=>'Photos par rues',
 						'xml'=>'opendata-urlPhotosRue.xml',
-						'csv'=>'opendata-urlPhotosRue.csv'
+						'csv'=>'opendata-urlPhotosRue.csv',
+						'filename'=>'urlPhotosRue'
 				)
 		);
 
-
 		foreach ($filesArray as $file){
+			if (file_exists("modules/opendata/xml/".$file['filename'].".xml")) {
+				$file['date'] = date("d/m/Y H:i:s", filemtime("modules/opendata/xml/".$file['filename'].".xml")) ;
+			}
 			$t->assign_block_vars('fichier', $file);
 		}
 

@@ -43,6 +43,10 @@
 					array(
 							'value' => 'adressesQuartier',
 							'label' => 'Adresses par quartier'
+					),
+					array(
+							'value' => 'urlPhotosAdresse',
+							'label' => 'Url des photos par adresse'
 					)
 			);
 			foreach($optionArray as $option){

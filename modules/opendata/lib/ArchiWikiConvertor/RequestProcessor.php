@@ -47,6 +47,9 @@ class RequestProcessor{
 			case 'adressesQuartier':
 				$this->strategy=new AdressesQuartier($this->config);
 				break;
+			case 'urlPhotosAdresse':
+				$this->strategy=new UrlPhotosAdresse($this->config);
+				break;
 			default:
 				$this->strategy=new AdressesRue($this->config);
 		}
