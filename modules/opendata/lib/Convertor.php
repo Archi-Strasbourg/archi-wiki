@@ -161,7 +161,7 @@ class Convertor{
 		foreach ($simpleArray as $line){
 			if(is_array($line)){
 				foreach ($line as $k=>$v){
-					$convertLine[$k] = utf8_decode($v);
+					$convertLine[$k] = iconv('Windows-1252', 'UTF-8//TRANSLIT', $v);
 				}
 				$line=$convertLine;
 			}
