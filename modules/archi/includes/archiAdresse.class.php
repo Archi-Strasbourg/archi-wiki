@@ -101,6 +101,7 @@ class archiAdresse extends ArchiContenu
 																						GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
 																						HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)";
 
+				debug($sql);
 
 				$resCheckExist=$this->connexionBdd->requete($sql);
 
@@ -128,17 +129,17 @@ class archiAdresse extends ArchiContenu
 
 					$sql = "INSERT INTO historiqueAdresse (idUtilisateur,idAdresse,date,description,nom,idRue,numero,idQuartier,idSousQuartier,idPays,idVille) VALUES (
 							'".$authentifie->getIdUtilisateur()."',
-									'".$nouvelIdAdresse."',
-											\"".$this->date->toBdd($tabForm['date']['value'])."\",
-													\"".$tabForm['description']['value']."\",
-															\"".$tabForm['nom']['value']."\",
-																	'".$tabForm['rue']['value']."',
-																			'".$tabForm['numero']['value']."',
-																					'".$tabForm['quartier']['value']."',
-																							'".$tabForm['sousQuartier']['value']."',
-																									'".$tabForm['pays']['value']."',
-																											'".$tabForm['ville']['value']."'
-																													)";
+							'".$nouvelIdAdresse."',
+							\"".$this->date->toBdd($tabForm['date']['value'])."\",
+							\"".$tabForm['description']['value']."\",
+							\"".$tabForm['nom']['value']."\",
+							'".$tabForm['rue']['value']."',
+							'".$tabForm['numero']['value']."',
+							'".$tabForm['quartier']['value']."',
+							'".$tabForm['sousQuartier']['value']."',
+							'".$tabForm['pays']['value']."',
+							'".$tabForm['ville']['value']."'
+							)";
 
 					$this->connexionBdd->requete($sql);
 
@@ -9220,9 +9221,8 @@ class archiAdresse extends ArchiContenu
         		LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
         		WHERE c.idEvenementGroupeAdresse = '".$idEvenementGroupeAdresse."'
         				AND CommentaireValide=1
-        				ORDER BY date DESC
+        				ORDER BY date ASC
         				";
-
 
         
         $res = $this->connexionBdd->requete($req);
