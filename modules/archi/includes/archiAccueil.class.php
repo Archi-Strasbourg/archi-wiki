@@ -500,7 +500,7 @@ class ArchiAccueil extends config
 				//Gestion pour les commentaires
 				$latestComments = $this->getLatestComments(2);
 				$t->assign_vars(array(
-						'commentaireSectionTitle'=>_("Commentaires récents"),
+						'commentaireSectionTitle'=>_("COMMENTAIRES RÉCENTS"),
 						'urlListCommentaire' => $this->creerUrl('','tousLesCommentaires')
 				));
 

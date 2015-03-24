@@ -1,5 +1,6 @@
 <div class="commentairesAccueil">
 <h2>{commentaireSectionTitle}</h2>
+<hr class="edgeFade" />
 <!-- BEGIN commentaire -->
 	<div class="singleComment">
 		<div class="commentDate">{commentaire.date} par</div>

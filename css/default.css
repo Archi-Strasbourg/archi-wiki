@@ -2039,35 +2039,46 @@ Page d'accueil
 }
 
 .commentairesAccueil{
-	width:200px;
+	background-color: #869698;
+	padding: 5px 10px;
+	width:210px;
+	border-radius: 2px;
+	border: 0px solid;
 	vertical-align: top;
 }
 
 .commentairesAccueil h2{
 	margin-top: 0; 
+	font-size: 16px;
+	border-bottom: none;
 }
 .commentDate , .commentAuthor{
+	/*
 	color: white;	
 	font-size: 13px;
 	font-weight: bold;
+	*/
 }
 
 .commentAdresse , .commentAdresse a{
+/*
 	color: #EC951E;
 	font-size: 12px;
-	font-weight: bold; 
+	font-weight: bold;
+	*/ 
 }
 .commentBody{
 	color:#2E3D40;
 }
-
+.commentBody a{
+	color: #394549;
+}
 
 .newsContent{
 	margin-top: 10px;
 }
 .newsAccueil{
-	width: 700px;
-	//background: purple;
+	width: 650px;
 	margin-bottom: 10px;
 	padding-right: 10px;
 }
@@ -2085,6 +2096,7 @@ Page d'accueil
 .singleComment{
 	margin-top: 5px;
 	margin-bottom: 10px;
+	color: white;
 }
 
 .newsTitle h2 , .newsTitle a{
@@ -2366,7 +2378,7 @@ del{
 
 .ellipsis {
   	overflow: hidden;
-	height: 64px; 
+	max-height: 64px; 
 	line-height: 16px;
 }
 
@@ -2374,7 +2386,7 @@ del{
 	content:"";
 	float: left;
 	width: 5px; 
-	height: 72px; 
+	max-height: 72px; 
 }
 
 .ellipsis > *:first-child {
@@ -2385,19 +2397,16 @@ del{
 
 .ellipsis:after {
 	content: "\02026";  
-
 	box-sizing: content-box;
 	-webkit-box-sizing: content-box;
 	-moz-box-sizing: content-box;
-
 	float: right; position: relative;
 	top: -25px; left: 100%; 
 	width: 3em; margin-left: -3em;
 	padding-right: 5px;
-	
 	text-align: right;
-
 }
+
 .ellipsis:hover:after{
 	color: black;
 }
