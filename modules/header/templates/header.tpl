@@ -150,7 +150,7 @@
                 </div>
 
                 <div class="emplacementPub pubSecondaryContent">
-                	<a href="http://m.archi-strasbourg.org"><img alt="" src="images/pub/pub_mobile.jpg"></a>
+                	<a href="http://m.archi-strasbourg.org"><img alt="" src="images/pub/pub_mobile.png"></a>
                 </div>
                 
                 <div class="fb-like-box reseauSocial" data-href="https://www.facebook.com/pages/Association-Archi-Strasbourg/215793091822502" data-width="240" data-stream="false" data-header="true"></div>
