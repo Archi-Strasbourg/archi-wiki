@@ -13,20 +13,17 @@
 <!-- END nav -->
 <a href="{urlSuivant}" onclick="{urlSuivantOnClick}">&gt;</a>
 
-<table class="results">
-	<tr>
+<div class="results">
+	<div>
 	<!-- BEGIN liens -->
-		<td>
 			<a href="{liens.url}" onclick="{liens.urlOnClick}">{liens.titre}</a> 
 			<a href="{liens.urlDesc}" onclick="{liens.urlDescOnClick}"><img src="images/Advisa/balisebas.png" alt="&darr;" /></a> 
 			<a href="{liens.urlAsc}" onclick="{liens.urlAscOnClick}"><img src="images/Advisa/balisehaut.png" alt="&uarr;" /></a>
-			</td>
 	<!-- END liens -->
-	</tr>
+	</div>
 	
 	<!-- BEGIN adresses -->
-	<tr class="listAddressItem">
-        <td>
+	<div class="listAddressItem">
         	<a href="{adresses.urlDetailHref}">
         		<img src='{adresses.urlImageIllustration}' border=0 alt="{adresses.alt}" title="{adresses.alt}">
         	</a> 
@@ -40,10 +37,9 @@
         	<span style='font-size:11px;'>
         		{adresses.titresEvenements}
         	</span>
-        </td>
-	</tr>
+	</div>
 	<!-- END adresses -->
-</table>
+</div>
 <br />
 
 {nbReponses}

@@ -886,14 +886,15 @@ img {
 	width: 49%;
 	vertical-align: top;
 }
-
+/*
 .results,.results td {
 	width: 100%;
 }
-
+*/
 .listAddressItem td {
 	display: block;
 	min-height: 150px;
+	width: 100%;
 }
 
 .menu .flag {
@@ -1326,9 +1327,15 @@ img {
 .pagination a:hover {
 	color: gray;
 }
-
+.results{
+	width: 100%;
+}
 .results a {
 	color: #111;
+}
+
+.results colgroup col{
+	width: 100%;
 }
 
 .results a:hover {
@@ -1455,6 +1462,7 @@ li:empty {
 }
 
 .listAddressItem {
+	height: 150px;
 	margin-top: 1em;
 	border-bottom: thin dotted #EEE;
 	display: block;
