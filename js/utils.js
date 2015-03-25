@@ -16,9 +16,7 @@
 	$(function(){
 		$('.addCommentButton').on('click',function(e){
 			e.preventDefault();
-			$(e.target).next('form').toggleClass('formComment');
-			$(e.target).next('form').toggleClass('activeForm');
-			console.log($(e.target).next());
+			$(e.target).parent().parent('div').toggleClass('active');
 		});
 	});
 })(jQuery);

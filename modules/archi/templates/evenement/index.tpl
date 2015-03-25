@@ -79,7 +79,7 @@
 			</ul>
 		</div>
 		<!-- END menuAction -->
-		<div style='min-height: 150px;'>
+		<div>
 			<h3 itemprop="titre">{evenement.titre}</h3>{evenement.infoTitre}
 			<a href="{evenement.lienHistoriqueEvenementCourant}">{evenement.labelLienHistorique}</a>
 			<div class="event">

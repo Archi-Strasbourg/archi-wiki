@@ -7454,6 +7454,9 @@ debug($reqEvenementEvenement);
 			$nom = $utilisateur->getNom();
 			$prenom = $utilisateur->getPrenom();
 			$email = $utilisateur->getEmail();
+			$urlProfilePic = $utilisateur->getImageAvatar(array('idUtilisateur'=> $userId));
+			$profileAlt = $prenom. " " . $nom;
+			
 			
 			if($type == 0){
 				$array_type = array();
@@ -7499,7 +7502,9 @@ debug($reqEvenementEvenement);
 			}
 			$t->assign_vars(array(
 					'urlRedirect'=> $url,
-					'name'=> 'formAjoutCommentaire'
+					'name'=> 'formAjoutCommentaire',
+					'urlProfilePic'=>$urlProfilePic,
+					'profileAlt' => $profileAlt
 			));
 			
 		}

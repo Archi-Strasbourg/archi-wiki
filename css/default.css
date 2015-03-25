@@ -1014,7 +1014,7 @@ img {
 }
 
 .comment {
-	min-height: 120px;
+	//min-height: 120px;
 }
 
 /*
@@ -2423,11 +2423,90 @@ del{
 
 .formComment {
  	max-height: 0;
-    transition: max-height 0.15s ease-out;
+    transition: max-height 0.15s ease-out,background-color 0.15s ease-out;
     overflow: hidden;
 }
 
-.activeForm {
-    max-height: 500px;
-    transition: max-height 0.25s ease-in;
+
+.addCommentButtonWrapper {
+	width: 200px;
 }
+
+.active .formComment{
+	max-height: 500px;
+    transition: max-height 0.25s ease-in , background-color 0.25s ease-in;
+    background-color: #424647;
+    padding: 14px 10px 10px 10px;
+    margin-top: -4px;
+}
+.formComment form{
+	//float:left;
+	display: inline-block;
+}
+.formComment form textarea , .active .formComment form textarea{
+	resize:both;
+	max-width: 730px;
+	height: 0;
+}
+.active .formComment form textarea{
+	width: 630px;
+	max-width: 640px;
+}
+
+.addCommentButtonWrapper a , .addCommentButtonWrapper a:hover{
+	color: white;
+}
+
+
+.addCommentButtonWrapper a {
+	display: block;
+	width: 100%;
+	line-height: 40px;
+	text-align: center;
+	vertical-align: middle;
+	background-color: #FC7F2C;
+	text-decoration: none;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.addCommentButtonWrapper a ,.formComment,.commentSubmitButton{
+	border-radius: 3px;
+}
+
+
+.active .addCommentButtonWrapper a {
+	background-color: #424647;
+}
+.addCommentButtonWrapper a:focus {
+    outline: 0;
+}
+
+
+.profilePicWrapper{
+	/*float:left;*/
+	vertical-align: top;
+	display: inline-block;
+}
+.profilePicWrapper img , .active .formComment form textarea{
+	margin-right: 10px;
+}
+.commentSubmitButton{
+	background-color:  #FC7F2C;
+	vertical-align: top;
+	border: none;
+	color: white;
+	width: 100px;
+}
+.commentSubmitButton , .addCommentButtonWrapper a{
+	color: white;
+    text-transform: uppercase;
+}
+
+
+.commentSubmitButton , .addCommentButtonWrapper a ,.profilePicWrapper, .active .formComment form textarea,.commentFormWrapper img,.comment img{
+	height: 40px;
+}
+.commentFormWrapper img , .profilePicWrapper img{
+	border: none;	
+}
+
