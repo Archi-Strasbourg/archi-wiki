@@ -120,15 +120,15 @@
 			</div>
 		</div>
 		<div class="commentaireEvenement">
+			{evenement.formulaireCommentaireEvenement}
 			{evenement.listeCommentaireEvenement} 
-			{evenement.formulaireCommentaireEvenement} 
 		</div>
 	</div>
 	<!-- END evenement -->
 </div>
 
-{listeCommentairesAdresse}
 {formulaireCommentaireAdresse}
+{listeCommentairesAdresse}
 
 <!-- BEGIN formEvenement -->
 <form action='' name='formulaireEvenement' method='POST' enctype='multipart/form-data' id='formulaireEvenement'>

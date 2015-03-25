@@ -9266,7 +9266,7 @@ class archiAdresse extends ArchiContenu
 	                {
 	                    $archiIdAdresse = $this->variablesGet['archiIdAdresse'];
 	                }
-	                $boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse))."';\">";
+	                $boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse))."';\">";
 	                $adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
 	            }
 	            $t->assign_block_vars('commentaires',array(
@@ -9619,7 +9619,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         // redirection javascript ... pas terrible ca , a changer
         if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='')
         {
-            echo "<script langage='javascript'>location.href='".$this->creerUrl('','adresseDetail',array('archiIdAdresse'=>$this->variablesGet['archiIdAdresse']), false, false)."';</script>";
+            echo "<script langage='javascript'>location.href='".$this->creerUrl('','adresseDetail',array('archiIdAdresse'=>$this->variablesGet['archiIdAdresse'] , 'archiIdEvenementGroupeAdresse'=>$this->variablesGet['archiIdEvenementGroupeAdresse']), false, false)."';</script>";
         }
     }
     
