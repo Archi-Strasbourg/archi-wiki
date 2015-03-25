@@ -19,13 +19,11 @@
 <link rel="alternate" href="rss.php?type=culture" type="application/rss+xml" title="Derniers événements culturels" />
 <link rel="alternate" href="rss.php?type=dernieresVues" type="application/rss+xml" title="Dernières vues" />
 <link rel="icon" href="favicon.png" type="image/png"  />
+<script src="js/jquery-ui/js/jquery-1.7.2.min.js" type="text/javascript">
 <script src='includes/datePicker.js'></script>
 <script src='includes/bbcode.js'></script>
-{ajaxFunctions}
-{calqueFunctions}
+
 <script src='includes/common.js'></script>
-<script src="js/jquery-ui/js/jquery-1.7.2.min.js" type="text/javascript">
-{jsHeader}
 <!-- BEGIN utilisateurNonConnecte -->
 <script src="https://browserid.org/include.js" type="text/javascript"></script>  
 <script src="js/browserid.js" type="text/javascript"></script>  
@@ -34,7 +32,13 @@
 <script src="js/jquery-ui/js/jquery-1.7.2.min.js"></script>
 <script src="js/jquery-ui/js/jquery-ui-1.8.21.custom.min.js"></script>
 <link href="js/jquery-ui/themes/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" type="text/css" />
+<script src="js/homeSearch.js"></script>
+<script type="js/utils.js"></script>
 <link rel="license" href="http://www.data.gouv.fr/Licence-Ouverte-Open-Licence">
+{ajaxFunctions}
+{calqueFunctions}
+{jsHeader}
+
 </head>
 
 

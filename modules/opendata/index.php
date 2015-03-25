@@ -52,8 +52,62 @@
 			foreach($optionArray as $option){
 		echo '<option value="'.$option['value'].'">'.$option['label'].'</option>';
 	}
+	
+	
+	
+	
+	
 	?>
 		</select> <input type="submit">
 	</form>
+	
+	<?php 
+
+
+	$cplxArray = array(
+			'layer11'=>array(
+					'layer2'=>'blabla',
+					'layer2bis'=>
+					array(
+							'layer3'=>"blip",
+							'layer3bis'=>"blop",
+							'layer3bis2'=>"blup",
+							'layer3bis3'=>"blap",
+							'layer3bis4'=>"blyp",
+					)
+			),
+		'layer12'=>array(
+				'layer21'=>'blabla',
+				'layer21bis'=>
+				array(
+						'layer31'=>"blip",
+						'layer31bis'=>"blop",
+						'layer31bis2'=>"blup",
+						'layer31bis3'=>"blap",
+						'layer31bis4'=>"blyp",
+				)
+)
+	
+	);
+	
+foreach (glob("lib/ArchiWikiConvertor/Interface/*.php") as $filename){
+	include $filename;
+}
+foreach (glob("lib/ArchiWikiConvertor/*.php") as $filename){
+	include $filename;
+}
+foreach (glob("lib/*.php") as $filename){
+	include $filename;
+}
+	
+	
+	$util = new Utils();
+	//$second = $util->complexFlat($cplxArray);
+	$flat = $util->flattenTest($cplxArray);
+	debug($cplxArray);
+	//debug($second);
+	debug($flat);
+	
+	?>
 </body>
 </html>

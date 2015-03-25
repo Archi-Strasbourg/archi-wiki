@@ -29,10 +29,19 @@ class UrlPhotosAdresse extends Strategy{
 					FROM historiqueAdresse
 					WHERE idRue = 
 					".$fetch['idRue'];
-			$resultNumero = $c->processRequest($requeteNumero,'numero');
-			$rue['numero'] = $resultNumero;
+			$resultNumero = $c->execute($requeteNumero);
 			
-			$request = "
+			$adresse = array();
+			$labelAdresse = 'adresse';
+			$indiceAdresse=0;
+			while ($num = mysql_fetch_assoc($resultNumero)){
+				
+				
+				
+				
+				
+				
+				$request = "
 					SELECT hi.idHistoriqueImage, hi.dateUpload
 					FROM _evenementImage ei
 					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = ei.idEvenement
@@ -40,25 +49,34 @@ class UrlPhotosAdresse extends Strategy{
 					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 					LEFT JOIN historiqueImage hi on hi.idImage = ei.idImage
 					WHERE ha.idRue =  ".$fetch['idRue']."
+					AND ha.numero =". $num['numero'].";
 							";
-			$resProcess = $c->processRequest($request,'url');
-			$j=0;
-			$urlImage = array();
-			foreach ($resProcess as $infoImage){
-				$indice = 'url'.$j++;
-				$urlImage[$indice] = $utils->createArchiWikiPhotoUrl($infoImage['idHistoriqueImage'], $infoImage['dateUpload'],'http://archi-strasbourg.org','grand');
+				$resProcess = $c->processRequest($request,'url');
+				$j=0;
+				$urlImage = array();
+				foreach ($resProcess as $infoImage){
+					$indice = 'url'.$j++;
+					$urlImage[$indice] = $utils->createArchiWikiPhotoUrl($infoImage['idHistoriqueImage'], $infoImage['dateUpload'],'http://archi-strasbourg.org','grand');
+				}
+				
+				if(!empty($urlImage)){
+					$rue[$labelAdresse.$indiceAdresse++] = array(
+							'numero' => $num['numero'],
+							'url'=> $urlImage
+					);
+				}
+				
+				
+				
 			}
-			$resultNumero['url'] = $urlImage;
 
-			debug($resultNumero);
-			
-			$rue['numero'] = $resultNumero;
+
+			//$rue['numero'] = $resultNumero;
 			$label  = 'rue'.$i++;
 			$ruesByQuartier[$label]=$rue;
 		}
-
-		$c->complexArrayToXML($ruesByQuartier,"xml/urlPhotosRue.xml",'urlPhotosRue','urlPhoto');
-		$c->complexArrayToCSV($ruesByQuartier,"csv/urlPhotosRue.csv",'urlPhotosRue','urlPhoto');
+		$c->complexArrayToXML($ruesByQuartier,"xml/urlPhotosAdresse.xml",'urlPhotosAdresse','urlPhoto');
+		$c->complexArrayToCSV($ruesByQuartier,"csv/urlPhotosAdresse.csv",'urlPhotosAdresse','urlPhoto');
 	}
 }
 ?>

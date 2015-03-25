@@ -2414,9 +2414,20 @@ del{
 
 
 .adresseLastModif .lienAdresse,.adresseLastModif .lienVille{
-	color:#363636;
+	color: #363636;
 }
 
-.adresseLastModif .lienVille{
-	font-size: 11px;	
+.adresseLastModif .lienVille {
+	font-size: 11px;
+}
+
+.formComment {
+ 	max-height: 0;
+    transition: max-height 0.15s ease-out;
+    overflow: hidden;
+}
+
+.activeForm {
+    max-height: 500px;
+    transition: max-height 0.25s ease-in;
 }

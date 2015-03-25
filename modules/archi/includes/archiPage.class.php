@@ -192,5 +192,16 @@ class ArchiPage
         }
         $config->connexionBdd->requete($query);
     }
+    public function getFormComment($type,$idEvenement){
+    	$t = new Template('modules/archi/templates/');
+    	$t->set_filenames((array('listeCommentaires'=>'comment/comment.tpl')));
+    		
+    	ob_start();
+    	$t->pparse('listeCommentaires');
+    	$html .= ob_get_contents();
+    	ob_end_clean();
+    	return $html;
+    }
+    
 }
 ?>

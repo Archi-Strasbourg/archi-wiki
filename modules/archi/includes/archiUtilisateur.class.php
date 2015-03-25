@@ -3561,5 +3561,46 @@ class archiUtilisateur extends config {
     	//return $result['old'] . " -> " . $result['new'];
     	return $result;
     }
+    
+    
+    public function setUserId($id){
+    	if(isset($id) && !empty($id) && $id != ''){
+    		$this->idUtilisateur = $id;
+    	}
+    }
+    public function getNom(){
+    	if(isset($this->idUtilisateur) && !empty($this->idUtilisateur) && $this->idUtilisateur != ''){
+    		$requete =" SELECT nom  FROM utilisateur WHERE idUtilisateur = " . $this->idUtilisateur;
+    		$result = $this->connexionBdd->requete($requete);
+    		$array_nom = mysql_fetch_assoc($result);
+    		return $array_nom['nom']; 
+    	}
+    	else{
+    		return false;
+    	}
+    }
+    public function getPrenom(){
+    	if(isset($this->idUtilisateur) && !empty($this->idUtilisateur) && $this->idUtilisateur != ''){
+    		$requete =" SELECT  prenom FROM utilisateur WHERE idUtilisateur = " . $this->idUtilisateur;
+    		$result = $this->connexionBdd->requete($requete);
+    		$array_nom = mysql_fetch_assoc($result);
+    		return $array_nom['prenom'];
+    	}
+    	else{
+    		return false;
+    	}
+    }
+    public function getEmail(){
+    	if(isset($this->idUtilisateur) && !empty($this->idUtilisateur) && $this->idUtilisateur != ''){
+    		$requete =" SELECT mail FROM utilisateur WHERE idUtilisateur = " . $this->idUtilisateur;
+    		$result = $this->connexionBdd->requete($requete);
+    		$array_email = mysql_fetch_assoc($result);
+    		return $array_email['mail'];
+    	}
+    	else{
+    		return false;
+    	}
+    }
+    
 }
 ?>

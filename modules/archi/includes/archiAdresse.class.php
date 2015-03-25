@@ -650,6 +650,9 @@ class archiAdresse extends ArchiContenu
 		$listeCommentaires=$this->getListeCommentaires($idEvenementGroupeAdresse);
 		$formulaireCommentaire=$this->getFormulaireCommentaires($idEvenementGroupeAdresse,$this->getCommentairesFields());
 		
+		$formulaireCommentaire = $e->getFormComment($idEvenementGroupeAdresse, $this->getCommentairesFields(),'');
+		
+		
 		$t->assign_vars(array(
 				'title' => $title,
 				'listeCommentairesAdresse' => $listeCommentaires,

@@ -11,6 +11,18 @@
 /**
  * add VueSur elt on photo
  */
+
+(function($) {
+	$(function(){
+		$('.addCommentButton').on('click',function(e){
+			e.preventDefault();
+			$(e.target).next('form').toggleClass('formComment');
+			$(e.target).next('form').toggleClass('activeForm');
+			console.log($(e.target).next());
+		});
+	});
+})(jQuery);
+
 function addVueSur(idEvenementGroupeAdresse , idAdresse , nom){
 	
 	/*
@@ -222,7 +234,3 @@ function newMenuAction(){
     });
 
 }
-
-
-
-

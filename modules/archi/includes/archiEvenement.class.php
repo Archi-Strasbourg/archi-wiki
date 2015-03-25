@@ -80,8 +80,9 @@ class archiEvenement extends config
 	// ajoute un evenement provenant du formulaire d'ajout evenement + groupe adresse
 	// retourne l'id de l'evenement groupe d'adresses
 	// **********************************************************************************************************************************************************************
-	public function ajouterEvenementNouveauDossier()
+	public function ajouterEvenementNouveauDossier($id = null)
 	{
+		$idAdresse = is_null($id) ? 0:$id;
 		$retour = array('idEvenementGroupeAdresse'=>0,'idSousEvenement'=>0,'errors'=>array());
 
 		$idEvenementGroupeAdresse=0;
@@ -91,20 +92,53 @@ class archiEvenement extends config
 
 		$authentification = new archiAuthentification();
 		$idUtilisateur   = $authentification->getIdUtilisateur();
-
+		$idEvenementGroupeAdresse = 0;
+		
+		debug(array(
+			'isset'=>isset($idAdresse),
+			'not empty'=>empty($idAdresse),
+			'test idAdresse'=>($idAdresse!=0),
+			'is_null' => is_null($idAdresse),
+			'idAdresse' => $idAdresse
+		));
+		
+		if( isset($idAdresse) &&  !is_null($idAdresse ) && $idAdresse!=0 ){
+			$requeteIdEvtGa = "
+					SELECT idEvenement 
+					FROM _adresseEvenement 
+					WHERE idAdresse =".$idAdresse;
+			$resultatIdEvtGa = $this->connexionBdd->requete($requeteIdEvtGa);
+			$array_idEvt = mysql_fetch_assoc($resultatIdEvtGa);	
+			$idEvenementGroupeAdresse = $array_idEvt['idEvenement'];
+			debug($idEvenementGroupeAdresse);
+				
+		}
+		debug($idEvenementGroupeAdresse);
+		
+		
+		
+		
 		if(count($errors)==0)
 		{
+			debug(array(
+			'isset'=>isset ($idEvenementGroupeAdresse) ,
+			'not empty' => !empty($idEvenementGroupeAdresse) ,
+			'idEvtGA'=>	 ($idEvenementGroupeAdresse==0) 
+			));
 			//$this->connexionBdd->getLock(array('historiqueEvenement'));
-
-			// *****************************************************
-			// ajout de l'evenement groupe d'adresses
-			$idEvenementGroupeAdresse = $this->getNewIdEvenement();
-			// creation de l'evenement parent groupe d'adresse
-			$sql = "INSERT INTO evenements (idEvenement, titre, description, dateDebut, dateFin, idSource, idUtilisateur, idTypeStructure, idTypeEvenement,dateCreationEvenement)
-					VALUES (".$idEvenementGroupeAdresse.", '', '', '', '', ".$tabForm['source']['value'].", ".$idUtilisateur.", 0, ".$this->getIdTypeEvenementGroupeAdresse().",now())";
-			$this->connexionBdd->requete($sql);
-			$idEvenementGroupeAdresse= $this->connexionBdd->getLastId();
-			
+			if( isset($idAdresse) &&  !is_null($idAdresse ) && $idAdresse==0 ){
+								
+				debug($idEvenementGroupeAdresse);
+				// *****************************************************
+				// ajout de l'evenement groupe d'adresses
+				$idEvenementGroupeAdresse = $this->getNewIdEvenement();
+				// creation de l'evenement parent groupe d'adresse
+				$sql = "INSERT INTO evenements (idEvenement, titre, description, dateDebut, dateFin, idSource, idUtilisateur, idTypeStructure, idTypeEvenement,dateCreationEvenement)
+						VALUES (".$idEvenementGroupeAdresse.", '', '', '', '', ".$tabForm['source']['value'].", ".$idUtilisateur.", 0, ".$this->getIdTypeEvenementGroupeAdresse().",now())";
+				$this->connexionBdd->requete($sql);
+				debug($sql);
+				$idEvenementGroupeAdresse= $this->connexionBdd->getLastId();
+			}
 			// *****************************************************
 			// on recupere l'id de l'evenement enfant ( construction)
 			//$idSousEvenement = $this->getNewIdEvenement();
@@ -158,7 +192,7 @@ class archiEvenement extends config
 			$sqlHistoriqueEvenement = "INSERT INTO evenements ( titre, description, dateDebut, dateFin, idSource, idUtilisateur, idTypeStructure, idTypeEvenement,dateCreationEvenement,ISMH , MH , nbEtages,isDateDebutEnviron,numeroArchive)
 					VALUES ( \"".mysql_real_escape_string($libelle)."\", \"".mysql_real_escape_string($description)."\", '".mysql_real_escape_string($dateDebut)."', '".mysql_real_escape_string($dateFin)."', ".mysql_real_escape_string($idSource).", ".mysql_real_escape_string($idUtilisateur).", '".mysql_real_escape_string($idTypeStructure)."', '".mysql_real_escape_string($idTypeEvenement)."', now(), '".mysql_real_escape_string($ISMH)."', '".mysql_real_escape_string($MH)."', '".mysql_real_escape_string($nbEtages)."', '".mysql_real_escape_string($isDateDebutEnviron)."',\"".mysql_real_escape_string($numeroArchive)."\")";
 			$this->connexionBdd->requete($sqlHistoriqueEvenement );
-
+debug($sqlHistoriqueEvenement);
 			$idEvenement = $this->connexionBdd->getLastId();
 			
 			$idSousEvenement = $idEvenement;
@@ -1172,6 +1206,7 @@ class archiEvenement extends config
 			$fetchRecupIdEvenementGroupeAdresse = mysql_fetch_assoc($resRecupIdEvenementGroupeAdresse);
 			$idEvenementGroupeAdresse = $fetchRecupIdEvenementGroupeAdresse['idEvenementGroupeAdresse'];
 
+			
 
 			// recup d'idAdresse pour l'affichage du detail de l'adresse a la fin de la suppression
 			$reqSuppHistorique = "DELETE FROM evenements WHERE idEvenement = '".idEvenement."'";
@@ -1197,6 +1232,15 @@ class archiEvenement extends config
 			// verification que l'evenement est le seul ou pas lié au groupe d'adresse
 			$idEvenementGroupeAdresse = $this->getParent($idEvenement);
 
+			
+			foreach ($_SESSION['lastVisited'] as $key => $lastVisit){
+				if($lastVisit['idEvenementGroupeAdresse'] == $idEvenementGroupeAdresse){
+					debug($lastVisit);
+					unset($_SESSION['lastVisited'][$key]);
+				}
+			}
+			debug($_SESSION['lastVisited']);
+			
 			//debug($idEvenementGroupeAdresse);
 			// on verifie que l'evenement n'a qu'un seul parent
 			$reqVerifParent = "
@@ -1341,12 +1385,15 @@ class archiEvenement extends config
 		
 		$idEvenementGroupeAdresse=$this->getParent($idEvenement);
 		if($idEvenementGroupeAdresse == 0){
-			$accueil = new archiAccueil();
-			echo $accueil->afficheAccueil();
+			
+			header("Location: index.php");
+				
+			/*$accueil = new archiAccueil();
+			echo $accueil->afficheAccueil();*/
 		}
 		else{
-			$adresse = new archiAdresse();
-			echo $adresse->afficherDetailAdresse($idAdresse, $this->getParent($idEvenement));
+			//$adresse = new archiAdresse();
+			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$this->getParent($idEvenement))));
 		}
 	}
 
@@ -5222,7 +5269,7 @@ debug($reqEvenementEvenement);
 				LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
 				WHERE c.idEvenement = '".$idCommentaireAdresse."'
 						AND CommentaireValide=1
-						ORDER BY date DESC
+						ORDER BY date ASC
 						";
 
 		$res = $this->connexionBdd->requete($req);
@@ -5277,6 +5324,11 @@ debug($reqEvenementEvenement);
 		}
 
 	}
+	
+	
+	
+	
+	
 
 	// ************************************************************************************************************************
 	// affiche le formulaire d'ajout d'un commentaire
@@ -5348,19 +5400,12 @@ debug($reqEvenementEvenement);
 				<input type=\"button\" value=\"url interne\"  style=\"width:75px\" onclick=\"bbcode_ajout_balise('url',  'formAjoutCommentaireEvenement', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('Insérer une adresse WEB interne à archi-strasbourg.org');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this,'apercu');\"/>
 				<input type=\"button\" value=\"url externe\"  style=\"width:80px\" onclick=\"bbcode_ajout_balise('urlExterne',  'formAjoutCommentaireEvenement', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('Insérer une adresse WEB externe à archi-strasbourg.org');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this,'apercu');\"/></div>";
 
-		$fieldsCommentaires['commentaire']['htmlCodeBeforeField'] = $bbMiseEnFormBoutons;
+		//$fieldsCommentaires['commentaire']['htmlCodeBeforeField'] = $bbMiseEnFormBoutons;
 
 		$tabCommentaires = array(   'titrePage'=>$titre,
 				'formName'=>'formAjoutCommentaireEvenement',
 				'formAction'=>$this->creerUrl('enregistreCommentaireEvenement','',array()),
-				'tableHtmlCode'=>" class='formAjoutCommentaireEvenement'",
-				'codeHtmlInFormAfterFields'=>_("Prévisualisation :")."<div id='apercu'></div><div id='helpCalque' style='background-color:#FFFFFF; border:2px solid #000000;padding:10px;float:left;display:none;'><img src='images/aide.jpg' style='float:left;padding-right:3px;' valign='middle'><div id='helpCalqueTxt' style='padding-top:7px;'></div></div><script type='text/javascript' >
-				bbcode_keyup(document.forms['formAjoutCommentaireEvenement'].elements['commentaire'], 'apercu');setTimeout('majDescription()',1000);
-				function majDescription()
-				{
-					bbcode_keyup(document.forms['formAjoutCommentaireEvenement'].elements['commentaire'], 'apercu');
-					setTimeout('majDescription()',500);
-				}</script>",
+				'tableHtmlCode'=>" class='formComment'",
 				'fields'=>$fieldsCommentaires,
 				'type' => $type
 		);
@@ -5370,6 +5415,23 @@ debug($reqEvenementEvenement);
 
 		$bbCode = new bbCodeObject();
 
+		$jsPop = "
+				<script>
+				(function($) {
+				$(function(){
+				$('.addCommentButton').on('click',function(e){
+				e.preventDefault();
+				$(e.target).next().next().toggleClass('formComment');
+				$(e.target).next().next().toggleClass('activeForm');
+	});
+	});
+	})(jQuery);
+				</script>
+				";//formAjoutCommentaireEvenement
+		//$this->addToJsHeader($jsPop);
+		$this->addToJsFooter($jsPop);
+
+		$html.='<a href="#" class="addCommentButton">Ajouter un commentaire</a>';
 		$html.= $formulaire->afficherFromArray($tabCommentaires);
 		return $html;
 	}
@@ -5381,7 +5443,7 @@ debug($reqEvenementEvenement);
 				'nom'                  		=>array('type'=>'text','default'=>'','htmlCode'=>'','libelle'=>_("Votre nom ou pseudo :"),'required'=>true,'error'=>'','value'=>''),
 				'prenom'                    =>array('type'=>'text','default'=>'','htmlCode'=>'','libelle'=>_("Votre prénom :"),'required'=>false,'error'=>'','value'=>''),
 				'email'                     =>array('type'=>'email','default'=>'','htmlCode'=>"style='width:250px;'",'libelle'=>_("Votre e-mail :"),'required'=>false,'error'=>'','value'=>''),
-				'commentaire'               =>array('type'=>'bigText','default'=>'','htmlCode'=>"rows=5 cols=50",'libelle'=>_("Votre commentaire :"),'required'=>true,'error'=>'','value'=>''),
+				'commentaire'               =>array('type'=>'bigText','default'=>'','htmlCode'=>"rows=5 cols=50",'libelle'=>'','required'=>true,'error'=>'','value'=>''),
 				'idEvenementGroupeAdresse'  => array('type'=>'hidden','default'=>'','htmlCode'=>'','libelle'=>'','required'=>false,'error'=>'','value'=>''),
 				'captcha'                   =>array('type'=>'captcha','default'=>'','htmlCode'=>'','libelle'=>'','required'=>true,'error'=>'','value'=>''),
 				'type'						=>array('type'=>'hidden','default'=>$type,'htmlCode'=>'','libelle'=>'','required'=>false,'error'=>'','value'=>'')
@@ -6316,6 +6378,12 @@ debug($reqEvenementEvenement);
 		{
 			$retourEvenement = $evenement->afficher($this->variablesGet['archiIdEvenementGroupeAdresse'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 			$html.=$retourEvenement['html'];
+			
+			
+			//$contenu = new ArchiContenu();
+			$html.=	$this->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields());
+			
+			
 			$html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
 			$html.=$this->getFormulaireCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields());
 		}
@@ -6323,6 +6391,9 @@ debug($reqEvenementEvenement);
 		{
 			$retourEvenement = $evenement->afficher($idEvenementGroupeAdresse,'',null,array());
 			$html.=$retourEvenement['html'];
+			
+			$html.=$this->getFormComment($idEvenementGroupeAdresse,$this->getCommentairesFields());
+			
 			$html.=$this->getListeCommentaires($idEvenementGroupeAdresse);
 			$html.=$this->getFormulaireCommentaires($idEvenementGroupeAdresse,$this->getCommentairesFields());
 		}
@@ -6336,6 +6407,10 @@ debug($reqEvenementEvenement);
 				$fetchEvenements = mysql_fetch_assoc($resEvenements);
 				$retourEvenement = $evenement->afficher($fetchEvenements['idEvenement'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 				$html.=$retourEvenement['html'];
+				
+				$html.=$this->getFormComment($fetchEvenements['idEvenement'],$this->getCommentairesFields('evenement'));
+				
+				
 				$html.=$this->getListeCommentaires($fetchEvenements['idEvenement']);
 				$html.=$this->getFormulaireCommentaires($fetchEvenements['idEvenement'],$this->getCommentairesFields());
 			}
@@ -6384,6 +6459,10 @@ debug($reqEvenementEvenement);
 
 					if($nbGroupesAdressesAffiches==1)
 					{
+						
+						$html.=$this->getFormComment($groupeAdresse,$this->getCommentairesFields());
+						
+						
 						$html.=$this->getListeCommentaires($groupeAdresse);
 						$html.=$this->getFormulaireCommentaires($groupeAdresse,$this->getCommentairesFields());
 					}
@@ -7012,7 +7091,9 @@ debug($reqEvenementEvenement);
 		
 		//Commentaires
 		$listeCommentaires = $this->getListCommentairesEvenements( $idEvenement);
-		$formulaireCommentaire = $this->getFormulaireCommentairesHistorique($idEvenement,$this->getCommentairesFields('evenement'));
+		//$formulaireCommentaire = $this->getFormulaireCommentairesHistorique($idEvenement,$this->getCommentairesFields('evenement'));
+		$formulaireCommentaire=$this->getFormComment( $idEvenement,$this->getCommentairesFields('evenement'),'evenement');
+		
 		
 		//Adresses liees processing
 		$adressesLieesHTML = $this->getAdressesLieesAEvenement(array('modeRetour'=>'affichageSurDetailEvenement','idEvenement'=>$idEvenement));
@@ -7357,6 +7438,79 @@ debug($reqEvenementEvenement);
 		}
 	}
 	
+	public function getFormComment($idEvenement,$fields,$ty=''){
+		$t = new Template('modules/archi/templates/');
+		$t->set_filenames((array('listeCommentaires'=>'comment/comment.tpl')));
+		
+		$type = ($ty=='') ? 0 : $ty;
+		
+		$auth = new ArchiAuthentification();
+		if($auth->estConnecte()){
+			
+			$url ="";
+			$userId = $auth->getIdUtilisateur();
+			$utilisateur = new archiUtilisateur();
+			$utilisateur->setUserId($userId);
+			$nom = $utilisateur->getNom();
+			$prenom = $utilisateur->getPrenom();
+			$email = $utilisateur->getEmail();
+			
+			if($type == 0){
+				$array_type = array();
+				$url = $this->creerUrl('enregistreCommentaire','',array());
+			}
+			else {
+				$array_type = array('type'=>array(
+						'id'=> 'type',
+						'type'=> 'hidden',
+						'value'=>$type
+				));
+				$url=$this->creerUrl('enregistreCommentaireEvenement','',array());
+			}
+			$inputs = array(
+					'nom'=>array(
+							'id'=>'nom' ,
+							'type'=> 'hidden',
+							'value'=> $nom
+					),
+					'prenom'=>array(
+							'id'=> 'prenom',
+							'type'=> 'hidden',
+							'value'=> $prenom
+					),
+					'email'=>array(
+							'id'=> 'email',
+							'type'=> 'hidden',
+							'value'=>$email
+					),
+					'idEvenementGroupeAdresse'=>array(
+							'id'=> 'idEvenementGroupeAdresse',
+							'type'=> 'hidden',
+							'value'=>$idEvenement
+					),
+			);
+
+		
+			$inputs = array_merge($inputs,$array_type);
+			
+			//debug($inputs);
+			foreach ($inputs as $input){
+				$t->assign_block_vars('input', $input);		
+			}
+			$t->assign_vars(array(
+					'urlRedirect'=> $url,
+					'name'=> 'formAjoutCommentaire'
+			));
+			
+		}
+		
+		
+		ob_start();
+		$t->pparse('listeCommentaires');
+		$html .= ob_get_contents();
+		ob_end_clean();
+		return $html;
+	}
 }
 
 

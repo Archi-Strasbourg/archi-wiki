@@ -113,7 +113,7 @@ abstract class ArchiContenu extends config
         // ******
         // si la personne n'est pas admin elle verra une version simplifiée du formulaire
         $authentification = new archiAuthentification();
-        $u = new ArchiUtilisateur();
+        $u = new archiUtilisateur();
         if ($authentification->estConnecte() && ($authentification->estAdmin() || $u->canAddWithoutStreet(array('idUtilisateur'=>$authentification->getIdUtilisateur())))) {
             $t->assign_block_vars('afficheAjoutEvenement.isAdmin', array());
             $t->assign_vars(array("displayQuartiers"=>'table-row'));
@@ -687,6 +687,29 @@ abstract class ArchiContenu extends config
                 }
             }
             
+            
+            //debug($this->variablesPost);
+            debug($arrayNewAdresses);
+            
+            
+            $sql = "SELECT ha1.idAdresse as idAdresse
+				FROM historiqueAdresse ha1, historiqueAdresse ha2
+				WHERE ha2.idAdresse = ha1.idAdresse
+				AND ha1.idRue='".$tabForm['rue']['value']."'
+				AND ha1.idSousQuartier='".$tabForm['sousQuartier']['value']."'
+				AND ha1.idQuartier='".$tabForm['quartier']['value']."'
+				AND ha1.idVille='".$tabForm['ville']['value']."'
+				AND ha1.idPays='".$tabForm['pays']['value']."'
+				AND ha1.numero = '".$tabForm['numero']['value']."'
+				AND ha1.date='".$tabForm['date']['value']."'
+				AND ha1.idIndicatif='".$tabForm['indicatif']['value']."'
+				GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
+				HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)";
+            $resDouble = $this->connexionBdd->requete($sql);
+            $arrayDouble = mysql_fetch_assoc($resDouble);
+            
+            
+            
             $this->addEvent("adresse",  $arrayNewAdresses);
             
             // enfin on regenere les caches
@@ -720,25 +743,46 @@ abstract class ArchiContenu extends config
         $idSousEvenement=0;
         
         if ($type=="personne") {
-            $linkTable="_personneEvenement";
-            $field="idPersonne";
+        	$linkTable="_personneEvenement";
+        	$field="idPersonne";
         } else {
-            $linkTable="_adresseEvenement";
-            $field="idAdresse";
+        	$linkTable="_adresseEvenement";
+        	$field="idAdresse";
         }
         $table = array('table'=>$linkTable,'field' => $field);
-        $arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier();
+
+        debug($arrayNewAdresses);
+        //$arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier();
+        
+
         
         
+        foreach ($arrayNewAdresses as $newAddress){
+        	debug(array(
+        	'isset'=>isset($newAddress['newAdresse']) ,
+        	'not empty' => !empty($newAddress['newAdresse']),
+        	'newAdresse'=>$newAddress['newAdresse']
+        	));
+	        if(isset($newAddress['newAdresse']) && !empty($newAddress['newAdresse']) || $newAddress['newAdresse'] ==1){
+	        	debug("full ajout");
+	        	$arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier();
+	        }
+	        else{
+	        	debug("ajout simple id : ".$newAddress['idAdresse']);
+	        	$arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier($newAddress['idAdresse']);
+	        }
+        }
+        debug($arrayRetourEvenementNouveauDossier);
+
         // s'il n'y a pas eu d'erreurs ,  on peut faire l'ajout des liaisons entre evenement et adresses
         if (count($arrayRetourEvenementNouveauDossier['errors'])==0 && count($arrayNewAdresses)>0) {
-            $idEvenementGroupeAdresses = $arrayRetourEvenementNouveauDossier['idEvenementGroupeAdresse'];
-            $idSousEvenement = $arrayRetourEvenementNouveauDossier['idSousEvenement'];
-            // liaison entre les adresses et l'evenement groupe d'adresses
-            $resSupp = $this->connexionBdd->requete("delete from $linkTable where idEvenement = '".$idEvenementGroupeAdresses."'");
-            
-            
-            // on rend la liste des identifiants unique
+        	$idEvenementGroupeAdresses = $arrayRetourEvenementNouveauDossier['idEvenementGroupeAdresse'];
+        	$idSousEvenement = $arrayRetourEvenementNouveauDossier['idSousEvenement'];
+        	// liaison entre les adresses et l'evenement groupe d'adresses
+        	$resSupp = $this->connexionBdd->requete("delete from $linkTable where idEvenement = '".$idEvenementGroupeAdresses."'");
+
+
+        	// on rend la liste des identifiants unique
             $arrayNewIdAdresses=array();
             foreach ($arrayNewAdresses as $indice =>$value) {
                 $arrayNewIdAdresses[] = $value['idAdresse'];
@@ -750,16 +794,21 @@ abstract class ArchiContenu extends config
                 $reqLiaisons = "INSERT INTO $linkTable ($field, idEvenement)
                                 VALUES ('".$idAdresse."', '".$idEvenementGroupeAdresses."')
                 ";
-                
                 $resLiaisons = $this->connexionBdd->requete($reqLiaisons);
             }
             
             
 
             // on relie l'evenement pere (groupe d'adresse ) à l'evenement fils
-            $sqlAssociationNettoie = "delete from _evenementEvenement where idEvenement = '".$arrayRetourEvenementNouveauDossier['idEvenementGroupeAdresse']."'";
-            $resAssociationNettoie = $this->connexionBdd->requete($sqlAssociationNettoie);
+            if(isset($newAddress['newAdresse']) && !empty($newAddress['newAdresse']) || $newAddress['newAdresse'] ==1){
+	            
+	            $sqlAssociationNettoie = "delete from _evenementEvenement where idEvenement = '".$arrayRetourEvenementNouveauDossier['idEvenementGroupeAdresse']."'";
+	            debug($sqlAssociationNettoie);
+	            
+	            $resAssociationNettoie = $this->connexionBdd->requete($sqlAssociationNettoie);
+            }
             $sqlAssociation = "insert into _evenementEvenement (idEvenement,idEvenementAssocie) values ('".$arrayRetourEvenementNouveauDossier['idEvenementGroupeAdresse']."','".$arrayRetourEvenementNouveauDossier['idSousEvenement']."')";
+            debug($sqlAssociation);
             $resAssociation = $this->connexionBdd->requete($sqlAssociation);
             
             if ($type=="personne") {
@@ -883,6 +932,26 @@ abstract class ArchiContenu extends config
             }
         }
     }
+    
+    
+    
+    
+    
+    public function getFormComment($type,$idEvenement,$fieldsCommentaires){
+    	$t = new Template('modules/archi/templates/');
+    	$t->set_filenames((array('listeCommentaires'=>'comment/comment.tpl')));
+    	
+    	
+    	
+    	
+    	
+    	ob_start();
+    	$t->pparse('listeCommentaires');
+    	$html .= ob_get_contents();
+    	ob_end_clean();
+    	return $html;
+    }
+    
 }
 
 ?>

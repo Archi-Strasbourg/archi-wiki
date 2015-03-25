@@ -1215,7 +1215,6 @@ class formGenerator extends config
         
         $t->assign_vars(array('idFormObject'=>$this->identifiantObject));
         
-        
         if (isset($parametres['onClickButtonSubmit'])) {
             $t->assign_vars(array('onClickButtonSubmit'=>$parametres['onClickButtonSubmit']));
         }

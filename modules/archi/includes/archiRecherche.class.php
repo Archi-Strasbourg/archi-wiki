@@ -2191,10 +2191,14 @@ class archiRecherche extends config {
 				else{
 					if(!empty($criterias[$id[0]])){
 						$motCle = $criterias[$id[0]];
+						$motCleEscapedFullEscaped = "*".str_replace(' ', '*', $criterias[$id[0]])."*";
+						
 						$motCleEscaped = str_replace(' ', ' +', $criterias[$id[0]]);
 						$motCleEscaped="+".$motCleEscaped;
 						
-						$sqlWhereTab[] = "MATCH(nomRue, nomQuartier, nomSousQuartier, nomVille, nomPays, prefixeRue,numeroAdresse,  description, titre , nomPersonne, prenomPersonne, concat1, concat2, concat3, concat4, concat5) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE) ";
+						$sqlWhereTab[] = "MATCH(nomRue, nomQuartier, nomSousQuartier, nomVille, nomPays, prefixeRue,numeroAdresse,  description, titre , nomPersonne, prenomPersonne, concat1, concat2, concat3, concat4, concat5) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE) 
+								OR MATCH(description, titre , concat1, concat2, concat3) AGAINST ('".$motCleEscapedFullEscaped."' IN BOOLEAN MODE) 
+								";
 					}
 				}
 			}
@@ -2270,8 +2274,7 @@ class archiRecherche extends config {
 			$motCleEscaped = str_replace(' ', ' +', $params['motcle']);
 			$motCleEscaped="+".$motCleEscaped;
 			
-			
-			
+			$motCleFullEscaped = "*".str_replace(' ', '*', $params['motcle'])."*";
 			
 			
 			//				10000000000000 * ((MATCH (concat1) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
@@ -2282,13 +2285,14 @@ class archiRecherche extends config {
 				(
 		
 		
-				1000000000000000* (MATCH (concat3) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
-				100000000000000* (MATCH (concat3) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
+				10000000000000000* (MATCH (concat3) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				1000000000000000* (MATCH (concat3) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
+				100000000000000* (MATCH (concat3) AGAINST ('".$motCleFullEscaped."' IN BOOLEAN MODE)) +
 						
 				10000000000000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) +
 				10000000000000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) )) +
 
-				10000000000000 * (( (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
+				10000000000000 * (((MATCH (nomQuartier) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
 						
 						
 				100000000000 * (MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
@@ -2330,7 +2334,6 @@ class archiRecherche extends config {
 				ORDER BY relevance  ".$order."
 				".$limit.
 							";";
-				
 		}
 		else{
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5, 1 as relevance
