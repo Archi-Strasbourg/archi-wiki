@@ -1,9 +1,18 @@
-﻿<br>
-<h2>{titre}<??></h2>
-<table {tableHtmlCode}>
-<!-- BEGIN commentaires -->
-<tr><td class="commentWrapper" style="padding:0;" itemprop="review" itemscope itemtype="http://schema.org/Review"><div class="commentHeader" itemprop="creator" itemscope itemtype="http://schema.org/Person">{commentaires.infosPersonne} {commentaires.boutonSupprimer}{commentaires.siteWeb}{commentaires.adresseMail}</div>
-<div class="comment" itemprop="reviewBody">{commentaires.commentaire}</div></td></tr>
+﻿<!-- BEGIN commentaires -->
+<div class="commentaire">
+	<div class="commentHeader"><div class="profilePicWrapper">
+		<img alt="" src="{commentaires.urlProfilPic}">
+	</div> 
+	<div class="commentNameAction"> 
+		<p>{commentaires.prenom} {commentaires.nom} {commentaires.labelCommentAction} </p>
+		<p><a href="{commentaires.urlSupprimer}">Supprimer ce commentaire</a></p> 
+	</div> 
+		<div class="commentDate">
+		<p>{commentaires.date}</p>
+		</div> 
+	 </div>
+	<div class="comment">
+		{commentaires.commentaire}
+	</div>
+</div>
 <!-- END commentaires -->
-</table>
-{msg}

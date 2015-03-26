@@ -9254,6 +9254,7 @@ class archiAdresse extends ArchiContenu
 	            $adresseMail = "";
 	            $boutonSupprimer="";
 	            $urlSiteWeb = "";
+	            $urlProfilePic = $u->getImageAvatar(array('idUtilisateur'=>$fetch['idUtilisateur']));
 	            if($fetch['urlSiteWeb']!='')
 	            {
 	                $urlSiteWeb = "<br><a itemprop='url' href='".$fetch['urlSiteWeb']."' target='_blank'><span style='font-size:9px;color:#FFFFFF;'>".$fetch['urlSiteWeb']."</span></a>";
@@ -9267,15 +9268,37 @@ class archiAdresse extends ArchiContenu
 	                    $archiIdAdresse = $this->variablesGet['archiIdAdresse'];
 	                }
 	                $boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse))."';\">";
+	                $urlSupprimer = $this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse));
 	                $adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
 	            }
 	            $t->assign_block_vars('commentaires',array(
+	                'adresseMail'=>$adresseMail,
+	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
+	                'boutonSupprimer'=>$boutonSupprimer,
+	            	'urlProfilPic'=>$urlProfilePic,
+            		'prenom' => $fetch['prenom'],
+            		'nom'=> $fetch['nom'],
+	            	'labelCommentAction' => _("a ajouté un commentaire"),
+	            	'date' =>$fetch['dateF'],
+	            	'urlSupprimer'=>$urlSupprimer
+	            		
+	            ));
+	            
+	            /*
+	             *  $t->assign_block_vars('commentaires',array(
 	                'infosPersonne'=>"".$fetch['dateF'].' : <span itemprop="name">'.$fetch['nom'].' '.$fetch['prenom']."</span>",
 	                'adresseMail'=>$adresseMail,
-	                'commentaire'=>"<img itemprop='image' src='".$u->getImageAvatar(array('idUtilisateur'=>$fetch['idUtilisateur']))."' border=0 align=left style='padding-right:5px;padding-bottom:5px;'>".$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
+	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
 	                'boutonSupprimer'=>$boutonSupprimer,
-	                'siteWeb'=>$urlSiteWeb)
-	                );
+	                'siteWeb'=>$urlSiteWeb,
+	            	'urlProfilPic'=>$urlProfilePic,
+            		'prenom' => $fetch['nom'],
+            		'nom'=> $fetch['prenom'],
+	            	'labelCommentAction' => _("a ajouté un commentaire"),
+	            	'date' =>$fetch['dateF']
+	            		
+	            ));
+	             */
 	        }
 	        
 	        ob_start();

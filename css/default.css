@@ -996,9 +996,7 @@ img {
 .commentHeader {
 	border-bottom: thin solid #BBB;
 	font-size: 12px;
-	font-weight: bold;
 	color: #FFFFFF;
-	/*background-color: #007799;*/
 }
 
 .commentWrapper {
@@ -1014,7 +1012,7 @@ img {
 }
 
 .comment {
-	//min-height: 120px;
+	color: white;
 }
 
 /*
@@ -2457,7 +2455,6 @@ del{
 	color: white;
 }
 
-
 .addCommentButtonWrapper a {
 	display: block;
 	width: 100%;
@@ -2473,14 +2470,12 @@ del{
 	border-radius: 3px;
 }
 
-
-.active .addCommentButtonWrapper a {
+.active .addCommentButtonWrapper a , .commentaire {
 	background-color: #424647;
 }
 .addCommentButtonWrapper a:focus {
     outline: 0;
 }
-
 
 .profilePicWrapper{
 	/*float:left;*/
@@ -2502,7 +2497,6 @@ del{
     text-transform: uppercase;
 }
 
-
 .commentSubmitButton , .addCommentButtonWrapper a ,.profilePicWrapper, .active .formComment form textarea,.commentFormWrapper img,.comment img{
 	height: 40px;
 }
@@ -2510,3 +2504,26 @@ del{
 	border: none;	
 }
 
+
+/* Comment list */
+.commentaire{
+	margin-top: 5px;
+}
+
+.commentHeader div, .commentHeader .profilePicWrapper img,.commentHeader{
+	height: 40px;
+}
+
+.commentHeader .profilePicWrapper , .commentHeader .commentNameAction{
+	float: left;
+}
+.commentHeader .commentDate{
+	float: right;
+}
+.commentNameAction p{
+	margin: 0;
+}
+
+.commentDate p{
+	background-color: #293234;
+}

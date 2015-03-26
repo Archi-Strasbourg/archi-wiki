@@ -5272,56 +5272,87 @@ debug($reqEvenementEvenement);
 						ORDER BY date ASC
 						";
 
-		$res = $this->connexionBdd->requete($req);
+	  $res = $this->connexionBdd->requete($req);
+        if(mysql_num_rows($res)>0)
+        {
+        
+	        $t->assign_vars(array(
+	        		'tableHtmlCode'=>"  ",
+	        		'titre'=>_("Liste des commentaires concernant l'adresse")
+	        ));
+	        
+	        $authentification = new archiAuthentification();
+	        
+	        
+	        
+	        // si l'utilisateur est administrateur, on affiche le bouton de suppression d'un commentaire
+	        $isAdmin=false;
+	        if($authentification->estConnecte() && $authentification->estAdmin())
+	        {
+	            $isAdmin=true;
+	        }
+	        
+	        
+	        while($fetch = mysql_fetch_assoc($res))
+	        {
+	            $adresseMail = "";
+	            $boutonSupprimer="";
+	            $urlSiteWeb = "";
+	            $urlProfilePic = $u->getImageAvatar(array('idUtilisateur'=>$fetch['idUtilisateur']));
+	            if($fetch['urlSiteWeb']!='')
+	            {
+	                $urlSiteWeb = "<br><a itemprop='url' href='".$fetch['urlSiteWeb']."' target='_blank'><span style='font-size:9px;color:#FFFFFF;'>".$fetch['urlSiteWeb']."</span></a>";
+	            }
+	            
+	            if($isAdmin)
+	            {
+	                $archiIdAdresse='';
+	                if(isset($this->variablesGet['archiIdAdresse']))
+	                {
+	                    $archiIdAdresse = $this->variablesGet['archiIdAdresse'];
+	                }
+	                $boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse))."';\">";
 
-		
-		if(mysql_num_rows($res)>0){	
-			
-			$t->assign_vars(array(
-					'tableHtmlCode'=>"  ",
-					'titre'=>_("Liste des commentaires concernant l'événement")
-			));
-	
-			$authentification = new archiAuthentification();
-	
-	
-			// si l'utilisateur est administrateur, on affiche le bouton de suppression d'un commentaire
-			$isAdmin=false;
-			if($authentification->estConnecte() && $authentification->estAdmin())
-			{
-				$isAdmin=true;
-			}
-	
-			while($fetch = mysql_fetch_assoc($res))
-			{
-				$adresseMail = "";
-				$boutonSupprimer="";
-				$urlSiteWeb = "";
-				if($isAdmin)
-				{
-					$archiIdAdresse='';
-					if(isset($this->variablesGet['archiIdAdresse']))
-					{
-						$archiIdAdresse = $this->variablesGet['archiIdAdresse'];
-					}
-					$boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaireEvenement','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse))."';\">";
-					$adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
-				}
-				$t->assign_block_vars('commentaires',array(
-						'infosPersonne'=>"".$fetch['dateF'].' : <span itemprop="name">'.$fetch['nom'].' '.$fetch['prenom']."</span>",
-						'adresseMail'=>$adresseMail,
-						'commentaire'=>"<img itemprop='image' src='".$u->getImageAvatar(array('idUtilisateur'=>$fetch['idUtilisateur']))."' border=0 align=left style='padding-right:5px;padding-bottom:5px;'>".$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))),
-						'boutonSupprimer'=>$boutonSupprimer,
-						'siteWeb'=>$urlSiteWeb)
-				);
-			}
-			ob_start();
-			$t->pparse('listeCommentaires');
-			$html .= ob_get_contents();
-			ob_end_clean();
-	
-			return $html;
-		}
+	                $urlSupprimer = $this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse));
+	                $adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
+	            }
+	            $t->assign_block_vars('commentaires',array(
+	                'adresseMail'=>$adresseMail,
+	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
+	                'boutonSupprimer'=>$boutonSupprimer,
+	            	'urlProfilPic'=>$urlProfilePic,
+            		'prenom' => $fetch['prenom'],
+            		'nom'=> $fetch['nom'],
+	            	'labelCommentAction' => _("a ajouté un commentaire"),
+	            	'date' =>$fetch['dateF'],
+            		'urlSupprimer'=>$urlSupprimer
+	            		
+	            ));
+	            
+	            /*
+	             *  $t->assign_block_vars('commentaires',array(
+	                'infosPersonne'=>"".$fetch['dateF'].' : <span itemprop="name">'.$fetch['nom'].' '.$fetch['prenom']."</span>",
+	                'adresseMail'=>$adresseMail,
+	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
+	                'boutonSupprimer'=>$boutonSupprimer,
+	                'siteWeb'=>$urlSiteWeb,
+	            	'urlProfilPic'=>$urlProfilePic,
+            		'prenom' => $fetch['nom'],
+            		'nom'=> $fetch['prenom'],
+	            	'labelCommentAction' => _("a ajouté un commentaire"),
+	            	'date' =>$fetch['dateF']
+	            		
+	            ));
+	             */
+	        }
+	        
+	        ob_start();
+	        $t->pparse('listeCommentaires');
+	        $html .= ob_get_contents();
+	        ob_end_clean();
+	        
+	        return $html;
+        }
 
 	}
 	
@@ -7458,7 +7489,7 @@ debug($reqEvenementEvenement);
 			$profileAlt = $prenom. " " . $nom;
 			
 			
-			if($type == 0){
+			if($ty==''){
 				$array_type = array();
 				$url = $this->creerUrl('enregistreCommentaire','',array());
 			}
@@ -7470,6 +7501,7 @@ debug($reqEvenementEvenement);
 				));
 				$url=$this->creerUrl('enregistreCommentaireEvenement','',array());
 			}
+			debug(array('type'=> $type,'url'=>$url ,'test 0'=> ($type == 0),'test evt'=> ($type == 'evenement')));
 			$inputs = array(
 					'nom'=>array(
 							'id'=>'nom' ,
