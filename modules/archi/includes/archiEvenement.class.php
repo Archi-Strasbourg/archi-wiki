@@ -7018,10 +7018,10 @@ debug($reqEvenementEvenement);
 		$resultHistory = $this->connexionBdd->requete($requeteHistory);
 	
 		if(mysql_num_rows($resultHistory)>1){
-			$txtEnvoi = "Modifié";
+			$txtEnvoi = "modifié";
 		}
 		else{
-			$txtEnvoi="Envoyé";
+			$txtEnvoi="envoyé";
 		}
 		$lienHistoriqueEvenementCourant=$this->creerUrl('','consultationHistoriqueEvenement',array('archiIdEvenement'=>$idEvenement));
 		$labelHistoriqueEvenement = '(Consulter l\'historique)';
@@ -7161,6 +7161,7 @@ debug($reqEvenementEvenement);
 		$isAdmin = true;
 		$u = new archiUtilisateur();
 		$userId = $authentification->getIdUtilisateur();
+		$urlProfilPic = $u->getImageAvatar(array('idUtilisateur'=>$idUtilisateur));
 		$isModerateur = $u->isModerateurFromVille($userId,$cityId,'idVille');
 		$isAdmin = ($u->getIdProfil($userId)=='4');
 	
@@ -7201,9 +7202,10 @@ debug($reqEvenementEvenement);
 		}
 		$evenementData = array(
 				'titre' => stripslashes($fetch['titre']),
-				'infoTitre'=> " - ".$txtEnvoi." par $utilisateur " .$fetch['dateCreationEvenement'],
-				'txtEnvoi' => $txtEnvoi,
+				'infoTitre'=> $utilisateur . " a ".$txtEnvoi." un evenement",
+				'txtEnvoi' => $txtEnvoi." le",
 				'utilisateur' => $fetch['prenomUtilisateur'].' '.$fetch['nomUtilisateur'],
+				'urlProfilPic' => $urlProfilPic,
 				'dateEnvoi' =>$fetch['dateCreationEvenement'],
 				'lienHistoriqueEvenementCourant' => $lienHistoriqueEvenementCourant,
 				'labelLienHistorique'=>$labelHistoriqueEvenement,
@@ -7501,7 +7503,6 @@ debug($reqEvenementEvenement);
 				));
 				$url=$this->creerUrl('enregistreCommentaireEvenement','',array());
 			}
-			debug(array('type'=> $type,'url'=>$url ,'test 0'=> ($type == 0),'test evt'=> ($type == 'evenement')));
 			$inputs = array(
 					'nom'=>array(
 							'id'=>'nom' ,
@@ -7541,6 +7542,56 @@ debug($reqEvenementEvenement);
 			
 		}
 		
+		
+		ob_start();
+		$t->pparse('listeCommentaires');
+		$html .= ob_get_contents();
+		ob_end_clean();
+		return $html;
+	}
+	
+	
+	public function displaySingleEvent($evenement){
+		$t = new Template('modules/archi/templates/');
+		$t->set_filenames((array('listeCommentaires'=>'evenement/singleEvent.tpl')));
+		
+		//Filling the template with the infos
+		$t->assign_block_vars('evenement', $evenement['evenementData']);
+			
+		//Menu (ajouter image/event, modifier image/event etc..)
+		if(isset($evenement['menuArray'])){
+			foreach ($evenement['menuArray'] as $menuElt){
+				$t->assign_block_vars($menuElt[0], $menuElt[1]);
+			}
+		}
+		//Personnes
+		if(isset($evenement['arrayPersonne'])){
+			foreach ($evenement['arrayPersonne'] as $personne){
+				$t->assign_block_vars($personne[0], $personne[1]);
+			}
+		}
+			
+		//Formulaire pour les modifications d'images
+		if(isset($evenement['arrayFormEvent'])){
+			$t->assign_block_vars($personne[0], $personne[1]);
+		}
+			
+		//Courant architectural
+		if(isset($evenement['arrayCourantArchi'])){
+			foreach ($evenement['arrayCourantArchi'] as $courantArchi){
+				$t->assign_block_vars($courantArchi[0], $courantArchi[1]);
+			}
+		}
+		$titre =stripslashes($evenement['evenementData']['titre']);
+		if(isset($evenement['evenementData']['titre']) &&$evenement['evenementData']['titre']!=""){
+			$titre.=" - ";
+		}
+		$ancre = "#evenement".$evenement['evenementData']['idEvenement'];
+		$t->assign_block_vars('sommaireEvenements.sommaireItem', array(
+				'ancre' => $ancre,
+				'titre' => $titre,
+				'date' =>$evenement['evenementData']['dates']
+		));
 		
 		ob_start();
 		$t->pparse('listeCommentaires');

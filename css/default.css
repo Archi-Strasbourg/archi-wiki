@@ -973,10 +973,11 @@ img {
 }
 
 .actionEvent {
-	padding-left: 1em;
-	list-style-type: none;
+//	padding-left: 1em;
 	/*background-color: #E1E1E1;*/
-	border-bottom: thin solid #BBB;
+	//border-bottom: thin solid #BBB;
+	color: black;
+	margin-bottom: 5px;
 	font-weight: bold;
 }
 
@@ -1067,7 +1068,7 @@ img {
 }
 
 .large,.evenement {
-	width: 100%;
+	//width: 100%;
 }
 
 .barredons {
@@ -1383,11 +1384,10 @@ a.white:hover {
 }
 
 .event {
-	background-color: #99ACB0;
-	padding: 1em;
-	margin-bottom: 3em;
+	padding: 0 1em 1em 1em;
 	border-radius: 5px;
-	min-width: 730px;
+	width: 730px;
+	float: left;
 }
 
 li:empty {
@@ -1403,11 +1403,18 @@ li:empty {
 }
 
 .menuAction {
+	/*
 	background-color: #829395;
 	border: thin solid #BBB;
 	border-radius: 5px;
+	*/
+	float: right;
 }
-
+.menuAction > div{
+	margin-bottom: 10px;
+	padding: 5px;
+	background-color: #797979;
+}
 .menuAction li {
 	list-style-type: none;
 }
@@ -1748,13 +1755,14 @@ hr.edgeFade {
 .imgResultHover {
 	position: absolute;
 	left: 0;
-	background-color: #99ACB0;
-	border-radius: 5px;
+	//border-radius: 5px;
+	background-color: #424647;
 	text-align: center;
 	width: 130px;
 	height: 130px;
 	overflow: hidden;
 	padding: 0;
+	color: white;
 }
 
 .imgResultHover p {
@@ -1764,12 +1772,14 @@ hr.edgeFade {
 }
 
 .imgResultHover img {
-	border-radius: 5px;
+	//border-radius: 5px;
 	min-height: 130px;
+	//max-width: 130px;
 }
 
 .imgResultGrp:hover .imgResultHover img {
 	min-height: 80px;
+	//max-width:auto;
 }
 
 .imgResultGrp:hover .imgResultHover {
@@ -1780,7 +1790,8 @@ hr.edgeFade {
 	top: -20px;
 	z-index: 20;
 	opacity: 1;
-	border: thin solid #BBBBBB;
+	//border: 2px solid black;
+	border: thin solid black;
 }
 
 .secondaryContent .switchSearch {
@@ -2375,6 +2386,21 @@ del{
 }
 
 
+.gallery > div {
+	float: left;
+	text-align: center;
+	position: relative;
+	padding-left: 5px;
+	padding-bottom: 5px;
+	width: 130px;
+	height: 130px;
+	clear: vertical;
+}
+.imgDesc {
+	height: 17px;
+	overflow: hidden
+}
+
 .ellipsis {
   	overflow: hidden;
 	max-height: 64px; 
@@ -2526,4 +2552,36 @@ del{
 
 .commentDate p{
 	background-color: #293234;
+}
+.commentaireEvenement{
+	margin-bottom: 20px;
+}
+
+
+/*
+Evenement block
+*/
+.evenement{
+	 background-color: #424647;
+	 color: white;
+	 padding: 10px;
+}
+
+.eventPoster img{
+	height: 20px;	
+	vertical-align: bottom;
+	margin-right: 10px;
+}
+.eventHeader div:first-child{
+	float: left;
+}
+.eventHeader div:last-child{
+	float: right;
+}
+.eventHeader div:last-child a{
+	float: right;
+}
+
+.eventHeader div:last-child p{
+	background-color: #2A3335;
 }

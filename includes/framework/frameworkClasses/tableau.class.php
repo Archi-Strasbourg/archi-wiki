@@ -32,7 +32,7 @@ class tableau
 	}
 	
 	
-	// construction d'un tableau html ou le précise le nom de colonnes en parametres
+	// construction d'un tableau html ou le prï¿½cise le nom de colonnes en parametres
 	public function createHtmlTableFromArray($nbColonnes=4,$styleTableau='border:1px;',$classTableau='',$cellProperty='',$tableauProperties='')
 	{
 	
@@ -57,8 +57,8 @@ class tableau
 		
 		$nbCases = $nbLignes * $nbColonnes;
 		
-		$ligne=0; // coordonnées horizontales
-		$colonne=0; // coordonnées verticales
+		$ligne=0; // coordonnï¿½es horizontales
+		$colonne=0; // coordonnï¿½es verticales
 		for($i=0 ; $i<$nbCases ; $i++)
 		{
 			if($colonne==0)
@@ -95,7 +95,7 @@ class tableau
 		return $html;
 	}
 	
-	// fonction permettant d'afficher un tableau de photo par exemple avec un commentaire qui sera aligné dans la ligne suivante du tableau
+	// fonction permettant d'afficher un tableau de photo par exemple avec un commentaire qui sera alignï¿½ dans la ligne suivante du tableau
 	public function addValuesFromArrayLinked($arrayValues,$nbColonnes=3,$styleCellHaut='',$styleCellBas='')
 	{
 		
@@ -182,10 +182,10 @@ class tableau
 		
 	}
 	
-	// creation d'un tableau a base de divs , permettant ainsi d'avoir des cases aux formats différents
+	// creation d'un tableau a base de divs , permettant ainsi d'avoir des cases aux formats diffï¿½rents
 	// attention : si problemes avec ie , mettre un <div style='clear:left;'></div> a la fin dans le conteneur
 	//
-	// si nbColonnes est précisé dans les parametres, on met un div autour des div afin d'aligner les cellules
+	// si nbColonnes est prï¿½cisï¿½ dans les parametres, on met un div autour des div afin d'aligner les cellules
 	public function createHtmlDivsFromArray($params=array())
 	{
 		$html="";
@@ -211,11 +211,11 @@ class tableau
 		{
 			if(isset($nbColonnes) && $i==0)
 			{
-				$html.="<div style='float:left;display:table;$widthLigne'>";
+				$html.="<div style='display:table;$widthLigne'>";
 			}
 			elseif(isset($nbColonnes) && $i%$nbColonnes==0)
 			{
-				$html.="</div><div style='clear:both;'></div><div style='float:left;display:table;$widthLigne'>";
+				$html.="</div><div style='clear:both;'></div><div style='display:table;$widthLigne'>";
 			}
 			
 			$width="";
@@ -223,7 +223,7 @@ class tableau
 			{
 				$width="width:".$this->tabProperties[$i]['x']."px;";
 			}
-			$html.="<div style='float:left;$width".$styleDivs."'>".$this->tabValues[$i]."</div>";
+			$html.="<div style='$width".$styleDivs."'>".$this->tabValues[$i]."</div>";
 			
 			if(isset($nbColonnes) && ($i==$nbValues-1))
 			{

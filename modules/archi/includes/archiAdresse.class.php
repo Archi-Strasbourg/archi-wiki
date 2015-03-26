@@ -589,6 +589,9 @@ class archiAdresse extends ArchiContenu
 			//Getting all the infos with this method 
 			$evenement = $e->getEventInfos($fetch['idEvenement']);
 
+			$result = $e->displaySingleEvent($evenement);
+			$t->assign_block_vars('event', array('content'=>$result));
+						/*
 			//Filling the template with the infos
 			$t->assign_block_vars('evenement', $evenement['evenementData']);
 			
@@ -620,13 +623,13 @@ class archiAdresse extends ArchiContenu
 			if(isset($evenement['evenementData']['titre']) &&$evenement['evenementData']['titre']!=""){
 				$titre.=" - ";
 			}
+			*/
 			$ancre = "#evenement".$evenement['evenementData']['idEvenement'];
 			$t->assign_block_vars('sommaireEvenements.sommaireItem', array(
 					'ancre' => $ancre,
 					'titre' => $titre,
 					'date' =>$evenement['evenementData']['dates']
 			));
-				
 		}
 		
 		

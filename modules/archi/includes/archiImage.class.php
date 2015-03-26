@@ -2166,21 +2166,7 @@ class archiImage extends config
                 $sizes['x'] = $arrayImageSizeAff[0];
                 $sizes['y'] = $arrayImageSizeAff[1];
             }
-            /*
-             * echo '<a class="imgResultGrp" href="'.$config->creerUrl(
-                '', 'imageDetail', array('archiRetourAffichage'=>'evenement',
-                'archiRetourIdName'=>'idEvenement',
-                'archiIdImage'=>$image['idImage'],
-                'archiIdAdresse'=>$image['idAdresse'],
-                'archiRetourIdValue'=>$image['idEvenement'])
-            ).'"><div class="imgResult"></div>
-            <div class="imgResultHover"><img src="'.
-            'photos--'.$image['dateUpload'].'-'.$image['idHistoriqueImage'].
-            '-moyen.jpg'.'" alt="" /><p>'.strip_tags(
-                $bbcode->convertToDisplay(
-                    array('text'=>$image['description'])
-                )
-            ).'</p></div></a>';*/
+   
             $imageHTML .= '<a class="imgResultGrp" '.$hrefImage.'><div class="imgResultHover"><img itemprop="image" onclick="'.$onClickImage.'" id="image'.$valuesImage['idHistoriqueImage'].$divParamIdGroupeAdresseAffiche.'"  alt="'.htmlspecialchars($alt).'"  src="'.
             'photos--'.$valuesImage['dateUpload'].'-'.$valuesImage['idHistoriqueImage'].
             '-moyen.jpg'.'" class="eventImage" /><p>'.strip_tags($bbCode->convertToDisplay(array('text'=>$valuesImage['description']))).'</p></div></a><div class="imgDesc">'.$bbCode->convertToDisplay(array('text'=>$valuesImage['description'])).'</div><br>';//src=\'photos-'.$string->convertStringToUrlRewrite($intituleAdresse).'-'.$valuesImage['dateUpload'].'-'.$valuesImage['idHistoriqueImage'].'-'.$formatAffichagePhoto.'.jpg\'
@@ -2207,10 +2193,10 @@ class archiImage extends config
         if ($authentification->estConnecte()) {
             // si on est connecté ,  on laisse un padding top pour que les photos ne se chevauches pas avec le menu des evenements
             //$html = "<div style='display:table;padding-top:50px;'>".$tab->createHtmlTableFromArray(3,  '',  '',  'align="center" valign="top" style="font-size:13px;"')."</div>";
-            $html = "<div class='gallery'>".$tab->createHtmlDivsFromArray(array("styleDivs"=>"text-align:center;display:table;padding-left:5px;padding-bottom:5px;position:relative; width:130px; height:130px;",  "nbColonnes"=>4))."<div style='clear:both;'></div></div>";
+            $html = "<div class='gallery'>".$tab->createHtmlDivsFromArray(array("styleDivs"=>""))."</div>";
         } else {
             //$html = "<div style='display:table;'>".$tab->createHtmlTableFromArray(3,  '',  '',  'align="center" valign="top" style="font-size:13px;"')."</div>";
-            $html = "<div class='gallery'>".$tab->createHtmlDivsFromArray(array("styleDivs"=>"display:table;padding-left:5px;padding-bottom:5px;position:relative; width:130px; height:130px;",  "nbColonnes"=>5))."<div style='clear:left;'></div></div>";
+            $html = "<div class='gallery'>".$tab->createHtmlDivsFromArray(array("styleDivs"=>""))."</div>";
         }
         
         return $html.$zonesHTML;

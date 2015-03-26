@@ -2001,6 +2001,7 @@ class archiUtilisateur extends config {
     	if (isset($params['idUtilisateur']) && $params['idUtilisateur']!='')
     		$idUtilisateur = $params['idUtilisateur'];
 
+    	
     	if (file_exists($this->getCheminPhysique()."/images/avatar/".$idUtilisateur."/avatar.jpg"))
     	{
     		$retour = $this->getUrlImage()."avatar/".$idUtilisateur."/avatar.jpg";
