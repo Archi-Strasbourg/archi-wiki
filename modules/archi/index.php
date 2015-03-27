@@ -1416,8 +1416,8 @@ if (isset($_GET['archiAffichage'])) {
             break;
         case 'detailProfilPublique':
             $u = new archiUtilisateur();
-            //echo $u->afficheProfilPublique();
-            echo $u->getPublicProfil($_GET['archiIdUtilisateur']);
+            echo $u->afficheProfilPublique();
+            //echo $u->getPublicProfil($_GET['archiIdUtilisateur']);
             break;
         case 'donAnnule':
             echo "<h1>Faire un don</h1><br>";

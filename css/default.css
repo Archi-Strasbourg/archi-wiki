@@ -1467,7 +1467,7 @@ li:empty {
 }
 
 .listAddressItem {
-	height: 150px;
+	min-height: 150px;
 	margin-top: 1em;
 	border-bottom: thin dotted #EEE;
 	display: block;
