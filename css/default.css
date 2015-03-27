@@ -2475,6 +2475,7 @@ del{
 .active .formComment form textarea{
 	width: 630px;
 	max-width: 640px;
+	max-height: 500px;
 }
 
 .addCommentButtonWrapper a , .addCommentButtonWrapper a:hover{

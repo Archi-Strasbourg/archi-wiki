@@ -110,25 +110,15 @@ class archiEvenement extends config
 			$resultatIdEvtGa = $this->connexionBdd->requete($requeteIdEvtGa);
 			$array_idEvt = mysql_fetch_assoc($resultatIdEvtGa);	
 			$idEvenementGroupeAdresse = $array_idEvt['idEvenement'];
-			debug($idEvenementGroupeAdresse);
 				
 		}
-		debug($idEvenementGroupeAdresse);
-		
-		
 		
 		
 		if(count($errors)==0)
 		{
-			debug(array(
-			'isset'=>isset ($idEvenementGroupeAdresse) ,
-			'not empty' => !empty($idEvenementGroupeAdresse) ,
-			'idEvtGA'=>	 ($idEvenementGroupeAdresse==0) 
-			));
 			//$this->connexionBdd->getLock(array('historiqueEvenement'));
 			if( isset($idAdresse) &&  !is_null($idAdresse ) && $idAdresse==0 ){
 								
-				debug($idEvenementGroupeAdresse);
 				// *****************************************************
 				// ajout de l'evenement groupe d'adresses
 				$idEvenementGroupeAdresse = $this->getNewIdEvenement();
@@ -1235,11 +1225,9 @@ debug($sqlHistoriqueEvenement);
 			
 			foreach ($_SESSION['lastVisited'] as $key => $lastVisit){
 				if($lastVisit['idEvenementGroupeAdresse'] == $idEvenementGroupeAdresse){
-					debug($lastVisit);
 					unset($_SESSION['lastVisited'][$key]);
 				}
 			}
-			debug($_SESSION['lastVisited']);
 			
 			//debug($idEvenementGroupeAdresse);
 			// on verifie que l'evenement n'a qu'un seul parent
@@ -2039,7 +2027,6 @@ debug($sqlHistoriqueEvenement);
 					$t->assign_vars(array("evenementsLiesPersonne" => $linkedEventsHTML));
 				} else if ($idPerson=archiPersonne::isPerson($idEvenementGroupeAdresse)) {
 					$linkedEventsHTML=archiPersonne::displayEvenementsLies($idPerson, $dateDebut, 3000);
-
 					$t->assign_vars(array("evenementsLiesPersonne" => $linkedEventsHTML));
 				}
 				
@@ -2404,8 +2391,12 @@ debug($sqlHistoriqueEvenement);
 						}
 						
 						if($this->variablesGet['selection'] == 'personne'){
+							$e = new archiEvenement();
 							$listeCommentaires = $this->getListCommentairesEvenements( $value['idEvenementAssocie']);
-							$formulaireCommentaire = $this->getFormulaireCommentairesHistorique($value['idEvenementAssocie'],$this->getCommentairesFields('personne',$this->variablesGet['id']),'personne');
+							$formulaireCommentaire = $this->getFormulaireCommentairesHistorique($value['idEvenementAssocie'],$e->getCommentairesFields('personne',$this->variablesGet['id']),'personne');
+							$formulaireCommentaire = $e->getFormComment($value['idEvenementAssocie'], $this->getCommentairesFields('personne',$this->variablesGet['id']),'personne');
+								
+						//	$formulaireCommentaire = $this->getFormulaireCommentairesHistorique($value['idEvenementAssocie'],$this->getCommentairesFields('personne',$this->variablesGet['id']),'personne');
 						}
 						else{
 							$listeCommentaires = $this->getListCommentairesEvenements( $value['idEvenementAssocie']);
@@ -2820,7 +2811,6 @@ debug($sqlHistoriqueEvenement);
 			}
 			elseif($fetch['idEvenementRecuperationTitre']!='0')
 			{
-				debug(debug_backtrace());
 				$reqVerifEvenementTitre = "SELECT idEvenement from evenements WHERE idEvenement=".$fetch['idEvenementRecuperationTitre'];
 				$resVerifEvenementTitre = $this->connexionBdd->requete($reqVerifEvenementTitre);
 				if(mysql_num_rows($resVerifEvenementTitre)>0)
@@ -5227,19 +5217,19 @@ debug($reqEvenementEvenement);
 
 			$idGroupeEvenement = $this->getIdEvenementGroupeAdresseFromIdEvenement($this->variablesPost['idEvenementGroupeAdresse']);
 			$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idGroupeEvenement);
-			//$this->variablesGet['archiIdEvenementGroupeAdresse'] = $this->variablesPost['idEvenementGroupeAdresse'];
 				
 			$adresse = new archiAdresse();
 			
 			$this->messages->addConfirmation("Commentaire enregistré !");
-			//header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#evenement'.$this->variablesPost['idEvenementGroupeAdresse']);
 			
 			switch ($this->variablesPost['type']){
 				case 'evenement':
 					header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#evenement'.$this->variablesPost['idEvenementGroupeAdresse']);
 					break;
 				case 'personne':
-					header("Location: ".$this->creerUrl('', 'evenementListe', array('selection' => 'personne', 'id' => $this->variablesPost['idPersonne'])));
+					$e = new archiEvenement();
+					$idEvenementGA = $e->getIdEvenementGroupeAdresseFromIdEvenement($this->variablesPost['idEvenementGroupeAdresse']);
+					header("Location: ".$this->creerUrl('', 'evenementListe', array('selection' => 'personne', 'id' => archiPersonne::isPerson($idEvenementGA))));
 					break;
 				default:
 					header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#evenement'.$this->variablesPost['idEvenementGroupeAdresse']);
@@ -7056,7 +7046,7 @@ debug($reqEvenementEvenement);
 		$date2 =mysql_fetch_object($res);
 		$idAdresse = $fetch['idAdresse'];
 		$linkedEventsHTML=archiPersonne::displayEvenementsLies($idPerson, $dateDebut, $date2->dateDebut);
-	
+
 		//Personne processing
 		if($params['type'] == 'historique'){
 		$rep = $this->connexionBdd->requete('
@@ -7127,7 +7117,7 @@ debug($reqEvenementEvenement);
 		
 		
 		//Adresses liees processing
-		$adressesLieesHTML = $this->getAdressesLieesAEvenement(array('modeRetour'=>'affichageSurDetailEvenement','idEvenement'=>$idEvenement));
+		$adressesLieesHTML = $this->getAdressesLieesAEvenement(array('modeRetour'=>'affichageSurDetailEvenement','idEvenement'=>$idEvenementGroupeAdresse));
 		if($adressesLieesHTML!=''){
 			$adressesLieesHTML="<b>"._("Liste des adresses liées :")."</b> <br>".$adressesLieesHTML;
 		}
@@ -7582,16 +7572,16 @@ debug($reqEvenementEvenement);
 				$t->assign_block_vars($courantArchi[0], $courantArchi[1]);
 			}
 		}
-		$titre =stripslashes($evenement['evenementData']['titre']);
-		if(isset($evenement['evenementData']['titre']) &&$evenement['evenementData']['titre']!=""){
-			$titre.=" - ";
+		
+		/*
+		debug($evenement['idEvenement']);
+		$adressesLieesHTML = $this->getAdressesLieesAEvenement(array('modeRetour'=>'affichageSurDetailEvenement','idEvenement'=>$evenement['idEvenement']));
+		if($adressesLieesHTML!='')
+		{
+			$adressesLieesHTML="<b>"._("Liste des adresses liées :")."</b> <br>".$adressesLieesHTML;
 		}
-		$ancre = "#evenement".$evenement['evenementData']['idEvenement'];
-		$t->assign_block_vars('sommaireEvenements.sommaireItem', array(
-				'ancre' => $ancre,
-				'titre' => $titre,
-				'date' =>$evenement['evenementData']['dates']
-		));
+		*/
+		
 		
 		ob_start();
 		$t->pparse('listeCommentaires');

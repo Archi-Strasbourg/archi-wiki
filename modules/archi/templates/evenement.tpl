@@ -5,19 +5,33 @@
 	{urlEvenementExterne}
 	<!-- BEGIN menuAction -->
 	<div class="menuAction"	style="margin-left: 1em; float: right; padding: 5px; display: {divDisplayMenuAction}">
-		<ul style='margin: 0px; display: table;'>
-			<li class='actionEvent'><?_("Ajouter")?></li>
-			<li><a href="{ajouterImage}"><?_("Images")?> </a> <!-- | Évènement -->
-			</li>
-			<li class='actionEvent'><?_("Modifier")?></li>
-			<li><a href="{modifierImage}"><?_("Images")?> </a> | <a
-				href="{modifierEvenement}"><?_("Évènement")?> </a></li>
+		<div style='margin: 0px; display: table;'>
+			
+			<div>
+				<div class='actionEvent'>
+					<?_("Ajouter")?>
+				</div>
+				<div>
+					<a href="{ajouterImage}"><?_("Images")?> </a> 
+				</div>
+			</div>
+			
+			<div>
+				<div class='actionEvent'>
+					<?_("Modifier")?>
+				</div>
+				<div>
+					<a href="{modifierImage}"><?_("Images")?> </a> | <a	href="{modifierEvenement}"><?_("Évènement")?> </a>
+				</div>
+			</div>
 			<!-- BEGIN isAdminOrModerateurFromVille -->
-			<li class='actionEvent'><?_("Supprimer")?></li>
-			<li><a
-				onclick="if(confirm('Voulez vous vraiment supprimer cet évènement ?')){location.href='{supprimerEvenement}'};"
-				href="#">Évènement</a> 
-				</li>
+			<div>
+				<div class='actionEvent'><?_("Supprimer")?></div>
+				<div><a
+					onclick="if(confirm('Voulez vous vraiment supprimer cet évènement ?')){location.href='{supprimerEvenement}'};"
+					href="#">Évènement</a> 
+				</div>
+			</div>
 			<!-- END isAdminOrModerateurFromVille --> 
 			<!-- BEGIN isAdmin -->
 				<!-- BEGIN isAffichageSelectionImages --> 
@@ -27,25 +41,36 @@
 				<!-- END isAffichageSelectionImages -->
 			
 				<!-- BEGIN isAffichageSelectionImages -->
-					<li class='actionEvent'><?_("Importer")?></li>
-					<li>
+				<div>
+					<div class='actionEvent'>
+						<?_("Importer")?>
+					</div>
+					<div>
 						<a onclick="{onClickImporterImage}" href="{urlImporterImage}"><?_("Images selectionnées")?>	</a>
-					</li>
+					</div>
+				</div>
 				<!-- END isAffichageSelectionImages -->
 			<!-- END isAdmin -->
 			<!-- BEGIN afficheElementMenuLierAdresse -->
-			<li class='actionEvent'><?_("Lier")?></li>
-			<li><a href="{urlLierAdresses}"><?_("Adresses")?> </a></li>
+			
+			<div>
+				<div class='actionEvent'><?_("Lier")?></div>
+				<div><a href="{urlLierAdresses}"><?_("Adresses")?> </a></div>
+			</div>
 			<!-- END afficheElementMenuLierAdresse -->
 			<!-- BEGIN afficheElementMenuDeplacerEvenement -->
-			<li class='actionEvent'><?_("Déplacer")?></li>
-			<li><a href="#" onclick="{onClickDeplacerVersAdresses}"><?_("Vers Adresse")?>
-			</a> | <a href="{urlDeplacerVersNouveauGroupeAdresse}">+Créer</a></li>
+			<div>
+				<div class='actionEvent'>
+					<?_("Déplacer")?>
+				</div>
+				<div>
+					<a href="#" onclick="{onClickDeplacerVersAdresses}"><?_("Vers Adresse")?></a> | <a href="{urlDeplacerVersNouveauGroupeAdresse}">+Créer</a>
+				</div>
+			</div>
 			<!-- END afficheElementMenuDeplacerEvenement -->
-		</ul>
-
-		
-
+	
+	
+		</div>
 	</div>
 	<!-- END menuAction -->
 
@@ -282,8 +307,10 @@
 <a id='{evenementLie.numeroAncre}'></a>
 <div>
 {evenementLie.evenement}
-{evenementLie.listeCommentaires}
+<div class="commentFormWrapper">
 {evenementLie.formulaireCommentaire}
+{evenementLie.listeCommentaires}
+</div>
 </div>
 <!-- END evenementLie -->
 

@@ -5813,6 +5813,8 @@ class archiAdresse extends ArchiContenu
 	 // afin de changer le comportement des liens et limiter certains affichages,  non utiles dans la popup par exemple
 	 // cette fonction ,  permet maintenant aussi de renvoyer les resultats dans un tableau ,  sans forcement les affichers (utile dans la recherche ...)
 	 *
+	 * InPeople n'est pas responsable de cette fonction sortie des enfersd
+	 *
 	 * @param array  $criteres      Critères
 	 * @param string $modeAffichage Mode d'affichage
 	 * @param array  $params        Paramètres
@@ -5925,7 +5927,6 @@ class archiAdresse extends ArchiContenu
 			)
 					";
 		}
-
 
 		/*
 		 * Recherche dans les evenements
@@ -6203,7 +6204,7 @@ class archiAdresse extends ArchiContenu
 			$valDebutSuivant += 10;
 
 
-
+		
 		$nbAdresses = $nbReponses;
 		$sqlAdressesSupplementairesRechercheRelancee="";
 		// on a effectue une recherche par mot cle ,  mais pas de resultat,  on va donc voir si la recherche concerne une adresse precise et rechercher les numeros autour de cette adresse
@@ -6395,7 +6396,7 @@ class archiAdresse extends ArchiContenu
 
 				);
 		}
-
+		
 		if (!isset($_GET["selection"]) || $_GET["selection"]!="personne") {
 			// on peut cacher l'affichage du nombre de reponses suivant l'affichage souhaité
 			if (!isset($criteres['cacheNbReponses'])) {
@@ -7001,7 +7002,6 @@ class archiAdresse extends ArchiContenu
 				}
 			}
 		}
-		
 		
 		
 		ob_start();

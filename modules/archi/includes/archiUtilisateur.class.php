@@ -2419,8 +2419,10 @@ class archiUtilisateur extends config {
     			FROM _adresseEvenement 
     			WHERE idEvenement = $idEvenementGroupeAdresse
     			";
+    	debug($requeteCheck);
     	$resultCheck = $this->connexionBdd->requete($requeteCheck);
     	while($rowCheck = mysql_fetch_assoc($resultCheck)){
+    		debug($rowCheck);
     		if($rowCheck['idAdresse'] == $idAdresse){
     			$idConsistency = true;	
     		}
@@ -2438,8 +2440,10 @@ class archiUtilisateur extends config {
     	}
     	else{
     		if($idConsistency == false){
+    			/*
     			$this->messages->addWarning("Identifiant de groupe d'événements et d'adresse non consistants.");
     			$this->messages->display();
+    			*/
     		}
     	}
     	$_SESSION['lastVisited']=$lastVisitedLinks ;

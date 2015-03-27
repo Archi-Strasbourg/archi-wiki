@@ -52,7 +52,6 @@
 		<!-- BEGIN menuAction -->
 		<div class="menuAction">
 				<!-- BEGIN rowName -->
-					
 					<div>
 						<div class='actionEvent'>
 						{evenement.menuAction.rowName.actionName}

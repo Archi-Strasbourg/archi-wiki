@@ -1532,6 +1532,13 @@ if (isset($_GET['archiAffichage'])) {
 			$s = new archiRecherche();
 			echo $s->advancedSearch($criteres);
         	break;
+        case 'testevent':
+        	$id=$_GET['idEvenement'];
+        	$e = new archiEvenement();
+        	$evenement = $e->getEventInfos($id);
+        	echo "salut";
+        	echo $e->displaySingleEvent($evenement);
+        	break;
         }
     }
 }
