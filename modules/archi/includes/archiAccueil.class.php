@@ -2279,7 +2279,8 @@ class ArchiAccueil extends config
 						ha.numero,
 						r.prefixe,
 						r.nom as nomRue,
-						'commentairesEvenement' as typeCommentaire
+						'commentairesEvenement' as typeCommentaire,
+						 date_format( c.date, '%Y%m%d%H%i%s' ) AS dateTri
 						 
 						FROM commentairesEvenement c
 						LEFT JOIN utilisateur u on u.idUtilisateur = c.idUtilisateur
@@ -2287,7 +2288,7 @@ class ArchiAccueil extends config
 						LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
 						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 						LEFT JOIN rue r on r.idRue = ha.idRue
-						ORDER BY c.date DESC";
+						";
 		
 		$sousRequete2 = "SELECT
 						date_format(c.date,"._('"%e/%m/%Y"').") as date,
@@ -2299,7 +2300,8 @@ class ArchiAccueil extends config
 						ha.numero,
 						r.prefixe,
 						r.nom as nomRue,
-						'commentaires' as typeCommentaire
+						'commentaires' as typeCommentaire,
+						date_format( c.date, '%Y%m%d%H%i%s' ) AS dateTri
 
 						 
 						FROM commentaires c
@@ -2308,7 +2310,6 @@ class ArchiAccueil extends config
 						LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
 						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 						LEFT JOIN rue r on r.idRue = ha.idRue
-						ORDER BY c.date desc
 		";
 		
 		$requete= "
@@ -2323,9 +2324,9 @@ class ArchiAccueil extends config
 					$sousRequete2
 					)
 					AS tmp2
+					ORDER BY dateTri desc
 					LIMIT $nbComment
 					";
-			
 		$result = $this->connexionBdd->requete($requete);
 		$arrayComment = array();
 		$e = new archiEvenement();
@@ -2334,7 +2335,7 @@ class ArchiAccueil extends config
 			$idEvenementGroup = "";
 			$idAdresse="";
 
-			if(strcmp($latestComment['typeCommentaire'] , 'commentaireEvenement')){
+			if($latestComment['typeCommentaire'] == 'commentairesEvenement'){
 				$idEvenement = $latestComment['idEvenement'];
 				$idEvenementGroup = $e->getIdGroupeEvenement($latestComment['idEvenement']);
 				if($idPersonne = archiPersonne::isPerson($idEvenementGroup)){
