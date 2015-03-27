@@ -2586,3 +2586,14 @@ Evenement block
 .eventHeader div:last-child p{
 	background-color: #2A3335;
 }
+
+
+
+
+/*
+Opendata
+*/
+
+.opendata-table{
+	font-size: 14px;
+}

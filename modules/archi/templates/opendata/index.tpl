@@ -1,10 +1,10 @@
 <div>
 <div>
 	<h1>Télécharger le contenu du site</h1>
-	Merci de citer Archi-Wiki comme source <a href="{urlContact}">et de nous faire part de vos projets.</a>
-</div>
+	<a href="{urlContact}">L'ensemble du contenu d'Archi-Wiki peut être réutilisé pour d'autres projets. Merci de citer Archi-Wiki comme source et de nous faire part de vos projets.</a>
+</div> 
 <div>
-<table>
+<table class="opendata-table">
 	<tr>
 		<td>Type d'informations</td> 
 		<td>Fichier XML<br/>(clic droit, enregistrer sous)</td>
