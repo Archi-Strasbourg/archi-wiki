@@ -2419,10 +2419,8 @@ class archiUtilisateur extends config {
     			FROM _adresseEvenement 
     			WHERE idEvenement = $idEvenementGroupeAdresse
     			";
-    	debug($requeteCheck);
     	$resultCheck = $this->connexionBdd->requete($requeteCheck);
     	while($rowCheck = mysql_fetch_assoc($resultCheck)){
-    		debug($rowCheck);
     		if($rowCheck['idAdresse'] == $idAdresse){
     			$idConsistency = true;	
     		}
