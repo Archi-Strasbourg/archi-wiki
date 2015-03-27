@@ -2274,7 +2274,7 @@ class archiRecherche extends config {
 			$motCleEscaped = str_replace(' ', ' +', $params['motcle']);
 			$motCleEscaped="+".$motCleEscaped;
 			
-			$motCleFullEscaped = "*".str_replace(' ', '*', $params['motcle'])."*";
+			$motCleFullEscaped = "".str_replace(' ', '*', $params['motcle'])."";
 			
 			
 			//				10000000000000 * ((MATCH (concat1) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
@@ -2325,7 +2325,7 @@ class archiRecherche extends config {
 				1 * (MATCH (description) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE))
 			
 				) as relevance,
-				10000000000000 * ((MATCH (concat1) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) as matchQuartier
+				 100000000000000* (MATCH (concat3) AGAINST ('".$motCleFullEscaped."' IN BOOLEAN MODE)) as matchQuartier
 						
 		
 				FROM recherche "
@@ -2334,6 +2334,9 @@ class archiRecherche extends config {
 				ORDER BY relevance  ".$order."
 				".$limit.
 							";";
+
+									debug($request);
+									
 		}
 		else{
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5, 1 as relevance
