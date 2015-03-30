@@ -26,7 +26,7 @@
 	<!-- BEGIN parametres -->
 	<input type='hidden' name="{parametres.nom}" id="{parametres.id}" value="{parametres.value}">
 	<!-- END parametres -->
-	<input type="text" accesskey="F"  name="motcle" value="{motcle}" style='{motCleStyle}' placeholder="<?_("Indiquez une adresse, un nom de rue ou de bâtiment")?>" class="searchInput" />&nbsp;
+	<input type="text" accesskey="F"  name="motcle" value="{motcle}" style='{motCleStyle}' placeholder="<?_("Indiquez une adresse, un nom de rue ou de bâtiment")?>" class="searchInput" required/>&nbsp;
 		<input type="submit"  name="submit" class="loupe" value="<?_("OK")?>" />
 	
 	<div class="rechercheBottomElements">
