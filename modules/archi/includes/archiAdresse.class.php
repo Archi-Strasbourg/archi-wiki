@@ -14279,7 +14279,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 							'',
 							array(
 									'archiAffichage'=>'adresseDetail',
-									"archiIdAdresse"=>$info['idHistoriqueAdresse'],
+									"archiIdAdresse"=>$info['idAdresse'],
 									"archiIdEvenementGroupeAdresse"=>$info['idEvenementGroupeAdresse']
 							)
 					);
@@ -14390,7 +14390,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$fetch['titre'] = stripslashes($arrayTitre['titre']);
 				
 				$reqTitresEvenements ="
-					SELECT  distinct he1.titre
+					SELECT  distinct he1.titre,he1.idEvenement
     				FROM evenements he1
 					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = he1.idEvenement
 					LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
@@ -14419,7 +14419,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				 					'archiIdEvenementGroupeAdresse'=>$fetch['idEvenementGroupeAdresse'], 
 				 					'debut'=>'')
 				 			)
-				 	."#".$positionAncre."'>"
+				 	."#evenement".$row['idEvenement']."'>"
 				 	.stripslashes($titre).
 				 	"</a>";
 				 
