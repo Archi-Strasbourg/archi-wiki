@@ -2280,7 +2280,8 @@ class ArchiAccueil extends config
 						r.prefixe,
 						r.nom as nomRue,
 						'commentairesEvenement' as typeCommentaire,
-						 date_format( c.date, '%Y%m%d%H%i%s' ) AS dateTri
+						 date_format( c.date, '%Y%m%d%H%i%s' ) AS dateTri,
+						c.idCommentairesEvenement as idCommentaire
 						 
 						FROM commentairesEvenement c
 						LEFT JOIN utilisateur u on u.idUtilisateur = c.idUtilisateur
@@ -2301,7 +2302,9 @@ class ArchiAccueil extends config
 						r.prefixe,
 						r.nom as nomRue,
 						'commentaires' as typeCommentaire,
-						date_format( c.date, '%Y%m%d%H%i%s' ) AS dateTri
+						date_format( c.date, '%Y%m%d%H%i%s' ) AS dateTri,
+						c.idCommentaire as idCommentaire
+								
 
 						 
 						FROM commentaires c
@@ -2334,7 +2337,8 @@ class ArchiAccueil extends config
 			$idEvenement = "";
 			$idEvenementGroup = "";
 			$idAdresse="";
-
+			$ancre="#commentaire";
+			
 			if($latestComment['typeCommentaire'] == 'commentairesEvenement'){
 				$idEvenement = $latestComment['idEvenement'];
 				$idEvenementGroup = $e->getIdGroupeEvenement($latestComment['idEvenement']);
@@ -2346,6 +2350,8 @@ class ArchiAccueil extends config
 				else{
 					$idAdresse = $e->getIdAdresse($latestComment['idEvenement']);
 				}
+				
+				$ancre.="Evenement".$latestComment['idCommentaire'];
 			}
 			else{
 				$idEvenementGroup = $latestComment['idEvenement'];
@@ -2358,6 +2364,8 @@ class ArchiAccueil extends config
 				$tmp = mysql_fetch_array($resIdEvt);
 				$idEvenement = $tmp['idEvenement'];
 				$idAdresse = $e->getIdAdresse($idEvenement);
+				
+				$ancre.="Adresse".$latestComment['idCommentaire'];
 			}
 
 
@@ -2382,7 +2390,7 @@ class ArchiAccueil extends config
 			$urlPersonne = $this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$latestComment['idUtilisateur'],'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroup));
 
 			$latestComment['typeCommentaire'] = 'commentaireEvenement';
-			$latestComment['urlAdresse'] = $url;
+			$latestComment['urlAdresse'] = $url.$ancre;
 			$latestComment['urlPersonne'] = $urlPersonne;
 			$latestComment['adresse']=$adresse;
 			$arrayComment[] = $latestComment;

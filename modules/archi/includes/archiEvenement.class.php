@@ -5307,6 +5307,7 @@ debug($reqEvenementEvenement);
 	                $adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
 	            }
 	            $t->assign_block_vars('commentaires',array(
+	            	'htmlId'=>'commentaireEvenement'.$fetch['idCommentaire'],
 	                'adresseMail'=>$adresseMail,
 	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
 	                'boutonSupprimer'=>$boutonSupprimer,
@@ -5318,22 +5319,6 @@ debug($reqEvenementEvenement);
             		'urlSupprimer'=>$urlSupprimer
 	            		
 	            ));
-	            
-	            /*
-	             *  $t->assign_block_vars('commentaires',array(
-	                'infosPersonne'=>"".$fetch['dateF'].' : <span itemprop="name">'.$fetch['nom'].' '.$fetch['prenom']."</span>",
-	                'adresseMail'=>$adresseMail,
-	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
-	                'boutonSupprimer'=>$boutonSupprimer,
-	                'siteWeb'=>$urlSiteWeb,
-	            	'urlProfilPic'=>$urlProfilePic,
-            		'prenom' => $fetch['nom'],
-            		'nom'=> $fetch['prenom'],
-	            	'labelCommentAction' => _("a ajouté un commentaire"),
-	            	'date' =>$fetch['dateF']
-	            		
-	            ));
-	             */
 	        }
 	        
 	        ob_start();
@@ -7543,7 +7528,7 @@ debug($reqEvenementEvenement);
 	
 	public function displaySingleEvent($evenement){
 		$t = new Template('modules/archi/templates/');
-		$t->set_filenames((array('listeCommentaires'=>'evenement/singleEvent.tpl')));
+		$t->set_filenames((array('evenement'=>'evenement/singleEvent.tpl')));
 		
 		//Filling the template with the infos
 		$t->assign_block_vars('evenement', $evenement['evenementData']);
@@ -7573,18 +7558,9 @@ debug($reqEvenementEvenement);
 			}
 		}
 		
-		/*
-		debug($evenement['idEvenement']);
-		$adressesLieesHTML = $this->getAdressesLieesAEvenement(array('modeRetour'=>'affichageSurDetailEvenement','idEvenement'=>$evenement['idEvenement']));
-		if($adressesLieesHTML!='')
-		{
-			$adressesLieesHTML="<b>"._("Liste des adresses liées :")."</b> <br>".$adressesLieesHTML;
-		}
-		*/
-		
 		
 		ob_start();
-		$t->pparse('listeCommentaires');
+		$t->pparse('evenement');
 		$html .= ob_get_contents();
 		ob_end_clean();
 		return $html;

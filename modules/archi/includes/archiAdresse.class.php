@@ -591,39 +591,14 @@ class archiAdresse extends ArchiContenu
 
 			$result = $e->displaySingleEvent($evenement);
 			$t->assign_block_vars('event', array('content'=>$result));
-						/*
 			//Filling the template with the infos
 			$t->assign_block_vars('evenement', $evenement['evenementData']);
 			
-			//Menu (ajouter image/event, modifier image/event etc..)
-			if(isset($evenement['menuArray'])){
-				foreach ($evenement['menuArray'] as $menuElt){
-					$t->assign_block_vars($menuElt[0], $menuElt[1]);
-				}
-			}
-			//Personnes
-			if(isset($evenement['arrayPersonne'])){
-				foreach ($evenement['arrayPersonne'] as $personne){
-					$t->assign_block_vars($personne[0], $personne[1]);
-				}
-			}
-			
-			//Formulaire pour les modifications d'images
-			if(isset($evenement['arrayFormEvent'])){
-				$t->assign_block_vars($personne[0], $personne[1]);
-			}
-			
-			//Courant architectural
-			if(isset($evenement['arrayCourantArchi'])){
-				foreach ($evenement['arrayCourantArchi'] as $courantArchi){
-					$t->assign_block_vars($courantArchi[0], $courantArchi[1]);
-				}
-			}
+		
 			$titre =stripslashes($evenement['evenementData']['titre']);
 			if(isset($evenement['evenementData']['titre']) &&$evenement['evenementData']['titre']!=""){
 				$titre.=" - ";
 			}
-			*/
 			$ancre = "#evenement".$evenement['evenementData']['idEvenement'];
 			$t->assign_block_vars('sommaireEvenements.sommaireItem', array(
 					'ancre' => $ancre,
@@ -9275,6 +9250,7 @@ class archiAdresse extends ArchiContenu
 	                $adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
 	            }
 	            $t->assign_block_vars('commentaires',array(
+            		'htmlId'=>'commentaireAdresse'.$fetch['idCommentaire'],
 	                'adresseMail'=>$adresseMail,
 	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
 	                'boutonSupprimer'=>$boutonSupprimer,
@@ -9286,22 +9262,6 @@ class archiAdresse extends ArchiContenu
 	            	'urlSupprimer'=>$urlSupprimer
 	            		
 	            ));
-	            
-	            /*
-	             *  $t->assign_block_vars('commentaires',array(
-	                'infosPersonne'=>"".$fetch['dateF'].' : <span itemprop="name">'.$fetch['nom'].' '.$fetch['prenom']."</span>",
-	                'adresseMail'=>$adresseMail,
-	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
-	                'boutonSupprimer'=>$boutonSupprimer,
-	                'siteWeb'=>$urlSiteWeb,
-	            	'urlProfilPic'=>$urlProfilePic,
-            		'prenom' => $fetch['nom'],
-            		'nom'=> $fetch['prenom'],
-	            	'labelCommentAction' => _("a ajouté un commentaire"),
-	            	'date' =>$fetch['dateF']
-	            		
-	            ));
-	             */
 	        }
 	        
 	        ob_start();

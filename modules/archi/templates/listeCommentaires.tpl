@@ -1,5 +1,5 @@
 ﻿<!-- BEGIN commentaires -->
-<div class="commentaire">
+<div class="commentaire" id="{commentaires.htmlId}">
 	<div class="commentHeader"><div class="profilePicWrapper">
 		<img alt="" src="{commentaires.urlProfilPic}">
 	</div> 
