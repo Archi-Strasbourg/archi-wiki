@@ -9355,6 +9355,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             
             while($fetch = mysql_fetch_assoc($res))
             {
+            	$ancre="#commentaire";
                 // recuperation de l'adresse concernée
             	if($fetch['typeCommentaires'] ==  'commentaires'){
             		$idEvenementGroupeAdresse  = $fetch['idEvenementGroupeAdresse'];
@@ -9367,12 +9368,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             		$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
             		$urlAdresse = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
             		$labelItemCommented = str_replace("( - )", "", implode(" / ", $arrayIntituleAdresses));
-            		
+            		$ancre.="Adresse".$fetch['idCommentaire'];
             	}
             	elseif($fetch['typeCommentaires'] == 'commentairesEvenement'){
             		$e = new archiEvenement();
             		$idEvenementGroupeAdresse = $e->getIdEvenementGroupeAdresseFromIdEvenement($fetch['idEvenementGroupeAdresse']);
-
+            		$ancre.="Evenement".$fetch['idCommentaire'];
+            		
             		if($idPersonne = archiPersonne::isPerson($idEvenementGroupeAdresse)){
             			$nom = archiPersonne::getName($idPersonne) ;
             			$labelItemCommented = $nom->prenom." ".$nom->nom;
@@ -9400,7 +9402,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             		}
             	}
 
-
+            	$urlAdresse.=$ancre;
+            	
             	$imageSurListeTousLesCommentaires="";
             	if(isset($params['afficherTous']) && $params['afficherTous']==true)
             	{
@@ -9432,7 +9435,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 		'commentaires',
                 		array(
                 				'commentaire'=>$bbCode->convertToDisplay(array('text'=>$txtCommentaire)),
-                				'pseudo'=>"<div style='display:block;overflow:auto;text-decoration:none;font-weight:normal;'>".$imageSurListeTousLesCommentaires."<span style='display:block;font-weight:normal;'>".$fetch['dateF']." "._("de")." <span style='color:#507391;font-size:9px;font-weight:normal;'>".$fetch['nom'].' '.$fetch['prenom']."</span>"."<br>"._("pour")." <a href=\"".$urlAdresse."\" style='color:#507391;font-size:9px;'>".$labelItemCommented."</a></span></div><div style='clear:both;'></div>"
+                				'pseudo'=>
+                				"<div style='display:block;overflow:auto;text-decoration:none;font-weight:normal;'>".
+                					$imageSurListeTousLesCommentaires.
+                					"<span style='display:block;font-weight:normal;'>"
+                						.$fetch['dateF']." "._("de").
+                					" <span style='color:#507391;font-size:9px;font-weight:normal;'>
+                				".$fetch['nom'].' '.$fetch['prenom']."</span>"."<br>"._("pour")." <a href=\"".$urlAdresse."\" style='color:#507391;font-size:9px;'>".$labelItemCommented."</a></span></div><div style='clear:both;'></div>"
                 		));
             }
 

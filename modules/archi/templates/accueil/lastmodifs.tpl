@@ -30,4 +30,4 @@
 </div>
 <!-- END lastModif -->
 </div>
-<a  class="customNewsFeed" href="{urlCustomNewsFeed}"><h2>Personnaliser mon flux d'actualité</h2></a>
+<a  class="customNewsFeed orangeButton" href="{urlCustomNewsFeed}"><h2>Personnaliser mon flux d'actualité</h2></a>
