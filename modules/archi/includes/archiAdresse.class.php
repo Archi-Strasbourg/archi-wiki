@@ -9501,6 +9501,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             
             $res = $this->connexionBdd->requete($req);
             
+            $idCommentaire = mysql_insert_id();
+            
             // retour a l'affichage de l'adresse
             $idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($this->variablesPost['idEvenementGroupeAdresse']);
 
@@ -9588,7 +9590,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             
             $this->messages->addConfirmation("Commentaire enregistré !");
             $this->messages->display();
-            header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$this->variablesGet['archiIdEvenementGroupeAdresse']), false, false));
+            header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$this->variablesGet['archiIdEvenementGroupeAdresse']), false, false).'#commentaireAdresse'.$idCommentaire);
             
         }
         else

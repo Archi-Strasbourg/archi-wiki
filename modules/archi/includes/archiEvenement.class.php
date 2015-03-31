@@ -1178,8 +1178,6 @@ debug($sqlHistoriqueEvenement);
 	// *************************************************************************************************************************************
 	public function supprimer($idEvenement, $idHistoriqueEvenement='')
 	{
-		//debug($idEvenement);
-		//debug($idHistoriqueEvenement);
 		$html = '';
 		$idEvenementGroupeAdresse = 0;
 		if($idHistoriqueEvenement !='')
@@ -1368,20 +1366,11 @@ debug($sqlHistoriqueEvenement);
 		if ($idPerson=archiPersonne::isPerson($idEvenementGroupeAdresse)) {
 			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$idPerson), false, false));
 		}
-		
-		
-		
-		$idEvenementGroupeAdresse=$this->getParent($idEvenement);
 		if($idEvenementGroupeAdresse == 0){
-			
 			header("Location: index.php");
-				
-			/*$accueil = new archiAccueil();
-			echo $accueil->afficheAccueil();*/
 		}
 		else{
-			//$adresse = new archiAdresse();
-			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$this->getParent($idEvenement))));
+			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
 		}
 	}
 
@@ -5137,6 +5126,8 @@ debug($reqEvenementEvenement);
 			$idAdresse = $this->variablesPost['idEvenementGroupeAdresse'];
 			
 
+			$idCommentaire = mysql_insert_id();
+			
 			// ************************************************************************************************************************************************
 			// envoi d'un mail a tous les participants pour le groupe d'adresse
 			// ************************************************************************************************************************************************
@@ -5224,15 +5215,15 @@ debug($reqEvenementEvenement);
 			
 			switch ($this->variablesPost['type']){
 				case 'evenement':
-					header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#evenement'.$this->variablesPost['idEvenementGroupeAdresse']);
+					header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#commentaireEvenement'.$idCommentaire);
 					break;
 				case 'personne':
 					$e = new archiEvenement();
 					$idEvenementGA = $e->getIdEvenementGroupeAdresseFromIdEvenement($this->variablesPost['idEvenementGroupeAdresse']);
-					header("Location: ".$this->creerUrl('', 'evenementListe', array('selection' => 'personne', 'id' => archiPersonne::isPerson($idEvenementGA))));
+					header("Location: ".$this->creerUrl('', 'evenementListe', array('selection' => 'personne', 'id' => archiPersonne::isPerson($idEvenementGA))).'#commentaireEvenement'.$idCommentaire);
 					break;
 				default:
-					header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#evenement'.$this->variablesPost['idEvenementGroupeAdresse']);
+					header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idGroupeEvenement), false, false).'#commentaireEvenement'.$idCommentaire);
 			}
 		}
 		else
@@ -7177,7 +7168,7 @@ debug($reqEvenementEvenement);
 		}
 		$evenementData = array(
 				'titre' => stripslashes($fetch['titre']),
-				'infoTitre'=> $utilisateur . " a ".$txtEnvoi." un evenement",
+				'infoTitre'=> $utilisateur . " a ".$txtEnvoi." un événement",
 				'txtEnvoi' => $txtEnvoi." le",
 				'utilisateur' => $fetch['prenomUtilisateur'].' '.$fetch['nomUtilisateur'],
 				'urlProfilPic' => $urlProfilPic,
