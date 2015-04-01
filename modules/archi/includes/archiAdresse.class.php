@@ -4276,7 +4276,6 @@ class archiAdresse extends ArchiContenu
 									GROUP BY ha.idAdresse , ha.idHistoriqueAdresse
 									HAVING ha.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
 									";
-
 			$resVerifAdresse = $this->connexionBdd->requete($reqVerifAdresse);
 
 			if(mysql_num_rows($resVerifAdresse)==1)
@@ -4372,7 +4371,6 @@ class archiAdresse extends ArchiContenu
 					$numero="";
 					$indicatif="";
 				}
-
 
 				// recuperation du nom de la rue , le complément et l'indicatif
 				$reqRue = "SELECT idRue, nom, prefixe FROM rue WHERE idRue = '".$idRue."'";

@@ -182,7 +182,6 @@ class archiEvenement extends config
 			$sqlHistoriqueEvenement = "INSERT INTO evenements ( titre, description, dateDebut, dateFin, idSource, idUtilisateur, idTypeStructure, idTypeEvenement,dateCreationEvenement,ISMH , MH , nbEtages,isDateDebutEnviron,numeroArchive)
 					VALUES ( \"".mysql_real_escape_string($libelle)."\", \"".mysql_real_escape_string($description)."\", '".mysql_real_escape_string($dateDebut)."', '".mysql_real_escape_string($dateFin)."', ".mysql_real_escape_string($idSource).", ".mysql_real_escape_string($idUtilisateur).", '".mysql_real_escape_string($idTypeStructure)."', '".mysql_real_escape_string($idTypeEvenement)."', now(), '".mysql_real_escape_string($ISMH)."', '".mysql_real_escape_string($MH)."', '".mysql_real_escape_string($nbEtages)."', '".mysql_real_escape_string($isDateDebutEnviron)."',\"".mysql_real_escape_string($numeroArchive)."\")";
 			$this->connexionBdd->requete($sqlHistoriqueEvenement );
-debug($sqlHistoriqueEvenement);
 			$idEvenement = $this->connexionBdd->getLastId();
 			
 			$idSousEvenement = $idEvenement;
@@ -1258,7 +1257,7 @@ debug($sqlHistoriqueEvenement);
 						// courant architectural
 						$courant->deleteLiaisonsCourantFromIdEvenement($idEvenement);
 						// commentaires
-						//$adresse->deleteCommentairesFromIdEvenement($idEvenementGroupeAdresse);
+						$adresse->deleteCommentairesFromIdEvenement($idEvenementGroupeAdresse);
 						// adresses liees à l'evenement , on supprime la liaison
 						$this->deleteLiaisonsAdressesLieesSurEvenement($idEvenement);
 
@@ -1361,6 +1360,7 @@ debug($sqlHistoriqueEvenement);
 				$reqDeleteEvenementGAEvenementAssocie = "DELETE FROM _evenementEvenement WHERE idEvenement='".$idEvenementGroupeAdresse."'";
 				//debug($reqDeleteEvenementGAEvenementAssocie);
 				$resDeleteEvenementGAEvenementAssocie = $this->connexionBdd->requete($reqDeleteEvenementGAEvenementAssocie);
+				$idEvenementGroupeAdresse=0;
 			}
 		}
 		if ($idPerson=archiPersonne::isPerson($idEvenementGroupeAdresse)) {
@@ -7367,7 +7367,6 @@ debug($reqEvenementEvenement);
 	 * @return idEvenement of the groupe evenement corresponding
 	 */
 	public function getIdGroupeEvenement($idEvenement){
-		
 		$requete = "
 				SELECT idEvenement 
 				FROM _evenementEvenement

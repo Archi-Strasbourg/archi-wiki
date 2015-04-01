@@ -688,7 +688,7 @@ abstract class ArchiContenu extends config
             }
             
             
-            //debug($this->variablesPost);
+            debug($this->variablesPost);
             debug($arrayNewAdresses);
             
             
@@ -710,7 +710,7 @@ abstract class ArchiContenu extends config
             
             
             
-            $this->addEvent("adresse",  $arrayNewAdresses);
+			$this->addEvent("adresse",  $arrayNewAdresses);
             
             // enfin on regenere les caches
             //$cache = new cacheObject();
