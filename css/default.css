@@ -1847,6 +1847,7 @@ hr.edgeFade {
 	
 }
 
+/*WARNING MESSAGE*/
 .message-text{
 	margin-left: 30px;
 	margin-bottom: 0px !important;
@@ -1870,6 +1871,12 @@ hr.edgeFade {
 	border: 1px solid green; 
 }
 
+.warning-div{
+	background: url('images/notice.png') no-repeat scroll 10px center;
+}
+.warning-div p{
+	margin-left: 30px;
+}
 .actionsEvenement{
 	width: 246px;
 }
@@ -2464,6 +2471,7 @@ del{
     background-color: #424647;
     padding: 14px 10px 10px 10px;
     margin-top: -4px;
+    color: white;
 }
 .formComment form{
 	//float:left;

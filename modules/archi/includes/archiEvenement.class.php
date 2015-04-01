@@ -5204,7 +5204,6 @@ debug($reqEvenementEvenement);
 			$_POST['nom']="";
 			$_POST['prenom']="";
 			
-			//$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($this->variablesPost['idEvenementGroupeAdresse']);
 
 			$idGroupeEvenement = $this->getIdEvenementGroupeAdresseFromIdEvenement($this->variablesPost['idEvenementGroupeAdresse']);
 			$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idGroupeEvenement);
@@ -7438,13 +7437,13 @@ debug($reqEvenementEvenement);
 	
 	public function getFormComment($idEvenement,$fields,$ty=''){
 		$t = new Template('modules/archi/templates/');
-		$t->set_filenames((array('listeCommentaires'=>'comment/comment.tpl')));
 		
 		$type = ($ty=='') ? 0 : $ty;
 		
 		$auth = new ArchiAuthentification();
 		if($auth->estConnecte()){
-			
+			$t->set_filenames((array('formComment'=>'comment/comment.tpl')));
+				
 			$url ="";
 			$userId = $auth->getIdUtilisateur();
 			$utilisateur = new archiUtilisateur();
@@ -7506,10 +7505,21 @@ debug($reqEvenementEvenement);
 			));
 			
 		}
+		else{
+			$t->set_filenames((array('formComment'=>'comment/notconnected.tpl')));
+			$urlConnexion = $this->creerUrl('','connexion');
+			$urlInscription = $this->creerUrl('','inscription');
+			
+			$t->assign_vars(array(
+					'urlInscription'=>$urlInscription,
+					'urlConnexion'=>$urlConnexion
+			));
+		}
+		
 		
 		
 		ob_start();
-		$t->pparse('listeCommentaires');
+		$t->pparse('formComment');
 		$html .= ob_get_contents();
 		ob_end_clean();
 		return $html;
