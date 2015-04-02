@@ -2337,7 +2337,6 @@ class archiRecherche extends config {
 				".$limit.
 							";";
 
-						debug($request);			
 		}
 		else{
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5, 1 as relevance

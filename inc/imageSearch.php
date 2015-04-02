@@ -33,7 +33,7 @@ if (isset($_GET['query'])) {
 ?>
  />
 <input type="hidden" name="archiAffichage" value="imageSearch" />
-<input class="loupe" type="image" src="images/Advisa/loupe.png">
+<input type="submit" class="loupe" value="OK">
 <br/>
 <label for="licence">Licence&nbsp;:</label>
 <?php
@@ -128,7 +128,66 @@ if (isset($_GET['query']) && !empty($_GET['query'])) {
     GROUP BY results.idImage
     ORDER BY Poids DESC
     LIMIT 96';
-    $query = mysql_query($query);
+    
+    
+  
+    $query2 = "
+    SELECT DISTINCT
+        idImage,
+    	idHistoriqueImage,
+        licence,
+        tags,
+    	titreEvenement,
+    	nomQuartier,
+        descriptionEvenement,
+    	descriptionImage,
+    	idAdresse,
+        idEvenement,
+    	dateUpload,
+    	nomAdresse,
+        (
+    	4*(MATCH (descriptionEvenement) AGAINST ('\"".$keyword."\"' IN BOOLEAN MODE)) +
+    	20*(MATCH (tags) AGAINST ('\"".$keyword."\"' IN BOOLEAN MODE)) +
+    	10*(MATCH (descriptionImage) AGAINST ('\"".$keyword."\"' IN BOOLEAN MODE)) +
+    	6*(MATCH (titreEvenement) AGAINST ('\"".$keyword."\"' IN BOOLEAN MODE)) +
+		2*(MATCH (nomAdresse) AGAINST ('\"".$keyword."\"' IN BOOLEAN MODE)) +
+    	2*(MATCH (nomQuartier) AGAINST ('\"".$keyword."\"' IN BOOLEAN MODE)) +
+    
+    	2*(MATCH (descriptionEvenement) AGAINST ('\"*".$keyword."*\"' IN BOOLEAN MODE)) +
+    	10*(MATCH (tags) AGAINST ('\"*".$keyword."*\"' IN BOOLEAN MODE)) +
+    	5*(MATCH (descriptionImage) AGAINST ('\"*".$keyword."*\"' IN BOOLEAN MODE)) +
+    	3*(MATCH (titreEvenement) AGAINST ('\"*".$keyword."*\"' IN BOOLEAN MODE)) +
+		1*(MATCH (nomAdresse) AGAINST ('\"*".$keyword."*\"' IN BOOLEAN MODE)) +
+    	1*(MATCH (nomQuartier) AGAINST ('\"*".$keyword."*\"' IN BOOLEAN MODE))
+    
+    
+    
+        ) as Poids,
+    
+    	(MATCH (descriptionEvenement) AGAINST ('\"".$keyword."\"*' IN BOOLEAN MODE)) as testDescEvt,
+    	(MATCH (tags) AGAINST ('\"".$keyword."\"*' IN BOOLEAN MODE)) as testTags,
+    	(MATCH (descriptionImage) AGAINST ('\"".$keyword."\"*' IN BOOLEAN MODE)) as testDescImg,
+    	(MATCH (titreEvenement) AGAINST ('\"".$keyword."\"*' IN BOOLEAN MODE)) as testTitreEvt,
+		(MATCH (nomAdresse) AGAINST ('\"".$keyword."\"*' IN BOOLEAN MODE)) as testNomAdre,
+    	(MATCH (nomQuartier) AGAINST ('\"".$keyword."\"*' IN BOOLEAN MODE)) as testNomQuartier
+    
+    FROM rechercheImage
+    WHERE (NOT ISNULL(descriptionEvenement))
+    AND (NOT ISNULL(idAdresse))
+    AND
+    (
+    MATCH(descriptionEvenement, tags, descriptionImage, titreEvenement, nomAdresse, nomQuartier) AGAINST ('".$keyword."' IN BOOLEAN MODE)
+    )
+    GROUP BY idImage
+    ORDER BY Poids DESC
+    LIMIT 96";
+
+    /*
+    debug($query);
+    debug($query2);
+    */
+    
+    $query = mysql_query($query2);
     $bbcode= new bbCodeObject();
     while ($results=mysql_fetch_assoc($query)) {
         $req = 'SELECT idHistoriqueImage, licence, historiqueImage.idImage,
