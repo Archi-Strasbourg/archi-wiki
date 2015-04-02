@@ -9,7 +9,7 @@
 	<div class="map_block inline-div">
 	<iframe
 					src='{CarteGoogle.src}' id='iFrameGoogleMap'
-					style='width: 275px; height: 275px;' itemprop='map'></iframe><br>{CarteGoogle.lienVoirCarteGrand}{CarteGoogle.popupGoogleMap}</td>
+					style='width: 275px; height: 275px;' itemprop='map'></iframe><br>{CarteGoogle.lienVoirCarteGrand}{CarteGoogle.popupGoogleMap}
 	</div>
 <!-- END CarteGoogle -->
 <!-- BEGIN listeAdressesVoisines -->

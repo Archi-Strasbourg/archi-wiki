@@ -484,13 +484,18 @@ class archiAdresse extends ArchiContenu
 		$coordonnees['latitude'] = $fetch['latitude'];
 		
 		
-		//Dispaying google map
+		//Displaying google map
 		$e = new archiEvenement();//Should be moved to archiUtils
 		$calqueGoogleMap = new calqueObject(array('idPopup'=>10));
 		$contenuIFramePopup = $e->getContenuIFramePopupGoogleMap(array(
 				'idAdresseCourante'=>$idAdresse,
 				'calqueObject'=>$calqueGoogleMap,
-				'idEvenementGroupeAdresseCourant'=>$idEvenement
+				'idEvenementGroupeAdresseCourant'=>$idEvenementGroupeAdresse
+		));
+		$t->assign_block_vars('CarteGoogle',array(
+				'src'=>$this->creerUrl('','afficheGoogleMapIframe',array('noHeaderNoFooter'=>1,'longitude'=>$coordonnees['longitude'],'latitude'=>$coordonnees['latitude'],'archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse)),
+				'lienVoirCarteGrand'=>"<a href='#' onclick=\"".$calqueGoogleMap->getJsOpenPopupNoDraggableWithBackgroundOpacity()."document.getElementById('iFrameDivPopupGM').src='".$this->creerUrl('','afficheGoogleMapIframe',array('longitude'=>$coordonnees['longitude'],'latitude'=>$coordonnees['latitude'],'noHeaderNoFooter'=>true,'archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse,'modeAffichage'=>'popupDetailAdresse'))."';\" class='bigger' style='font-size:11px;'>"._("Voir la carte en + grand")."</a>",
+				'popupGoogleMap'=>$calqueGoogleMap->getDivNoDraggableWithBackgroundOpacity(array('top'=>20,'lienSrcIFrame'=>'','contenu'=>$contenuIFramePopup))
 		));
 
 		//Getting neighborhood addresses 
@@ -503,11 +508,7 @@ class archiAdresse extends ArchiContenu
 				'urlAutresBiensRue'=>$urlAutreBiens['urlAutresBiensRue'],
 				'urlAutresBiensQuartier' => $urlAutreBiens['urlAutresBiensQuartier']
 				));
-		$t->assign_block_vars('CarteGoogle',array(
-				'src'=>$this->creerUrl('','afficheGoogleMapIframe',array('noHeaderNoFooter'=>1,'longitude'=>$coordonnees['longitude'],'latitude'=>$coordonnees['latitude'],'archiIdAdresse'=>$idAdresseCourante,'archiIdEvenementGroupeAdresse'=>$idEvenement)),
-				'lienVoirCarteGrand'=>"<a href='#' onclick=\"".$calqueGoogleMap->getJsOpenPopupNoDraggableWithBackgroundOpacity()."document.getElementById('iFrameDivPopupGM').src='".$this->creerUrl('','afficheGoogleMapIframe',array('longitude'=>$coordonnees['longitude'],'latitude'=>$coordonnees['latitude'],'noHeaderNoFooter'=>true,'archiIdAdresse'=>$idAdresseCourante,'archiIdEvenementGroupeAdresse'=>$idEvenement,'modeAffichage'=>'popupDetailAdresse'))."';\" class='bigger' style='font-size:11px;'>"._("Voir la carte en + grand")."</a>",
-				'popupGoogleMap'=>$calqueGoogleMap->getDivNoDraggableWithBackgroundOpacity(array('top'=>20,'lienSrcIFrame'=>'','contenu'=>$contenuIFramePopup))
-		));
+
 		$t->assign_block_vars('sommaireEvenements', array());
 
 		
@@ -725,6 +726,8 @@ class archiAdresse extends ArchiContenu
 
 		}
 		$html.="</h2>";
+		debug("isset var idEvtGA");
+		
 		$evenement = new archiEvenement();
 		// si le groupe d'adresse est precisé dans l'url , on ne va afficher que celui ci
 		if(isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!='')
@@ -11137,7 +11140,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     // affiche la googlemap a coté des adresses sur le detail d'une adresse dans une iframe
     public function getGoogleMapIframe($params = array())
     {
-        $html="";
+        $html='<link href="css/default.css" rel="stylesheet" type="text/css" /> 
+    ';
 
         if(isset($this->variablesGet['longitude']) && $this->variablesGet['longitude']!='' && isset($this->variablesGet['latitude']) && $this->variablesGet['latitude']!='')
         {

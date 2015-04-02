@@ -6,7 +6,7 @@
 <meta name="description" content="{descriptionPage}" />
 <meta name="robots" content="index follow, all" />
 <meta name="keywords" content="<?_("architectures,architecture,neudorf,contades,centre,strasbourg,photos,immeubles,monuments,immobilier,alsace")?>{motsCle}" />
-<!-- <link href="css/default.css" rel="stylesheet" type="text/css" /> -->
+<link href="css/default.css" rel="stylesheet" type="text/css" /> 
 <link href="css/persona-buttons.css" rel="stylesheet" type="text/css" />
 <link rel="author" href="index.php?archiAffichage=contact" />
 <link rel="author" href="mailto:{mailContact}" />
@@ -19,9 +19,11 @@
 <link rel="alternate" href="rss.php?type=culture" type="application/rss+xml" title="Derniers événements culturels" />
 <link rel="alternate" href="rss.php?type=dernieresVues" type="application/rss+xml" title="Dernières vues" />
 <link rel="icon" href="favicon.png" type="image/png"  />
+
 <script src="js/jquery-ui/js/jquery-1.7.2.min.js" type="text/javascript">
 <script src='includes/datePicker.js'></script>
 <script src='includes/bbcode.js'></script>
+<script src="js/utils.js"></script>
 
 <script src='includes/common.js'></script>
 <!-- BEGIN utilisateurNonConnecte -->
@@ -33,7 +35,6 @@
 <script src="js/jquery-ui/js/jquery-ui-1.8.21.custom.min.js"></script>
 <link href="js/jquery-ui/themes/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" type="text/css" />
 <script src="js/homeSearch.js"></script>
-<script type="js/utils.js"></script>
 <link rel="license" href="http://www.data.gouv.fr/Licence-Ouverte-Open-Licence">
 {ajaxFunctions}
 {calqueFunctions}

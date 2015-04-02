@@ -13,6 +13,9 @@
  */
 
 (function($) {
+	$(document).ready(function() { 
+		newMenuAction();
+	});
 	$(function(){
 		$('.addCommentButton').on('click',function(e){
 			e.preventDefault();

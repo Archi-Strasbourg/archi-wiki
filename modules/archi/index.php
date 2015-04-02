@@ -92,6 +92,9 @@ if (isset($_GET['archiAction'])) {
         $utilisateur = new archiUtilisateur();
         echo $utilisateur->confirmInscription();
         break;
+    case 'testFond':
+    	echo "test brol";
+    	break;
     case 'deconnexion':
         $auth = new archiAuthentification();
         $auth -> deconnexion();
@@ -1387,6 +1390,9 @@ if (isset($_GET['archiAffichage'])) {
             $a = new archiAdresse();
             echo $a->getJsGoogleMapNewCenter();
             break;
+        case 'testFond':
+        	echo "coucou";
+        	break;
         case 'adminListeParcours':
             $admin = new archiAdministration();
             echo $admin->getHtmlAdminParcoursListe();
@@ -1516,7 +1522,6 @@ if (isset($_GET['archiAffichage'])) {
         	*/
         	$util = new archiUtils();
         	$plop= $util->yoloDiff("thi is a test" , "This test is the test new test");
-        	debug($plop);
         	break;
         case 'historiqueEvenement':
         	$e = new archiEvenement();

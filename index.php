@@ -61,6 +61,7 @@ $jsFooter="";
 $ajaxObj = new ajaxObject();
 $config = new config();
 
+$footerAndHeader =array();
 
 ob_start();
 if (isset($_GET['module'])) {
@@ -85,6 +86,11 @@ if (!isset($_GET['noHTMLHeaderFooter'])) {
             $headerJS = config::getJsHeader();
         }
         include 'modules/header/index.php';
+        //$t->assign_var('header', $header);
+        //$t->assign_vars(array('header'=> $header));
+        //echo $header;
+        $footerAndHeader['header']=$header;
+        
     } else {
         $headerJS = "";
         if (config::getJsHeader()!='') {
@@ -101,6 +107,10 @@ if (!isset($_GET['noHTMLHeaderFooter'])) {
             $footerJS = config::getJsFooter();
         }
         include 'modules/footer/index.php';
+        //$t->assign_var('footer', $footer);
+        $footerAndHeader['footer']=$footer;
+        
+        
     } else {
         $footerJS = "";
         if (config::getJsFooter()!='') {
@@ -124,12 +134,10 @@ $t->assign_vars(array(
 	'analyticsJS' => $analyticsJSvar,
 	'htmlHeader'=> $htmlHeader,
 	'htmlModule' =>$htmlModule,
-	'header' => $header,
-	'content'=>'',
-	'footer'=>$footer
+	'content'=>''
 
 ));
-
+$t->assign_vars($footerAndHeader);
 ob_start();
 $t->pparse('template');
 $page = ob_get_contents();

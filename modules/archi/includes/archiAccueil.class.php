@@ -784,7 +784,6 @@ class ArchiAccueil extends config
 				}
 
 
-
 				//Associate template to the general template
 				$t->assign_var_from_handle('news', 'news');
 				$t->assign_var_from_handle('dernieresModifs', 'derniereModfis');
