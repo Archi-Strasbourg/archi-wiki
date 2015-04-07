@@ -997,7 +997,7 @@ img {
 .commentHeader {
 	border-bottom: thin solid #BBB;
 	font-size: 12px;
-	color: #FFFFFF;
+/*	color: #FFFFFF;*/
 }
 
 .commentWrapper {
@@ -1012,15 +1012,7 @@ img {
 	padding: 0.5em;
 }
 
-.comment {
-	color: white;
-}
 
-/*
-.eventImage {
-    border: solid 2px #007799;
-}
-*/
 .calque,.calqueVille,.calquePersonne,.calqueRue,.calqueDate,.calqueSource
 	{
 	z-index: 10;
@@ -1384,7 +1376,7 @@ a.white:hover {
 }
 
 .event {
-	padding: 0 1em 1em 1em;
+	padding: 0 1em;
 	border-radius: 5px;
 	width: 730px;
 	float: left;
@@ -2402,13 +2394,16 @@ del{
 	padding-left: 5px;
 	padding-bottom: 5px;
 	width: 130px;
-	height: 130px;
+	/*height: 130px;*/
 	clear: vertical;
 }
+
+/*
 .imgDesc {
 	height: 17px;
 	overflow: hidden
 }
+*/
 
 .ellipsis {
   	overflow: hidden;
@@ -2463,6 +2458,9 @@ del{
 
 .addCommentButtonWrapper {
 	width: 200px;
+}
+.addCommentAdresseButtonWrapper{
+	width: 310px;
 }
 
 .active .formComment{
@@ -2602,6 +2600,14 @@ Evenement block
 .eventHeader div:last-child p{
 	background-color: #2A3335;
 }
+
+.evenement a, .commentaire a {
+	color: white;
+}
+.evenement,.commentaire {
+	color: #b2b2b2;
+}
+
 
 /*
 Opendata

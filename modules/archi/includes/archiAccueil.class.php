@@ -565,9 +565,10 @@ class ArchiAccueil extends config
 					//Description
 					$so = new StringObject();
 					$description = $so->sansBalises($modif['description']);
-					$description = stripslashes($description);
-					$description = mb_substr($description, 0,130);;
-
+					$description=$so->truncateString($modif['description'], 130);
+					
+					
+			
 					$t->assign_block_vars('lastModif', array(
 							'miniatureLabelLeft'=>$modif['typeEvenement'],
 							'miniatureLabelRight' => $modif['dateCreationEvenement'],
@@ -2252,9 +2253,12 @@ class ArchiAccueil extends config
 		$result = $this->connexionBdd->requete($requete);
 		$fetch = mysql_fetch_assoc($result);
 		$url = 'http://archi-strasbourg.org/images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
-		//$url = 'http://archi-strasbourg.org/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
 		$urlNews = 'actualites-archi-strasbourg-'.$fetch['idActualite'].'.html';
 		$description = strip_tags($fetch['texte']);
+		$so = new StringObject();
+		$description = $so->sansBalises($description);
+		$description = $so->truncateString($description, 300);
+		
 		$news=array(
 				'urlMiniature'=>$url,
 				'titre' => $fetch['titre'],
@@ -2383,9 +2387,14 @@ class ArchiAccueil extends config
 
 				$url = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail',"archiIdAdresse"=>$idAdresse,"archiIdEvenementGroupeAdresse"=>$idEvenementGroup));
 			}
-				
-				
-				
+
+
+			$so = new StringObject();
+			$test = $so->replaceUrl($latestComment['commentaire']);
+			
+			
+			$latestComment['commentaire'] = $so->truncateString($latestComment['commentaire'], 80);
+			
 			$urlPersonne = $this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$latestComment['idUtilisateur'],'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroup));
 
 			$latestComment['typeCommentaire'] = 'commentaireEvenement';
@@ -2501,7 +2510,7 @@ class ArchiAccueil extends config
 					HAVING evt.idEvenement = max(evt2.idEvenement)
 				) as tmp
 				GROUP BY tmp.idEvenementGroupeAdresse
-				ORDER BY tmp.priorite DESC, tmp.DateTri DESC
+				ORDER BY tmp.DateTri DESC,tmp.priorite DESC
 				LIMIT $nbElts
 				";
 		$result = $this->connexionBdd->requete($requete);
@@ -2519,7 +2528,6 @@ class ArchiAccueil extends config
 			$tmp['titre'] = $titreArray['titre'];
 			$idImagePrincipale = $titreArray['idImagePrincipale'];
 
-			
 			if(isset($idImagePrincipale) && !empty($idImagePrincipale)){
 				$requeteIdHistoImage = "
 						SELECT idHistoriqueImage

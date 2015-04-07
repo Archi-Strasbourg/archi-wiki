@@ -306,25 +306,77 @@ class StringObject extends config
     
         return $retour;
     }
-    
-    /*
-    // http://articles.techrepublic.com.com/5100-10878_11-6174867.html
-    // si utilisation de cette fonction , il faut enlever les commentaires pour les includes vers les bibliotheques au debut du fichier 
-    public function getTxtDiffByPEAR($params = array())
-    {
-        $separator = '<br />';
-        if (isset($params['separator']))
-            $separator = $params['separator'];
-    
-        $diff = new Text_Diff(
-            explode($separator,strip_tags(nl2br($params['ancien']), $separator)),
-            explode($separator,strip_tags(nl2br($params['nouveau']), $separator))
-        );
-        
-        $renderer = new Text_Diff_Renderer_inline();
-        echo $renderer->render($diff);
-        
+    public function getUrlDomain($input){
+    	$rexProtocol = '(https?://)?';
+    	$rexDomain   = '((?:[-a-zA-Z0-9]{1,63}\.)+[-a-zA-Z0-9]{2,63}|(?:[0-9]{1,3}\.){3}[0-9]{1,3})';
+    	$rexPort     = '(:[0-9]{1,5})?';
+    	$rexPath     = '(/[!$-/0-9:;=@_\':;!a-zA-Z\x7f-\xff]*?)?';
+    	$rexQuery    = '(\?[!$-/0-9:;=@_\':;!a-zA-Z\x7f-\xff]+?)?';
+    	$rexFragment = '(#[!$-/0-9:;=@_\':;!a-zA-Z\x7f-\xff]+?)?';
+    	
+    	
+    	$fullRegex = "&\\b$rexProtocol$rexDomain$rexPort$rexPath$rexQuery$rexFragment(?=[?.!,;:\"]?(\s|$))&";
+    	$reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
+    	 
+    	debug($fullRegex);
+    	$test = preg_replace_callback($reg_exUrl,'callback_url', htmlspecialchars($input));
+    	debug($test);
+
+    	
+    	
+    	// The Text you want to filter for urls
+    	
+    	debug($input);
+    	// Check if there is a url in the text
+    	if(preg_match($reg_exUrl, $input, $url)) {
+    	
+    		debug($url);
+    		// make the urls hyper links
+    		$test= preg_replace_callback($reg_exUrl, "callback", $input);
+    		debug($test);
+    		return preg_replace_callback($reg_exUrl, "callback", $input);
+    	
+    	} else {
+    	debug('false');
+    		// if no urls in the text just return the text
+    		return $text;
+    	
+    	}
+    	
+    	
+    	
+    	
+    	
     }
-    */
+    
+    function callback($url){
+    	return '<a href="'.$url[0].'">'.$url[0].'</a>';
+    }
+    
+    function callback_url($match)
+    {
+    	// Prepend http:// if no protocol specified
+    	$completeUrl = $match[1] ? $match[0] : "http://{$match[0]}";
+    
+    	return '<a href="' . $completeUrl . '">'
+    			. $match[2] . '</a>';
+    }
+    
+    
+    public function replaceUrl($input){
+    	$regex = "/((http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3})(\/\S*)?/";
+    	$text = preg_replace_callback($regex, function($url) {
+    		return "<a href=\"".$url[0]."\">".$url[1]."</a>";
+    	}, $input);
+    	return $text;
+    }
+    
+    public function truncateString($input,$maxChar){
+    	$descriptionSize = strlen($input);
+    	if($descriptionSize > $maxChar)
+    		return mb_substr($input,0, $maxChar)."...";
+    	else 
+    		return $input;
+    }
 }
 ?>

@@ -9253,7 +9253,7 @@ class archiAdresse extends ArchiContenu
 	            $t->assign_block_vars('commentaires',array(
             		'htmlId'=>'commentaireAdresse'.$fetch['idCommentaire'],
 	                'adresseMail'=>$adresseMail,
-	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
+	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']),'type'=>'commentaire')), 
 	                'boutonSupprimer'=>$boutonSupprimer,
 	            	'urlProfilPic'=>$urlProfilePic,
             		'prenom' => $fetch['prenom'],

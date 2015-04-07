@@ -189,17 +189,23 @@ class BBCodeObject extends config
         $description ="";
         if (isset($params['text'])) {
             $description = $params['text'];
-            
+
+
+
             $description = stripslashes($this->BBversHTML(htmlspecialchars($description)));//nl2br
-            
+
+            if(isset($params['type'])&& $params['type']=='commentaire'){
+            	$so = new StringObject();
+            	$description = $so->replaceUrl($description);
+            }
             //$description = str_replace(array("\n\r", "\r\n", "\r", "\n"), "<br>", $description);
             /*$description = str_replace("\n\r", "--hop1--", $description);
             $description = str_replace("\r\n", "--hop2--", $description);
             $description = str_replace("\r", "--hop3--", $description);
             $description = str_replace("\n", "--hop4--", $description);*/
-            
+
             $description = nl2br($description);
-            
+
             $description = str_replace("###serveur###",  $this->getNomServeur(),  $description);
 
             $description = preg_replace("#\\[url=\"http\\://(.+)\"\\](.+)\\[/url\\]#isU", "<a href=\"http://\\1\">\\2</a>", $description);
@@ -228,6 +234,7 @@ class BBCodeObject extends config
             $description = preg_replace("#\\[urlExterne=\\](.+)\\[/urlExterne\\]#isU", "<a href=\"\" target=\"_blank\">\\1</a>", $description);
             $description = preg_replace("#\\[iframe\\=(.+)\\](.+)\\[/iframe\\]#isU", "<iframe src=\"\\1\" width='425' height='349'>\\2</iframe>", $description);
             $description = preg_replace("#\\[lang\\=(.+)\\](.+)\\[/lang\\]#isU", "<span lang=\"\\1\">\\2</span>",  $description);
+            
             $description = ($description);
         } else {
         	$this->messages->addError("Problème de conversion du texte, aucun texte spécifié pour la fonction convertToDisplay");

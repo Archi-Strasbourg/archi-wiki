@@ -187,7 +187,7 @@ if (isset($_GET['query']) && !empty($_GET['query'])) {
     debug($query2);
     */
     
-    $query = mysql_query($query2);
+    $query = mysql_query($query);
     $bbcode= new bbCodeObject();
     while ($results=mysql_fetch_assoc($query)) {
         $req = 'SELECT idHistoriqueImage, licence, historiqueImage.idImage,

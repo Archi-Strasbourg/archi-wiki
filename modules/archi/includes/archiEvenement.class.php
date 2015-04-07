@@ -5299,7 +5299,7 @@ debug($reqEvenementEvenement);
 	            $t->assign_block_vars('commentaires',array(
 	            	'htmlId'=>'commentaireEvenement'.$fetch['idCommentaire'],
 	                'adresseMail'=>$adresseMail,
-	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']))), 
+	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']),'type'=>'commentaire')), 
 	                'boutonSupprimer'=>$boutonSupprimer,
 	            	'urlProfilPic'=>$urlProfilePic,
             		'prenom' => $fetch['prenom'],
@@ -6971,10 +6971,7 @@ debug($reqEvenementEvenement);
 		$result = $this->connexionBdd->requete($requete);
 		
 		
-		//while($fetch = mysql_fetch_assoc($result)){
-		
 		$fetch = mysql_fetch_assoc($result);
-	
 		$idEvenementGroupeAdresse = $fetch['idEvenementGroupeAdresse'];
 		
 		//History processing
@@ -7087,7 +7084,6 @@ debug($reqEvenementEvenement);
 		
 		//Commentaires
 		$listeCommentaires = $this->getListCommentairesEvenements( $idEvenement);
-		//$formulaireCommentaire = $this->getFormulaireCommentairesHistorique($idEvenement,$this->getCommentairesFields('evenement'));
 		$formulaireCommentaire=$this->getFormComment( $idEvenement,$this->getCommentairesFields('evenement'),'evenement');
 		
 		
@@ -7437,9 +7433,9 @@ debug($reqEvenementEvenement);
 	
 	public function getFormComment($idEvenement,$fields,$ty=''){
 		$t = new Template('modules/archi/templates/');
-		
+		$labelButton = "Ajouter un commentaire";
 		$type = ($ty=='') ? 0 : $ty;
-		
+		$classButton = 'addCommentButtonWrapper';
 		$auth = new ArchiAuthentification();
 		if($auth->estConnecte()){
 			$t->set_filenames((array('formComment'=>'comment/comment.tpl')));
@@ -7458,6 +7454,8 @@ debug($reqEvenementEvenement);
 			if($ty==''){
 				$array_type = array();
 				$url = $this->creerUrl('enregistreCommentaire','',array());
+				$labelButton.=" sur l'adresse";
+				$classButton.=" addCommentAdresseButtonWrapper";
 			}
 			else {
 				$array_type = array('type'=>array(
@@ -7493,7 +7491,6 @@ debug($reqEvenementEvenement);
 		
 			$inputs = array_merge($inputs,$array_type);
 			
-			//debug($inputs);
 			foreach ($inputs as $input){
 				$t->assign_block_vars('input', $input);		
 			}
@@ -7501,7 +7498,9 @@ debug($reqEvenementEvenement);
 					'urlRedirect'=> $url,
 					'name'=> 'formAjoutCommentaire',
 					'urlProfilePic'=>$urlProfilePic,
-					'profileAlt' => $profileAlt
+					'profileAlt' => $profileAlt,
+					'labelButton' => $labelButton,
+					'classButton' => $classButton
 			));
 			
 		}
