@@ -9250,6 +9250,9 @@ class archiAdresse extends ArchiContenu
 	                $urlSupprimer = $this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse));
 	                $adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
 	            }
+	            
+	            $so = new StringObject();
+	            
 	            $t->assign_block_vars('commentaires',array(
             		'htmlId'=>'commentaireAdresse'.$fetch['idCommentaire'],
 	                'adresseMail'=>$adresseMail,

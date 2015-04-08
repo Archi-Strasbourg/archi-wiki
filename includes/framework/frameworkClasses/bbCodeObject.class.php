@@ -246,5 +246,10 @@ class BBCodeObject extends config
         
         return $description;
     }
+    public function stripBBCode($text_to_search) {
+    	$pattern = '|[[\/\!]*?[^\[\]]*?]|si';
+    	$replace = '';
+    	return preg_replace($pattern, $replace, $text_to_search);
+    }
 }
 ?>

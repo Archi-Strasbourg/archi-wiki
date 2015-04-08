@@ -1376,7 +1376,7 @@ a.white:hover {
 }
 
 .event {
-	padding: 0 1em;
+	padding: 0 10px;
 	border-radius: 5px;
 	width: 730px;
 	float: left;
@@ -2282,7 +2282,7 @@ Page d'accueil
 
 .push-menu-top-search form{
 	float:left;
-	margin-right: 10px;
+//	margin-right: 10px;
 	color: #BCBFBE;
 }
 
@@ -2388,7 +2388,7 @@ del{
 
 
 .gallery > div {
-	float: left;
+	/*float: left;*/
 	text-align: center;
 	position: relative;
 	padding-left: 5px;
@@ -2396,6 +2396,8 @@ del{
 	width: 130px;
 	/*height: 130px;*/
 	clear: vertical;
+	display: inline-block;
+	vertical-align: top;
 }
 
 /*
@@ -2457,10 +2459,10 @@ del{
 
 
 .addCommentButtonWrapper {
-	width: 200px;
+	width: 210px;
 }
 .addCommentAdresseButtonWrapper{
-	width: 310px;
+	width: 320px;
 }
 
 .active .formComment{
@@ -2536,6 +2538,7 @@ del{
 .commentSubmitButton , .addCommentButtonWrapper a{
 	color: white;
     text-transform: uppercase;
+    cursor: pointer;
 }
 
 .commentSubmitButton , .addCommentButtonWrapper a ,.profilePicWrapper, .active .formComment form textarea,.commentFormWrapper img,.comment img{

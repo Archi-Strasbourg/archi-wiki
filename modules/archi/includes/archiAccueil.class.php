@@ -560,15 +560,14 @@ class ArchiAccueil extends config
 					$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($modif['idEvenement']);
 					$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
 					 
-
 					 
 					//Description
 					$so = new StringObject();
-					$description = $so->sansBalises($modif['description']);
-					$description=$so->truncateString($modif['description'], 130);
+					$bbcode = new bbCodeObject();
+					$description=$bbcode->stripBBCode($modif['description']);
+					$description=$so->truncateString($description, 130);
 					
 					
-			
 					$t->assign_block_vars('lastModif', array(
 							'miniatureLabelLeft'=>$modif['typeEvenement'],
 							'miniatureLabelRight' => $modif['dateCreationEvenement'],
@@ -653,7 +652,7 @@ class ArchiAccueil extends config
 									SELECT evt.description
 									FROM evenements evt
 									LEFT JOIN positionsEvenements pe on pe.idEvenementGroupeAdresse = ".$lastVisit['idEvenementGroupeAdresse']."
-											WHERE pe.idEvenement = evt.idEvenement
+									WHERE pe.idEvenement = evt.idEvenement
 											";
 							$resDescription = $this->connexionBdd->requete($requeteDescription);
 							$arrayDescription = mysql_fetch_assoc($resDescription);
@@ -661,7 +660,6 @@ class ArchiAccueil extends config
 							$description = $so->sansBalises($arrayDescription['description']);
 							$description = stripslashes($description);
 							$description = mb_substr($description, 0,130);
-
 
 							if(isset($lastVisit) && !empty($lastVisit) && isset($lastVisit['idEvenementGroupeAdresse'] )&& !empty($lastVisit['idEvenementGroupeAdresse']) && isset($lastVisit['idAdresse']) && !empty($lastVisit['idAdresse'])){
 								//Titre
@@ -2393,10 +2391,10 @@ class ArchiAccueil extends config
 			$test = $so->replaceUrl($latestComment['commentaire']);
 			
 			
-			$latestComment['commentaire'] = $so->truncateString($latestComment['commentaire'], 80);
-			
+			$bbCode = new bbCodeObject();
+			$commentaireText =$bbCode->stripBBCode($latestComment['commentaire']); 
+			$latestComment['commentaire'] = $so->truncateString($commentaireText, 80);
 			$urlPersonne = $this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$latestComment['idUtilisateur'],'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroup));
-
 			$latestComment['typeCommentaire'] = 'commentaireEvenement';
 			$latestComment['urlAdresse'] = $url.$ancre;
 			$latestComment['urlPersonne'] = $urlPersonne;
@@ -2470,20 +2468,21 @@ class ArchiAccueil extends config
 					historiqueAdresse ha
 					LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
 					LEFT JOIN _evenementEvenement ee on ee.idEvenement = ae.idEvenement
-					LEFT JOIN evenements evt on evt.idEvenement = ee.idEvenementAssocie
+					LEFT JOIN historiqueEvenement evt on evt.idEvenement = ee.idEvenementAssocie
 					LEFT JOIN _evenementEvenement ee2 on ee2.idEvenement = ee.idEvenement
-					LEFT JOIN evenements evt2 on evt2.idEvenement = ee2.idEvenementAssocie
+					LEFT JOIN historiqueEvenement evt2 on evt2.idEvenement = ee2.idEvenementAssocie
 					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
 					
 					
 					
 					$whereClause
-					GROUP BY evt.idEvenement,ee.idEvenement, ae.idAdresse
+					GROUP BY evt.idEvenement,ee.idEvenement
 					HAVING evt.idEvenement = max(evt2.idEvenement)
 					
 					UNION ALL
 					
 					SELECT
+										
 					ae.idAdresse,
 					ee.idEvenement as idEvenementGroupeAdresse,
 					evt.idEvenement AS idEvenement,
@@ -2500,19 +2499,22 @@ class ArchiAccueil extends config
 					historiqueAdresse ha
 					LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
 					LEFT JOIN _evenementEvenement ee on ee.idEvenement = ae.idEvenement
-					LEFT JOIN evenements evt on evt.idEvenement = ee.idEvenementAssocie
+					LEFT JOIN historiqueEvenement evt on evt.idEvenement = ee.idEvenementAssocie
 					LEFT JOIN _evenementEvenement ee2 on ee2.idEvenement = ee.idEvenement
-					LEFT JOIN evenements evt2 on evt2.idEvenement = ee2.idEvenementAssocie
+					LEFT JOIN historiqueEvenement evt2 on evt2.idEvenement = ee2.idEvenementAssocie
 					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
 									
 					WHERE ae.idAdresse IS NOT NULL
-					GROUP BY evt.idEvenement,ee.idEvenement, ae.idAdresse
+					GROUP BY evt.idEvenement,ee.idEvenement
 					HAVING evt.idEvenement = max(evt2.idEvenement)
 				) as tmp
-				GROUP BY tmp.idEvenementGroupeAdresse
+				GROUP BY tmp.idEvenementGroupeAdresse,tmp.idAdresse
 				ORDER BY tmp.DateTri DESC,tmp.priorite DESC
 				LIMIT $nbElts
 				";
+		
+
+
 		$result = $this->connexionBdd->requete($requete);
 		$arrayLastModif = array();
 		while($lastModif = mysql_fetch_assoc($result)){

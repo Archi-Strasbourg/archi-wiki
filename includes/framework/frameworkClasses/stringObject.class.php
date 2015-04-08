@@ -364,11 +364,12 @@ class StringObject extends config
     
     
     public function replaceUrl($input){
-    	$regex = "/((http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3})(\/\S*)?/";
-    	$text = preg_replace_callback($regex, function($url) {
-    		return "<a href=\"".$url[0]."\">".$url[1]."</a>";
+    	$regex = "/(https?:\/\/)?(www\.)?(([\/\w \.-]+)(\.[a-z]{2,3}))(\/.*)/";
+		$text = preg_replace_callback($regex, function($url) {
+    		return "<a href=\"".$url[0]."\">".$url[3]."</a>";
     	}, $input);
     	return $text;
+    			
     }
     
     public function truncateString($input,$maxChar){
@@ -377,6 +378,12 @@ class StringObject extends config
     		return mb_substr($input,0, $maxChar)."...";
     	else 
     		return $input;
+    }
+
+    public function stripBBcodeTags($input){
+    	$pattern = '|[[\\/\\!]*?[^\\[\\]]*?]|si';
+    	$replace = '';
+    	return preg_replace($pattern, $replace, $input);
     }
 }
 ?>

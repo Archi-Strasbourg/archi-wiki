@@ -2196,8 +2196,7 @@ class archiRecherche extends config {
 						$motCleEscaped = str_replace(' ', ' +', $criterias[$id[0]]);
 						$motCleEscaped="+".$motCleEscaped;
 						
-						$sqlWhereTab[] = "MATCH(nomRue, nomQuartier, nomSousQuartier, nomVille, nomPays, prefixeRue,numeroAdresse,  description, titre , nomPersonne, prenomPersonne, concat1, concat2, concat3, concat4, concat5) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE) 
-								OR MATCH(description, titre , concat1, concat2, concat3) AGAINST ('".$motCleEscapedFullEscaped."' IN BOOLEAN MODE) 
+						$sqlWhereTab[] = "MATCH(nomRue, nomQuartier, nomSousQuartier, nomVille, nomPays, prefixeRue,numeroAdresse,  description, titre , nomPersonne, prenomPersonne, concat1, concat2, concat3, concat4, concat5) AGAINST ('".$criterias[$id[0]]."' IN BOOLEAN MODE) 
 								";
 					}
 				}
@@ -2300,7 +2299,7 @@ class archiRecherche extends config {
 				100000000000 * (MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 				10000000000 * (MATCH (concat1) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
 			
-				(1000000000 - (10*CONVERT(numeroAdresse  , UNSIGNED INTEGER))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) ))) +
+				(10000000000 - (10*CONVERT(numeroAdresse  , UNSIGNED INTEGER))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) ))) +
 			
 				100000000 * (MATCH (titre) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 				10000000 * (MATCH (titre) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
@@ -2327,7 +2326,7 @@ class archiRecherche extends config {
 				1 * (MATCH (description) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE))
 			
 				) as relevance,
-				 100000000000000* (MATCH (concat3) AGAINST ('".$motCleFullEscaped."' IN BOOLEAN MODE)) as matchQuartier
+				 (((MATCH (nomQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) as matchQuartier
 						
 		
 				FROM recherche "
@@ -2337,6 +2336,9 @@ class archiRecherche extends config {
 				".$limit.
 							";";
 
+									
+									
+									
 		}
 		else{
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,concat4,concat5, 1 as relevance
