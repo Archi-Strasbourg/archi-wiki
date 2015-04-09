@@ -626,8 +626,6 @@ debug($evenement['evenementData']['titre']);
 		
 		
 		$listeCommentaires=$this->getListeCommentaires($idEvenementGroupeAdresse);
-		$formulaireCommentaire=$this->getFormulaireCommentaires($idEvenementGroupeAdresse,$this->getCommentairesFields());
-		
 		$formulaireCommentaire = $e->getFormComment($idEvenementGroupeAdresse, $this->getCommentairesFields(),'');
 		
 		
@@ -739,14 +737,15 @@ debug($evenement['evenementData']['titre']);
 			$retourEvenement = $evenement->afficher($this->variablesGet['archiIdEvenementGroupeAdresse'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 			$html.=$retourEvenement['html'];
 			$html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
-			$html.=$this->getFormulaireCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields());
+			$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
+				
 		}
 		elseif($idEvenementGroupeAdresse!='' && $idEvenementGroupeAdresse !='0')
 		{
 			$retourEvenement = $evenement->afficher($idEvenementGroupeAdresse,'',null,array());
 			$html.=$retourEvenement['html'];
 			$html.=$this->getListeCommentaires($idEvenementGroupeAdresse);
-			$html.=$this->getFormulaireCommentaires($idEvenementGroupeAdresse,$this->getCommentairesFields());
+			$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
 		}
 		else
 		{
@@ -759,7 +758,7 @@ debug($evenement['evenementData']['titre']);
 				$retourEvenement = $evenement->afficher($fetchEvenements['idEvenement'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 				$html.=$retourEvenement['html'];
 				$html.=$this->getListeCommentaires($fetchEvenements['idEvenement']);
-				$html.=$this->getFormulaireCommentaires($fetchEvenements['idEvenement'],$this->getCommentairesFields());
+				$html.= $evenement->getFormComment($fetchEvenements['idEvenement'],$this->getCommentairesFields(),'');
 			}
 			else
 			{
@@ -807,7 +806,7 @@ debug($evenement['evenementData']['titre']);
 					if($nbGroupesAdressesAffiches==1)
 					{
 						$html.=$this->getListeCommentaires($groupeAdresse);
-						$html.=$this->getFormulaireCommentaires($groupeAdresse,$this->getCommentairesFields());
+						$html.= $evenement->getFormComment($groupeAdresse,$this->getCommentairesFields(),'');
 					}
 				}
 			}

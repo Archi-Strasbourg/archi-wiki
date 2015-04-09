@@ -1,7 +1,7 @@
 <div>
 <div>
 	<h1>Télécharger le contenu du site</h1>
-	<a href="{urlContact}">L'ensemble du contenu d'Archi-Wiki peut être réutilisé pour d'autres projets. Merci de citer Archi-Wiki comme source et de nous faire part de vos projets.</a>
+	L'ensemble du contenu d'Archi-Wiki peut être réutilisé pour d'autres projets. Merci de citer Archi-Wiki comme source et de <a href="{urlContact}">nous faire part de vos projets.</a>
 </div> 
 <div>
 <table class="opendata-table">

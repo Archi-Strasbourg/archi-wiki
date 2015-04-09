@@ -303,11 +303,13 @@
 <!-- BEGIN evenementLie -->
 <a id='{evenementLie.numeroAncre}'></a>
 <div>
-{evenementLie.evenement}
-<div class="commentFormWrapper">
-{evenementLie.formulaireCommentaire}
-{evenementLie.listeCommentaires}
-</div>
+	{evenementLie.evenement}
+	<div class="commentaireEvenement">
+		<div class="commentFormWrapper">
+			{evenementLie.formulaireCommentaire}
+			{evenementLie.listeCommentaires}
+		</div>
+	</div>
 </div>
 <!-- END evenementLie -->
 
