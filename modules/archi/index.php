@@ -92,9 +92,6 @@ if (isset($_GET['archiAction'])) {
         $utilisateur = new archiUtilisateur();
         echo $utilisateur->confirmInscription();
         break;
-    case 'testFond':
-    	echo "test brol";
-    	break;
     case 'deconnexion':
         $auth = new archiAuthentification();
         $auth -> deconnexion();
@@ -125,7 +122,6 @@ if (isset($_GET['archiAction'])) {
 	case 'enregistreCommentaireEvenement':
        	$a = new archiEvenement();
        	$a->enregistreCommentaireEvenement();
-        
         	/*if (!$authentification->estConnecte()) {
         		echo "<SCRIPT>";
         		echo "alert('"._("Merci pour votre commentaire.")."\\n".

@@ -4,8 +4,7 @@
 	style='position: relative; display: table;'>
 	{urlEvenementExterne}
 	<!-- BEGIN menuAction -->
-	<div class="menuAction"	style="margin-left: 1em; float: right; padding: 5px; display: {divDisplayMenuAction}">
-		<div style='margin: 0px; display: table;'>
+	<div class="menuAction"	style="display: {divDisplayMenuAction}">
 			
 			<div>
 				<div class='actionEvent'>
@@ -31,6 +30,7 @@
 					onclick="if(confirm('Voulez vous vraiment supprimer cet évènement ?')){location.href='{supprimerEvenement}'};"
 					href="#">Évènement</a> 
 				</div>
+				
 			</div>
 			<!-- END isAdminOrModerateurFromVille --> 
 			<!-- BEGIN isAdmin -->
@@ -68,21 +68,18 @@
 				</div>
 			</div>
 			<!-- END afficheElementMenuDeplacerEvenement -->
-	
-	
-		</div>
 	</div>
 	<!-- END menuAction -->
 
 
 
-	<div style='min-height: 150px;'>
+	<div class="event">
 		{titre} - {txtEnvoi} par {utilisateur} {dateEnvoi}
 		{lienHistoriqueEvenementCourant}
 
 
 
-		<div class="event">
+		<div >
 			<p>
 			
 			
@@ -156,7 +153,7 @@
 <!-- END isCarteGoogle --> 
 	<!-- BEGIN adresses -->
 			<table border="" class='tableauResumeAdresse'
-				style='width: {largeurTableauResumeAdresse'>
+				style='width: {largeurTableauResumeAdresse}px'>
 
 				<tr>
 					<td

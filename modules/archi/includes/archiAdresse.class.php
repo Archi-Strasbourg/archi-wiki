@@ -516,11 +516,10 @@ class archiAdresse extends ArchiContenu
 		$requeteIdEvenements = "
 				SELECT DISTINCT ee.idEvenementAssocie as idEvenement
 				FROM _evenementEvenement ee
-				LEFT JOIN positionsEvenements pe on pe.idEvenementGroupeAdresse = ee.idEvenement
+				LEFT JOIN positionsEvenements pe on pe.idEvenement = ee.idEvenementAssocie
 				WHERE ee.idEvenement = $idEvenementGroupeAdresse
-				order by pe.position ASC
+				ORDER BY IF(pe.position IS NULL,0, pe.position) ASC 
 				";
-		
 		$resultIdEvenements = $this->connexionBdd->requete($requeteIdEvenements);
 		
 		
@@ -589,7 +588,7 @@ class archiAdresse extends ArchiContenu
 		while($fetch = mysql_fetch_assoc($resultIdEvenements)){
 			//Getting all the infos with this method 
 			$evenement = $e->getEventInfos($fetch['idEvenement']);
-
+debug($evenement['evenementData']['titre']);
 			$result = $e->displaySingleEvent($evenement);
 			$t->assign_block_vars('event', array('content'=>$result));
 			//Filling the template with the infos
