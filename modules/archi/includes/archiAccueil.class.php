@@ -2443,17 +2443,36 @@ class ArchiAccueil extends config
 			}
 
 		}
-		$requete ="
-				
-				SELECT *
-				
-				
-				from (
-				
+		
+		
+		$requeteIdAdresse = "select distinct tmp.idAdresse from(
+			SELECT ae.idAdresse, 
+			ee.idEvenement AS idEvenementGroupeAdresse, 
+			evt.idEvenement, DATE_FORMAT( evt.dateCreationEvenement, '%Y%m%d%H%i%s' ) AS DateTri 
+			FROM historiqueEvenement evt, _evenementEvenement ee, _adresseEvenement ae,historiqueAdresse ha
+			$whereClause
+			AND evt.idEvenement = ee.idEvenementAssocie
+			AND ha.idAdresse = ae.idAdresse
+			AND ae.idEvenement = ee.idEvenement
+			ORDER BY DateTri DESC 
+		
+			) as tmp
+			limit $nbElts
+		";
+		$resultIdAdresse = $this->connexionBdd->requete($requeteIdAdresse);
+		$arrayIdEvenement = array();
+		$arrayEvenement = array();
+		while($row= mysql_fetch_assoc($resultIdAdresse)){
+			$arrayIdAdresse[]=$row['idAdresse'];
+			$arrayIdEvenement[]=$row['idEvenement'];
+			
+
+			$requeteSingleEvent = "
 					SELECT
-					ae.idAdresse,
+					DISTINCT
 					ee.idEvenement as idEvenementGroupeAdresse,
 					evt.idEvenement AS idEvenement,
+					ae.idAdresse,
 					evt.idEvenementRecuperationTitre ,
 					evt.idImagePrincipale AS idHistoriqueImage,
 					te.nom as typeEvenement,
@@ -2461,63 +2480,25 @@ class ArchiAccueil extends config
 					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
 					evt.description,
 					1 as priorite
-					
+						
 					FROM
-	
-					
-					historiqueAdresse ha
-					LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
-					LEFT JOIN _evenementEvenement ee on ee.idEvenement = ae.idEvenement
-					LEFT JOIN historiqueEvenement evt on evt.idEvenement = ee.idEvenementAssocie
-					LEFT JOIN _evenementEvenement ee2 on ee2.idEvenement = ee.idEvenement
-					LEFT JOIN historiqueEvenement evt2 on evt2.idEvenement = ee2.idEvenementAssocie
+
+					historiqueEvenement evt
+					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
-					
-					
-					
-					$whereClause
-					GROUP BY evt.idEvenement,ee.idEvenement
-					HAVING evt.idEvenement = max(evt2.idEvenement)
-					
-					UNION ALL
-					
-					SELECT
-										
-					ae.idAdresse,
-					ee.idEvenement as idEvenementGroupeAdresse,
-					evt.idEvenement AS idEvenement,
-					evt.idEvenementRecuperationTitre ,
-					evt.idImagePrincipale AS idHistoriqueImage,
-					te.nom as typeEvenement,
-					date_format(evt.dateCreationEvenement,"._('"%e/%m/%Y"').") as dateCreationEvenement,
-					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
-					evt.description,
-					0 as priorite
-					
-					FROM
-					
-					historiqueAdresse ha
-					LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
-					LEFT JOIN _evenementEvenement ee on ee.idEvenement = ae.idEvenement
-					LEFT JOIN historiqueEvenement evt on evt.idEvenement = ee.idEvenementAssocie
-					LEFT JOIN _evenementEvenement ee2 on ee2.idEvenement = ee.idEvenement
-					LEFT JOIN historiqueEvenement evt2 on evt2.idEvenement = ee2.idEvenementAssocie
-					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
-									
-					WHERE ae.idAdresse IS NOT NULL
-					GROUP BY evt.idEvenement,ee.idEvenement
-					HAVING evt.idEvenement = max(evt2.idEvenement)
-				) as tmp
-				GROUP BY tmp.idEvenementGroupeAdresse,tmp.idAdresse
-				ORDER BY tmp.DateTri DESC,tmp.priorite DESC
-				LIMIT $nbElts
-				";
+
+					WHERE ha.idAdresse = ".$row['idAdresse']."
+					ORDER BY DateTri DESC
+					LIMIT 1
+					";
+			$resultSingleEvenement = $this->connexionBdd->requete($requeteSingleEvent);
+			$arrayEvenement[]=mysql_fetch_assoc($resultSingleEvenement);
+		}
 		
-
-
-		$result = $this->connexionBdd->requete($requete);
-		$arrayLastModif = array();
-		while($lastModif = mysql_fetch_assoc($result)){
+		
+		foreach ($arrayEvenement as $lastModif){
 			$tmp = $lastModif;
 			$requeteTitre = "SELECT e1.titre , e2.idImagePrincipale
 					FROM evenements e1,evenements e2

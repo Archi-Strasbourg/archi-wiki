@@ -2293,7 +2293,7 @@ class archiRecherche extends config {
 				10000000000000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) +
 				10000000000000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) )) +
 
-				10000000000000 * (((MATCH (nomQuartier) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
+				10000000000000 * (( (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
 						
 						
 				100000000000 * (MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
@@ -2325,10 +2325,8 @@ class archiRecherche extends config {
 		
 				1 * (MATCH (description) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE))
 			
-				) as relevance,
-				 (((MATCH (nomQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) as matchQuartier
+				) as relevance
 						
-		
 				FROM recherche "
 									.$sqlWhere.
 									"GROUP BY idEvenementGA

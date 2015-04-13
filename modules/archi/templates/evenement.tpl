@@ -128,12 +128,6 @@
 		</div>
 
 	</div>
-	<!-- BEGIN commentaireEvenement -->
-	<div class="commentaireEvenement">
-		{commentaireEvenement.listeCommentaireEvenement} 
-		{commentaireEvenement.formulaireCommentaireEvenement} 
-	</div>
-	<!-- END commentaireEvenement -->
 </div>
 <!-- END simple -->
 
@@ -338,6 +332,9 @@
 <!-- END noSimple -->
 
 
+<!-- BEGIN commentairesAdresse -->
+	{commentairesAdresse.formulaireCommentaire}
+	{commentairesAdresse.listeCommentaires}
+<!-- END commentairesAdresse -->
 
 {divDeplacerEvenementVersGA}
-

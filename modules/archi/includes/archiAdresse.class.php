@@ -588,7 +588,6 @@ class archiAdresse extends ArchiContenu
 		while($fetch = mysql_fetch_assoc($resultIdEvenements)){
 			//Getting all the infos with this method 
 			$evenement = $e->getEventInfos($fetch['idEvenement']);
-debug($evenement['evenementData']['titre']);
 			$result = $e->displaySingleEvent($evenement);
 			$t->assign_block_vars('event', array('content'=>$result));
 			//Filling the template with the infos
@@ -14212,6 +14211,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$fulladdress =  ucfirst($this->getIntituleAdresseFrom($info['idEvenementGroupeAdresse'],$type='idEvenementGroupeAdresse'));
 				
 				$titre = $info['titre'];
+				
+				
 				
 				//If prisdepuis
 				if(isset($this->variablesGet['modeAffichage']) && ($this->variablesGet['modeAffichage'] == 'popupRechercheAdressePrisDepuis')){

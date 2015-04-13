@@ -2078,7 +2078,7 @@ class archiEvenement extends config
 				//*
 				//**    Historique
 				//*/
-
+				
 				$t->assign_vars(array( 'nbHistorique' => $nbHistorique));
 				if ($nbHistorique > 0) {
 					$t->assign_block_vars('histo', array('url' => $this->creerUrl('', 'historiqueEvenement', array('idEvenement' => $idEvenement))));
@@ -2380,8 +2380,7 @@ class archiEvenement extends config
 						}
 						
 						if($this->variablesGet['selection'] == 'personne'){
-							$e = new archiEvenement();
-							$formulaireCommentaire = $e->getFormComment($value['idEvenementAssocie'], $this->getCommentairesFields('personne',$this->variablesGet['id']),'personne');
+							$formulaireCommentaire = $this->getFormComment($value['idEvenementAssocie'], $this->getCommentairesFields('personne',$this->variablesGet['id']),'personne');
 							$listeCommentaires = $this->getListCommentairesEvenements( $value['idEvenementAssocie']);
 								
 						}
@@ -2458,6 +2457,19 @@ class archiEvenement extends config
 							}
 						}
 					}
+					
+					
+					//TODO COMMENTAIREs
+
+					$a = new archiAdresse();
+					$listeCommentaires=$a->getListeCommentaires($idEvenementGroupeAdresse);
+					$formulaireCommentaire = $this->getFormComment($idEvenementGroupeAdresse, $this->getCommentairesFields(),'');
+					
+					$t->assign_block_vars('commentairesAdresse', array(
+							'formulaireCommentaire' => $formulaireCommentaire,
+							'listeCommentaires' => $listeCommentaires
+					));
+					
 
 					$t->assign_vars(array('nbEvenements'=>count($tabIdEvenementsLies)+1));
 				} else {
@@ -6376,8 +6388,6 @@ debug($reqEvenementEvenement);
 			
 			//$contenu = new ArchiContenu();
 			$html.=	$this->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields());
-			
-			
 			$html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
 			//$html.= $this->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
 		}
@@ -6387,7 +6397,6 @@ debug($reqEvenementEvenement);
 			$html.=$retourEvenement['html'];
 			
 			$html.=$this->getFormComment($idEvenementGroupeAdresse,$this->getCommentairesFields());
-			
 			$html.=$this->getListeCommentaires($idEvenementGroupeAdresse);
 		}
 		else
@@ -6402,10 +6411,7 @@ debug($reqEvenementEvenement);
 				$html.=$retourEvenement['html'];
 				
 				$html.=$this->getFormComment($fetchEvenements['idEvenement'],$this->getCommentairesFields('evenement'));
-				
-				
 				$html.=$this->getListeCommentaires($fetchEvenements['idEvenement']);
-				//$html.=$this->getFormulaireCommentaires($fetchEvenements['idEvenement'],$this->getCommentairesFields());
 			}
 			else
 			{
@@ -6453,11 +6459,8 @@ debug($reqEvenementEvenement);
 					if($nbGroupesAdressesAffiches==1)
 					{
 						
-						$html.=$this->getFormComment($groupeAdresse,$this->getCommentairesFields());
-						
-						
+						$html.=$this->getFormComment($groupeAdresse,$this->getCommentairesFields(),'');
 						$html.=$this->getListeCommentaires($groupeAdresse);
-						//$html.=$this->getFormulaireCommentaires($groupeAdresse,$this->getCommentairesFields());
 					}
 				}
 			}
