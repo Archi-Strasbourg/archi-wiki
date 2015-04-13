@@ -2445,7 +2445,7 @@ class ArchiAccueil extends config
 		}
 		
 		
-		$requeteIdAdresse = "select distinct tmp.idAdresse from(
+		$requeteIdAdresse = "select distinct tmp.idEvenementGroupeAdresse from(
 			SELECT ae.idAdresse, 
 			ee.idEvenement AS idEvenementGroupeAdresse, 
 			evt.idEvenement, DATE_FORMAT( evt.dateCreationEvenement, '%Y%m%d%H%i%s' ) AS DateTri 
@@ -2463,9 +2463,6 @@ class ArchiAccueil extends config
 		$arrayIdEvenement = array();
 		$arrayEvenement = array();
 		while($row= mysql_fetch_assoc($resultIdAdresse)){
-			$arrayIdAdresse[]=$row['idAdresse'];
-			$arrayIdEvenement[]=$row['idEvenement'];
-			
 
 			$requeteSingleEvent = "
 					SELECT
@@ -2489,7 +2486,7 @@ class ArchiAccueil extends config
 					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
 
-					WHERE ha.idAdresse = ".$row['idAdresse']."
+					WHERE ee.idEvenement = ".$row['idEvenementGroupeAdresse']."
 					ORDER BY DateTri DESC
 					LIMIT 1
 					";
