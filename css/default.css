@@ -2471,7 +2471,6 @@ del{
     background-color: #424647;
     padding: 14px 10px 10px 10px;
     margin-top: -4px;
-    color: white;
 }
 .formComment form{
 	//float:left;
@@ -2604,10 +2603,10 @@ Evenement block
 	background-color: #2A3335;
 }
 
-.evenement a, .commentaire a {
+.evenement a, .commentaire a , .formComment a {
 	color: white;
 }
-.evenement,.commentaire {
+.evenement,.commentaire ,.formComment{
 	color: #b2b2b2;
 }
 

@@ -7511,7 +7511,9 @@ debug($reqEvenementEvenement);
 			
 			$t->assign_vars(array(
 					'urlInscription'=>$urlInscription,
-					'urlConnexion'=>$urlConnexion
+					'urlConnexion'=>$urlConnexion,
+					'labelButton'=>$labelButton,
+					'classButton'=>'addCommentButtonWrapper'
 			));
 		}
 		
