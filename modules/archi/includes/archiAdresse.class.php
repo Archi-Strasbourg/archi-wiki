@@ -9236,18 +9236,6 @@ class archiAdresse extends ArchiContenu
 	                $urlSiteWeb = "<br><a itemprop='url' href='".$fetch['urlSiteWeb']."' target='_blank'><span style='font-size:9px;color:#FFFFFF;'>".$fetch['urlSiteWeb']."</span></a>";
 	            }
 	            
-	            if($isAdmin)
-	            {
-	                $archiIdAdresse='';
-	                if(isset($this->variablesGet['archiIdAdresse']))
-	                {
-	                    $archiIdAdresse = $this->variablesGet['archiIdAdresse'];
-	                }
-	                $boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse))."';\">";
-	                $urlSupprimer = $this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse));
-	                $adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
-	            }
-	            
 	            $so = new StringObject();
 	            
 	            $t->assign_block_vars('commentaires',array(
@@ -9263,6 +9251,20 @@ class archiAdresse extends ArchiContenu
 	            	'urlSupprimer'=>$urlSupprimer
 	            		
 	            ));
+	            if($isAdmin)
+	            {
+	            	$archiIdAdresse='';
+	            	if(isset($this->variablesGet['archiIdAdresse']))
+	            	{
+	            		$archiIdAdresse = $this->variablesGet['archiIdAdresse'];
+	            	}
+	            	$boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse))."';\">";
+	            	$urlSupprimer = $this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse));
+	            	$adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
+	            	$t->assign_block_vars('commentaires.supprimer', array(
+	            			'urlSupprimer'=>$urlSupprimer
+	            	));
+	            }
 	        }
 	        
 	        ob_start();

@@ -5,7 +5,10 @@
 	</div> 
 	<div class="commentNameAction"> 
 		<p>{commentaires.prenom} {commentaires.nom} {commentaires.labelCommentAction} </p>
-		<p><a href="{commentaires.urlSupprimer}">Supprimer ce commentaire</a></p> 
+		
+		<!-- BEGIN supprimer -->
+		<p><a href="{commentaires.supprimer.urlSupprimer}">Supprimer ce commentaire</a></p>
+		<!-- END supprimer -->
 	</div> 
 		<div class="commentDate">
 		<p>{commentaires.date}</p>
