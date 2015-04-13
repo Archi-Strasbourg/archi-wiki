@@ -5252,16 +5252,19 @@ debug($reqEvenementEvenement);
 		$html="";
 		$t = new Template('modules/archi/templates/');
 		$t->set_filenames((array('listeCommentaires'=>'listeCommentaires.tpl')));
-
 			
 		$req = "SELECT c.idCommentairesEvenement as idCommentaire,c.nom as nom,c.prenom as prenom,c.email as email,DATE_FORMAT(c.date,'"._("%d/%m/%Y à %kh%i")."') as dateF,c.commentaire as commentaire,c.idUtilisateur as idUtilisateur
 				FROM commentairesEvenement c
 				LEFT JOIN utilisateur u ON u.idUtilisateur = c.idUtilisateur
 				WHERE c.idEvenement = '".$idCommentaireAdresse."'
-						AND CommentaireValide=1
-						ORDER BY date ASC
-						";
+				AND CommentaireValide=1
+				ORDER BY date ASC
+				";
 
+		if(isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!=''){
+			$idEvenementGroupeAdresse = $this->variablesGet['archiIdEvenementGroupeAdresse'];
+		}
+		
 	  $res = $this->connexionBdd->requete($req);
         if(mysql_num_rows($res)>0)
         {
@@ -5273,8 +5276,6 @@ debug($reqEvenementEvenement);
 	        
 	        $authentification = new archiAuthentification();
 	        
-	        
-	        
 	        // si l'utilisateur est administrateur, on affiche le bouton de suppression d'un commentaire
 	        $isAdmin=false;
 	        if($authentification->estConnecte() && $authentification->estAdmin())
@@ -5282,18 +5283,15 @@ debug($reqEvenementEvenement);
 	            $isAdmin=true;
 	        }
 	        
-	        
 	        while($fetch = mysql_fetch_assoc($res))
 	        {
 	            $adresseMail = "";
 	            $boutonSupprimer="";
 	            $urlSiteWeb = "";
 	            $urlProfilePic = $u->getImageAvatar(array('idUtilisateur'=>$fetch['idUtilisateur']));
-	            if($fetch['urlSiteWeb']!='')
-	            {
+	            if($fetch['urlSiteWeb']!=''){
 	                $urlSiteWeb = "<br><a itemprop='url' href='".$fetch['urlSiteWeb']."' target='_blank'><span style='font-size:9px;color:#FFFFFF;'>".$fetch['urlSiteWeb']."</span></a>";
 	            }
-	            
 	           
 	            $t->assign_block_vars('commentaires',array(
 	            	'htmlId'=>'commentaireEvenement'.$fetch['idCommentaire'],
@@ -5304,25 +5302,33 @@ debug($reqEvenementEvenement);
             		'nom'=> $fetch['nom'],
 	            	'labelCommentAction' => _("a ajouté un commentaire"),
 	            	'date' =>$fetch['dateF']
-	            		
 	            ));
-	            if($isAdmin)
-	            {
+	            if($isAdmin){
 	            	$archiIdAdresse='';
-	            	if(isset($this->variablesGet['archiIdAdresse']))
-	            	{
+	            	if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse'] !=''){
 	            		$archiIdAdresse = $this->variablesGet['archiIdAdresse'];
 	            	}
+	            	else{
+	            		if(isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse'] !=''){
+	            			$idEvenementGroupeAdresse = $this->variablesGet['archiIdEvenementGroupeAdresse'];
+	            		}
+	            		else{
+	            			$requeteIdEvt = "SELECT idEvenement FROM _evenementEvenement WHERE idEvenementAssocie = $idCommentaireAdresse";
+	            			$resIdEvt = $this->connexionBdd->requete($requeteIdEvt);
+	            			$arrayIdEvt = mysql_fetch_assoc($resIdEvt);
+	            			$idEvenementGroupeAdresse = $arrayIdEvt['idEvenement'];
+	            		}
+	            		$archiIdAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
+	            	}
 	            	$boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse))."';\">";
-	            
-	            	$urlSupprimer = $this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse));
+	            	
+	            	$urlSupprimer = $this->creerUrl('supprimerCommentaireEvenement','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse));
 	            	$adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
-	            	 $t->assign_block_vars('commentaires.supprimer', array(
+	            	$t->assign_block_vars('commentaires.supprimer', array(
 	            	 		'urlSupprimer'=>$urlSupprimer
-	            	 ));
+	            	));
 	            }
 	        }
-	        
 	        ob_start();
 	        $t->pparse('listeCommentaires');
 	        $html .= ob_get_contents();
@@ -5330,11 +5336,7 @@ debug($reqEvenementEvenement);
 	        
 	        return $html;
         }
-
 	}
-	
-	
-	
 	
 	
 
@@ -7511,15 +7513,18 @@ debug($reqEvenementEvenement);
 			$urlConnexion = $this->creerUrl('','connexion');
 			$urlInscription = $this->creerUrl('','inscription');
 			
+			if($ty==''){
+				$labelButton.=" sur l'adresse";
+				$classButton.=" addCommentAdresseButtonWrapper";
+			}
+			
 			$t->assign_vars(array(
 					'urlInscription'=>$urlInscription,
 					'urlConnexion'=>$urlConnexion,
 					'labelButton'=>$labelButton,
-					'classButton'=>'addCommentButtonWrapper'
+					'classButton'=>$classButton
 			));
 		}
-		
-		
 		
 		ob_start();
 		$t->pparse('formComment');

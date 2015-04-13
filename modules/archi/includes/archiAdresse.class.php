@@ -9193,7 +9193,6 @@ class archiAdresse extends ArchiContenu
         $html="";
         $t = new Template('modules/archi/templates/');
         $t->set_filenames((array('listeCommentaires'=>'listeCommentaires.tpl')));
-        
 
         $req = "SELECT c.idCommentaire as idCommentaire,c.nom as nom,c.prenom as prenom,c.email as email,DATE_FORMAT(c.date,'"._("%d/%m/%Y à %kh%i")."') as dateF,c.commentaire as commentaire,c.idUtilisateur as idUtilisateur, u.urlSiteWeb as urlSiteWeb
         		FROM commentaires c
@@ -9203,36 +9202,27 @@ class archiAdresse extends ArchiContenu
         				ORDER BY date ASC
         				";
 
-        
         $res = $this->connexionBdd->requete($req);
-        if(mysql_num_rows($res)>0)
-        {
-        
+        if(mysql_num_rows($res)>0){
 	        $t->assign_vars(array(
 	        		'tableHtmlCode'=>"  ",
 	        		'titre'=>_("Liste des commentaires concernant l'adresse")
 	        ));
-	        
+
 	        $authentification = new archiAuthentification();
-	        
-	        
 	        
 	        // si l'utilisateur est administrateur, on affiche le bouton de suppression d'un commentaire
 	        $isAdmin=false;
-	        if($authentification->estConnecte() && $authentification->estAdmin())
-	        {
+	        if($authentification->estConnecte() && $authentification->estAdmin()){
 	            $isAdmin=true;
 	        }
 	        
-	        
-	        while($fetch = mysql_fetch_assoc($res))
-	        {
+	        while($fetch = mysql_fetch_assoc($res)){
 	            $adresseMail = "";
 	            $boutonSupprimer="";
 	            $urlSiteWeb = "";
 	            $urlProfilePic = $u->getImageAvatar(array('idUtilisateur'=>$fetch['idUtilisateur']));
-	            if($fetch['urlSiteWeb']!='')
-	            {
+	            if($fetch['urlSiteWeb']!=''){
 	                $urlSiteWeb = "<br><a itemprop='url' href='".$fetch['urlSiteWeb']."' target='_blank'><span style='font-size:9px;color:#FFFFFF;'>".$fetch['urlSiteWeb']."</span></a>";
 	            }
 	            
@@ -9251,14 +9241,11 @@ class archiAdresse extends ArchiContenu
 	            	'urlSupprimer'=>$urlSupprimer
 	            		
 	            ));
-	            if($isAdmin)
-	            {
+	            if($isAdmin){
 	            	$archiIdAdresse='';
-	            	if(isset($this->variablesGet['archiIdAdresse']))
-	            	{
+	            	if(isset($this->variablesGet['archiIdAdresse'])){
 	            		$archiIdAdresse = $this->variablesGet['archiIdAdresse'];
 	            	}
-	            	$boutonSupprimer = "<input type='button' value='supprimer' onclick=\"location.href='".$this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse))."';\">";
 	            	$urlSupprimer = $this->creerUrl('supprimerCommentaire','',array('archiIdCommentaire'=>$fetch['idCommentaire'],'archiIdAdresse'=>$archiIdAdresse, 'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresse));
 	            	$adresseMail = "<br><a style='font-size:9px;color:#FFFFFF;' itemprop='email' href='mailto:".$fetch['email']."'>".$fetch['email']."</a>";
 	            	$t->assign_block_vars('commentaires.supprimer', array(
@@ -9266,12 +9253,10 @@ class archiAdresse extends ArchiContenu
 	            	));
 	            }
 	        }
-	        
 	        ob_start();
 	        $t->pparse('listeCommentaires');
 	        $html .= ob_get_contents();
 	        ob_end_clean();
-	        
 	        return $html;
         }
     }
@@ -14648,15 +14633,31 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 	
 	
 	public function deleteCommentaireEvenement(){
+		//Get id for redirection
+		if(!isset($this->variablesGet['archiIdEvenementGroupeAdresse']) || $this->variablesGet['archiIdEvenementGroupeAdresse']==''){
+			$requeteIdEvt = "SELECT c.idEvenement , ee.idEvenement as idEvenementGroupeAdresse
+					FROM commentairesEvenement c
+					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = c.idEvenement
+					WHERE c.idCommentairesEvenement = '".$this->variablesGet['archiIdCommentaire']."'";
+			$resIdEvt = $this->connexionBdd->requete($requeteIdEvt);
+			$arrayIdEvt = mysql_fetch_assoc($resIdEvt);
+			$idEvenementGroupeAdresse = $arrayIdEvt['idEvenementGroupeAdresse'];
+			debug($idEvenementGroupeAdresse);
+		}
+
+		if(!(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='')){
+			if(isset($idEvenementGroupeAdresse) && $idEvenementGroupeAdresse!=''){
+				$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
+			}
+		}
+		
 		if(isset($this->variablesGet['archiIdCommentaire']) && $this->variablesGet['archiIdCommentaire']!=''){
 			$req = "DELETE FROM commentairesEvenement WHERE idCommentairesEvenement = '".$this->variablesGet['archiIdCommentaire']."'";
 			$res = $this->connexionBdd->requete($req);
 		}
 		
-		// redirection javascript ... pas terrible ca , a changer
 		if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!=''){
 			$idAdresse = $this->variablesGet['archiIdAdresse'];
-			
 			$idEvenementGroupeAdresse = $this->getIdEvenementGroupeAdresseFromIdAdresse($idAdresse);
 			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
 		}
