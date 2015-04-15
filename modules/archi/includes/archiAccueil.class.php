@@ -608,11 +608,8 @@ class ArchiAccueil extends config
 								$adresse.=' '.$adresseArray['nomRue'];
 							}
 
-
-							
 							
 							//Image
-							
 							$requeteImage = "
 									SELECT hi.idHistoriqueImage , e.idEvenement
 									FROM historiqueImage hi
@@ -2290,6 +2287,7 @@ class ArchiAccueil extends config
 						LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
 						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 						LEFT JOIN rue r on r.idRue = ha.idRue
+						WHERE c.CommentaireValide =1
 						";
 		
 		$sousRequete2 = "SELECT
@@ -2314,6 +2312,7 @@ class ArchiAccueil extends config
 						LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
 						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 						LEFT JOIN rue r on r.idRue = ha.idRue
+						WHERE c.CommentaireValide =1
 		";
 		
 		$requete= "
@@ -2508,6 +2507,18 @@ class ArchiAccueil extends config
 			$tmp['titre'] = $titreArray['titre'];
 			$idImagePrincipale = $titreArray['idImagePrincipale'];
 
+			//Test on current event, if there is an image related to current, display this one, otherwise select main image (if set)
+			$requeteImageEvenement="
+						SELECT idImage
+						FROM _evenementImage  
+						WHERE idEvenement = ".$lastModif['idEvenement']."
+								";
+			$resImgEvt = $this->connexionBdd->requete($requeteImageEvenement);
+			if(mysql_num_rows($resImgEvt)>1){
+				$arrayImgEvt = mysql_fetch_assoc($resImgEvt);
+				$idImagePrincipale= $arrayImgEvt['idImage'];
+			}
+			
 			if(isset($idImagePrincipale) && !empty($idImagePrincipale)){
 				$requeteIdHistoImage = "
 						SELECT idHistoriqueImage

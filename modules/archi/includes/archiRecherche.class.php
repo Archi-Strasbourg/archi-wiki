@@ -2293,8 +2293,7 @@ class archiRecherche extends config {
 				10000000000000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) +
 				10000000000000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) )) +
 
-				10000000000000 * (( (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
-						
+				10000000000000 * ((((MATCH (titre) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE))) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
 						
 				100000000000 * (MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 				10000000000 * (MATCH (concat1) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
@@ -2315,7 +2314,6 @@ class archiRecherche extends config {
 				100 * (MATCH (concat4) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
 				100 * (MATCH (concat5) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
 		
-		
 				100 * ((MATCH (nomQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
 				10 * (MATCH (nomRue) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
 				10 * (MATCH (nomSousQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
@@ -2325,16 +2323,17 @@ class archiRecherche extends config {
 		
 				1 * (MATCH (description) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE))
 			
-				) as relevance
+				) as relevance,
+				((((MATCH (nomQuartier,nomSousQuartier,titre) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE))) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) as matchquartier 
+						
 						
 				FROM recherche "
-									.$sqlWhere.
-									"GROUP BY idEvenementGA
-				ORDER BY relevance  ".$order."
+				.$sqlWhere.
+				"GROUP BY idEvenementGA
+				ORDER BY  relevance  ".$order."
 				".$limit.
-							";";
+				";";
 
-									
 									
 									
 		}
@@ -2352,7 +2351,10 @@ class archiRecherche extends config {
 		$idHistoriqueAdresse  = array();
 		$res = $this->connexionBdd->requete($request);
 		while($fetch = mysql_fetch_assoc($res)){
-			$idHistoriqueAdresse[] = $fetch['idHistoriqueAdresse'];
+			$idHistoriqueAdresse[] = array(
+					'idHistoriqueAdresse'=>$fetch['idHistoriqueAdresse'],
+					'idEvenementGroupeAdresse'=>$fetch['idEvenementGA']
+			);
 		}
 		return $idHistoriqueAdresse;
 	}

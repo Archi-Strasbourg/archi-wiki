@@ -466,14 +466,14 @@ class archiAdresse extends ArchiContenu
 
 
 		//Setting idAdresse
-
 		if(isset($idAdresse) && $idAdresse!=''){//Setting idEvenementGroupeAdresse
-			$requete = "SELECT idEvenement FROM _adresseEvenement WHERE idAdresse = ".$idAdresse;
-			$result = $this->connexionBdd->requete($requete);
-			$fetch = mysql_fetch_assoc($result);
-			$oldIdEvt = $idEvenementGroupeAdresse;
-			$idEvenementGroupeAdresse = $fetch['idEvenement'];
-			//debug(array( $oldIdEvt,$idEvenementGroupeAdresse));
+			if((isset($idEvenementGroupeAdresse)!=1) || ($idEvenementGroupeAdresse=='')){
+				$requete = "SELECT idEvenement FROM _adresseEvenement WHERE idAdresse = ".$idAdresse;
+				$result = $this->connexionBdd->requete($requete);
+				$fetch = mysql_fetch_assoc($result);
+				$oldIdEvt = $idEvenementGroupeAdresse;
+				$idEvenementGroupeAdresse = $fetch['idEvenement'];
+			}
 		}
 
 		//Getting coordo for the current address
@@ -14286,48 +14286,38 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		$addressesInformations = array();
 		if(!empty($idList)){
 			
-			//Building WHERE clause
-			$whereClause = 'WHERE idHistoriqueAdresse IN (';
-			$orderByClause = 'ORDER BY FIELD(idHistoriqueAdresse, ';
+			
 			$i=0;
 			$nbElt=count($idList);
+			$arrayAdresse = array();
 			foreach ($idList as $id){
-				if(++$i==$nbElt){
-					$whereClause .= $id." ) ";
-					$orderByClause .= $id." ) ";
-				}
-				else{
-					$whereClause .= $id." , ";
-					$orderByClause .= $id." , ";
-				}
-			}
-			
-		
-			$limit = " ";
-			if(!empty($optionsPagination)){
-				$indexResult = ($optionsPagination['currentPage'] )*$optionsPagination['nbResultPerPage'];
-				$limit =" LIMIT " .$indexResult . " , " . $optionsPagination['nbResultPerPage']. " ";
-			}
-			
-			/*
-			 * Previous request
-			 */
-			$req="
+				$req="
 					SELECT ha.nom ,
 					ha.idHistoriqueAdresse ,
 					ha.idAdresse ,
 					ae.idEvenement as idEvenementGroupeAdresse
-			
+		
     				FROM historiqueAdresse ha
 					LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
-    				".$whereClause."
+    				WHERE ha.idHistoriqueAdresse =".$id['idHistoriqueAdresse']."
+    				AND ae.idEvenement = ".$id['idEvenementGroupeAdresse']."
     				GROUP BY ha.idHistoriqueAdresse
-					".$orderByClause."
 							";
+				
+				$res = $this->connexionBdd->requete($req);
+				$row = mysql_fetch_assoc($res);
+				$arrayAdresse[]=$row;				
+			}
 			
-			$res = $this->connexionBdd->requete($req);
+			
+			/*
+			 * Previous request
+			 */
 			//Processing all the adresses get from the request : getting address title and link to the events linked
-			while($fetch = mysql_fetch_assoc($res)){
+			
+			
+			//while($fetch = mysql_fetch_assoc($res)){
+			foreach ($arrayAdresse as $fetch){
 				$titreRequest = "
 						SELECT evt2.titre
 						FROM evenements evt , evenements evt2
@@ -14357,7 +14347,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = he1.idEvenement
 					LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
 					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
-					WHERE ha.idAdresse =  ".$fetch['idAdresse']."
+					WHERE ee.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
 					AND TRIM(he1.titre) <> ''
 						";
 				
@@ -14374,10 +14364,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				 	"<a href='".
 				 	$this->creerUrl(
 				 			'', 
-				 			'', 
+				 			'adresseDetail', 
 				 			array(
 				 					'archiIdAdresse'=>$fetch['idAdresse'], 
-				 					'archiAffichage'=>'adresseDetail', 
 				 					'archiIdEvenementGroupeAdresse'=>$fetch['idEvenementGroupeAdresse'], 
 				 					'debut'=>'')
 				 			)

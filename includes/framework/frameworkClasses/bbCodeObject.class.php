@@ -193,11 +193,11 @@ class BBCodeObject extends config
 
 
             $description = stripslashes($this->BBversHTML(htmlspecialchars($description)));//nl2br
-
             if(isset($params['type'])&& $params['type']=='commentaire'){
             	$so = new StringObject();
             	$description = $so->replaceUrl($description);
             }
+
             //$description = str_replace(array("\n\r", "\r\n", "\r", "\n"), "<br>", $description);
             /*$description = str_replace("\n\r", "--hop1--", $description);
             $description = str_replace("\r\n", "--hop2--", $description);

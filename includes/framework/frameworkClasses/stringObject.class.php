@@ -365,11 +365,11 @@ class StringObject extends config
     
     public function replaceUrl($input){
     	$regex = "/(https?:\/\/)?(www\.)?(([\/\w \.-]+)(\.[a-z]{2,3}))(\/.*)/";
-		$text = preg_replace_callback($regex, function($url) {
-    		return "<a href=\"".$url[0]."\">".$url[3]."</a>";
+    	$regex = "#((https?://|ftp://|www\.|[^\s:=]+@www\.).*?[a-z_\/0-9\-\#=&])(?=(\.|,|;|\?|\!)?(\"|'|«|»|\[|\s|\r|\n|$))#iS";
+    	$text = preg_replace_callback($regex, function($url) {
+    		return "<a href=\"".$url[0]."\">".mb_substr($url[0], 0,50)."...</a>";
     	}, $input);
     	return $text;
-    			
     }
     
     public function truncateString($input,$maxChar){
