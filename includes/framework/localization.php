@@ -15,7 +15,6 @@
 if (function_exists("bindtextdomain")) {
     if (isset($_GET["lang"])) {
         define("LANG", $_GET["lang"]);
-        debug($_GET['lang']);
     } else if (isset($_COOKIE["lang"])) {
         define("LANG", $_COOKIE["lang"]);
     } else {
