@@ -15,7 +15,6 @@
 if (function_exists("bindtextdomain")) {
     if (isset($_GET["lang"])) {
         define("LANG", $_GET["lang"]);
-        debug($_GET['lang']);
     } else if (isset($_COOKIE["lang"])) {
         define("LANG", $_COOKIE["lang"]);
     } else {
@@ -31,31 +30,6 @@ if (function_exists("bindtextdomain")) {
     $resbindtd  = bindtextdomain("messages", dirname(dirname(__DIR__))."/locale");
     $resultBindTextdomaincodeset=bind_textdomain_codeset("messages", "UTF-8");
     $retTextDomain = textdomain("messages");
-    debug(
-
-	    array(
-	    'var envi'=>array(
-		    'LC_ALL'=>LC_ALL,
-		    'LANG'=>LANG
-	    ),
-	    'input'=>array(
-		    'first'=>LC_ALL, 
-		    'second'=>LANG.".utf8",
-		    'third'=>LANG,
-		    'forth'=>LANG."_".strtoupper(LANG),
-		    'fifth'=>LANG."_".strtoupper(LANG).".utf8"
-	    	)
-	    )
-    );
-
-    debug(
-    array(
-    'resultPutenv' => $resultPutenv,
-    'resultsetlocale'=>$resultSetenv,
-    		'resbindtd' => $resultBindTextdomaincodeset,
-    		'restextDomain'=>$retTextDomain
-    	)
-    );
 } else {
     define("LANG", "fr_FR");
     if (!function_exists("gettext")) {
