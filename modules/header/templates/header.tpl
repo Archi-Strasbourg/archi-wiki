@@ -90,7 +90,7 @@
 		
 				<div id="searchButton" class="left-buttons-header menu-button">
 					<div><span><img id="logoSearch" alt="" src="images/logo_loupe.png"></span><span id="crossSearch">&#x2715;</span></div>
-					<div class="label-menu-buttons-left">Recherche</div>
+					<div class="label-menu-buttons-left"><?_("Recherche")?></div>
 				</div>
 				<div id="connexionButton" class="left-buttons-header menu-button">
 					<div><span id="logoConnexion"><img alt="" src="{imageConnexion}"></span><span id="crossConnexion">&#x2715;</span></div>
