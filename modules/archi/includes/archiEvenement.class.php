@@ -7056,9 +7056,9 @@ debug($reqEvenementEvenement);
 					'evenement.pers', array(
 							'urlDetail'    => $this->creerUrl('', 'personne', array('idPersonne' => $res->idPersonne)),
 							'urlEvenement' => $this->creerUrl('', 'evenementListe', array('selection' => 'personne', 'id' => $res->idPersonne)),
-							'nom' => stripslashes($res->nom),
-							'prenom' => stripslashes($res->prenom),
-							'metier' => stripslashes($metier),
+							'nom' => ucfirst(stripslashes($res->nom)),
+							'prenom' => ucfirst(stripslashes($res->prenom)),
+							'metier' => ucfirst(stripslashes($metier)),
 							'idPerson' => $res->idPersonne,
 							'idEvent' => $idEvenement
 					)
