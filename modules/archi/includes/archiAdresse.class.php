@@ -14647,7 +14647,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		
 		if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!=''){
 			$idAdresse = $this->variablesGet['archiIdAdresse'];
-			$idEvenementGroupeAdresse = $this->getIdEvenementGroupeAdresseFromIdAdresse($idAdresse);
+			if(isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!=''){
+				$idEvenementGroupeAdresse=$this->variablesGet['archiIdEvenementGroupeAdresse'];
+			}
+			else{
+				$idEvenementGroupeAdresse = $this->getIdEvenementGroupeAdresseFromIdAdresse($idAdresse);
+			}
 			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
 		}
 	}
