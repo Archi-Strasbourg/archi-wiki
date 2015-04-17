@@ -565,8 +565,7 @@ class ArchiAccueil extends config
 					$so = new StringObject();
 					$bbcode = new bbCodeObject();
 					$description=$bbcode->stripBBCode($modif['description']);
-					$description=$so->truncateString($description, 130);
-					
+					$description = $so->truncateStringToWord($description,130,' ','...');
 					
 					$t->assign_block_vars('lastModif', array(
 							'miniatureLabelLeft'=>$modif['typeEvenement'],
@@ -676,7 +675,6 @@ class ArchiAccueil extends config
 								}
 							}
 
-
 							$visite = array(
 									'adresse' => $adresse,
 									'urlMiniature' => $urlImage,
@@ -686,9 +684,6 @@ class ArchiAccueil extends config
 							);
 							$t->assign_block_vars('lastVisit', $visite);
 						}
-						 
-						 
-
 					}
 				}
 
@@ -2252,7 +2247,8 @@ class ArchiAccueil extends config
 		$description = strip_tags($fetch['texte']);
 		$so = new StringObject();
 		$description = $so->sansBalises($description);
-		$description = $so->truncateString($description, 300);
+		$description = $so->truncateStringToWord($description,320,' ','...');
+		
 		
 		$news=array(
 				'urlMiniature'=>$url,
@@ -2392,7 +2388,7 @@ class ArchiAccueil extends config
 			
 			$bbCode = new bbCodeObject();
 			$commentaireText =$bbCode->stripBBCode($latestComment['commentaire']); 
-			$latestComment['commentaire'] = $so->truncateString($commentaireText, 80);
+			$latestComment['commentaire'] = $so->truncateStringToWord($commentaireText,80,' ','...');
 			$urlPersonne = $this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$latestComment['idUtilisateur'],'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroup));
 			$latestComment['typeCommentaire'] = 'commentaireEvenement';
 			$latestComment['urlAdresse'] = $url.$ancre;

@@ -1,11 +1,36 @@
-﻿<h1>Donateurs</h1>
+﻿﻿<h1>Donateurs</h1>
  
 Vous trouverez ci-dessous la liste de nos mécènes et donateurs (par ordre de don, du plus récent au plus ancien) :<br>
 
 <table>
 
 <!------------------------------------------------------------------------------>
-<!----		Balloïde Photo         	                    ->
+<!----		Rêve d'Altitude         	                    		         ->
+<!------------------------------------------------------------------------------>
+<tr>
+<td>
+<img border=0 src='images/donateurs/revealtitude.png'>
+</td>
+<!--<td class='textePetit'>-->
+<td>
+<font size=2>
+<b>Rêve d'Altitude</b>
+<br>
+Photographie aérienne et télépilotage de drones<br>
+<br>
+M. Adrien Adloff<br>
+24 rue des voituriers<br>
+67500 Haguenau<br>
+Tél: 06 43 29 09 65
+<br><br>
+<a href='http://www.revedaltitude.com' target=_blank>Consulter le site de la société</a>
+<br>
+</td>
+</tr>
+
+
+<!------------------------------------------------------------------------------>
+<!----		Chamar'Elle         	                    ->
 <!------------------------------------------------------------------------------>
 <tr>
 <td>
@@ -40,7 +65,7 @@ Tél: 06 19 32 57 92
 <font size=2>
 <b>Balloïde Photo</b>
 <br>
-Premier réseau européen de photgraphies aériens par drone et ballon captif
+Premier réseau européen de photographies aériens par drone et ballon captif
 <br>
 Jean-Marc Bannwarth<br>
 21, rue Fairmont<br>

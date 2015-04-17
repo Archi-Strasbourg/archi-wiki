@@ -86,16 +86,24 @@ if (!isset($_GET['noHTMLHeaderFooter'])) {
             $headerJS = config::getJsHeader();
         }
         include 'modules/header/index.php';
-        //$t->assign_var('header', $header);
-        //$t->assign_vars(array('header'=> $header));
-        //echo $header;
         $footerAndHeader['header']=$header;
-        
-    } else {
+    } 
+    else {
+    	$footerAndHeader['header']='<html>
+    			<head>
+    			<link href="css/default.css" rel="stylesheet" type="text/css" />
+    			<script type=\'text/javascript\' src=\'includes/datePicker.js\'></script>
+    			<script type=\'text/javascript\' src=\'includes/bbcode.js\'></script>'
+    			. $ajaxObj->getAjaxFunctions().'
+    			<script type=\'text/javascript\' src=\'includes/common.js\'></script>'.
+    			$headerJS.'
+    			</head>
+    			<body>';
         $headerJS = "";
         if (config::getJsHeader()!='') {
-            $headerJS = config::getJsHeader();
+        	$headerJS = config::getJsHeader();
         }
+
     }
 }
 $htmlHeader = ob_get_contents();
@@ -107,20 +115,18 @@ if (!isset($_GET['noHTMLHeaderFooter'])) {
             $footerJS = config::getJsFooter();
         }
         include 'modules/footer/index.php';
-        //$t->assign_var('footer', $footer);
         $footerAndHeader['footer']=$footer;
-        
-        
-    } else {
+    } 
+    else {
         $footerJS = "";
         if (config::getJsFooter()!='') {
             $footerJS = config::getJsFooter();
         }
-        
-        
         if (!isset($config->isSiteLocal) || $config->isSiteLocal==false) {
 			$analyticsJSvar =  "<script type='text/javascript' src='js/analytics.js'></script>";
         }
+        $footerAndHeader['footer']="</body>
+        </html>";
     }
 }
 

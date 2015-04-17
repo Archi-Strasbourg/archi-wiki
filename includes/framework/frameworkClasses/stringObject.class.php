@@ -379,6 +379,19 @@ class StringObject extends config
     	else 
     		return $input;
     }
+    
+    public function truncateStringToWord($string, $limit, $break=' ', $pad=''){
+
+    	// return with no change if string is shorter than $limit + $pad length
+    	if (mb_strlen($string) <= $limit + mb_strlen($pad))
+    		return $string;
+    	
+    	$string = mb_substr($string, 0, $limit);
+    	if (false !== ($breakpoint = mb_strrpos($string, $break)))
+    		$string = mb_substr($string, 0, $breakpoint);
+    	
+    	return trim($string).$pad;
+    }
 
     public function stripBBcodeTags($input){
     	$pattern = '|[[\\/\\!]*?[^\\[\\]]*?]|si';
