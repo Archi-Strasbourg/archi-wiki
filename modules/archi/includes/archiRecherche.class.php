@@ -2026,6 +2026,9 @@ class archiRecherche extends config {
 		if(isset($criteres['debut'])){
 			$debut = $criteres['debut'];
 		}
+		else{
+			$criteres['debut']=0;
+		}
 		if(isset($criteres['motcle'])){
 			$motcle = addslashes($criteres['motcle']);
 			$criteres['motcle'] = $motcle;
@@ -2437,8 +2440,6 @@ class archiRecherche extends config {
 		foreach ($idHistoriqueEvenementArray as $idHE){
 			$arrayIdEvenementsGA[]=$idHE['idEvenementGroupeAdresse'];
 		}
-		
-		debug($arrayIdEvenementsGA);
 		
 		$gm = new googleMap(array('googleMapKey'=>$this->googleMapKey,'width'=>700, 'height'=>500, 'zoom'=>13));
 		$this->addToJsHeader($gm->getJsFunctions()); // ajout des fonctions de google map dans le header
