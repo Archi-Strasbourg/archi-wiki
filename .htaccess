@@ -7,11 +7,6 @@ Options +FollowSymlinks
 
 # Activation du module de réécriture d'URL :
 RewriteEngine on
-
-# Autoriser les URL pour les fichiers
-
-php_value allow_url_fopen On
-
 #--------------------------------------------------
 # Règles de réécriture d'URL :
 #--------------------------------------------------
@@ -25,7 +20,6 @@ php_value allow_url_fopen On
 
 
 
-RewriteRule images/petit/(.+) http://archi-strasbourg.org/images/$1 [L,QSA]
 RewriteRule images/mini/(.+) http://archi-strasbourg.org/images/mini/$1 [L,QSA]
 RewriteRule images/grand/(.+) http://archi-strasbourg.org/images/grand/$1 [L,QSA]
 RewriteRule images/moyen/(.+) http://archi-strasbourg.org/images/moyen/$1 [L,QSA]
@@ -94,7 +88,7 @@ RewriteRule dossiers-rues-quartiers-adresses-photos-strasbourg-page([0-9]+)-lett
 
 RewriteRule dossiers-rues-quartiers-adresses-photos-(.+)-([0-9]+)-page([0-9]+)-(.+)-lettre([a-z])\.html index.php?archiAffichage=listeDossiers&archiIdVilleGeneral=$2&archiPageCouranteVille=$3&modeAffichageListe=$4&lettreCourante=$5 [L,QSA]
 
-RewriteRule dossiers-rues-quartiers-adresses-photos-strasbourg-lettre([a-z])\.html index.php?archiAffichage=listeDossiers&lettreCourante=$1 [L,QSA]
+RewriteRule dossiers-rues-quartiers-adresses-photos-strasbourg-lettre([a-z0-9])\.html index.php?archiAffichage=listeDossiers&lettreCourante=$1 [L,QSA]
 
 RewriteRule dossiers-rues-quartiers-adresses-photos-ville-(.+)-([0-9]+)-([A-Za-z]+)-lettre([a-z])\.html index.php?archiAffichage=listeDossiers&archiIdVilleGeneral=$2&modeAffichageListe=$3&lettreCourante=$4 [L,QSA]
 
@@ -184,8 +178,11 @@ RewriteRule vues-photos-archi-strasbourg\.html index.php?archiAffichage=toutesLe
 
 RewriteRule opendata-([a-zA-Z0-9]+).(csv|xml) modules/opendata/$2/$1.$2 [L,QSA]
 RewriteRule generate-opendata.php modules/opendata/fullexport.php
+RewriteRule generate-opendata-single.php modules/opendata/index.php
 
 
 # URL rewrite pour le nom de la ville en faux sous domaine
 
 RewriteRule (.+)\/ index.php?archiAffichage=afficheAccueil&archiNomVilleGeneral=$1 [L,QSA]
+
+RewriteRule archi-stras-mobile-web archi-stras-mobile-web/www
