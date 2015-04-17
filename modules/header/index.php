@@ -206,7 +206,6 @@ $t->assign_vars(
 ); // headerJS = variables contenant le javascript recupéré des fonctions du site que l'on collecte et que l'on place dans la balise header
 
 
-
 $labelConnexion = _("Connexion");
 $imgConnexion="images/logo_connexion.png";
 if ($authentification->estConnecte() !== true) {
@@ -317,9 +316,11 @@ else {
 
 $t->assign_vars(array(
 		"labelConnexion" =>$labelConnexion,
-		'imageConnexion' =>$imgConnexion
+		'imageConnexion' =>$imgConnexion,
+		'urlFr'=> $config->creerUrl('','',array_merge($_GET ,array('lang' => fr_FR) )),
+		'urlEn'=> $config->creerUrl('','',array_merge($_GET ,array('lang' => en_US) )),
+		'urlDe'=> $config->creerUrl('','',array_merge($_GET ,array('lang' => de_DE) ))
 ));
-
 
 if ($adresse->isParcoursActif()) {
     $t->assign_block_vars('isParcours', array());
@@ -395,7 +396,6 @@ $t->assign_vars(
         'compteur_label'=>$compteur['compteur_label']
     )
 );
-
 
 
 ob_start();

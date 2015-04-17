@@ -71,9 +71,9 @@
 			
 			<div>
 				<ul class="languageSwitch">
-					<li><a href="?lang=fr_FR">FR</a>/</li>
-					<li><a href="?lang=en_US">EN</a>/</li>
-					<li><a href="?lang=de_DE">DE</a></li>
+					<li><a href="{urlFr}" title="Français">FR</a>/</li>
+					<li><a href="{urlEn}" title="English">EN</a>/</li>
+					<li><a href="{urlDe}" title="Deutsch">DE</a></li>
 				</ul>
 			</div>
 			
