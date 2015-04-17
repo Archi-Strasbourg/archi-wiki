@@ -21,7 +21,7 @@
 				<li>{evenement.labelStructure}{evenement.typeStructure}</li>
 				<li>{evenement.labelTypeEvenement}{evenement.lienTypeEvenement}</li>
 			</ul>
-			{evenement.numeroArchive}
+			<div>{evenement.numeroArchive}</div>
 			<!-- BEGIN pers -->
 			{evenement.pers.metier} <a href="{evenement.pers.urlEvenement}">{evenement.pers.prenom}
 				{evenement.pers.nom}</a>

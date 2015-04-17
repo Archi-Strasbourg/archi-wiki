@@ -7145,7 +7145,11 @@ debug($reqEvenementEvenement);
 				'plusCreer' => $this->creerUrl('deplacerEvenementVersNouveauGA','evenement',array('idEvenement'=>$idEvenement))
 		);
 	
-	
+		$numeroArchive = "";
+		if($fetch['numeroArchive']!=''){
+			// modif fabien du 15/04/2011 suite mail directrice Archives de Strasbourg Mme Perry Laurence
+			$numeroArchive = "Cote Archives de Strasbourg : ".$fetch['numeroArchive']."";
+		}
 	
 		// si on est en mode de deplacement d'image
 		// ou de selection de titre
@@ -7165,6 +7169,10 @@ debug($reqEvenementEvenement);
 			unset($lienHistoriqueEvenementCourant);
 			unset($labelHistoriqueEvenement);
 		}
+		
+		
+		
+		
 		$evenementData = array(
 				'titre' => stripslashes($fetch['titre']),
 				'infoTitre'=> $utilisateur . " a ".$txtEnvoi." un événement",
@@ -7182,7 +7190,7 @@ debug($reqEvenementEvenement);
 				'urlTypeEvenement'=>$this->creerUrl('', 'evenementListe', array('selection' => 'typeEvenement', 'id' => $fetch['idTypeEvenement'])),
 				'lienTypeEvenement'=> $lienTypeEvenement,
 				'typeEvenement'=>$fetch['nomTypeEvenement'],
-				'numeroArchive'=>$fetch['numeroArchive'],
+				'numeroArchive'=>$numeroArchive,
 				'description'=>$description,
 				'imagesLiees'=>$imagesHTML,
 				'evenementsParents'=>'',
@@ -7565,7 +7573,6 @@ debug($reqEvenementEvenement);
 				$t->assign_block_vars($courantArchi[0], $courantArchi[1]);
 			}
 		}
-		
 		
 		ob_start();
 		$t->pparse('evenement');
