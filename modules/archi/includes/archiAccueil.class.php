@@ -556,7 +556,6 @@ class ArchiAccueil extends config
 					}
 					else{
 						if($modif['idHistoriqueImage']==0 || !isset($modif['idHistoriqueImage']) || $modif['idHistoriqueImage']==''){
-							debug('on change');
 							$resImage = $a->getUrlImageFromAdresse($idAdresse,'moyen');
 							if($resImage['trouve'] != 1){
 								$resImgEvt = $a->getUrlImageFromEvenement($modif['idEvenement']);
@@ -2521,23 +2520,7 @@ class ArchiAccueil extends config
 			$tmp['titre'] = $titreArray['titre'];
 			$idImagePrincipale = $titreArray['idImagePrincipale'];
 
-			/*
-			//Test on current event, if there is an image related to current, display this one, otherwise select main image (if set)
-			$requeteImageEvenement="
-						SELECT hi.idHistoriqueImage
-						FROM _evenementImage ei
-						LEFT JOIN historiqueImage hi on hi.idImage = ei.idImage   
-						WHERE ei.idEvenement = ".$lastModif['idEvenement']."
-								";
-			debug($requeteImageEvenement);
-			$resImgEvt = $this->connexionBdd->requete($requeteImageEvenement);
-			debug(mysql_num_rows($resImgEvt));
-			if(mysql_num_rows($resImgEvt)>=1){
-				$arrayImgEvt = mysql_fetch_assoc($resImgEvt);
-				$tmp['idHistoriqueImage'] = $arrayImgEvt['idHistoriqueImage'];
-				debug($tmp);
-			}
-			*/
+			
 			if(isset($idImagePrincipale) && !empty($idImagePrincipale)){
 			//else{
 				$requeteIdHistoImage = "
@@ -2547,7 +2530,6 @@ class ArchiAccueil extends config
 						ORDER BY idHistoriqueImage DESC
 						LIMIT 1
 						";
-				//debug($requeteIdHistoImage);
 				$resIdImg = $this->connexionBdd->requete($requeteIdHistoImage);
 				$arrayIdHistoImg = mysql_fetch_assoc($resIdImg);
 				$tmp['idHistoriqueImage'] = $arrayIdHistoImg['idHistoriqueImage'];
