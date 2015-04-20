@@ -540,7 +540,7 @@ class archiAdresse extends ArchiContenu
 		}
 		$t->assign_block_vars('actionsSommaire',
 				array(
-						'urlAction'=>$this->creerUrl('', 'evenement',array('idEvenement'=>$idEvenementGroupeAdresse,'afficheSelectionImage'=>$afficheSelectionImages)),
+						'urlAction'=>$this->creerUrl('', 'evenement',array('idEvenement'=>$idEvenementGroupeAdresse,'archiIdAdresse'=>$idAdresse,'afficheSelectionImage'=>$afficheSelectionImages)),
 						'labelAction' => 'Sélectionner des images'
 				)
 		);
@@ -552,7 +552,7 @@ class archiAdresse extends ArchiContenu
 		}
 		$t->assign_block_vars('actionsSommaire',
 				array(
-						'urlAction'=>$this->creerUrl('','evenement',array('idEvenement'=>$idEvenementGroupeAdresse,'afficheSelectionImagePrincipale'=>$afficheSelectionImagePrincipale)),
+						'urlAction'=>$this->creerUrl('','evenement',array('idEvenement'=>$idEvenementGroupeAdresse,'archiIdAdresse'=>$idAdresse,'afficheSelectionImagePrincipale'=>$afficheSelectionImagePrincipale)),
 						'labelAction' => 'Sélectionner l\'image principale'
 				)
 		);
@@ -564,7 +564,7 @@ class archiAdresse extends ArchiContenu
 		}
 		$t->assign_block_vars('actionsSommaire',
 				array(
-						'urlAction'=>$this->creerUrl('','evenement',array('idEvenement'=>$idEvenementGroupeAdresse,'afficheSelectionTitre'=>$afficheSelectionTitre)),
+						'urlAction'=>$this->creerUrl('','evenement',array('idEvenement'=>$idEvenementGroupeAdresse,'archiIdAdresse'=>$idAdresse,'afficheSelectionTitre'=>$afficheSelectionTitre)),
 						'labelAction' => 'Sélectionner un titre'
 				)
 		);
@@ -579,7 +579,7 @@ class archiAdresse extends ArchiContenu
 		}
 		$t->assign_block_vars('actionsSommaire',
 				array(
-						'urlAction'=>$this->creerUrl('', 'evenement', array('archiIdAdresse'=>$idAdresse,'idEvenement'=>$idEvenementGroupeAdresse, 'affichePositionnementEvenements'=>$affichePositionnementEvenements)),
+						'urlAction'=>$this->creerUrl('', 'evenement', array('archiIdAdresse'=>$idAdresse,'idEvenement'=>$idEvenementGroupeAdresse, 'archiIdAdresse'=>$idAdresse,'affichePositionnementEvenements'=>$affichePositionnementEvenements)),
 						'labelAction' => 'Repositionner les évènements'
 				)
 		);
@@ -735,16 +735,21 @@ class archiAdresse extends ArchiContenu
 			}
 			$retourEvenement = $evenement->afficher($this->variablesGet['archiIdEvenementGroupeAdresse'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 			$html.=$retourEvenement['html'];
-			$html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
-			$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
 				
+			if(!ArchiPersonne::isPerson($this->variablesGet['archiIdEvenementGroupeAdresse'])){
+				$html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
+				$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
+			}
 		}
 		elseif($idEvenementGroupeAdresse!='' && $idEvenementGroupeAdresse !='0')
 		{
 			$retourEvenement = $evenement->afficher($idEvenementGroupeAdresse,'',null,array());
 			$html.=$retourEvenement['html'];
-			$html.=$this->getListeCommentaires($idEvenementGroupeAdresse);
-			$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
+				
+			if(!ArchiPersonne::isPerson($idEvenementGroupeAdresse)){
+				$html.=$this->getListeCommentaires($idEvenementGroupeAdresse);
+				$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
+			}
 		}
 		else
 		{
@@ -756,8 +761,10 @@ class archiAdresse extends ArchiContenu
 				$fetchEvenements = mysql_fetch_assoc($resEvenements);
 				$retourEvenement = $evenement->afficher($fetchEvenements['idEvenement'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 				$html.=$retourEvenement['html'];
-				$html.=$this->getListeCommentaires($fetchEvenements['idEvenement']);
-				$html.= $evenement->getFormComment($fetchEvenements['idEvenement'],$this->getCommentairesFields(),'');
+				if(!ArchiPersonne::isPerson($fetchEvenements['idEvenement'])){
+					$html.=$this->getListeCommentaires($fetchEvenements['idEvenement']);
+					$html.= $evenement->getFormComment($fetchEvenements['idEvenement'],$this->getCommentairesFields(),'');
+				}
 			}
 			else
 			{
@@ -804,8 +811,10 @@ class archiAdresse extends ArchiContenu
 
 					if($nbGroupesAdressesAffiches==1)
 					{
-						$html.=$this->getListeCommentaires($groupeAdresse);
-						$html.= $evenement->getFormComment($groupeAdresse,$this->getCommentairesFields(),'');
+						if(!ArchiPersonne::isPerson($groupeAdresse)){
+							$html.=$this->getListeCommentaires($groupeAdresse);
+							$html.= $evenement->getFormComment($groupeAdresse,$this->getCommentairesFields(),'');
+						}
 					}
 				}
 			}
@@ -2112,14 +2121,11 @@ class archiAdresse extends ArchiContenu
 			$url = $chemin.$fetchImage['dateUpload'].'/'.$fetchImage['idHistoriqueImage'].".jpg";
 			$dateUpload = $fetchImage['dateUpload'];
 			$idHistoriqueImage = $fetchImage['idHistoriqueImage'];
-
 		}
 		 
 		if($url=='')
 			$url = $this->getUrlImage().'transparent.gif';
 		return array('url'=>$url,'dateUpload'=>$dateUpload,'idHistoriqueImage'=>$idHistoriqueImage);
-
-
 	}
 
 
@@ -6896,8 +6902,6 @@ class archiAdresse extends ArchiContenu
 								}
 								$titresEvenements.="<div style='clear:both;'></div>";
 							}
-
-
 						}
 
 
@@ -14654,6 +14658,11 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$idEvenementGroupeAdresse = $this->getIdEvenementGroupeAdresseFromIdAdresse($idAdresse);
 			}
 			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
+		}
+		if(isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse'] !=''){
+			if($idPersonne = archiPersonne::isPerson($this->variablesGet['archiIdEvenementGroupeAdresse'])){
+				header("Location: ".$this->creerUrl('', 'evenementListe', array('selection' => 'personne', 'id' => $idPersonne)));
+			}
 		}
 	}
 	

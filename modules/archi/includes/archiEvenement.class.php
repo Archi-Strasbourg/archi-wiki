@@ -1466,15 +1466,11 @@ class archiEvenement extends config
 				$isAffichageSingleEvenement=true;
 				$sqlWhere = 'hE.idHistoriqueEvenement='.$idHistoriqueEvenement;
 				$nomTable="historiqueEvenement";
-				//debug('Hack here : modification idHistoriqueEvenement en idEvenement');
-				//$sqlWhere = 'hE.idEvenement='.$idHistoriqueEvenement;
 			}
 
 			if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']=='comparaisonEvenement')
 			{
 				// debug pour eviter un message d'erreur si l'evenement n'existe pas dans l'affichage de la comparaison d'evenement ancien/nouveau
-
-
 
 			}
 		} else {
@@ -1491,10 +1487,10 @@ class archiEvenement extends config
 						(SELECT _eE.idEvenement FROM _evenementEvenement _eE
 						LEFT JOIN evenements USING (idEvenement)
 						LEFT JOIN typeEvenement tE USING (idTypeEvenement) WHERE idEvenementAssocie='.$idEvenement.' LIMIT 1),
-								(SELECT _eE.idEvenement FROM _evenementEvenement _eE
-								LEFT JOIN evenements USING (idEvenement)
-								LEFT JOIN typeEvenement tE USING (idTypeEvenement) WHERE idEvenementAssocie='.$idEvenement.' LIMIT 1),
-										'.$idEvenement.')) ';
+						(SELECT _eE.idEvenement FROM _evenementEvenement _eE
+						LEFT JOIN evenements USING (idEvenement)
+						LEFT JOIN typeEvenement tE USING (idTypeEvenement) WHERE idEvenementAssocie='.$idEvenement.' LIMIT 1),
+						'.$idEvenement.')) ';
 
 				// si on est en mode de deplacement d'image
 				// ou de selection de titre
@@ -2459,16 +2455,15 @@ class archiEvenement extends config
 					}
 					
 					
-					//TODO COMMENTAIREs
-
 					$a = new archiAdresse();
 					$listeCommentaires=$a->getListeCommentaires($idEvenementGroupeAdresse);
 					$formulaireCommentaire = $this->getFormComment($idEvenementGroupeAdresse, $this->getCommentairesFields(),'');
-					
-					$t->assign_block_vars('commentairesAdresse', array(
-							'formulaireCommentaire' => $formulaireCommentaire,
-							'listeCommentaires' => $listeCommentaires
-					));
+					if(!ArchiPersonne::isPerson($idEvenementGroupeAdresse)){
+						$t->assign_block_vars('commentairesAdresse', array(
+								'formulaireCommentaire' => $formulaireCommentaire,
+								'listeCommentaires' => $listeCommentaires
+						));
+					}
 					
 
 					$t->assign_vars(array('nbEvenements'=>count($tabIdEvenementsLies)+1));
