@@ -671,7 +671,7 @@ class ArchiAccueil extends config
 							$so = new StringObject();
 							$description = $so->sansBalises($arrayDescription['description']);
 							$description = stripslashes($description);
-							$description = mb_substr($description, 0,130);
+							$description = $so->truncateStringToWord($description, 75,'','...');
 
 							if(isset($lastVisit) && !empty($lastVisit) && isset($lastVisit['idEvenementGroupeAdresse'] )&& !empty($lastVisit['idEvenementGroupeAdresse']) && isset($lastVisit['idAdresse']) && !empty($lastVisit['idAdresse'])){
 								//Titre
@@ -704,91 +704,10 @@ class ArchiAccueil extends config
 				}
 
 
-
-				//Gestion des dernieres modifications
 				$t->assign_vars(array(
 						'lastModifTitle' => _("Dernières modifications"),
 						'urlCustomNewsFeed'=>$this->creerUrl('', 'mesInterets', array())
 				));
-
-				if (!$auth->estConnecte()) {
-					$favoris = array('content' => _("Vous n'êtes pas connecté !"));
-					$t->assign_block_vars('message', $favoris);
-				}
-				else{
-					 
-					//Gestion des derniers favoris
-					$t->assign_vars(array(
-
-							'favorisTitle' =>  _("Bâtiments favoris")
-					)
-					);
-					$latestFav = $this->getLatestFav(3);
-					if(empty($latestFav)){
-						$favoris = array(
-								'content' => _("Aucun bâtiment en favori !")
-						);
-						$t->assign_block_vars('message', $favoris);
-					}
-					foreach ($latestFav as $fav){
-						$e = new archiEvenement();
-						$adresseArray = $e->getArrayAdresse($fav['idEvenement']);
-						 
-						//Adresse
-						$adresse = '';
-						if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''&& $adresseArray['numero'] !='0'){
-							$adresse.=$adresseArray['numero'].' ';
-						}
-						if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-							$adresse.=$adresseArray['prefixe'];
-						}
-						if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
-							$adresse.=' '.$adresseArray['nomRue'];
-						}
-
-						//Image
-						$i=new archiImage();
-						$infoImage = $i->getImagePrincipale($fav['idEvenement']);
-						$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=100&width=100";
-						 
-						//Url Evenement
-						$idAdresse = $e->getIdAdresse($fav['idEvenement']);
-						$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($fav['idEvenement']);
-						$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
-
-						//Description
-						$so = new StringObject();
-						$description = $so->sansBalises($fav['description']);
-						$description = stripslashes($description);
-						$description = mb_substr($description, 0,130);
-
-
-						//Titre
-						$idEvtTitre = $e->getIdEvenementTitre($fav);
-						$requeteTitre = "
-								SELECT evt.titre
-								FROM evenements evt
-								WHERE evt.idEvenement = ".$idEvtTitre."
-										";
-						$resTitre = $this->connexionBdd->requete($requeteTitre);
-						$titreArray = mysql_fetch_array($resTitre);
-						if($titreArray['titre'] == ''){
-							$titre = $adresse;
-						}
-						else{
-							$titre = $titreArray['titre'];
-						}
-
-						$favoris = array(
-								'adresse' => $adresse,
-								'urlMiniature' => $urlImage,
-								'urlEvenement' => $urlEvenement,
-								'description' => $description,
-								'titre' => $titre
-						);
-						$t->assign_block_vars('favoris', $favoris);
-					}
-				}
 
 
 				//Associate template to the general template

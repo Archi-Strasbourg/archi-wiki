@@ -789,8 +789,6 @@ img.box{
 	padding: 1px;
 	border: none;
 }
-.authentification {
-}
 
 /* entetes tableau ajout d'un dossier */
 .enteteFormulaireDossier {
@@ -1549,7 +1547,13 @@ hr.edgeFade {
     background-image: linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));      
 }
 
-
+hr.classic{
+	height: 2px; 
+	color: #839D2D; 
+	background-color: #839D2D; 
+	width: 50%; 
+	border: none;
+}
 
 .menu .home img {
 	vertical-align: bottom;
@@ -2158,11 +2162,6 @@ Page d'accueil
 	color: black;
 }
 
-/*
-.textNews div:first-child a {
-	font-size: 13px;
-}
-*/
 
 .descriptionNews{
 	color: white;
@@ -2281,6 +2280,11 @@ Page d'accueil
 
 .linkListCommentaire{
 	text-decoration: underline;
+}
+
+
+.description, .descriptionNews,.commentBody{
+	font-size: 12px;
 }
 
 .push-menu-top-search form{
@@ -2446,7 +2450,7 @@ del{
 }
 
 
-.adresseLastModif .lienAdresse,.adresseLastModif .lienVille{
+.adresseLastModif .lienAdresse,.adresseLastModif .lienVille,.titreLastvisit a,.adresseLastModif a{
 	color: #363636;
 }
 
@@ -2572,6 +2576,8 @@ del{
 
 .commentDate p{
 	background-color: #293234;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 .commentaireEvenement{
 	margin-bottom: 40px;
@@ -2604,6 +2610,8 @@ Evenement block
 
 .eventHeader div:last-child p{
 	background-color: #2A3335;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 .evenement a, .commentaire a , .formComment a {
