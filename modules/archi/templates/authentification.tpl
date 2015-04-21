@@ -1,7 +1,4 @@
 ﻿<form action='{ACTIONFORM}' method='post' enctype="multipart/form-data">
-
-
-
 <!-- BEGIN noCompact -->
 <br><br>
 <div align='center'>
@@ -12,10 +9,6 @@
 <tr><td colspan=2 align=center><input type='checkbox' name='cookie' id="cookie2" /><label for="cookie2"><?_("Rester connecté")?> (<?_("30 jours")?>)</label></td></tr>
 <tr><td colspan=2 align=center><input type='submit' name='validAuthentification' value='<?_("Se connecter")?>' /></td></tr>
 </table>
-<div>
-<?_("Vous pouvez également vous connecter avec")?> <a href="https://browserid.org/">BrowserID</a><?_(" :")?><br/>
-<a class="persona-button dark" id="browserid" title="<?_("Se connecter avec BrowserID")?>" title="<?_("Se connecter avec BrowserID")?>" ><span><?_("Connexion")?></span></a>  
-</div>
 <br/>
 {msg}
 </div>

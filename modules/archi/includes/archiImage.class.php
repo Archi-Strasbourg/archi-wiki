@@ -5354,52 +5354,6 @@ class archiImage extends config
      */
     public function getImagePrincipale($idEvenement){
 
-    	/*
-    	$requestMainImage = "
-    	SELECT evt.idImagePrincipale as idImage, hi.idHistoriqueImage , hi.dateUpload
-    	FROM evenements evt
-    	LEFT JOIN historiqueImage hi on hi.idImage = evt.idImagePrincipale
-    	WHERE evt.idEvenement = $idEvenement
-    	AND evt.idImagePrincipale != 0
-    	";
-    	$resMainImage = $this->connexionBdd->requete($requestMainImage);
-
-    	 
-    	if(mysql_num_rows($resMainImage)==0){
-    		debug("premier requete echoué");
-    		$requeteEI = "
-    		SELECT hi.idHistoriqueImage , hi.dateUpload , hi.idImage
-    		FROM historiqueImage hi
-    		LEFT JOIN _evenementImage ei on ei.idEvenement = $idEvenement
-    		WHERE ei.idImage = hi.idImage
-    		";
-    		$resultEI = $this->connexionBdd->requete($requeteEI);
-
-    		if(mysql_num_rows($resultEI) == 0){
-				debug("deuixieme if echoue");
-    			$requeteAI = "
-    			SELECT hi.idHistoriqueImage , hi.dateUpload , hi.idImage
-    			FROM historiqueImage hi
-    			LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = $idEvenement
-    			LEFT JOIN _adresseImage ai on ai.idEvenementGroupeAdresse = ee.idEvenement
-    			WHERE ai.idImage = hi.idImage
-    			";
-    			//debug($requeteAI);
-    			$resultAI = $this->connexionBdd->requete($requeteAI);
-    			$imageInfo = mysql_fetch_assoc($resultAI);
-
-    		}
-    		else{
-    			debug("deuxieme if success");
-    			$imageInfo = mysql_fetch_assoc($resultEI);
-    		}
-    	}
-    	else{
-    		debug("premier if succes");
-    		$imageInfo = mysql_fetch_assoc($resMainImage);;
-    	}
-*/
-    	 
     	$selectAll ="
     			
     			SELECT evt.idImagePrincipale as idImage, hi.idHistoriqueImage , hi.dateUpload
@@ -5420,45 +5374,10 @@ class archiImage extends config
     	    	$resBrol = $a->getFirstImageFromEvenement($idEvenement);
     	    }
     	 
-    	/*
-    	
-    	
-    	$a = new archiAdresse();
-    	$imageInfo = $a->getFirstImageFromEvenement($idEvenement);
-    	$requeteEvtImg = "
-    			SELECT hi.idHistoriqueImage , hi.dateUpload , hi.idImage
-    			FROM historiqueImage hi 
-    			LEFT JOIN 
-    			";
-    	
-    	
-    	
-    	if(empty($imageInfo)){
-    		$a = new archiAdresse();
-    		$requeteIdAdresse = $a->getIdAdressesFromIdEvenement(array('idEvenement'=>$idEvenement));
-    		$resourceIdAdresse = $this->connexionBdd->requete($requeteIdAdresse);
-    		$arrayIdAdresse = mysql_fetch_assoc($resourceIdAdresse);
-    		$idAdresse = $arrayIdAdresse['idAdresse'];
-    		$resourceImage = $this->getImagesEvenementsFromAdresse($idAdresse);
-    		//while($img = mysql_fetch_assoc($resourceImage)){
-    		$img = mysql_fetch_assoc($resourceImage);
-    			//debug($img);
-   				$imageInfo = $img;
-   				//echo "<a href=\"photos--".$imageInfo['dateUpload']."-".$imageInfo['idImage']."-moyen.jpg\"". ">lien image</a><br/>";
-   				   	
-    		//}
-    		//echo "<a href=\"photos--".$imageInfo['dateUpload']."-".$imageInfo['idImage']."-moyen.jpg\"". ">If image</a><br/>";
-   			//I don't think  looping on all the images is required, but it might be
-    	}
-    	else{
-    	//	debug('else');
-    		//echo "<a href=\"photos--".$imageInfo['dateUpload']."-".$imageInfo['idImage']."-moyen.jpg\"". ">Else image</a><br/>";
-    	}
-    	//echo "<a href=\"photos--".$imageInfo['dateUpload']."-".$imageInfo['idImage']."-moyen.jpg\"". ">Simple image</a><br/>";
-    	 * 
-    	 */
-    	 //debug(array(empty($imageInfo),isset($imageInfo), $imageInfo));
     	return $imageInfo;
     }
+    
+   
+    
 }
 ?>

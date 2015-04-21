@@ -1512,10 +1512,6 @@ if (isset($_GET['archiAffichage'])) {
 			$u->getPrivateProfil();
         	break;
         case 'diff':
-        	/*
-        	$u = new archiUtilisateur();
-        	echo $u->displayDiff("thi is a test" , "This test is the test new test");
-        	*/
         	$util = new archiUtils();
         	$plop= $util->yoloDiff("thi is a test" , "This test is the test new test");
         	break;
@@ -1532,13 +1528,6 @@ if (isset($_GET['archiAffichage'])) {
 			$criteres = array('typeStructure'=>$_GET['idTypeStructure']);
 			$s = new archiRecherche();
 			echo $s->advancedSearch($criteres);
-        	break;
-        case 'testevent':
-        	$id=$_GET['idEvenement'];
-        	$e = new archiEvenement();
-        	$evenement = $e->getEventInfos($id);
-        	echo "salut";
-        	echo $e->displaySingleEvent($evenement);
         	break;
         }
     }

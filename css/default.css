@@ -786,7 +786,10 @@ img.box{
 
 .authentification,.authentification tbody,.authentification tr,.authentification td
 	{
+	padding: 1px;
 	border: none;
+}
+.authentification {
 }
 
 /* entetes tableau ajout d'un dossier */

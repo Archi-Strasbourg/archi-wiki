@@ -1894,11 +1894,6 @@ class archiEvenement extends config
 					$numeroArchive = "Cote Archives de Strasbourg : ".$res->numeroArchive."<br>";
 				}
 
-
-
-
-
-
 				$adressesLieesHTML = $this->getAdressesLieesAEvenement(array('modeRetour'=>'affichageSurDetailEvenement','idEvenement'=>$idEvenement));
 				if($adressesLieesHTML!='')
 				{
@@ -1919,12 +1914,12 @@ class archiEvenement extends config
 					$onClickEvenementDeplacerVersGA = "document.getElementById('".$params['calquePopupDeplacerEvenement']->getJSIFrameId()."').src='".$this->creerUrl('','recherche',array('noHeaderNoFooter'=>1,'modeAffichage'=>"popupDeplacerEvenementVersGroupeAdresse","idEvenementADeplacer"=>$res->idEvenement))."';document.getElementById('".$params['calquePopupDeplacerEvenement']->getJSDivId()."').style.display='block';";
 				}
 
-				$txtEnvoi = _("Envoyé");
+				$txtEnvoi = _("envoyé");
 				$dateEnvoi="";
 
 				if(!$this->isFirstIdHistoriqueEvenementFromHistorique($res->idEvenement))
 				{
-					$txtEnvoi = _("Modifié");
+					$txtEnvoi = _("modifié");
 				}
 				$dateEnvoi = _("le")." ".$res->dateCreationEvenement;
 
@@ -1946,7 +1941,11 @@ class archiEvenement extends config
 					$urlTypeEvenement=$this->creerUrl('', 'evenementListe', array('selection' => 'typeEvenement', 'id' => $res->idTypeEvenement));
 				}
 				$titre=empty($res->titre)?"<meta itemprop='name' content='".$fetchTypeEvenement['nom']."' />":"<h3 itemprop='name'>".htmlspecialchars(stripslashes($res->titre))."</h3>";
-				//
+				
+				$user = new archiUtilisateur();
+				$user->setUserId($res->idEvenement);
+				$urlProfilPic = $user->getImageAvatar(array('idUtilisateur'=>$res->idUtilisateur));
+				$utilisateur="<a href='".$this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$res->idUtilisateur,'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroupeAdresse))."'>".$res->nomUtilisateur." ".$res->prenomUtilisateur."</a>";
 				$t->assign_vars(array(
 						'txtEnvoi'    => $txtEnvoi,
 						'dateEnvoi'     =>$dateEnvoi,
@@ -1978,7 +1977,12 @@ class archiEvenement extends config
 						'urlDeplacerVersNouveauGroupeAdresse'=>$this->creerUrl('deplacerEvenementVersNouveauGA','evenement',array('idEvenement'=>$res->idEvenement)),
 
 						'onClickDeplacerVersAdresses'=>$onClickEvenementDeplacerVersGA,
-						'numeroArchive'=>$numeroArchive
+						'numeroArchive'=>$numeroArchive,
+						'idEvenement'=>$res->idEvenement,
+						'urlProfilPic'=> $urlProfilPic,
+						'infoTitre'=> $utilisateur . " a ".$txtEnvoi." un événement",
+						'txtEnvoi' => $txtEnvoi." le",
+						'labelLienHistorique'=>_("(Consulter l'historique)")
 				));
 
 				$idEvenement = $res->idEvenement;
@@ -2010,14 +2014,16 @@ class archiEvenement extends config
 					$linkedEventsHTML=archiPersonne::displayEvenementsLies($idPerson, $dateDebut, $date2->dateDebut);
 
 					$t->assign_vars(array("evenementsLiesPersonne" => $linkedEventsHTML));
-				} else if ($idPerson=archiPersonne::isPerson($idEvenementGroupeAdresse)) {
+				} 
+				else if ($idPerson=archiPersonne::isPerson($idEvenementGroupeAdresse)) {
 					$linkedEventsHTML=archiPersonne::displayEvenementsLies($idPerson, $dateDebut, 3000);
 					$t->assign_vars(array("evenementsLiesPersonne" => $linkedEventsHTML));
 				}
+
 				
 				/*
-				 **  COURANTS ARCHI
-				*/
+				 * COURANTS ARCHI
+				 */
 				$rep = $this->connexionBdd->requete('
 						SELECT  cA.idCourantArchitectural, cA.nom
 						FROM _evenementCourantArchitectural _eA

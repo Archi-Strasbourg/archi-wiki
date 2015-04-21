@@ -1,9 +1,68 @@
 <!-- BEGIN simple -->
-<div class='evenement'
-	itemprop='event' itemscope itemtype="http://schema.org/Event"
-	style='position: relative; display: table;'>
+<div class='evenement'	itemprop='event' itemscope itemtype="http://schema.org/Event"style='position: relative; display: table;'>
 	{urlEvenementExterne}
-	<!-- BEGIN menuAction -->
+	<div class="eventHeader">
+		<div class="eventPoster">
+			<img alt="" src="{urlProfilPic}">{infoTitre}
+		</div>
+		<div>
+			<p>{txtEnvoi} {dateEnvoi}</p>
+			<p><a href="{lienHistoriqueEvenementCourant}">{labelLienHistorique}</a></p>	
+		</div>
+	</div>
+	
+	<div class="eventBody">
+
+	<div class="event">
+		{titre}
+		<div >
+			<p>
+			<ul>
+				<li>{dates}</li>
+				<li>{source}</li>
+				<li>{typeStructure}</li>
+				<li><?_("Type d'Évènement :")?> <a href="{urlTypeEvenement}">{typeEvenement}</a>
+				</li>
+			</ul>
+			{numeroArchive}
+			<!-- BEGIN pers -->
+			{simple.pers.metier} <a href="{simple.pers.urlEvenement}">{simple.pers.prenom}
+				{simple.pers.nom}</a>
+			<!-- BEGIN connected -->
+			<!--<small><a href="index.php?archiAffichage=choosePersonEventImage&idPerson={simple.pers.idPerson}&idEvent={simple.pers.idEvent}">(choisir l'image principale)</a></small>-->
+			<!-- END connected -->
+			<br>
+			<!-- END pers -->
+			</p>
+			<p>{description}</p>
+			<!-- BEGIN isCourantArchi -->
+			<div class="courantAchitectural">
+				<h4>
+					<?_("Courant Architectural")?>
+					</h3>
+					<ul>
+						<!-- BEGIN archi -->
+						<li><a href="{simple.isCourantArchi.archi.url}">{simple.isCourantArchi.archi.nom}</a>
+						</li>
+						<!-- END archi -->
+					</ul>
+			
+			</div>
+			<!-- END isCourantArchi -->
+			<div class="historiqueEvenement">
+				<!-- BEGIN menuAction -->
+				<!-- Il y a {nbHistorique} historique sur cet Évènement.-->
+				<!-- END menuAction -->
+				<!-- BEGIN histo -->
+				<br /> <a href="{histo.url}"><?_("Voir l'historique")?> </a>
+				<!-- END histo -->
+			</div>
+			{imagesLiees} {evenementsParents} {listeAdressesLiees}
+			{evenementsLiesPersonne}
+		</div>
+
+	</div>
+<!-- BEGIN menuAction -->
 	<div class="menuAction"	style="display: {divDisplayMenuAction}">
 			
 			<div>
@@ -70,63 +129,6 @@
 			<!-- END afficheElementMenuDeplacerEvenement -->
 	</div>
 	<!-- END menuAction -->
-
-
-
-	<div class="event">
-		{titre} - {txtEnvoi} par {utilisateur} {dateEnvoi}
-		{lienHistoriqueEvenementCourant}
-
-
-
-		<div >
-			<p>
-			
-			
-			<ul>
-				<li>{dates}</li>
-				<li>{source}</li>
-				<li>{typeStructure}</li>
-				<li><?_("Type d'Évènement :")?> <a href="{urlTypeEvenement}">{typeEvenement}</a>
-				</li>
-			</ul>
-			{numeroArchive}
-			<!-- BEGIN pers -->
-			{simple.pers.metier} <a href="{simple.pers.urlEvenement}">{simple.pers.prenom}
-				{simple.pers.nom}</a>
-			<!-- BEGIN connected -->
-			<!--<small><a href="index.php?archiAffichage=choosePersonEventImage&idPerson={simple.pers.idPerson}&idEvent={simple.pers.idEvent}">(choisir l'image principale)</a></small>-->
-			<!-- END connected -->
-			<br>
-			<!-- END pers -->
-			</p>
-			<p>{description}</p>
-			<!-- BEGIN isCourantArchi -->
-			<div class="courantAchitectural">
-				<h4>
-					<?_("Courant Architectural")?>
-					</h3>
-					<ul>
-						<!-- BEGIN archi -->
-						<li><a href="{simple.isCourantArchi.archi.url}">{simple.isCourantArchi.archi.nom}</a>
-						</li>
-						<!-- END archi -->
-					</ul>
-			
-			</div>
-			<!-- END isCourantArchi -->
-			<div class="historiqueEvenement">
-				<!-- BEGIN menuAction -->
-				<!-- Il y a {nbHistorique} historique sur cet Évènement.-->
-				<!-- END menuAction -->
-				<!-- BEGIN histo -->
-				<br /> <a href="{histo.url}"><?_("Voir l'historique")?> </a>
-				<!-- END histo -->
-			</div>
-			{imagesLiees} {evenementsParents} {listeAdressesLiees}
-			{evenementsLiesPersonne}
-		</div>
-
 	</div>
 </div>
 <!-- END simple -->
