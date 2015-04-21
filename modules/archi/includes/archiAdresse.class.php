@@ -529,60 +529,87 @@ class archiAdresse extends ArchiContenu
 				array(
 						'urlAction'=>$this->creerUrl('', 'ajouterSousEvenement',array('idAdresse'=>$idAdresse,'archiIdEvenement' =>$idEvenementGroupeAdresse)),
 						'labelAction' => 'Ajouter un évènement'
-			)
-		);
+			) );
 		
-		//Selection des images
-		//Copy/paste code from old function
-		$afficheSelectionImages=1;
-		if($authentification->estConnecte() && isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1'){
-			$afficheSelectionImages=0;
+		// Selection des images
+		// Copy/paste code from old function
+		$afficheSelectionImages = 1;
+		if ($authentification->estConnecte () && isset ( $this->variablesGet ['afficheSelectionImage'] ) && $this->variablesGet ['afficheSelectionImage'] == '1') {
+			$afficheSelectionImages = 0;
 		}
-		$t->assign_block_vars('actionsSommaire',
-				array(
-						'urlAction'=>$this->creerUrl('', 'evenement',array('idEvenement'=>$idEvenementGroupeAdresse,'archiIdAdresse'=>$idAdresse,'afficheSelectionImage'=>$afficheSelectionImages)),
-						'labelAction' => 'Sélectionner des images'
-				)
-		);
-		
-		//Selection de l'image principale
+		if ($authentification->estConnecte ()) {
+			if ($authentification->estAdmin ()) {
+				$t->assign_block_vars ( 'actionsSommaire', array (
+						'urlAction' => $this->creerUrl ( '', 'evenement', array (
+								'idEvenement' => $idEvenementGroupeAdresse,
+								'archiIdAdresse' => $idAdresse,
+								'afficheSelectionImage' => $afficheSelectionImages 
+						) ),
+						'labelAction' => 'Sélectionner des images' 
+				) );
+			}
+		}
+		// Selection de l'image principale
 		$afficheSelectionImagePrincipale = 1;
-		if ($authentification->estConnecte() && isset($this->variablesGet['afficheSelectionImagePrincipale']) && $this->variablesGet['afficheSelectionImagePrincipale']=='1') {
+		if ($authentification->estConnecte () && isset ( $this->variablesGet ['afficheSelectionImagePrincipale'] ) && $this->variablesGet ['afficheSelectionImagePrincipale'] == '1') {
 			$afficheSelectionImagePrincipale = 0;
 		}
-		$t->assign_block_vars('actionsSommaire',
-				array(
-						'urlAction'=>$this->creerUrl('','evenement',array('idEvenement'=>$idEvenementGroupeAdresse,'archiIdAdresse'=>$idAdresse,'afficheSelectionImagePrincipale'=>$afficheSelectionImagePrincipale)),
-						'labelAction' => 'Sélectionner l\'image principale'
-				)
-		);
+		if ($authentification->estConnecte ()) {
+			if ($authentification->estAdmin ()) {
+				$t->assign_block_vars ( 'actionsSommaire', array (
+						'urlAction' => $this->creerUrl ( '', 'evenement', array (
+								'idEvenement' => $idEvenementGroupeAdresse,
+								'archiIdAdresse' => $idAdresse,
+								'afficheSelectionImagePrincipale' => $afficheSelectionImagePrincipale 
+						) ),
+						'labelAction' => 'Sélectionner l\'image principale' 
+				) );
+			}
+		}
 		
-		//Selection du titre
+		// Selection du titre
 		$afficheSelectionTitre = 1;
-		if($authentification->estConnecte() && isset($this->variablesGet['afficheSelectionTitre']) && $this->variablesGet['afficheSelectionTitre']=='1'){
+		if ($authentification->estConnecte () && isset ( $this->variablesGet ['afficheSelectionTitre'] ) && $this->variablesGet ['afficheSelectionTitre'] == '1') {
 			$afficheSelectionTitre = 0;
 		}
-		$t->assign_block_vars('actionsSommaire',
-				array(
-						'urlAction'=>$this->creerUrl('','evenement',array('idEvenement'=>$idEvenementGroupeAdresse,'archiIdAdresse'=>$idAdresse,'afficheSelectionTitre'=>$afficheSelectionTitre)),
-						'labelAction' => 'Sélectionner un titre'
-				)
-		);
-		
-		//Repositionner les evenements
-		$affichePositionnementEvenements = 1;
-		if($authentification->estConnecte() && isset($this->variablesGet['affichePositionnementEvenements']) && $this->variablesGet['affichePositionnementEvenements']=='1'){
-			$affichePositionnementEvenements = 0;
-			$a = new archiEvenement();
-			$imageObject = new imageObject(); // objet image du framework
-			$a->addToJsHeader($imageObject->getJSFunctionsDragAndDrop(array('withBalisesScript'=>true))); // rajoute les fonctions de deplacement d'elements dans le header du formulaire
+		if ($authentification->estConnecte ()) {
+			if ($authentification->estAdmin ()) {
+				
+				$t->assign_block_vars ( 'actionsSommaire', array (
+						'urlAction' => $this->creerUrl ( '', 'evenement', array (
+								'idEvenement' => $idEvenementGroupeAdresse,
+								'archiIdAdresse' => $idAdresse,
+								'afficheSelectionTitre' => $afficheSelectionTitre 
+						) ),
+						'labelAction' => 'Sélectionner un titre' 
+				) );
+			}
 		}
-		$t->assign_block_vars('actionsSommaire',
-				array(
-						'urlAction'=>$this->creerUrl('', 'evenement', array('archiIdAdresse'=>$idAdresse,'idEvenement'=>$idEvenementGroupeAdresse, 'archiIdAdresse'=>$idAdresse,'affichePositionnementEvenements'=>$affichePositionnementEvenements)),
-						'labelAction' => 'Repositionner les évènements'
-				)
-		);
+		
+		// Repositionner les evenements
+		$affichePositionnementEvenements = 1;
+		if ($authentification->estConnecte () && isset ( $this->variablesGet ['affichePositionnementEvenements'] ) && $this->variablesGet ['affichePositionnementEvenements'] == '1') {
+			$affichePositionnementEvenements = 0;
+			$a = new archiEvenement ();
+			$imageObject = new imageObject (); // objet image du framework
+			$a->addToJsHeader ( $imageObject->getJSFunctionsDragAndDrop ( array (
+					'withBalisesScript' => true 
+			) ) ); // rajoute les fonctions de deplacement d'elements dans le header du formulaire
+		}
+		if ($authentification->estConnecte ()) {
+			if ($authentification->estAdmin ()) {
+				
+				$t->assign_block_vars ( 'actionsSommaire', array (
+						'urlAction' => $this->creerUrl ( '', 'evenement', array (
+								'archiIdAdresse' => $idAdresse,
+								'idEvenement' => $idEvenementGroupeAdresse,
+								'archiIdAdresse' => $idAdresse,
+								'affichePositionnementEvenements' => $affichePositionnementEvenements 
+						) ),
+						'labelAction' => 'Repositionner les évènements' 
+				) );
+			}
+		}
 		
 		//Loop on all evenet related to this idAdresse specified in argument of this function
 		while($fetch = mysql_fetch_assoc($resultIdEvenements)){
