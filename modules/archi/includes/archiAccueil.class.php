@@ -606,6 +606,7 @@ class ArchiAccueil extends config
 				}
 				else{
 					foreach ($lastVisitArray as $lastVisit){
+						$titre="";
 						if($lastVisit['idAdresse'] != '' && $lastVisit['idEvenementGroupeAdresse']!=''){
 							$idAdresse = $lastVisit['idAdresse'];
 							$e = new archiEvenement();
@@ -683,11 +684,12 @@ class ArchiAccueil extends config
 												";
 								$resTitre = $this->connexionBdd->requete($requeteTitre);
 								$titreArray = mysql_fetch_array($resTitre);
-								if($titreArray['titre'] == ''){
-									$titre = $adresse;
+								if($titreArray['titre'] != ''){
+									//$titre = $adresse;
+									$titre = $titreArray['titre'];
+										
 								}
 								else{
-									$titre = $titreArray['titre'];
 								}
 							}
 
@@ -2376,16 +2378,15 @@ class ArchiAccueil extends config
 		
 		
 		$requeteIdAdresse = "select distinct tmp.idEvenementGroupeAdresse from(
-			SELECT ae.idAdresse, 
-			ee.idEvenement AS idEvenementGroupeAdresse, 
-			evt.idEvenement, DATE_FORMAT( evt.dateCreationEvenement, '%Y%m%d%H%i%s' ) AS DateTri 
-			FROM historiqueEvenement evt, _evenementEvenement ee, _adresseEvenement ae,historiqueAdresse ha
-			$whereClause
-			AND evt.idEvenement = ee.idEvenementAssocie
-			AND ha.idAdresse = ae.idAdresse
-			AND ae.idEvenement = ee.idEvenement
-			ORDER BY DateTri DESC 
-		
+				SELECT ae.idAdresse, 
+				ee.idEvenement AS idEvenementGroupeAdresse, 
+				evt.idEvenement, DATE_FORMAT( evt.dateCreationEvenement, '%Y%m%d%H%i%s' ) AS DateTri 
+				FROM historiqueEvenement evt, _evenementEvenement ee, _adresseEvenement ae,historiqueAdresse ha
+				$whereClause
+				AND evt.idEvenement = ee.idEvenementAssocie
+				AND ha.idAdresse = ae.idAdresse
+				AND ae.idEvenement = ee.idEvenement
+				order by DateTri DESC
 			) as tmp
 			limit $nbElts
 		";

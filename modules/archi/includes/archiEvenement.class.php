@@ -6913,7 +6913,6 @@ debug($reqEvenementEvenement);
 				ha.idVille,
 				ee.idEvenement as idEvenementGroupeAdresse		
 				
-					
 				FROM evenements hE
 				LEFT JOIN source s      ON s.idSource = hE.idSource
 				LEFT JOIN typeStructure tS  ON tS.idTypeStructure = hE.idTypeStructure
@@ -6946,6 +6945,7 @@ debug($reqEvenementEvenement);
 				tE.nom AS nomTypeEvenement, 
 				tS.nom AS nomTypeStructure, 
 				s.nom AS nomSource, 
+				s.description as descriptionSource,
 				u.nom AS nomUtilisateur,
 				u.prenom as prenomUtilisateur, 
 				tE.groupe, 
@@ -7120,6 +7120,24 @@ debug($reqEvenementEvenement);
 		$urlTypeStructure = $this->creerUrl('' , 'listeStructure' , array('idTypeStructure'=>$fetch['idTypeStructure']));
 		$nomTypeStructure = $fetch['nomTypeStructure'];
 		$typeStructure = "<a href=\"$urlTypeStructure\">$nomTypeStructure</a> ";
+		
+		
+		//Source
+		$source="";
+		if(isset($fetch['nomSource']) && $fetch['nomSource'] != ''){
+			$source="Source : <a href='".
+			$this->creerUrl('','listeAdressesFromSource',
+					array(
+							'source'=>$fetch['idSource'],
+							'submit'=>'Rechercher')
+					)."' onmouseover=\"document.getElementById('calqueDescriptionSource').style.top=(getScrollHeight()+150)+'px';
+							document.getElementById('calqueDescriptionSource').style.display='block';
+							document.getElementById('iframe').src='".$this->creerUrl('','descriptionSource',array('archiIdSource'=>$fetch['idSource'],'noHeaderNoFooter'=>1))."';\" 
+									>".
+			stripslashes($fetch['nomSource'])."
+					</a><br>";
+		}
+		
 
 		//Info used for menu display
 		$cityId = $fetch['idVille'];
@@ -7184,7 +7202,7 @@ debug($reqEvenementEvenement);
 				'lienHistoriqueEvenementCourant' => $lienHistoriqueEvenementCourant,
 				'labelLienHistorique'=>$labelHistoriqueEvenement,
 				'dates'=>$dateTxt,
-				'sources'=>$fetch['nomSource'],
+				'source'=>$source,
 				'labelStructure' =>"Structure  : ",
 				'typeStructure'=>$typeStructure,
 				'labelTypeEvenement' => 'Type d\'Évènement : ',
@@ -7210,7 +7228,7 @@ debug($reqEvenementEvenement);
 		 * Useless now, but might be need futher if
 		*	this function is reused and should not display menu action
 		*/
-		$afficherMenu=true;
+		$afficherMenu=$authentification->estConnecte();
 		$allowSuppressImage = false; //Set to false now, image suppression isn't implemented
 		if($params['type'] == 'historique'){
 			$afficherMenu=false;	

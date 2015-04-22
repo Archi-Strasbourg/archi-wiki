@@ -18,10 +18,7 @@
 .clearfix {
   zoom:1; /* For IE 6/7 (trigger hasLayout) */
 }
-* { 
-	margin:0; 
-	padding:0; 
-}
+
 body {
 	background-position: center center;
 	background-repeat: no-repeat; 
@@ -186,8 +183,11 @@ a:hover {
 }
 
 .stats , #searchButton , #connexionButton{
-	margin-top: 20px;
+	/*margin-top: 20px;*/
 	float: left;
+}
+.stats p{
+	margin: 0;
 }
 #searchButton , #connexionButton{
 	text-align: center;
@@ -195,6 +195,7 @@ a:hover {
 }
 .languageSwitch{
 	margin-top: 10px;
+	padding: 0;
 }
 
 .languageSwitch li{
@@ -1930,6 +1931,9 @@ hr.classic{
 	float: right;
 	margin-right: 10px;
 }
+.left-div-header > div{
+	margin-bottom: 20px;
+}
 .menu-button-div,.logo_header{
 	float: left;
 }
@@ -2489,8 +2493,8 @@ del{
 	height: 0;
 }
 .active .formComment form textarea{
-	width: 630px;
-	max-width: 640px;
+	width: 700px;
+	max-width: 710px;
 	max-height: 500px;
 }
 
@@ -2590,9 +2594,14 @@ Evenement block
 .evenement{
 	 background-color: #424647;
 	 color: white;
-	 padding: 10px;
 }
-
+.evenement, .commentaire {
+	padding: 10px;
+}
+.evenement, .commentaire , .formComment{
+	
+	width: 100%;
+}
 .eventPoster img{
 	height: 20px;	
 	vertical-align: bottom;

@@ -654,11 +654,13 @@ class archiAdresse extends ArchiContenu
 		$listeCommentaires=$this->getListeCommentaires($idEvenementGroupeAdresse);
 		$formulaireCommentaire = $e->getFormComment($idEvenementGroupeAdresse, $this->getCommentairesFields(),'');
 		
-		
+		$s = new archiSource();
 		$t->assign_vars(array(
 				'title' => $title,
 				'listeCommentairesAdresse' => $listeCommentaires,
-				'formulaireCommentaireAdresse' => $formulaireCommentaire
+				'formulaireCommentaireAdresse' => $formulaireCommentaire,
+				'popupDescriptionSource' =>	$s->getPopupDescriptionSource()
+				
 		));
 		
 		ob_start();
@@ -14138,7 +14140,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			}
 			$t->assign_vars(array(
 					'nbReponses' => $nbReponses,
-					'titre' => 'Adresses'					
+					'titre' => 'Résultats'					
 			));
 
 			
@@ -14231,7 +14233,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$titre = $info['titre'];
 				
 				
-				
 				//If prisdepuis
 				if(isset($this->variablesGet['modeAffichage']) && ($this->variablesGet['modeAffichage'] == 'popupRechercheAdressePrisDepuis')){
 					$addressUrl="#";
@@ -14265,29 +14266,41 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 						
 						
 				}
+
 				//Regular case
 				else{
-					$addressUrl = $this->creerUrl(
-							'',
-							'',
-							array(
-									'archiAffichage'=>'adresseDetail',
-									"archiIdAdresse"=>$info['idAdresse'],
-									"archiIdEvenementGroupeAdresse"=>$info['idEvenementGroupeAdresse']
-							)
-					);
-					$urlDetailOnClick='';
-
-					//Event title
-					$titreEvenements = 	implode(" - ", $info['titresEvenements']); // Getting all the events links on one line
+					
+					//Personne case
+					if (isset ( $info['idPersonne'] ) && $info['idPersonne'] != '') {
+						$urlImageIllustration= archiPersonne::getImage($info['idPersonne'],'resized',false,array('height'=>130,'width'=>130));
+						$addressUrl = $this->creerUrl ( '', 'evenementListe', 
+								array (
+								'selection' => 'personne',
+								"id" => $info ['idPersonne'] 
+						) );
+						$titre=$info['nom'];
+					} 
+					//Adresse case
+					else {
+						$urlImageIllustration = 'resizeImage.php?id='.$illustration['idHistoriqueImage'];
+						$addressUrl = $this->creerUrl ( '', '', array (
+								'archiAffichage' => 'adresseDetail',
+								"archiIdAdresse" => $info ['idAdresse'],
+								"archiIdEvenementGroupeAdresse" => $info ['idEvenementGroupeAdresse'] 
+						) );
+					}
+					$urlDetailOnClick = '';
+					
+					// Event title
+					$titreEvenements = implode ( " - ", $info ['titresEvenements'] ); // Getting all the events links on one line
 				}
-								
+				
 				$t->assign_block_vars(
 						'adresses',
 						array(
 								'nom'        => $titre,
 								'adresseComplete' => $fulladdress,
-								'urlImageIllustration'    => 'resizeImage.php?id='.$illustration['idHistoriqueImage'],
+								'urlImageIllustration'    => $urlImageIllustration,
 								'alt' => $nom,
 								'urlDetailHref' => $addressUrl,
 								'titresEvenements'        => $titreEvenements,
@@ -14316,13 +14329,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 	private function getAddressesInfoFromIdHA($idList =array() , $optionsPagination = array()){
 		$addressesInformations = array();
 		if(!empty($idList)){
-			
-			
 			$i=0;
 			$nbElt=count($idList);
 			$arrayAdresse = array();
 			foreach ($idList as $id){
-				$req="
+				//If the idHistoAdresse is set, it's an address
+				if(isset ( $id ['idHistoriqueAdresse'] ) && $id ['idHistoriqueAdresse'] != '') {
+					$req = "
 					SELECT ha.nom ,
 					ha.idHistoriqueAdresse ,
 					ha.idAdresse ,
@@ -14330,14 +14343,40 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		
     				FROM historiqueAdresse ha
 					LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
-    				WHERE ha.idHistoriqueAdresse =".$id['idHistoriqueAdresse']."
-    				AND ae.idEvenement = ".$id['idEvenementGroupeAdresse']."
+    				WHERE ha.idHistoriqueAdresse =" . $id ['idHistoriqueAdresse'] . "
+    				AND ae.idEvenement = " . $id ['idEvenementGroupeAdresse'] . "
     				GROUP BY ha.idHistoriqueAdresse
 							";
-				
-				$res = $this->connexionBdd->requete($req);
-				$row = mysql_fetch_assoc($res);
-				$arrayAdresse[]=$row;				
+					
+					$res = $this->connexionBdd->requete ( $req );
+					$row = mysql_fetch_assoc ( $res );
+					$arrayAdresse [] = $row;
+				} 
+				//Else it's a person
+				else {
+					$req = "
+					SELECT p.nom ,
+					p.prenom,
+					p.idPersonne,
+					m.nom as nomMetier,
+					ep.idEvenement as idEvenementGroupeAdresse
+					
+    				FROM personne p
+					LEFT JOIN _personneEvenement ep on ep.idPersonne = p.idPersonne
+					LEFT JOIN metier m on m.idMetier = p.idMetier
+    				WHERE p.idPersonne = " . $id ['idPersonne'] . "
+							";
+					
+					$res = $this->connexionBdd->requete ( $req );
+					$row = mysql_fetch_assoc ( $res );
+					$nom = $row['prenom'].' ' .$row['nom'];
+					$personne['nom']=$nom;
+					$personne['idPersonne']=$row['idPersonne'];
+					$personne['idEvenementGroupeAdresse']=$row['idEvenementGroupeAdresse'];
+					$personne['titresEvenements'][0]="<a href=\"".$this->creerUrl('', 'evenementListe', array('selection'=>'personne','id' => $row['idPersonne']))."\">".ucfirst($row['nomMetier'])."</a>";
+					$personne['titre']='';
+					$arrayAdresse [] = $personne;
+				}
 			}
 			
 			
@@ -14407,7 +14446,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				 
 				}
 				//Putting all this in a nice array
-				$fetch['titresEvenements'] = $titresEvenements;
+				if(isset($fetch['idHistoriqueAdresse']) && $fetch['idHistoriqueAdresse']!=''){
+					$fetch['titresEvenements'] = $titresEvenements;
+				}
 				$addressesInformations[]=$fetch;
 				$positionAncre++;
 			}

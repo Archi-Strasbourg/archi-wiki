@@ -65,3 +65,5 @@
 <form action='' name='formulaireEvenement' method='POST' enctype='multipart/form-data' id='formulaireEvenement'>
 <input type='hidden' name='actionFormulaireEvenement' id='actionFormulaireEvenement' value=''>";
 <!-- END formEvenement -->
+
+{popupDescriptionSource}

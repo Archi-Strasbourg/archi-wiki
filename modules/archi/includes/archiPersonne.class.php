@@ -788,7 +788,7 @@ class ArchiPersonne extends ArchiContenu
      * 
      * @return string URL
      * */
-    static function getImage($id, $size="moyen", $showDefault=true)
+    static function getImage($id, $size="moyen", $showDefault=true,$dimension=array('height'=>200,'width'=>200))
     {
         global $config;
         $req = "
@@ -807,6 +807,9 @@ class ArchiPersonne extends ArchiContenu
             $res = $config->connexionBdd->requete($req);
             $fetch = mysql_fetch_object($res);
             if (isset($fetch->idHistoriqueImage)) {
+            	if($size=="resized"){
+            		return "resizeImage.php?id=".$fetch->idHistoriqueImage."&height=".$dimension['height']."&width=".$dimension['width']."";
+            	}
                 return $config->getUrlImage($size).$fetch->dateUpload.'/'.$fetch->idHistoriqueImage.'.jpg';
             }
         }
@@ -1049,6 +1052,7 @@ class ArchiPersonne extends ArchiContenu
             OR CONCAT_WS(' ', nom, prenom) LIKE '%".mysql_real_escape_string($keyword)."%'
             OR CONCAT_WS(' ', prenom, nom) LIKE '%".mysql_real_escape_string($keyword)."%'
             LIMIT ".(($pos-1)*10).", ".($pos*10);
+        debug($req);
         $res = $config->connexionBdd->requete($req);
         while ($person=mysql_fetch_object($res)) {
             $people[]=($person);
