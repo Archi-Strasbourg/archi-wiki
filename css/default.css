@@ -301,10 +301,6 @@ a.subscribeLabel{
 	color: #C1722E;
 }
 
-.connectedAuthLink{
-	margin-top: 20px;
-}
-
 .push-menu-top-search,.push-menu-top-connexion{
 	width: 1200px;
 	margin: auto;
@@ -327,6 +323,13 @@ a.subscribeLabel{
 	margin: 0 auto;
 }
 
+.linksConnexion{
+	margin-top: 5px;
+}
+
+.connectedAuthLink{
+	margin-top: 20px;
+}
 
 .formConnexion , .fastConnect{
 

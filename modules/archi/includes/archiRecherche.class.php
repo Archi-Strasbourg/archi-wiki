@@ -2397,7 +2397,17 @@ class archiRecherche extends config {
 					OR CONCAT_WS('', p.nom, p.prenom) LIKE \"%".$motcleEscapedLike."%\"
 					OR CONCAT_WS('', p.prenom, p.nom) LIKE \"%".$motcleEscapedLike."%\"
 			";
-			
+
+			if(isset($params['afficheResultatsSurCarte']) && $params['afficheResultatsSurCarte']==1){
+				$request = "
+				SELECT * from (".$requestAdresse.") as tmp
+				GROUP BY tmp.idEvenementGA
+				ORDER BY  tmp.relevance  ".$order."
+				".$limit.
+				";";
+				
+			}
+			else{
 			
 			$request = "
 				SELECT * from (".$requestAdresse." UNION ".$requetePersonne.") as tmp
@@ -2405,6 +2415,7 @@ class archiRecherche extends config {
 				ORDER BY  tmp.relevance  ".$order."
 				".$limit.
 				";";
+			}
 		}
 		else{
 			$request = "SELECT idHistoriqueAdresse, idEvenementGA, null as idPersonne,  1 as relevance

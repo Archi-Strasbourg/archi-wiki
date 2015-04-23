@@ -88,16 +88,24 @@
 				<div><a
 					onclick="if(confirm('Voulez vous vraiment supprimer cet évènement ?')){location.href='{supprimerEvenement}'};"
 					href="#">Évènement</a> 
+					<!-- BEGIN isAffichageSelectionImages --> 
+					| <a
+						onclick="{onClickSupprimerImage}" href="{urlSupprimerImage}"><?_("Images")?>
+					</a> 
+				<!-- END isAffichageSelectionImages -->
 				</div>
 				
 			</div>
 			<!-- END isAdminOrModerateurFromVille --> 
 			<!-- BEGIN isAdmin -->
-				<!-- BEGIN isAffichageSelectionImages --> 
-					| <a
-						onclick="{onClickSupprimerImage}" href="{urlSupprimerImage}"><?_("Images")?>
-					</a> 
-				<!-- END isAffichageSelectionImages -->
+				
+				
+				
+				
+				
+				
+				
+				
 			
 				<!-- BEGIN isAffichageSelectionImages -->
 				<div>

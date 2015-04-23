@@ -1599,6 +1599,7 @@ class archiEvenement extends config
 		$styleColorSelectionImagePrincipaleActif = "";
 		$afficheSelectionImagePrincipale = 1;
 		if ($authentification->estConnecte() && isset($this->variablesGet['afficheSelectionImagePrincipale']) && $this->variablesGet['afficheSelectionImagePrincipale']=='1') {
+			debug("img principale");
 			$styleColorSelectionImagePrincipaleActif = "color:red";
 			$afficheSelectionImagePrincipale = 0;
 		}
@@ -1636,20 +1637,15 @@ class archiEvenement extends config
 
 		if (isset($sqlWhere) && mysql_num_rows($rep) > 0)
 		{
-
 			$nbHistorique  = mysql_num_rows($rep)-1; // on ne compte pas le groupe d'adresse qui a le meme idEvenement
 			$res = mysql_fetch_object($rep);
 			$idEvenement = $res->idEvenement;
-
 			// si c'est un groupe d'adresse, on n'affiche pas le détail de l'évènement, juste ses évènements enfants
 			if ($res->groupe!=3)
 			{
 				if ($modeAffichage === 'simple' || $modeAffichage=='consultationHistoriqueEvenement')
 				{
 					$t->assign_block_vars('simple', array());
-
-
-
 					// si l'evenement est un evenement externe au groupe d'adresse , on affiche un menu different a droite
 					if(isset($params['isLieFromOtherAdresse']) && $params['isLieFromOtherAdresse']==true)
 					{
@@ -1660,7 +1656,6 @@ class archiEvenement extends config
 						$intituleAdresse = $adresse->getIntituleAdresseFrom($fetchAdressesExternes['idAdresse'],'idAdresse');
 						//$t->assign_vars(array("divDisplayMenuAction"=>"none"));
 
-						
 						$ancrePositionAdresseLiee = "";
 
 						$positionSurAdresseOrigine = $adresse->getPositionFromEvenement($idEvenement);
@@ -1728,6 +1723,10 @@ class archiEvenement extends config
 						if($authentification->getIdProfil() == 4 || $isModerateurFromVilleCourante) // est on administrateur ou moderateur de la ville ?
 						{
 							$t->assign_block_vars('simple.menuAction.isAdminOrModerateurFromVille',array());
+							if($authentification->estConnecte() && $authentification->estAdmin() && isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1')
+							{
+								$t->assign_block_vars('simple.menuAction.isAdminOrModerateurFromVille.isAffichageSelectionImages',array());
+							}
 						}
 					}
 
@@ -1738,7 +1737,7 @@ class archiEvenement extends config
 
 					if($authentification->estConnecte() && $authentification->estAdmin() && isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1')
 					{
-						$t->assign_block_vars('simple.menuAction.isAdmin.isAffichageSelectionImages',array());
+						//$t->assign_block_vars('simple.menuAction.isAdminOrModerateurFromVille',array());
 					}
 				}
 

@@ -147,18 +147,23 @@ if (isset($_GET['archiAction'])) {
     		echo $connexionUtilisateur->erreurs->afficher();
     	}
     	if (isset($_GET['archiActionPrecedente']) 
-    			&& ($_GET['archiActionPrecedente']=='' || $_GET['archiActionPrecedente']=='validAuthentification'	|| $_GET['archiActionPrecedente']=='deconnexion')
+    			&& ($_GET['archiActionPrecedente']=='' 
+    			|| $_GET['archiActionPrecedente']=='validAuthentification'	
+    			|| $_GET['archiActionPrecedente']=='deconnexion')
+
     			&& !$connexionUtilisateur->erreurs->existe()) {
-    		if (isset($_GET['archiAffichage']) && $_GET['archiAffichage']=='ajoutNouveauDossier') {
-    			$_GET['archiAffichage'] = 'ajoutNouveauDossier';
-    		} elseif (isset($_GET['archiAffichage']) && $_GET['archiAffichage']=='imageDetail') {
-    			$_GET['archiAffichage'] = 'imageDetail';
-    		} elseif (isset($_GET['archiAffichage']) && $_GET['archiAffichage']!='adresseDetail') {
-    			$_GET['archiAffichage'] = 'profilPublique';
-    		} elseif (!isset($_GET['archiAffichage'])) {
-    			$_GET['archiAffichage'] = 'profilPublique';
-    		}
-    	}
+
+				if (isset ( $_GET ['archiAffichage'] ) && $_GET ['archiAffichage'] == 'ajoutNouveauDossier') {
+					$_GET ['archiAffichage'] = 'ajoutNouveauDossier';
+				} elseif (isset ( $_GET ['archiAffichage'] ) && $_GET ['archiAffichage'] == 'imageDetail') {
+					$_GET ['archiAffichage'] = 'imageDetail';
+				} elseif (isset ( $_GET ['archiAffichage'] ) && $_GET ['archiAffichage'] != 'adresseDetail') {
+					$_GET ['archiAffichage'] = 'afficheAccueil';
+				} elseif (! isset ( $_GET ['archiAffichage'] )) {
+					$_GET ['archiAffichage'] = 'afficheAccueil';
+					$_GET ['modeAffichage'] = 'profil';
+				}
+			}
     	break;
     }
 

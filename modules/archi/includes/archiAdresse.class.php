@@ -551,9 +551,12 @@ class archiAdresse extends ArchiContenu
 		}
 		// Selection de l'image principale
 		$afficheSelectionImagePrincipale = 1;
+
+		/*
 		if ($authentification->estConnecte () && isset ( $this->variablesGet ['afficheSelectionImagePrincipale'] ) && $this->variablesGet ['afficheSelectionImagePrincipale'] == '1') {
 			$afficheSelectionImagePrincipale = 0;
 		}
+		*/
 		if ($authentification->estConnecte ()) {
 			if ($authentification->estAdmin ()) {
 				$t->assign_block_vars ( 'actionsSommaire', array (
@@ -569,9 +572,11 @@ class archiAdresse extends ArchiContenu
 		
 		// Selection du titre
 		$afficheSelectionTitre = 1;
+		/*
 		if ($authentification->estConnecte () && isset ( $this->variablesGet ['afficheSelectionTitre'] ) && $this->variablesGet ['afficheSelectionTitre'] == '1') {
 			$afficheSelectionTitre = 0;
 		}
+		*/
 		if ($authentification->estConnecte ()) {
 			if ($authentification->estAdmin ()) {
 				

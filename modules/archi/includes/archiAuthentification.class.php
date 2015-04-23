@@ -183,7 +183,6 @@ class ArchiAuthentification extends config
                 $this->session->addToSession('idPaysFavoris', $fetch->idPaysFavoris);
                 $this->session->addToSession('utilisateurAlerteCommentaires', $fetch->alerteCommentaires);
                 $this->session->addToSession('utilisateurAlerteAdresses', $fetch->alerteAdresses);
-
                 // on ajoute l'utilisateur et la date a la table de la liste des connexions
                 $this->connexionBdd->requete("insert into connexionsUtilisateurs (idUtilisateur,date) values ('".$fetch->idUtilisateur."',now()) ");
             } else {
