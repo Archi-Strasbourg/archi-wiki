@@ -14277,7 +14277,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					
 					//Personne case
 					if (isset ( $info['idPersonne'] ) && $info['idPersonne'] != '') {
-						$urlImageIllustration= archiPersonne::getImage($info['idPersonne'],'resized',false,array('height'=>130,'width'=>130));
+						$urlImageIllustration= archiPersonne::getImage($info['idPersonne'],'resized',true,array('height'=>130,'width'=>130));
 						$addressUrl = $this->creerUrl ( '', 'evenementListe', 
 								array (
 								'selection' => 'personne',
