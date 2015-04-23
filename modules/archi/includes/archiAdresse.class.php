@@ -475,6 +475,8 @@ class archiAdresse extends ArchiContenu
 				$idEvenementGroupeAdresse = $fetch['idEvenement'];
 			}
 		}
+		debug($idAdresse);
+		debug($idEvenementGroupeAdresse);
 
 		//Getting coordo for the current address
 		$requete = "SELECT latitude , longitude FROM historiqueAdresse WHERE idAdresse = ".$idAdresse;
@@ -9439,7 +9441,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             			$urlImage = $arrayImage['url'];
             		}
             		if(!empty($urlImage)){
-            			$imageSurListeTousLesCommentaires="<div style='float:left;display:block;overflow:visible;padding-right:3px;width:80px;text-align:center;'><a href='".$urlAdresse."'><img src='".$urlImage."' border=0 align=middle></a></div>";
+            			$imageSurListeTousLesCommentaires="<div style='float:left;display:block;overflow-x:visible;overflow-y:hidden;padding-right:3px;width:80px;text-align:center;'><a href='".$urlAdresse."'><img src='".$urlImage."' border=0 align=middle></a></div>";
             		}
             	}
             	else
@@ -9460,7 +9462,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $t->assign_block_vars(
                 		'commentaires',
                 		array(
-                				'commentaire'=>$bbCode->convertToDisplay(array('text'=>$txtCommentaire)),
+                				'commentaire'=>$bbCode->convertToDisplay(array('text'=>$txtCommentaire,'type'=>'commentaire')),
                 				'pseudo'=>
                 				"<div style='display:block;overflow:auto;text-decoration:none;font-weight:normal;'>".
                 					$imageSurListeTousLesCommentaires.

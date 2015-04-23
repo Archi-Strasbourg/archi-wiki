@@ -1392,6 +1392,10 @@ li:empty {
 	display: none;
 }
 
+.event h4,.event h5,.event h6{
+	color: #B2B2B2;
+}
+
 .formAjoutCommentaire textarea,.formAjoutCommentaire input {
 	border-radius: 20px;
 	padding: 0.2em;
@@ -2586,6 +2590,7 @@ del{
 	background-color: #293234;
 	padding-left: 5px;
 	padding-right: 5px;
+	margin-top: 0px;
 }
 .commentaireEvenement{
 	margin-bottom: 40px;
@@ -2599,13 +2604,27 @@ Evenement block
 	 background-color: #424647;
 	 color: white;
 }
-.evenement, .commentaire {
-	padding: 10px;
+
+.evenement,.commentaire {
+	//padding: 10px;
+}
+.evenement{
+	//padding-left: 10px;
+	//padding-right: 10px;
+	/*padding: 10px;*/
+}
+.comment{
+	margin-left: 10px;
+	margin-right: 10px;
 }
 .evenement, .commentaire , .formComment{
-	
 	width: 100%;
 }
+
+.eventHeader,.eventBody{
+	padding: 10px;	
+}
+
 .eventPoster img{
 	height: 20px;	
 	vertical-align: bottom;
@@ -2625,6 +2644,7 @@ Evenement block
 	background-color: #2A3335;
 	padding-left: 5px;
 	padding-right: 5px;
+	margin-top: 0px;
 }
 
 .evenement a, .commentaire a , .formComment a {

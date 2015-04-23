@@ -1599,7 +1599,6 @@ class archiEvenement extends config
 		$styleColorSelectionImagePrincipaleActif = "";
 		$afficheSelectionImagePrincipale = 1;
 		if ($authentification->estConnecte() && isset($this->variablesGet['afficheSelectionImagePrincipale']) && $this->variablesGet['afficheSelectionImagePrincipale']=='1') {
-			debug("img principale");
 			$styleColorSelectionImagePrincipaleActif = "color:red";
 			$afficheSelectionImagePrincipale = 0;
 		}
@@ -1863,7 +1862,21 @@ class archiEvenement extends config
 				$source = "";
 				if($res->idSource!=0)
 				{
-					$source="Source : <a href='".$this->creerUrl('','listeAdressesFromSource',array('source'=>$res->idSource,'submit'=>'Rechercher'))."' onmouseover=\"document.getElementById('calqueDescriptionSource').style.top=(getScrollHeight()+150)+'px';document.getElementById('calqueDescriptionSource').style.display='block';document.getElementById('iframe').src='".$this->creerUrl('','descriptionSource',array('archiIdSource'=>$res->idSource,'noHeaderNoFooter'=>1))."';\" onmouseout=\"document.getElementById('calqueDescriptionSource').style.display='none';\">".stripslashes($res->nomSource)."</a><br>";
+					$source="Source : <a href='".$this->creerUrl('','listeAdressesFromSource',
+							array(
+									'source'=>$res->idSource,
+									'submit'=>'Rechercher'
+									
+							)
+							)."' onmouseover=\"document.getElementById('calqueDescriptionSource').style.top=(getScrollHeight()+150)+'px';
+									document.getElementById('calqueDescriptionSource').style.display='block';
+									document.getElementById('iframe').src='".$this->creerUrl('','descriptionSource',
+											array(
+													'archiIdSource'=>$res->idSource,
+													'noHeaderNoFooter'=>1
+													
+											))."';\" 
+									>".stripslashes($res->nomSource)."</a><br>";
 				}
 				else
 				{
@@ -2499,7 +2512,10 @@ class archiEvenement extends config
 			{
 				$html.="</form>";
 			}
-		}
+		}		
+		$s = new archiSource();
+		$html.=$s->getPopupDescriptionSource();
+		
 		return array('html'=>$html,'idTypeStructure'=>$retourIdTypeStructure,'titreAncre'=>$retourTitreAncre,'nomTypeEvenement'=>$retourNomTypeEvenement,'date'=>$retourDate,'isMH'=>$isMH,'isISMH'=>$isISMH,'listeGroupeAdressesAffichees'=>$listeGroupeAdressesAffichees,'dateFin'=>$retourDateFin);
 	}
 
@@ -6308,6 +6324,8 @@ debug($reqEvenementEvenement);
 	// ***************************************************************************************************************************************
 	public function afficherDetail($idAdresse=0,$idEvenementGroupeAdresse=0)
 	{
+		debug($idAdresse);
+		debug($idEvenementGroupeAdresse);
 		// attention s'il y a plusieurs evenement distinct (pas associes entre eux) reliés a l'adresse on les affichera a la suite
 		if (isset($_GET["archiIdAdresse"])) {
 			$address=$this->getArrayAdresseFromIdAdresse($_GET["archiIdAdresse"]);
@@ -7536,7 +7554,7 @@ debug($reqEvenementEvenement);
 		}
 		else{
 			$t->set_filenames((array('formComment'=>'comment/notconnected.tpl')));
-			$urlConnexion = $this->creerUrl('','connexion');
+			$urlConnexion = $this->creerUrl('','authentification');
 			$urlInscription = $this->creerUrl('','inscription');
 			
 			if($ty==''){

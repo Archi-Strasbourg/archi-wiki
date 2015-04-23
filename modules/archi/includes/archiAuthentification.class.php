@@ -407,7 +407,7 @@ class ArchiAuthentification extends config
         $authentification                          = new archiAuthentification();
         $t->assign_block_vars($modeAffichage, array());
         if (!isset($params['msg'])) {
-            $t->assign_vars(array('msg'=>"<b>"._("Afin de pouvoir ajouter une adresse ou en modifier une existante vous devez, au préalable, créer votre compte personnel sur www.archi-strasbourg.org. Pour cela inscrivez-vous en cliquant")." <a href='".$this->creerUrl('', 'inscription')."'>"._("ici").".</a></b>"));
+            $t->assign_vars(array('msg'=>"<b>"._("Afin de pouvoir ajouter, modifier une adresse ou poster un commentaire, vous devez, au préalable, créer votre compte personnel sur www.archi-strasbourg.org. Pour cela inscrivez-vous en cliquant")." <a href='".$this->creerUrl('', 'inscription')."'>"._("ici").".</a></b>"));
         } else {
             $t->assign_vars(array('msg'=>$params['msg']));
         }

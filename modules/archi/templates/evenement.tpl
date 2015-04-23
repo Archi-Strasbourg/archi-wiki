@@ -99,13 +99,6 @@
 			<!-- END isAdminOrModerateurFromVille --> 
 			<!-- BEGIN isAdmin -->
 				
-				
-				
-				
-				
-				
-				
-				
 			
 				<!-- BEGIN isAffichageSelectionImages -->
 				<div>
@@ -321,22 +314,40 @@
 <!-- BEGIN noSimple -->
 
 <!-- BEGIN autresVuesSur -->
-<div class="event">
-	<H5>
-		<?_("Autres vues sur")?>
-		{listeAdressesCourantes}
-	</H5>
-	{noSimple.autresVuesSur.value}
+<div class='evenement'	itemprop='event' itemscope itemtype="http://schema.org/Event"style='position: relative; display: table;'>
+	<div class="eventHeader">
+		<div class="eventPoster">
+
+		</div>
+	</div>
+	<div class="eventBody">
+		<div class="event">
+			<H5>
+				<?_("Autres vues sur")?>
+				{listeAdressesCourantes}
+			</H5>
+			{noSimple.autresVuesSur.value}
+		</div>
+	</div>
 </div>
 <!-- END autresVuesSur -->
 
 <!-- BEGIN autresPrisesDepuis -->
-<div class="event">
-	<H5>
-		<?_("Vues prises depuis")?>
-		{listeAdressesCourantes}
-	</H5>
-	{noSimple.autresPrisesDepuis.value}
+<div class='evenement'	itemprop='event' itemscope itemtype="http://schema.org/Event"style='position: relative; display: table;'>
+	<div class="eventHeader">
+		<div class="eventPoster">
+
+		</div>
+	</div>
+	<div class="eventBody">
+		<div class="event">
+			<H5>
+				<?_("Vues prises depuis")?>
+				{listeAdressesCourantes}
+			</H5>
+			{noSimple.autresPrisesDepuis.value}
+		</div>
+	</div>
 </div>
 <!-- END autresPrisesDepuis -->
 <!-- END noSimple -->

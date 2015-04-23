@@ -12,15 +12,15 @@
  * */
 $path="images/placeholder.jpg";
 if (isset($_GET["id"]) && !empty($_GET["id"])) {
-	$ressource = mysql_connect('localhost', 'archi_u_preprod', 'archi_pwd_preprod')
+	$ressource = mysql_connect('localhost', 'archi_user', 'archi_password')
 	or die(file_get_contents(__DIR__.'/../../../maintenance.html'));
-	mysql_select_db('archi_dbname_preprod') or die(mysql_error());
+	mysql_select_db('archi_reboot') or die(mysql_error());
 	mysql_query('SET NAMES "utf8"') or die (mysql_error());
 	$req = "
             SELECT dateUpload
             FROM  historiqueImage
             WHERE idHistoriqueImage = '".mysql_real_escape_string($_GET["id"])."'";
-
+	
 	$res = mysql_query($req)
 	or
 	die($requete.' -- '.mysql_error().' -- <br/> Request in file : <b>'.debug_backtrace()[0]['file'].'</b><br/> on line <b>'.debug_backtrace()[0]['line']).'</b>';
@@ -48,6 +48,7 @@ else{
 }
 
 $source_path = $path;
+
 
 define('DESIRED_IMAGE_WIDTH', $new_width);
 define('DESIRED_IMAGE_HEIGHT', $new_height);
@@ -115,9 +116,6 @@ DESIRED_IMAGE_WIDTH, DESIRED_IMAGE_HEIGHT
  * Render the image
 * Alternatively, you can save the image in file-system or database
 */
-
 header('Content-type: image/jpeg');
 imagejpeg($desired_gdim);
-
-
 ?>

@@ -802,9 +802,21 @@ if (isset($_GET['archiAffichage'])) {
             break;
         case 'adresseDetail':
         	$u = new archiUtilisateur();
-        	$u->updateVisitedLink($_GET['archiIdAdresse'],$_GET['archiIdEvenementGroupeAdresse']);
-            $a = new archiAdresse();
-            echo $a->afficherDetailAdresse($_GET['archiIdAdresse'],$_GET['archiIdEvenementGroupeAdresse']);
+        	$idEvenementGroupeAdresse = "";
+        	
+        	if(isset($_GET['archiIdEvenementGroupeAdresse'])&&$_GET['archiIdEvenementGroupeAdresse']!=''){
+        		$idEvenementGroupeAdresse=$_GET['archiIdEvenementGroupeAdresse'];
+        	}
+        	elseif(isset($_GET['archiIdEvenement'])&&$_GET['archiIdEvenement']!=''){
+        		$idEvenementGroupeAdresse=$_GET['archiIdEvenement'];
+        		$_GET['archiIdEvenementGroupeAdresse']=$_GET['archiIdEvenement'];
+        	}
+        	$u->updateVisitedLink($_GET['archiIdAdresse'],$idEvenementGroupeAdresse);
+            //$a = new archiAdresse();
+            //echo $a->afficherDetailAdresse($_GET['archiIdAdresse'],$idEvenementGroupeAdresse);
+            $evenement = new archiEvenement();
+            $retour = $evenement->afficher($_GET['archiIdEvenementGroupeAdresse']);
+            echo $retour['html'];
             break;
         case 'displayAddress':
         	$a = new archiAdresse();
