@@ -570,14 +570,8 @@ class ArchiAccueil extends config
 							$infoImage['idHistoriqueImage']=$modif['idHistoriqueImage'];
 						}
 					}
-					
-					//images/placeholder.jpg
-				//if(isset($infoImage['idHistoriqueImage']) && $infoImage['idHistoriqueImage']!=''){
-						$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
-					/*}
-					else{
-						$urlImage="images/placeholder.jpg";
-					}*/
+					$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
+
 					//Url Evenement
 					$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($modif['idEvenement']);
 					$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
@@ -658,12 +652,7 @@ class ArchiAccueil extends config
 								
 								$infoImage['idHistoriqueImage']=$array_image['idHistoriqueImage'];
 							}
-							if(isset($infoImage['idHistoriqueImage']) && $infoImage['idHistoriqueImage']!=''){
-								$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
-							}
-							else{
-								$urlImage="images/placeholder.jpg";
-							}
+							$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
 
 							//Url Evenement
 							$idEvenementGroupeAdresses = $lastVisit['idEvenementGroupeAdresse'];

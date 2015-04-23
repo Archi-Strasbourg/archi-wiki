@@ -214,21 +214,21 @@
 					<!-- BEGIN isConnected -->
 					<!-- BEGIN afficheLienSelectionImages -->
 					<li class="addEvent"><a href="{urlDeplacerImages}"
-						style='white-space: nowrap;'><?_("Sélectionner des images")?> </a>
+						style='white-space: nowrap;{styleModeDeplacementImageActif}'><?_("Sélectionner des images")?> </a>
 					</li>
 					<!-- END afficheLienSelectionImages -->
 					<!-- BEGIN afficheLienSelectionImagePrincipale -->
 					<li class="addEvent"><a href="{urlSelectionImagePrincipale}"
-						style='white-space: nowrap;'><?_("Sélectionner l'image principale")?>
+						style='white-space: nowrap;{styleModeSelectionImagePrincipale}'><?_("Sélectionner l'image principale")?>
 					</a></li>
 					<!-- END afficheLienSelectionImagePrincipale -->
 					<!-- BEGIN afficheLienSelectionTitre -->
 					<li class="addEvent"><a href="{urlSelectionTitreAdresse}"
-						style='white-space: nowrap;'><?_("Sélectionner le titre")?> </a></li>
+						style='white-space: nowrap;{styleModeChoixTitre}'><?_("Sélectionner le titre")?> </a></li>
 					<!-- END afficheLienSelectionTitre -->
 					<!-- BEGIN afficheLienPositionnementEvenements -->
 					<li class="addEvent"><a href='{urlPositionnementEvenements}'
-						style='white-space: nowrap;'><?_("Repositionner les évènements")?>
+						style='white-space: nowrap;{styleModePositionnementEvenements}'><?_("Repositionner les évènements")?>
 					</a></li>
 					<!-- END afficheLienPositionnementEvenements -->
 
