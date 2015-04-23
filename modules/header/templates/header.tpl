@@ -108,7 +108,6 @@
 				
 					<div class="classicConnexion">
 					{formulaireConnexion}
-					<hr/>
 					<div class="linksConnexion {classAuthLinkWrapper}">
 					<!-- BEGIN linkConnected -->
 						<a class="authLinkOneClass {linkConnected.authLinkClass}" href="{linkConnected.authLinkUrl}">{linkConnected.authLinkLabel}</a>

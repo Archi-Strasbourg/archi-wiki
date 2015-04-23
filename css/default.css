@@ -322,21 +322,15 @@ a.subscribeLabel{
 	width: 620px;
 	margin: 0 auto;
 }
-
+/*
 .linksConnexion{
 	margin-top: 5px;
 }
-
+*/
 .connectedAuthLink{
-	margin-top: 20px;
+	padding-top: 20px;
 }
 
-.formConnexion , .fastConnect{
-
-}
-.classicConnexion{
-
-}
 .fastConnect{
 	width: 100px;
 	float: left;	

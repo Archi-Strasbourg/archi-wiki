@@ -173,7 +173,6 @@ foreach ($listPages as $page) {
 $t->assign_vars(
     array(
         'listeUtilisateurs'=>$config->creerUrl('', 'utilisateurListe'),
-        'logsMails'=>$config->creerUrl('', 'afficheLogsMails'),
         'administration'=>$config->creerUrl('', 'administration'),
         'seDeconnecter'=>$config->creerUrl('deconnexion', 'authentification'),
         'recherche'=>$config->creerUrl('', 'recherche'),
@@ -279,11 +278,6 @@ else {
     }
     
     if($utilisateur->getIdProfil($userId)>=3){
-	    $t->assign_block_vars('linkConnected', array(
-	    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
-	    		'authLinkUrl'=> $config->creerUrl('', 'afficheLogsMails'),
-	    		'authLinkLabel' => _("Logs Mails")
-	    ));
 	    $t->assign_block_vars('linkConnected', array(
 	    		'authLinkOneClass'=> 'authLinkTwoClass subscribeLabel',
 	    		'authLinkUrl'=> $config->creerUrl('', 'administration'),
