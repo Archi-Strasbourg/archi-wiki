@@ -29,7 +29,7 @@
  * */
 class ArchiStatic extends config
 {
-    
+	 public $arrayUrlVersion=array();
     /**
      * Constructeyr d'ArchiStatic
      * 
@@ -37,6 +37,24 @@ class ArchiStatic extends config
      * */
     function __construct()
     {
+    	$this->arrayUrlVersion= array(
+    			array(
+    					'url'=>$this->creerUrl('','quiSommesNousArchiStrasbourg',array()),
+    					'label'=>"2012 - Qui Sommes nous Archi-Strasbourg"
+    			),
+    			array(
+    					'url'=>$this->creerUrl('','quiSommesNousCreationAssociation',array()),
+    					'label'=>"2011 - Qui Sommes nous création association"
+    			),
+    			array(
+    					'url'=>$this->creerUrl('','quiSommesNousContributeurs',array()),
+    					'label'=>"2010 - Qui Sommes nous avec les contributeurs"
+    			),
+    			array(
+    					'url'=>$this->creerUrl('','quiSommesNousLaurent',array()),
+    					'label'=>"2009 - Qui Sommes nous avec Laurent Dorer"
+    			)
+    	);
         parent::__construct();
     }
 
@@ -183,8 +201,12 @@ class ArchiStatic extends config
             'lienProfilHelmlinger'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>95)), 
             'lienProfilLohner'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>101)), 
             'lienProfilRiviere'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>86))
+            		
             )
         );
+        foreach ($this->arrayUrlVersion as $historique){
+        	$t->assign_block_vars('lienHistorique',$historique );
+        }
         
         ob_start();
         $t->pparse('quiSommesNous');
@@ -192,9 +214,43 @@ class ArchiStatic extends config
         ob_end_clean();
         
         return $html;
-    
     }
 
+    
+    public function afficheQuiSommesNousArchiStrasbourg($param = array()){
+
+    	$html = '';
+    	
+    	$t = new Template('modules/archi/templates/');
+    	$t->set_filenames(array('quiSommesNous'=>'staticQuiSommesNous.tpl'));
+    	
+    	$t->assign_vars(
+    			array(
+    					'lienProfilLaurent'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>30)),
+    					'lienProfilFabien'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>31)),
+    					'lienProfilBurckel'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>116)),
+    					'lienProfilHelmlinger'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>95)),
+    					'lienProfilLohner'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>101)),
+    					'lienProfilRiviere'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>86)),
+    					'lien2011' => $this->creerUrl('','quiSommesNousArchiStrasbourg',array()),
+    					'lien2011' => $this->creerUrl('','quiSommesNousArchiStrasbourg',array()),
+    					'lien2011' => $this->creerUrl('','quiSommesNousArchiStrasbourg',array()),
+    					
+    			)
+    	);
+    	foreach ($this->arrayUrlVersion as $historique){
+    		$t->assign_block_vars('lienHistorique',$historique );
+    	}
+    	
+    	ob_start();
+    	$t->pparse('quiSommesNous');
+    	$html .= ob_get_contents();
+    	ob_end_clean();
+    	
+    	return $html;
+    	
+    }
+    
     /**
      * Affiche une page statique
      * 
@@ -219,7 +275,9 @@ class ArchiStatic extends config
             'lienProfilRiviere'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>86))
             )
         );
-        
+        foreach ($this->arrayUrlVersion as $historique){
+        	$t->assign_block_vars('lienHistorique',$historique );
+        }
         ob_start();
         $t->pparse('quiSommesNous');
         $html .= ob_get_contents();
@@ -252,7 +310,9 @@ class ArchiStatic extends config
             'lienProfilRiviere'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>86))
             )
         );
-        
+        foreach ($this->arrayUrlVersion as $historique){
+        	$t->assign_block_vars('lienHistorique',$historique );
+        }
         ob_start();
         $t->pparse('quiSommesNous');
         $html .= ob_get_contents();
@@ -286,7 +346,9 @@ class ArchiStatic extends config
             'lienProfilRiviere'=>$this->creerUrl('', 'detailProfilPublique', array('archiIdUtilisateur'=>86))
             )
         );
-        
+        foreach ($this->arrayUrlVersion as $historique){
+        	$t->assign_block_vars('lienHistorique',$historique );
+        }
         ob_start();
         $t->pparse('quiSommesNous');
         $html .= ob_get_contents();

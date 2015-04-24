@@ -34,3 +34,12 @@ Je profite de cette page pour remercier infiniment (par ordre alphabétique) Mes
 <p>Afin d'humaniser un peu le site, nous avons mis en place récemment, la possibilité d'ajouter votre photo et l'adresse de votre site internet. Ces renseignements sont affichés lorsque l'on laisse un commentaire. N'hésitez pas à mettre à jour votre profil.</p>
 <br>
 Archi-strasbourg.org raconte au quotidien la vie des bâtiments et lieux que composent la ville, c'est un peu le facebook des immeubles !<br>
+<small>
+<BR>
+Historique des précédents <i>Qui sommes nous ?</i> :
+<!-- BEGIN lienHistorique -->
+<br/>
+<a href="{lienHistorique.url}">{lienHistorique.label}</a>
+<!-- END lienHistorique -->
+
+</small>

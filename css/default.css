@@ -2607,10 +2607,13 @@ Evenement block
 	//padding-right: 10px;
 	/*padding: 10px;*/
 }
+
+/*
 .comment{
 	margin-left: 10px;
 	margin-right: 10px;
 }
+*/
 .evenement, .commentaire , .formComment{
 	width: 100%;
 }

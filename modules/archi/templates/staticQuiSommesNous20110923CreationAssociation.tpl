@@ -139,8 +139,8 @@ d'Archi-Strasbourg</I></P>
 <font size="1">
 <BR>
 Historique des pr&eacute;c&eacute;dents 'Qui sommes nous ?' :
-<BR>
-<A HREF=../../?archiAffichage=quiSommesNousContributeurs>2011/09/30 Qui Sommes nous avec les contributeurs</A>
-<BR>
-<A HREF=../../?archiAffichage=quiSommesNousLaurent>2011/02/07 Qui Sommes nous avec Laurent Dorer</A>
+<!-- BEGIN lienHistorique -->
+<br/>
+<a href="{lienHistorique.url}">{lienHistorique.label}</a>
+<!-- END lienHistorique -->
 </font>
