@@ -758,7 +758,6 @@ class archiAdresse extends ArchiContenu
 
 		}
 		$html.="</h2>";
-		debug("isset var idEvtGA");
 		
 		$evenement = new archiEvenement();
 		// si le groupe d'adresse est precisé dans l'url , on ne va afficher que celui ci
@@ -773,8 +772,8 @@ class archiAdresse extends ArchiContenu
 			$html.=$retourEvenement['html'];
 				
 			if(!ArchiPersonne::isPerson($this->variablesGet['archiIdEvenementGroupeAdresse'])){
-				$html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
 				$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
+				$html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
 			}
 		}
 		elseif($idEvenementGroupeAdresse!='' && $idEvenementGroupeAdresse !='0')
@@ -783,8 +782,8 @@ class archiAdresse extends ArchiContenu
 			$html.=$retourEvenement['html'];
 				
 			if(!ArchiPersonne::isPerson($idEvenementGroupeAdresse)){
-				$html.=$this->getListeCommentaires($idEvenementGroupeAdresse);
 				$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
+				$html.=$this->getListeCommentaires($idEvenementGroupeAdresse);
 			}
 		}
 		else
@@ -798,8 +797,8 @@ class archiAdresse extends ArchiContenu
 				$retourEvenement = $evenement->afficher($fetchEvenements['idEvenement'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 				$html.=$retourEvenement['html'];
 				if(!ArchiPersonne::isPerson($fetchEvenements['idEvenement'])){
-					$html.=$this->getListeCommentaires($fetchEvenements['idEvenement']);
 					$html.= $evenement->getFormComment($fetchEvenements['idEvenement'],$this->getCommentairesFields(),'');
+					$html.=$this->getListeCommentaires($fetchEvenements['idEvenement']);
 				}
 			}
 			else
@@ -848,8 +847,8 @@ class archiAdresse extends ArchiContenu
 					if($nbGroupesAdressesAffiches==1)
 					{
 						if(!ArchiPersonne::isPerson($groupeAdresse)){
-							$html.=$this->getListeCommentaires($groupeAdresse);
 							$html.= $evenement->getFormComment($groupeAdresse,$this->getCommentairesFields(),'');
+							$html.=$this->getListeCommentaires($groupeAdresse);
 						}
 					}
 				}

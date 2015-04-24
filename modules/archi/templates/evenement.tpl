@@ -353,9 +353,5 @@
 <!-- END noSimple -->
 
 
-<!-- BEGIN commentairesAdresse -->
-	{commentairesAdresse.formulaireCommentaire}
-	{commentairesAdresse.listeCommentaires}
-<!-- END commentairesAdresse -->
 
 {divDeplacerEvenementVersGA}
