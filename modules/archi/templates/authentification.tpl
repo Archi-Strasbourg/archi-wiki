@@ -1,4 +1,4 @@
-﻿<form action='{ACTIONFORM}' method='post' enctype="multipart/form-data">
+﻿<form id="formConnexion" action='{ACTIONFORM}' method='post' enctype="multipart/form-data">
 <!-- BEGIN noCompact -->
 <br><br>
 <div align='center'>

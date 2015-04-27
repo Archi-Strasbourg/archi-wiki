@@ -1,4 +1,4 @@
-<div id="formCommentEvent-{idEvenement}" class="commentFormWrapper">
+<div id="formCommentEvent-{idEvenement}" class="commentFormWrapper {classWrappingDiv}">
 	<div class="{classButton}"><a href="" class="addCommentButton orangeButton">+ {labelButton}</a></div>
 	<div class="formComment">
 		<div class="profilePicWrapper">

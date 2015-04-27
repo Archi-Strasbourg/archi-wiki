@@ -771,7 +771,6 @@ if (isset($_GET['archiAffichage'])) {
              * */
             if (!$afficheAuthentificationAction) {
                 $auth = new archiAuthentification();
-                debug($_GET);
                 echo $auth->afficheFormulaireAuthentification();
             }
             break;

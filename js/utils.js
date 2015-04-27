@@ -21,6 +21,38 @@
 			e.preventDefault();
 			$(e.target).parent().parent('div').toggleClass('active');
 		});
+
+
+		$('.scrollToConnection').on('click',function(e){
+			$("html, body").animate({ scrollTop: 0 }, "slow");			
+
+			e.preventDefault();
+			e.stopPropagation();
+
+			$('body').removeClass('pml-open pmt-open-search').toggleClass('pmt-open-connexion');
+			
+			
+			//formConnexion
+			element=$(e.target).parent().parent().parent();
+			action= $('#formConnexion').attr('action');
+			ancre=element.attr('id');
+			idEvenement = ancre.substring(17);
+			activeSetting  = "&commentFormActive=";
+
+			newFormAction = action.concat(activeSetting,idEvenement,'#',ancre);
+			
+			$('#formConnexion').attr('action',newFormAction);
+			
+			//Add event listener on click on body (so, on all the page)
+			$('body').on('click', function(e){
+				//If the zone clicked is not the menu
+				if (!$(e.target).closest('.push-menu-top-connexion').length) {
+					// Hide the menus.
+					$('body').removeClass('pmt-open-connexion');
+				}
+			});
+			
+		});
 	});
 })(jQuery);
 

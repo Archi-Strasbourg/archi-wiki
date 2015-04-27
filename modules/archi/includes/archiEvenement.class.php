@@ -7546,6 +7546,7 @@ debug($reqEvenementEvenement);
 			foreach ($inputs as $input){
 				$t->assign_block_vars('input', $input);		
 			}
+			
 			$t->assign_vars(array(
 					'urlRedirect'=> $url,
 					'name'=> 'formAjoutCommentaire',
@@ -7575,6 +7576,15 @@ debug($reqEvenementEvenement);
 					'idEvenement' => $idEvenement
 			));
 		}
+		
+		//Setting CSS class for opening the form
+		if(isset($this->variablesGet['commentFormActive']) && $this->variablesGet['commentFormActive']){
+			if($this->variablesGet['commentFormActive']==$idEvenement){
+				$t->assign_var('classWrappingDiv', 'active');
+			}
+		}
+		
+		
 		
 		ob_start();
 		$t->pparse('formComment');
