@@ -363,22 +363,72 @@ class StringObject extends config
     }
     
     
+
     public function replaceUrl($input){
     	$regex = "/(https?:\/\/)?(www\.)?(([\/\w \.-]+)(\.[a-z]{2,3}))(\/.*)/";
     	$regex = "#(((https?://)|ftp://|www\.|[^\s:=]+@www\.).*?[a-z_\/0-9\-\#=&])(?=(\.|,|;|\?|\!)?(\"|'|«|»|\[|\s|\r|\n|$))#iS";
     	$text = preg_replace_callback($regex, function($url) {
+    		
     		if($url[3] == ''){
     			$returnUrl = "http://".$url[0];
     		}
     		else{
     			$returnUrl = $url[0];
     		}
-    		return "<a href=\"".$returnUrl."\">".mb_substr($url[0], 0,50)."...</a>";
+    		
+    		$target="";
+    		$regexTarget = "#".$_SERVER['SERVER_NAME']."#i";
+    		if(!preg_match($regexTarget, $url[0])){
+    			$target="target=_blank";
+    		}
+    		
+    		return "<a href=\"".$returnUrl."\" $target >".mb_substr($url[0], 0,50)."...</a>";
     	}, $input);
     	return $text;
     }
     
-    public function truncateString($input,$maxChar){
+    
+	public function replaceUrlMixup($input) {
+			
+			/*
+		 * $skipRegex = '~\[url(?|=[\'"]?+([^]"\']++)[\'"]?+]([^[]++)|](([^[]++)))\[/url]~';
+		 * $replaceURL = '<a href="\1">\2</a>';
+		 *
+		 * // $test = preg_replace ( $skipRegex, $input, $matches );
+		 *
+		 * $regex = "/(https?:\/\/)?(www\.)?(([\/\w \.-]+)(\.[a-z]{2,3}))(\/.*)/";
+		 * // $regex = "#(((https?://)|ftp://|www\.|[^\s:=]+@www\.).*?[a-z_\/0-9\-\#=&])(?=(\.|,|;|\?|\!)?(\"|'|«|»|\[|\[|\s|\r|\n|$))#iS";
+		 */
+		//$regex = "#((https?://)|ftp://|www\.|[^\s:=]+@www\.).*?[a-z_\/0-9\-\#=&])(?=(\.|,|;|\?|\!)?(\"|'|«|»|\[|\[|\s|\r|\n|$))#iS";
+		//$regex = "^(?!\[url=)(((https?://)|ftp://|www\.|[^\s:=]+@www\.).*?[a-z_\/0-9\-\#=&])(?=(\.|,|;|\?|\!)?(\"|'|«|»|\[|\]|\s|\r|\n|$))#iS";
+		///$regex = '#^(?!\[url)((((https?:\/\/)|ftp:\/\/|www\.|[^\s:=]+@www\.).*?[a-z_\/0-9\-\#=&])(?=(\.|,|;|\?|\!)?(\"|\\\'|«|»|\[|\]|\s|\r|\n|$)))$#iS';
+		
+		
+		//$regex='#^((?!\[url)((((https?:\/\/)|ftp:\/\/|www\.|[^\s:=]+@www\.).*?[a-z_\/0-9\-\#=&])(?=(\.|,|;|\?|\!)?(\"|\\\'|«|»|\[|\]|\s|\r|\n|$))))*$';
+		
+		
+		$regex = "#((?!(\[url=))(((https?:\/\/)|ftp:\/\/|www\.|[^\s:=]+@www\.).*?[a-z_\/0-9\-\#=&])(?=(\.|,|;|\?|\!)?(\"|'|«|»|\[|\]|\s|\r|\n|$))#iS";
+		
+		/*
+		 * (((https?:\/\/)|ftp:\/\/|www\.|[^\s:=]+@www\.).*?[a-z_\/0-9\-\#=&])(?=(\.|,|;|\?|\!)?(\"|'|«|»|\[|\]|\s|\r|\n|$))
+		 */
+		
+		
+		
+		// $regex = "#~(\[url=)(((https?://)|ftp://|www\.|[^\s:=]+@www\.).*?[a-z_\/0-9\-\#=&])(?=(\.|,|;|\?|\!)?(\"|'|«|»|\[|\s|\r|\n|$))#iS";
+		$text = preg_replace_callback ( $regex, function ($url) {
+			debug ( $url );
+			if ($url [3] == '') {
+				$returnUrl = "http://" . $url [0];
+			} else {
+				$returnUrl = $url [0];
+			}
+			return "<a href=\"" . $returnUrl . "\">" . mb_substr ( $url [0], 0, 50 ) . "...</a>";
+		}, $input );
+		
+		return $text;
+	}
+	public function truncateString($input,$maxChar){
     	$descriptionSize = strlen($input);
     	if($descriptionSize > $maxChar)
     		return mb_substr($input,0, $maxChar)."...";
