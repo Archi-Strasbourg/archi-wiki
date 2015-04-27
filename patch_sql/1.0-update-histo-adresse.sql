@@ -1,17 +1,11 @@
-
 -- Author : Antoine Rota Graziosi / InPeople
 --
 --
--- Unset foreign key checking because we are messing with it
--- Need to be reset to 1 at the end
--- Maybe needed to set and unset at each UPDATE call whereas at start and end of this process script
 --
 -- Resetting process is done in cascade, using fields linked from other tables
 -- This modification goes with PHP modification done on oct. 16th 2014 which is setting mutliple ids
 -- (idSousQuartier, idQuartier, idVille, idPays) to the correct value, depending on idRue value
 -- This allow more flexible data access and might be avoiding useless LEFT join in certain case
-
-SET FOREIGN_KEY_CHECKS = 0;
 
 
 -- Resetting idSousQuartier using "idRue" and its relation with "idsousQuartier" in "rue" table
@@ -60,5 +54,3 @@ WHERE EXISTS (SELECT ville.idPays
               WHERE ville.idVille = historiqueAdresse.idVille
               AND ville.idPays != 0);
 ;
-SET FOREIGN_KEY_CHECKS = 1;
-

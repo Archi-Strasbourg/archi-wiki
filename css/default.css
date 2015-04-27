@@ -1913,6 +1913,8 @@ hr.classic{
 	color: white;
 }
 
+
+
 .menu-button-div , .toggle-push-left{
 	background: none repeat scroll 0% 0% #FC802C;
 }
@@ -1920,7 +1922,15 @@ hr.classic{
 	height: 100%;
 	width: 120px;
 }
-.logo-header span{
+
+#menu-button:active,#menu-button:focus,#menu-button:active {
+	background-image: none;
+	outline: 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.logo-header span {
 	display: block;
 	float: left;
 }

@@ -2,7 +2,7 @@
 -- This need the update-histo-adresse.sql script to be run before
 -- Author: Antoine Rota Graziosi
 
-CREATE TABLE rechercheTest AS 
+CREATE TABLE recherche AS 
   (
         SELECT distinct ee.idEvenement as idEvenementGA ,
                 r.nom as nomRue,
@@ -73,37 +73,4 @@ ALTER TABLE recherche ENGINE=MYISAM;
 ALTER TABLE recherche ADD FULLTEXT INDEX `search` (nomRue, nomQuartier, nomSousQuartier, nomVille, nomPays, numeroAdresse, prefixeRue, description, titre , nomPersonne, prenomPersonne, concat1,concat2,concat3,concat4,concat5);
 
 
-
-
-
--- Executing the fulltext search 
-/*
-SELECT idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3 ,
-(
-	10 * (MATCH (nomRue) AGAINST ('5 rue des balayeurs' IN BOOLEAN MODE)) +
-	10 * (MATCH (nomSousQuartier) AGAINST ('5 rue des balayeurs' IN BOOLEAN MODE)) +
-	10 * (MATCH (nomQuartier) AGAINST ('5 rue des balayeurs' IN BOOLEAN MODE)) +
-	10 * (MATCH (nomVille) AGAINST ('5 rue des balayeurs' IN BOOLEAN MODE)) +
-	10 * (MATCH (nomPays) AGAINST ('5 rue des balayeurs' IN BOOLEAN MODE)) +
-	1 * (MATCH (description) AGAINST ('5 rue des balayeurs' IN BOOLEAN MODE)) +
-	1 * (MATCH (titre) AGAINST ('5 rue des balayeurs' IN BOOLEAN MODE)) +
-	1000 * (MATCH (concat1) AGAINST ('5 rue des balayeurs' IN BOOLEAN MODE)) +
-	100 * (MATCH (concat2) AGAINST ('5 rue des balayeurs' IN BOOLEAN MODE)) +
-	100 * (MATCH (concat3) AGAINST ('5 rue des balayeurs' IN BOOLEAN MODE)) 
-
-) as relevance
-
-FROM recherchetmp
-WHERE MATCH(nomRue, nomQuartier, nomSousQuartier, nomVille, nomPays, prefixeRue,numeroAdresse,  description, titre , nomPersonne, prenomPersonne, concat1,concat2,concat3) AGAINST ('5 rue des balayeurs')
-ORDER BY relevance DESC
-;
-
-
-
-
-
-SELECT idEvenementGA, nomRue,nomSousQuartier,nomQuartier,nomVille,nomPays,prefixeRue,description,titre,nomPersonne, prenomPersonne, numeroAdresse,concat1,concat2,concat3
-FROM recherchetmp
-WHERE MATCH(nomRue, nomQuartier, nomSousQuartier, nomVille, nomPays, description, titre ) AGAINST ('etoile');
-*/
 
