@@ -122,7 +122,7 @@
     	<nav  class="menu-new push-menu-left inline-block">
 			<ul>
 				<li><a href="index.php"><?_("Accueil")?></a></li>
-				<li><a href="index.php?archiAffichage=page&idPage=6"><?_("Présentation du site")?></a></li>
+				<!-- <li><a href="index.php?archiAffichage=page&idPage=6"><?_("Présentation du site")?></a></li> -->
 				<li><a href="index.php?archiAffichage=page&idPage=7"><?_("Revue de presse")?></a></li>
 				<li><a href="{quiSommesNous}"><?_("Qui sommes-nous ?")?></a></li>
 				<li><a href="{listeDossiers}"><?_("Adresses")?></a></li>
