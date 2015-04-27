@@ -12,9 +12,9 @@
  * */
 $path="images/placeholder.jpg";
 if (isset($_GET["id"]) && !empty($_GET["id"])) {
-	$ressource = mysql_connect('localhost', 'archi_user', 'archi_password')
+	$ressource = mysql_connect('localhost', 'archi_u_preprod', 'archi_pwd_preprod')
 	or die(file_get_contents(__DIR__.'/../../../maintenance.html'));
-	mysql_select_db('archi_reboot') or die(mysql_error());
+	mysql_select_db('archi_dbname_preprod') or die(mysql_error());
 	mysql_query('SET NAMES "utf8"') or die (mysql_error());
 	$req = "
             SELECT dateUpload
