@@ -2492,7 +2492,8 @@ del{
 	max-height: 500px;
     transition: max-height 0.25s ease-in , background-color 0.25s ease-in;
     background-color: #424647;
-    padding: 14px 10px 10px 10px;
+    /*padding: 14px 10px 10px 10px;*/
+    padding: 10px 0px;
     margin-top: -4px;
 }
 .formComment form{
@@ -2546,6 +2547,7 @@ del{
 	/*float:left;*/
 	vertical-align: top;
 	display: inline-block;
+	margin-left: 10px;
 }
 .profilePicWrapper img , .active .formComment form textarea{
 	margin-right: 10px;
