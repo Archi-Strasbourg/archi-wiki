@@ -1958,6 +1958,10 @@ class archiEvenement extends config
 				$user->setUserId($res->idEvenement);
 				$urlProfilPic = $user->getImageAvatar(array('idUtilisateur'=>$res->idUtilisateur));
 				$utilisateur="<a href='".$this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$res->idUtilisateur,'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroupeAdresse))."'>".$res->nomUtilisateur." ".$res->prenomUtilisateur."</a>";
+				$labelHistorique="";				
+				if($authentification->estConnecte()){
+					$labelHistorique = _("(Consulter l'historique)");
+				}
 				$t->assign_vars(array(
 						'txtEnvoi'    => $txtEnvoi,
 						'dateEnvoi'     =>$dateEnvoi,
@@ -1994,7 +1998,7 @@ class archiEvenement extends config
 						'urlProfilPic'=> $urlProfilPic,
 						'infoTitre'=> $utilisateur . " a ".$txtEnvoi." un événement",
 						'txtEnvoi' => $txtEnvoi." le",
-						'labelLienHistorique'=>_("(Consulter l'historique)")
+						'labelLienHistorique'=>$labelHistorique
 				));
 
 				$idEvenement = $res->idEvenement;
@@ -7548,7 +7552,8 @@ debug($reqEvenementEvenement);
 					'urlProfilePic'=>$urlProfilePic,
 					'profileAlt' => $profileAlt,
 					'labelButton' => $labelButton,
-					'classButton' => $classButton
+					'classButton' => $classButton,
+					'idEvenement' => $idEvenement
 			));
 			
 		}
@@ -7566,7 +7571,8 @@ debug($reqEvenementEvenement);
 					'urlInscription'=>$urlInscription,
 					'urlConnexion'=>$urlConnexion,
 					'labelButton'=>$labelButton,
-					'classButton'=>$classButton
+					'classButton'=>$classButton,
+					'idEvenement' => $idEvenement
 			));
 		}
 		
