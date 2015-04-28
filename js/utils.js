@@ -20,6 +20,8 @@
 		$('.addCommentButton').on('click',function(e){
 			e.preventDefault();
 			$(e.target).parent().parent('div').toggleClass('active');
+			test = $(e.target).parent().parent().children('.formComment');
+			test.children('form').children('textarea').focus();
 		});
 
 
@@ -51,8 +53,9 @@
 					$('body').removeClass('pmt-open-connexion');
 				}
 			});
-			
+			$('#archiLogin').focus();
 		});
+		$('.active .formComment textarea').focus();
 	});
 })(jQuery);
 
