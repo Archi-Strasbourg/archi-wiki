@@ -1,4 +1,1 @@
-{analyticsJS} {header}
-	{htmlModule}
-	{content}
-	{footer}
+{analyticsJS}{header}{htmlModule}{content}{footer}

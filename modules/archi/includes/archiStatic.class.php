@@ -222,7 +222,7 @@ class ArchiStatic extends config
     	$html = '';
     	
     	$t = new Template('modules/archi/templates/');
-    	$t->set_filenames(array('quiSommesNous'=>'staticQuiSommesNous.tpl'));
+    	$t->set_filenames(array('quiSommesNous'=>'staticQuiSommesNousArchiStrasbourg.tpl'));
     	
     	$t->assign_vars(
     			array(
