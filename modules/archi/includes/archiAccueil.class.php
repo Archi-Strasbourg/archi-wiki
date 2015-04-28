@@ -2591,7 +2591,7 @@ class ArchiAccueil extends config
 						'filename'=>'adressesArchitecte'
 				),
 				array(
-						'name'=>'Adresses par quartier',
+						'name'=>'Adresses par quartiers',
 						'xml'=>'opendata-adressesQuartier.xml',
 						'csv'=>'opendata-adressesQuartier.csv',
 						'filename'=>'adressesQuartier'
@@ -2604,19 +2604,19 @@ class ArchiAccueil extends config
 						
 				),
 				array(
-						'name'=>'Quartiers par ville',
+						'name'=>'Quartiers par villes',
 						'xml'=>'opendata-quartiersVille.xml',
 						'csv'=>'opendata-quartiersVille.csv',
 						'filename'=>'quartiersVille'
 				),
 				array(
-						'name'=>'Rues par quartier',
+						'name'=>'Rues par quartiers',
 						'xml'=>'opendata-ruesQuartier.xml',
 						'csv'=>'opendata-ruesQuartier.csv',
 						'filename'=>'ruesQuartier'
 				),
 				array(
-						'name'=>'Rues par sous quartier',
+						'name'=>'Rues par sous quartiers',
 						'xml'=>'opendata-ruesSousQuartier.xml',
 						'csv'=>'opendata-ruesSousQuartier.csv',
 						'filename'=>'ruesSousQuartier'
@@ -2628,7 +2628,7 @@ class ArchiAccueil extends config
 						'filename'=>'ruesVille'
 				),
 				array(
-						'name'=>'Photos par quartier',
+						'name'=>'Photos par quartiers',
 						'xml'=>'opendata-urlPhotosQuartier.xml',
 						'csv'=>'opendata-urlPhotosQuartier.csv',
 						'filename'=>'urlPhotosQuartier'

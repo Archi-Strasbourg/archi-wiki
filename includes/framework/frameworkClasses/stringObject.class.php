@@ -381,8 +381,14 @@ class StringObject extends config
     		if(!preg_match($regexTarget, $url[0])){
     			$target="target=_blank";
     		}
-    		
-    		return "<a href=\"".$returnUrl."\" $target >".mb_substr($url[0], 0,50)."...</a>";
+
+    		if(strlen($url[0]) > 50){
+    			$returnLink = "<a href=\"" . $returnUrl . "\">" . mb_substr ( $url [0], 0, 50 ) . "...</a>";
+    		}
+    		else{
+    			$returnLink = "<a href=\"" . $returnUrl . "\">" . $url[0]. "</a>";
+    		}
+    		return $returnLink;
     	}, $input);
     	return $text;
     }
