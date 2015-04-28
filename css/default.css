@@ -2496,8 +2496,8 @@ del{
     padding: 10px 0px;
     margin-top: -4px;
 }
-.active .notConnected{
-	padding: 10px;
+.active .notConnected p{
+	margin-left: 10px;
 }
 .formComment form{
 	//float:left;
