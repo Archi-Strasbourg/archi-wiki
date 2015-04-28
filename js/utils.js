@@ -27,7 +27,8 @@
 
 		$('.scrollToConnection').on('click',function(e){
 			$("html, body").animate({ scrollTop: 0 }, "slow");			
-
+			message ='<div class="warning-message message-bloc" style="margin-top: 10px;"><p class="message-text">Veuillez vous connecter pour poster un commentaire</p></div>';
+			$( message ).prependTo( $( "#primaryContent" ) );
 			e.preventDefault();
 			e.stopPropagation();
 
@@ -56,6 +57,9 @@
 			$('#archiLogin').focus();
 		});
 		$('.active .formComment textarea').focus();
+		
+
+		
 	});
 })(jQuery);
 
