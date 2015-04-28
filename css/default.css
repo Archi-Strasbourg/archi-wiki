@@ -2496,6 +2496,9 @@ del{
     padding: 10px 0px;
     margin-top: -4px;
 }
+.active .notConnected{
+	padding: 10px;
+}
 .formComment form{
 	//float:left;
 	display: inline-block;
@@ -2544,7 +2547,6 @@ del{
 }
 
 .profilePicWrapper{
-	/*float:left;*/
 	vertical-align: top;
 	display: inline-block;
 	margin-left: 10px;
