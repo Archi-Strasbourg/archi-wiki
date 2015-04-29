@@ -215,9 +215,10 @@ if ($authentification->estConnecte() !== true) {
     } else {
         $t->assign_vars(array('etatConnexion'=>_("Vous n'êtes pas connecté")));
     }
+    
     $t->assign_vars(
         array(
-            'formulaireConnexion' => $authentification->afficheFormulaireAuthentification('compact'),
+        	'formulaireConnexion' => $authentification->afficheFormulaireAuthentification('compact'),
             'formulaireRecherche' => $recherche->afficheFormulaire(array(), 0, array('noDisplayRechercheAvancee'=>false, 'noDisplayCheckBoxResultatsCarte'=>false)),
             'inscriptionDeconnexion' => _("Inscrivez-vous !"),
             'urlInscriptDeconnexion' => $config->creerUrl('', 'inscription'),

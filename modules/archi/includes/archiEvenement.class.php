@@ -7584,7 +7584,7 @@ debug($reqEvenementEvenement);
 			}
 		}
 		
-		
+		//$debug($this->variablesGet);
 		
 		ob_start();
 		$t->pparse('formComment');

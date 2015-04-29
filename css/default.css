@@ -149,7 +149,7 @@ a:hover {
 	margin-top: 3em;
 }
 
-#header .h2 {
+#header .h2 {ll
 	display: inline;
 	padding-left: 0.5em;
 	font-size: 0.8em;
@@ -1608,8 +1608,8 @@ hr.classic{
 }
 
 #primaryContentContainer,.header2 {
-/* 	width: 1200px; */
-/* 	max-width: 98%; */
+ 	width: 1200px; 
+ 	/*max-width: 98%;*/
 	vertical-align:top;
 }
 

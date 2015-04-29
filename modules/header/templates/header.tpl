@@ -43,7 +43,7 @@
 </head>
 
 
-<body onload="{onload}">
+<body onload="{onload}" class="{classBody}">
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];

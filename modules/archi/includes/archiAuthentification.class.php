@@ -185,6 +185,7 @@ class ArchiAuthentification extends config
                 $this->session->addToSession('utilisateurAlerteAdresses', $fetch->alerteAdresses);
                 // on ajoute l'utilisateur et la date a la table de la liste des connexions
                 $this->connexionBdd->requete("insert into connexionsUtilisateurs (idUtilisateur,date) values ('".$fetch->idUtilisateur."',now()) ");
+                return true;
             } else {
                 $this->session->deleteFromSession('utilisateurConnecte'.$this->idSite);
                 $this->session->deleteFromSession('idVilleFavoris');
@@ -192,6 +193,7 @@ class ArchiAuthentification extends config
                 $this->session->deleteFromSession('utilisateurAlerteCommentaires');
                 $this->session->deleteFromSession('utilisateurAlerteAdresses');
                 $this->erreurs->ajouter('Connexion : ce compte n\'est pas actif');
+                return false;
             }
         } else {
             $this->session->deleteFromSession('utilisateurConnecte'.$this->idSite);
@@ -205,6 +207,7 @@ class ArchiAuthentification extends config
             } else {
                 $this->erreurs->ajouter(_("Connexion :")." "._("erreur dans vos identifiants"));
             }
+            return false;
         }
     }
 
