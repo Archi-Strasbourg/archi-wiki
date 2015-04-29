@@ -150,16 +150,15 @@ if (isset($_GET['archiAction'])) {
     				<script>
     				(function($) {
 					$(document).ready(function() {
-    				$('html, body').animate({ scrollTop: 0 }, 'slow');	 
+    				$('html, body').animate({ scrollTop: 0 }, 'fast');	 
     					});
     				})(jQuery);
     				</script>
     				";
-						$config->addToJsHeader($toggleMenu);
-						
-    			}
-   				echo $connexionUtilisateur->erreurs->afficher();
-    		}
+						$config->addToJsHeader ( $toggleMenu );
+					}
+					echo $connexionUtilisateur->erreurs->afficher();
+				}
     	}
     	if (isset($_GET['archiActionPrecedente']) 
     			&& ($_GET['archiActionPrecedente']=='' 
@@ -167,7 +166,6 @@ if (isset($_GET['archiAction'])) {
     			|| $_GET['archiActionPrecedente']=='deconnexion')
 
     			&& !$connexionUtilisateur->erreurs->existe()) {
-    				debug("coucou");
 				if (isset ( $_GET ['archiAffichage'] ) && $_GET ['archiAffichage'] == 'ajoutNouveauDossier') {
 					$_GET ['archiAffichage'] = 'ajoutNouveauDossier';
 				} elseif (isset ( $_GET ['archiAffichage'] ) && $_GET ['archiAffichage'] == 'imageDetail') {
