@@ -2383,6 +2383,7 @@ class archiRecherche extends config {
 				.$sqlWhere.
 				"";
 
+			debug($requestAdresse);
 
 			$requetePersonne = "
 					SELECT 

@@ -1176,29 +1176,6 @@ class ArchiAccueil extends config
 
 
 	/**
-	 * New function displaying the encarts for the index page
-	 * 3 encarts are displayed : News, lasts addresses, last addresses followed by the user
-	 *
-	 *
-	 * @param unknown $params
-	 * @return multitype:string : array of html relative to each "encarts"
-	 */
-	public function getNewEncarts($params = array()){
-		$derniersAdresses = $this->getDernieresAdresses($params);
-		$actualites = $this->getActualites($params);
-		$derniersLike = $this->getDernieresAdresses($params);
-		//
-		 
-		 
-		return array(
-				'dernieresAdresses' => $derniersAdresses,
-				'actualites' => $actualites
-		);
-	}
-
-
-
-	/**
 	 * Get the HTML for the last addresses added encarts
 	 *
 	 *
@@ -1411,12 +1388,6 @@ class ArchiAccueil extends config
 		ob_end_clean();
 		return $htmlActualites;
 	}
-
-
-
-
-
-
 
 
 	/**
@@ -1969,202 +1940,6 @@ class ArchiAccueil extends config
 
 
 
-	public function getIndexitem($itemType = null){
-		$t=new Template('modules/archi/templates/accueil/');
-		$t->set_filenames(array('indexItem'=>'indexItem.tpl'));
-		$itemContent = array();
-
-		switch($itemType){
-			case 'news':
-				$sqlField = "titre,  date,  photoIllustration,  LEFT(texte,100) as texte, idActualite";
-				$news = $this->getDernieresActualites(array('sqlLimit' => 'LIMIT 5','sqlFields'=>$sqlField));
-				//$t->assign_var('CSSClassWrapper', 'newsItem');
-				foreach ($news as $new){
-					$item['CSSClassWrapper'] = 'news';
-					$item['titreItem'] =$new['titre'];
-					$item['imgUrl'] = $this->getUrlRacine().'resizeImage.php?id='.$new['photoIllustration'];;
-					$item['urlItem'] = $this->creerUrl('', 'afficherActualite', array('archiIdActualite'=>$new['idActualite']));;
-					$item['textItem'] = strip_tags($new['texte']);
-						
-					$itemContent[]=$item;
-				}
-				break;
-			case 'derniereVue':
-				//$t->assign_var('CSSClassWrapper', 'lastAddItem');
-				$requete = "SELECT idHistoriqueImage
-						FROM historiqueImage
-						ORDER BY dateUpload
-						LIMIT 5
-						";
-				$result = $this->connexionBdd->requete($requete);
-				$arrayId = array();
-				while($fetch = mysql_fetch_assoc($result)){
-					$arrayId[]=$fetch['idHistoriqueImage'];
-				}
-				 
-				$sqlIn = "(";
-				$i=0;
-				foreach ($arrayId as $id){
-					$sqlIn .=$id;
-					if($i++<count($arrayId)-1){
-						$sqlIn .=',';
-					}
-				}
-				$sqlIn.=')';
-				 
-				 
-				$requete = "SELECT * from  historiqueImage hi
-						LEFT JOIN _evenementImage ei on hi.idImage = hi.idImage
-						LEFT JOIN evenements evt on evt.idEvenement = ei.idEvenement
-						WHERE hi.idHistoriqueImage in " .$sqlIn."
-								GROUP BY hi.idHistoriqueImage";
-				 
-				$result = $this->connexionBdd->requete($requete);
-				while($fetch = mysql_fetch_assoc($result)){
-					$item['CSSClassWrapper'] = 'lastAdd';
-					$item['titreItem'] =$fetch['nom'];
-					$item['imgUrl'] = $this->getUrlRacine().'resizeImage.php?id='.$fetch['idHistoriqueImage'];
-					$item['urlItem'] = $this->creerUrl('', '',
-							array(
-									'archiAffichage'=>'adresseDetail',
-									"archiIdAdresse"=>$fetch['idAdresse'],
-									"archiIdEvenementGroupeAdresse"=>$fetch['idEvenementGroupeAdresse']
-							));
-					$item['textItem'] = $fetch['nom'];
-					$itemContent[] = $item;
-				}
-				break;
-			case 'lastAdded':
-				$requete =
-				"
-						SELECT evt.idEvenement AS idEvenement, evt.titre AS titre, evt.idImagePrincipale AS idHistoriqueImage, ee.idEvenement AS idEvenementGroupeAdresse, ae.idAdresse AS idAdresse,ha.nom
-						FROM evenements evt
-						LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
-						LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-						LEFT JOIN historiqueAdresse ha ON ha.idAdresse = ae.idAdresse
-
-						ORDER BY evt.idEvenement DESC
-						LIMIT 5
-						";
-
-				$result = $this->connexionBdd->requete($requete);
-				while($fetch = mysql_fetch_assoc($result)){
-					$item['CSSClassWrapper'] = 'lastAdd';
-					$item['titreItem'] =$fetch['nom'];
-					$item['imgUrl'] = $this->getUrlRacine().'resizeImage.php?id='.$fetch['idHistoriqueImage'];
-					$item['urlItem'] = $this->creerUrl('', '',
-							array(
-									'archiAffichage'=>'adresseDetail',
-									"archiIdAdresse"=>$fetch['idAdresse'],
-									"archiIdEvenementGroupeAdresse"=>$fetch['idEvenementGroupeAdresse']
-							));
-					$item['textItem'] = $fetch['nom'];
-					$itemContent[] = $item;
-				}
-				break;
-			case 'interest':
-
-				/*
-				 * Initialisation des variables :
-				 * Tableau avec les champs pour remplir la requete
-				 */
-				$requestField = array(
-				array(
-				'table'=>'_interetRue',
-				'id'=> 'idRue'
-						),
-						array(
-						'table'=>'_interetSousQuartier',
-						'id'=> 'idSousQuartier'
-								),
-								array(
-								'table'=>'_interetVille',
-								'id'=> 'idVille'
-										),
-										array(
-										'table'=>'_interetAdresse',
-										'id'=> 'idHistoriqueAdresse'
-												),
-												array(
-												'table'=>'_interetPays',
-												'id'=> 'idPays'
-														),
-														array(
-														'table'=>'_interetQuartier',
-														'id'=> 'idQuartier'
-																)
-				);
-				$auth = new ArchiAuthentification();
-				$userId=$auth->getIdUtilisateur();
-				 
-				/*
-				 * Boucle pour faire les sous requetes
-				*/
-				 
-				$subRequest = array();
-				$request ="";
-				$i=0;
-				foreach ($requestField as $fields){
-					$request.="
-							(
-							SELECT evt.idEvenement AS idEvenement, evt.titre AS titre, evt.idImagePrincipale AS idHistoriqueImage, ee.idEvenement AS idEvenementGroupeAdresse, ae.idAdresse AS idAdresse,ha.nom , i.created as created
-							FROM evenements evt
-							INNER JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
-							INNER JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-							INNER JOIN historiqueAdresse ha ON ha.idAdresse = ae.idAdresse
-							INNER JOIN ".$fields['table']." i ON i.".$fields['id']." = ha.".$fields['id']."
-									WHERE i.idUtilisateur =".$userId."
-											GROUP BY idEvenement DESC
-											ORDER BY i.created
-											LIMIT 5
-											)
-											";
-					if($i++<count($requestField)-1){
-						$request.=" UNION ";
-					}
-					else{
-						/*$request.=" ORDER BY created
-						 LIMIT 5";
-						*/
-					}
-				}
-				/*
-				 * Data processing
-				*/
-				 
-				//Strange request wrapping to avoid redundancy, might not be accepted by MySQL
-				$request = "SELECT * FROM
-						(".$request.")
-								AS tmp
-								GROUP BY idEvenementGroupeAdresse
-								ORDER BY created
-								LIMIT 5 ";
-				$result = $this->connexionBdd->requete($request);
-				while($fetch = mysql_fetch_assoc($result)){
-					$item['CSSClassWrapper'] = 'interest';
-					$item['titreItem'] =$fetch['nom'];
-					$item['imgUrl'] = 'resizeImage.php?id='.$fetch['idHistoriqueImage'];
-					$item['urlItem'] = $this->creerUrl('', '',
-							array(
-									'archiAffichage'=>'adresseDetail',
-									"archiIdAdresse"=>$fetch['idAdresse'],
-									"archiIdEvenementGroupeAdresse"=>$fetch['idEvenementGroupeAdresse']
-							));
-					$item['textItem'] = $fetch['nom'];
-					$itemContent[] = $item;
-				}
-				break;
-			default:
-				$itemContent['CSSClassWrapper'] = 'news';
-				$itemContent['titreItem'] ='';
-				$itemContent['imgUrl'] = '';
-				$itemContent['urlItem'] = '';
-				$itemContent['textItem'] = '';
-
-		}
-		 
-		return $itemContent;
-	}
 
 
 
@@ -2341,54 +2116,172 @@ class ArchiAccueil extends config
 		$interest = new archiInterest();
 		$arrayIdEvenement = $interest->getFavorisIdEvenementGroupeAdresse(0);
 		$auth = new ArchiAuthentification();
-		$whereClause = "WHERE ae.idAdresse IS NOT NULL ";
-		
+		//$whereClause = "WHERE ae.idAdresse IS NOT NULL ";
+		$whereSimple = "WHERE ae.idAdresse IS NOT NULL ";
+		$whereSimpleArray = array();
 		if($auth->estConnecte()){
 			$arrayInterest = $interest->getFavorisByCategories();
+			//debug($arrayInterest);
 			if(!empty($arrayInterest)){
-				//$whereClause.="AND (";
 				if(isset($arrayInterest['rue'])){
 					$fieldRue = implode(',', $arrayInterest['rue']);
 					$subClause[]= "ha.idRue in ($fieldRue)";
+					
+					foreach($arrayInterest['rue'] as $idRue){
+						$whereSimpleArray[] = "ha.idRue = ".$idRue." ";
+					}
 				}
 				if(isset($arrayInterest['sousQuartier'])){
 					$fieldSousQuartier = implode(',',$arrayInterest['sousQuartier']);
-					$subClause[]= "ha.idSousQuartier in ($fieldSousQuartier)";
+					$subClause[] = "ha.idSousQuartier in ($fieldSousQuartier)";
+					
+					foreach ( $arrayInterest ['sousQuartier'] as $idSousQuartier ) {
+						$whereSimpleArray[]= " ha.idSousQuartier = " . $idSousQuartier." ";
+					}
 				}
-				if(isset($arrayInterest['quartier'])){
-					$fieldQuartier = implode(',',$arrayInterest['quartier']);
-					$subClause[]= "ha.idQuartier in ($fieldQuartier)";
+				if (isset ( $arrayInterest ['quartier'] )) {
+					$fieldQuartier = implode ( ',', $arrayInterest ['quartier'] );
+					$subClause [] = "ha.idQuartier in ($fieldQuartier)";
+					
+					foreach ($arrayInterest['quartier'] as $idQuartier){
+						$whereSimpleArray[]=" ha.idQuartier = ".$idQuartier." ";
+					}
 				}
-				if(isset($arrayInterest['ville'])){
-					$fieldVille=implode(',',$arrayInterest['ville']);
-					$subClause[] = "ha.idVille in ($fieldVille)";
+				if (isset ( $arrayInterest ['ville'] )) {
+					$fieldVille = implode ( ',', $arrayInterest ['ville'] );
+					$subClause [] = "ha.idVille in ($fieldVille)";
+					foreach ($arrayInterest['ville'] as $idVille){
+						$whereSimpleArray[]=" ha.idVille = ".$idVille." ";
+					}
 				}
 				if(isset($arrayInterest['pays'])){
 					$fieldPays = implode(',', $arrayInterest['pays']);
 					$subClause[]="ha.idPays in ($fieldPays)";
+					
+					foreach ($arrayInterest['pays'] as $idPays){
+						$whereSimpleArray[]=" ha.idPays = ".$idPays." ";
+					}
 				}
 
 				if(!empty($subClause)){
 					$whereClause.=" AND (".implode(' OR ', $subClause).")";
 				}
+				if(!empty($whereSimpleArray)){
+					$whereSimple .=" AND (".implode(' OR ', $whereSimpleArray).")";					
+				}
 			}
 
 		}
 		
+		//debug($whereSimple);
+		$requeteIdAdresse = "select distinct tmp.idEvenementGroupeAdresse from(
+		SELECT ae.idAdresse,
+		ee.idEvenement AS idEvenementGroupeAdresse,
+		evt.idEvenement, DATE_FORMAT( evt.dateCreationEvenement, '%Y%m%d%H%i%s' ) AS DateTri
+		FROM historiqueEvenement evt, _evenementEvenement ee, _adresseEvenement ae,historiqueAdresse ha
+		$whereClause
+		AND evt.idEvenement = ee.idEvenementAssocie
+		AND ha.idAdresse = ae.idAdresse
+		AND ae.idEvenement = ee.idEvenement
+		order by DateTri DESC
+		) as tmp
+		limit $nbElts
+		";
+		
+		
 		
 		$requeteIdAdresse = "select distinct tmp.idEvenementGroupeAdresse from(
-				SELECT ae.idAdresse, 
-				ee.idEvenement AS idEvenementGroupeAdresse, 
-				evt.idEvenement, DATE_FORMAT( evt.dateCreationEvenement, '%Y%m%d%H%i%s' ) AS DateTri 
-				FROM historiqueEvenement evt, _evenementEvenement ee, _adresseEvenement ae,historiqueAdresse ha
-				$whereClause
-				AND evt.idEvenement = ee.idEvenementAssocie
-				AND ha.idAdresse = ae.idAdresse
-				AND ae.idEvenement = ee.idEvenement
-				order by DateTri DESC
-			) as tmp
-			limit $nbElts
+		SELECT ae.idAdresse,
+		ee.idEvenement AS idEvenementGroupeAdresse,
+		evt.idEvenement, DATE_FORMAT( evt.dateCreationEvenement, '%Y%m%d%H%i%s' ) AS DateTri
+		FROM historiqueEvenement evt, _evenementEvenement ee, _adresseEvenement ae,historiqueAdresse ha
+		$whereSimple
+		AND evt.idEvenement = ee.idEvenementAssocie
+		AND ha.idAdresse = ae.idAdresse
+		AND ae.idEvenement = ee.idEvenement
+		order by DateTri DESC
+		) as tmp
+		limit $nbElts
 		";
+		
+		
+		
+		//debug($requeteIdAdresse);
+		
+		/*
+		 * SELECT * from (SELECT ee.idEvenement AS idEvenementGroupeAdresse, evt.idEvenement AS idEvenement, ae.idAdresse, evt.idEvenementRecuperationTitre, evt.idImagePrincipale AS idHistoriqueImage, te.nom AS typeEvenement, date_format( evt.dateCreationEvenement, "%e/%m/%Y" ) AS dateCreationEvenement, DATE_FORMAT( evt.dateCreationEvenement, '%Y%m%d%H%i%s' ) AS DateTri, evt.description, 1 AS priorite
+FROM evenements evt
+LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
+LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+LEFT JOIN historiqueAdresse ha ON ha.idAdresse = ae.idAdresse
+AND (
+ha.idRue
+IN ( 10 )
+OR ha.idSousQuartier
+IN ( 97 )
+OR ha.idQuartier
+IN ( 17 )
+OR ha.idVille
+IN ( 1, 29, 41 )
+OR ha.idPays
+IN ( 1 )
+)
+LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
+WHERE ae.idAdresse is not null
+) as tmp
+GROUP BY tmp.idAdresse
+ORDER BY tmp.DateTri DESC 
+LIMIT 8
+		 */
+		
+		
+		$requeteElements = "
+					SELECT
+					ee.idEvenement as idEvenementGroupeAdresse,
+					evt.idEvenement AS idEvenement,
+					ae.idAdresse,
+					evt.idEvenementRecuperationTitre ,
+					evt.idImagePrincipale AS idHistoriqueImage,
+					te.nom as typeEvenement,
+					date_format(evt.dateCreationEvenement," . _ ( '"%e/%m/%Y"' ) . ") as dateCreationEvenement,
+					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
+									
+					evt.description,
+					1 as priorite
+					
+					FROM evenements evt
+					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse  ".$whereClause."
+					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
+							
+					WHERE ae.idAdresse IS NOT NULL 
+					ORDER BY DateTri DESC
+					LIMIT ".$nbElts."
+				";
+		
+		//debug($requeteElements);
+		
+		
+		/*
+		$resultElement = $this->connexionBdd->requete($requeteElements);
+		$arrayEvenement=array();
+		while($rowElement = mysql_fetch_assoc($resultElement)){
+			$arrayEvenement[]=$rowElement;
+		}
+		*/
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
 		$resultIdAdresse = $this->connexionBdd->requete($requeteIdAdresse);
 		$arrayIdEvenement = array();
 		$arrayEvenement = array();
@@ -2423,7 +2316,6 @@ class ArchiAccueil extends config
 			$resultSingleEvenement = $this->connexionBdd->requete($requeteSingleEvent);
 			$arrayEvenement[]=mysql_fetch_assoc($resultSingleEvenement);
 		}
-		
 		
 		foreach ($arrayEvenement as $lastModif){
 			
@@ -2537,11 +2429,6 @@ class ArchiAccueil extends config
 									";
 			if($i++<count($requestField)-1){
 				$request.=" UNION ";
-			}
-			else{
-				/*$request.=" ORDER BY created
-				 LIMIT 5";
-				*/
 			}
 		}
 		/*

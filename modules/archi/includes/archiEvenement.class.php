@@ -6979,7 +6979,6 @@ debug($reqEvenementEvenement);
 				ae.idAdresse,
 				ha.idVille,
 				ee.idEvenement as idEvenementGroupeAdresse		
-				
 					
 				FROM historiqueEvenement hE
 				LEFT JOIN source s      ON s.idSource = hE.idSource
@@ -7483,6 +7482,16 @@ debug($reqEvenementEvenement);
 		}
 	}
 	
+	
+	/**
+	 * Get the form for comment
+	 * 
+	 * 
+	 * @param unknown $idEvenement
+	 * @param unknown $fields
+	 * @param string $ty : type of comment 
+	 * @return string
+	 */
 	public function getFormComment($idEvenement,$fields,$ty=''){
 		$t = new Template('modules/archi/templates/');
 		$labelButton = "Ajouter un commentaire";
@@ -7584,8 +7593,6 @@ debug($reqEvenementEvenement);
 			}
 		}
 		
-		//$debug($this->variablesGet);
-		
 		ob_start();
 		$t->pparse('formComment');
 		$html .= ob_get_contents();
@@ -7593,7 +7600,12 @@ debug($reqEvenementEvenement);
 		return $html;
 	}
 	
-	
+	/**
+	 * Display a single event with event data in input
+	 * 
+	 * @param unknown $evenement
+	 * @return string
+	 */
 	public function displaySingleEvent($evenement){
 		$t = new Template('modules/archi/templates/');
 		$t->set_filenames((array('evenement'=>'evenement/singleEvent.tpl')));

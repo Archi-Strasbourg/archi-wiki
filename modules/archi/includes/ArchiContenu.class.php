@@ -683,13 +683,8 @@ abstract class ArchiContenu extends config
                             'latitude'=>''
                         )
                     );
-                
                 }
             }
-            
-            
-            debug($this->variablesPost);
-            debug($arrayNewAdresses);
             
             
             $sql = "SELECT ha1.idAdresse as idAdresse
@@ -707,8 +702,6 @@ abstract class ArchiContenu extends config
 				HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)";
             $resDouble = $this->connexionBdd->requete($sql);
             $arrayDouble = mysql_fetch_assoc($resDouble);
-            
-            
             
 			$this->addEvent("adresse",  $arrayNewAdresses);
             
@@ -751,11 +744,8 @@ abstract class ArchiContenu extends config
         }
         $table = array('table'=>$linkTable,'field' => $field);
 
-        debug($arrayNewAdresses);
+		//debug($arrayNewAdresses);
         //$arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier();
-        
-
-        
         
         foreach ($arrayNewAdresses as $newAddress){
         	debug(array(
@@ -796,8 +786,6 @@ abstract class ArchiContenu extends config
                 ";
                 $resLiaisons = $this->connexionBdd->requete($reqLiaisons);
             }
-            
-            
 
             // on relie l'evenement pere (groupe d'adresse ) à l'evenement fils
             if(isset($newAddress['newAdresse']) && !empty($newAddress['newAdresse']) || $newAddress['newAdresse'] ==1){
@@ -932,26 +920,6 @@ abstract class ArchiContenu extends config
             }
         }
     }
-    
-    
-    
-    
-    
-    public function getFormComment($type,$idEvenement,$fieldsCommentaires){
-    	$t = new Template('modules/archi/templates/');
-    	$t->set_filenames((array('listeCommentaires'=>'comment/comment.tpl')));
-    	
-    	
-    	
-    	
-    	
-    	ob_start();
-    	$t->pparse('listeCommentaires');
-    	$html .= ob_get_contents();
-    	ob_end_clean();
-    	return $html;
-    }
-    
 }
 
 ?>

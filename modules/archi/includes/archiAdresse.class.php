@@ -12950,14 +12950,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
     // renvoi les adresses situées autour de l'adresse courante ... ex : adresse courante = 3 rue de la ziegelau , =====> on renvoi le 2 rue de la ziegelau et le 4 , ci ceux ci existents , sinon on recherche le precedent et le suivant immediat
     // contrairement a la fonction getIdAdressesAutourAdressesCourante qui se base sur l'intitule de l'adresse sous forme de chaine de caractere , ici on se base sur le groupe d'adresse , donc c'est plus rapide pour l'affichage de l'encart
     public function getArrayIdAdressesNearCurrentAdresse($params = array())
@@ -14462,7 +14454,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		return $addressesInformations;
 	}
 	
-	
+	/**
+	 * Generate pagination links 
+	 * 
+	 * @param unknown $options
+	 * @return multitype:string
+	 */
 	private function generatePaginationLinks($options = array()){
 		//Pagination display
 		$nbResult = 0;
@@ -14514,7 +14511,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 	
 	
 	/**
-	 * 
+	 * Get pagination index
 	 * @param unknown $optionsPagination : array with the info of pagination (nb results, nb results per page, current page etc)
 	 * @return $indexRange = range of the index to display
 	 */	
@@ -14755,8 +14752,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		$retValue = mysql_fetch_assoc($result);
 		return $retValue['titre'];
 	}
-
-
 }
 
 ?>
