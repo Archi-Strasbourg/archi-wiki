@@ -2168,7 +2168,6 @@ class ArchiAccueil extends config
 
 		}
 		
-		//debug($leftjoinCondition);
 		$requeteIdAdresse = "select distinct tmp.idEvenementGroupeAdresse from(
 		SELECT ae.idAdresse,
 		ee.idEvenement AS idEvenementGroupeAdresse,
@@ -2351,7 +2350,6 @@ LIMIT 8
 			$titreArray = mysql_fetch_assoc($restitre);
 
 			$tmp['titre'] = $titreArray['titre'];
-			$tmp['titre']="titre";
 			$idImagePrincipale = $titreArray['idImagePrincipale'];
 			if(isset($idImagePrincipale) && !empty($idImagePrincipale)){
 				$requeteIdHistoImage = "

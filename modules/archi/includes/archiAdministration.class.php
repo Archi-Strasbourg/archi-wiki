@@ -1165,7 +1165,7 @@ class ArchiAdministration extends config
 
             // gestion de l'upload
             if (isset($_FILES['photoIllustration']) && !$_FILES['photoIllustration']['error']) {
-                $f->handleUploadedFileSimpleMoveTo(array('inputFileName'=>'photoIllustration', 'redimensionneImageConfig'=>array(200=>array('destination'=>$this->getCheminPhysique()."images/actualites/".$idNewActualite."/illustration200.jpg"))));
+                $f->handleUploadedFileSimpleMoveTo(array('inputFileName'=>'photoIllustration', 'redimensionneImageConfig'=>array(150=>array('destination'=>$this->getCheminPhysique()."images/actualites/".$idNewActualite."/illustration200.jpg"))));
 
                 // on met a jour la bdd , meme si dans les prochaines actu cela ne sert a rien de garder le champs , vu le fonctionnement, on le garde pour les anciennes actus
                 $reqIllustration = "UPDATE actualites SET photoIllustration='illustration200.jpg' WHERE idActualite='".$idNewActualite."' ";
