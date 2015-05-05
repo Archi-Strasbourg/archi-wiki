@@ -771,7 +771,7 @@ class archiAdresse extends ArchiContenu
 			$retourEvenement = $evenement->afficher($this->variablesGet['archiIdEvenementGroupeAdresse'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 			$html.=$retourEvenement['html'];
 				
-			if(!ArchiPersonne::isPerson($this->variablesGet['archiIdEvenementGroupeAdresse'])){
+			if(!archiPersonne::isPerson($this->variablesGet['archiIdEvenementGroupeAdresse'])){
 				$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
 				$html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
 			}
@@ -14231,6 +14231,15 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$titre = $info['titre'];
 				
 				
+				
+				
+				$input=array(
+						'idEvenementGA'=>$info['idEvenementGroupeAdresse'],
+						'idAdresse'=>$info['idAdresse']
+						
+				);
+				$arrayUrl = $this->generateUrlListAddresses($input,$this->variablesGet['modeAffichage']);
+				
 				//If prisdepuis
 				if(isset($this->variablesGet['modeAffichage']) && ($this->variablesGet['modeAffichage'] == 'popupRechercheAdressePrisDepuis')){
 					$addressUrl="#";
@@ -14277,6 +14286,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 								"id" => $info ['idPersonne'] 
 						) );
 						$titre=$info['nom'];
+						$urlDetailOnClick = '';
+						
 					} 
 					//Adresse case
 					else {
@@ -14286,8 +14297,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 								"archiIdAdresse" => $info ['idAdresse'],
 								"archiIdEvenementGroupeAdresse" => $info ['idEvenementGroupeAdresse'] 
 						) );
+						
+						
+						$addressUrl=$arrayUrl['urlDetailHref'];
+						$urlDetailOnClick=$arrayUrl['urlDetailOnClick'];
+						
 					}
-					$urlDetailOnClick = '';
 					
 					// Event title
 					$titreEvenements = implode ( " - ", $info ['titresEvenements'] ); // Getting all the events links on one line
@@ -14345,7 +14360,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     				AND ae.idEvenement = " . $id ['idEvenementGroupeAdresse'] . "
     				GROUP BY ha.idHistoriqueAdresse
 							";
-					
+					debug($req);
 					$res = $this->connexionBdd->requete ( $req );
 					$row = mysql_fetch_assoc ( $res );
 					$arrayAdresse [] = $row;
@@ -14382,6 +14397,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			 * Previous request
 			 */
 			//Processing all the adresses get from the request : getting address title and link to the events linked
+			
 			
 			
 			//while($fetch = mysql_fetch_assoc($res)){
@@ -14752,6 +14768,178 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		$retValue = mysql_fetch_assoc($result);
 		return $retValue['titre'];
 	}
+	
+	
+	
+	
+	public function generateUrlListAddresses($input, $modeAffichage){
+		// mise en place du lien de l'adresse suivant l'affichage ou l'on est
+		switch ($modeAffichage) {
+			case 'calqueImage':
+				$urlDetailHref    = "#";
+				$urlDetailOnClick = "document.getElementById(document.getElementById('paramChampsAppelantAdresse').value).value='".$input['idAdresse']."';document.getElementById(document.getElementById('paramChampsAppelantAdresse').value+'txt').value='".$nomAdresse."';document.getElementById('calqueAdresse').style.display='none';";
+				break;
+			case 'calqueImageChampsMultiples':
+				// les liens renvoient la valeur dans un champ select et non pas dans un champ texte ,  mais la meme popup peut etre appelé plusieurs fois pour plusieurs champs differents du meme type
+				$urlDetailHref    = "#";
+				$urlDetailOnClick = "parent.document.getElementById(parent.document.getElementById('paramChampsAppelantAdresse').value).innerHTML+='<option selected=\'selected\' value=\'".$input['idAdresse']."\'>".addslashes($nomAdresse)."</option>';";
+				$urlNomRue        = '#';
+				$urlNomRueOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomSousQuartier = '#';
+				$urlNomSousQuartierOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$input['idSousQuartier'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomQuartier = '#';
+				$urlNomQuartierOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'quartier',  'id'=>$input['idQuartier'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomVille = '#';
+				$urlNomVilleOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'ville',  'id'=>$input['idVille'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomPays = '#';
+				$urlNomPaysOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$input['idPays'],  'debut'=>0)))."', 'resultatsAdresse');";
+				break;
+			case 'calqueImageChampsMultiplesRetourSimple':
+				// les liens renvoient la valeur dans un champ texte et non pas dans une liste multiple ,  mais la meme popup peut etre appelé plusieurs fois pour plusieurs champs differents du meme type
+				$urlDetailHref    = "#";
+				$urlDetailOnClick = "parent.document.getElementById(parent.document.getElementById('paramChampsAppelantAdresse').value).value='".$input['idAdresse']."'; parent.document.getElementById(parent.document.getElementById('paramChampsAppelantAdresse').value+'txt').value='".addslashes($nomAdresse)."';";
+				$urlNomRue        = '#';
+				$urlNomRueOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomSousQuartier = '#';
+				$urlNomSousQuartierOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$input['idSousQuartier'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomQuartier = '#';
+				$urlNomQuartierOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'quartier',  'id'=>$input['idQuartier'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomVille = '#';
+				$urlNomVilleOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'ville',  'id'=>$input['idVille'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomPays = '#';
+				$urlNomPaysOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$input['idPays'],  'debut'=>0)))."', 'resultatsAdresse');";
+				break;
+			case 'calqueEvenement':
+				$urlDetailHref = "#";
+				$urlDetailOnClick = "parent.document.getElementById('adresses').innerHTML+='<option selected=\'selected\' value=\'".$input['idAdresse']."\'>".addslashes($nomAdresse)."</option>';";
+				$urlNomRue        = '#';
+				$urlNomRueOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomSousQuartier = '#';
+				$urlNomSousQuartierOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$input['idSousQuartier'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomQuartier = '#';
+				$urlNomQuartierOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'quartier',  'id'=>$input['idQuartier'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomVille = '#';
+				$urlNomVilleOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'ville',  'id'=>$input['idVille'],  'debut'=>0)))."', 'resultatsAdresse');";
+				$urlNomPays = '#';
+				$urlNomPaysOnClick = "appelAjax('".$this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$input['idPays'],  'debut'=>0)))."', 'resultatsAdresse');";
+				break;
+			case 'popupRechercheAdressePrisDepuis':
+				$urlDetailHref    = "#";
+				$urlDetailOnClick = "parent.document.getElementById('listePrisDepuisDiv'+parent.document.getElementById('identifiantRetour').value).innerHTML+='".str_replace(array("'", "\""), array("\\'", "&#34;"), $nomAdresse)."<a  style=\'cursor:pointer;\' onclick=\'retirerPrisDepuis(&#34;".$input['idAdresse']."_".$input['idEvenementGA']."&#34;, '+parent.document.getElementById('identifiantRetour').value+');\'>(-)</a><br>';parent.document.getElementById('prisDepuis'+parent.document.getElementById('identifiantRetour').value).innerHTML+='<option value=\'".$input["idAdresse"]."_".$input['idEvenementGA']."\' SELECTED>".str_replace(array("'", "\""), array("\'", "&#34;"), $nomAdresse)."</option>';";
+				$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)));
+				$urlNomRueOnClick = '';
+				$urlNomSousQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$input['idSousQuartier'],  'debut'=>0)));
+				$urlNomSousQuartierOnClick = '';
+				$urlNomQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'quartier',  'id'=>$input['idQuartier'],  'debut'=>0)));
+				$urlNomQuartierOnClick = '';
+				$urlNomVille = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'ville',  'id'=>$input['idVille'],  'debut'=>0)));
+				$urlNomVilleOnClick = '';
+				$urlNomPays = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$input['idPays'],  'debut'=>0)));
+				$urlNomPaysOnClick = '';
+				break;
+			case 'popupRechercheAdresseVueSur':
+		
+				$urlDetailHref    = "#";
+				$urlDetailOnClick = "parent.document.getElementById('listeVueSurDiv'+parent.document.getElementById('identifiantRetour').value).innerHTML+='".str_replace(array("'", "\""), array("\\'", "    &#34;"), $nomAdresse)."<a style=\'cursor:pointer;\' onclick=\' retirerVueSur(&#34;".$input['idAdresse']."_".$input['idEvenementGA']."&#34;, &#34;'+parent.document.getElementById('identifiantRetour').value+'&#34;); \'>(-)</a><br>';
+		
+										parent.document.getElementById('vueSur'+parent.document.getElementById('identifiantRetour').value).innerHTML+='<option value=\'".$input['idAdresse']."_".$input['idEvenementGA']."\' SELECTED>".str_replace(array("'", "\""), array("\'", "&#34;"), $nomAdresse)."</option>';";
+		
+				$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)));
+				$urlNomRueOnClick = '';
+				$urlNomSousQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$input['idSousQuartier'],  'debut'=>0)));
+				$urlNomSousQuartierOnClick = '';
+				$urlNomQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'quartier',  'id'=>$input['idQuartier'],  'debut'=>0)));
+				$urlNomQuartierOnClick = '';
+				$urlNomVille = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'ville',  'id'=>$input['idVille'],  'debut'=>0)));
+				$urlNomVilleOnClick = '';
+				$urlNomPays = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$input['idPays'],  'debut'=>0)));
+				$urlNomPaysOnClick = '';
+				break;
+			case "popupAjoutAdressesLieesSurEvenement":
+		
+				$urlDetailHref    = "#";
+				$urlDetailOnClick = "parent.document.getElementById('listeGroupesAdressesLiees').innerHTML+='".str_replace("'", "\\'", $nomAdresse)."<a  style=\'cursor:pointer\' onclick=\'retirerGroupeAdresse(".$input['idEvenementGA'].");\'>(-)</a><br>';parent.document.getElementById('listeIdGroupesAdressesLiees').innerHTML+='<option value=\'".$input["idEvenementGA"]."\' SELECTED>".str_replace("'", "\'", $nomAdresse)."</option>';";
+				$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)));
+				$urlNomRueOnClick = '';
+				$urlNomSousQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$input['idSousQuartier'],  'debut'=>0)));
+				$urlNomSousQuartierOnClick = '';
+				$urlNomQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'quartier',  'id'=>$input['idQuartier'],  'debut'=>0)));
+				$urlNomQuartierOnClick = '';
+				$urlNomVille = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'ville',  'id'=>$input['idVille'],  'debut'=>0)));
+				$urlNomVilleOnClick = '';
+				$urlNomPays = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$input['idPays'],  'debut'=>0)));
+				$urlNomPaysOnClick = '';
+		
+				break;
+			case "popupDeplacerEvenementVersGroupeAdresse":
+				$urlDetailHref    = "#";
+				$urlDetailOnClick = "if (confirm('Etes vous sûr de vouloir deplacer cet évènement ?')){parent.location.href='".$this->creerUrl('deplacerEvenementVersGA', 'evenement', array('idEvenementADeplacer'=>$this->variablesGet['idEvenementADeplacer'], 'deplacerVersIdGroupeAdresse'=>$input['idEvenementGA'], 'idEvenement'=>$this->variablesGet['idEvenementADeplacer']))."';}";
+				$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)));
+				$urlNomRueOnClick = '';
+				$urlNomSousQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$input['idSousQuartier'],  'debut'=>0)));
+				$urlNomSousQuartierOnClick = '';
+				$urlNomQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'quartier',  'id'=>$input['idQuartier'],  'debut'=>0)));
+				$urlNomQuartierOnClick = '';
+				$urlNomVille = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'ville',  'id'=>$input['idVille'],  'debut'=>0)));
+				$urlNomVilleOnClick = '';
+				$urlNomPays = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$input['idPays'],  'debut'=>0)));
+				$urlNomPaysOnClick = '';
+				break;
+			case 'popupRechercheAdresseAdminParcours':
+				$urlDetailHref    = "#";
+				$urlDetailOnClick = "parent.document.getElementById('libelleEvenementGroupeAdresse').value='".str_replace("'", "\\'", $nomAdresseNoStyle)."';parent.document.getElementById('idEvenementGroupeAdresse').value='".$input['idEvenementGA']."';parent.document.getElementById('divpopupChoixAdresses').style.display='none';";
+				$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)));
+				$urlNomRueOnClick = '';
+				$urlNomSousQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$input['idSousQuartier'],  'debut'=>0)));
+				$urlNomSousQuartierOnClick = '';
+				$urlNomQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'quartier',  'id'=>$input['idQuartier'],  'debut'=>0)));
+				$urlNomQuartierOnClick = '';
+				$urlNomVille = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'ville',  'id'=>$input['idVille'],  'debut'=>0)));
+				$urlNomVilleOnClick = '';
+				$urlNomPays = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$input['idPays'],  'debut'=>0)));
+				$urlNomPaysOnClick = '';
+				break;
+			default:
+				$criteresFiltres = array();
+				$urlDetailHref    = $this->creerUrl('', '', array_merge($criteresFiltres, array('archiIdAdresse'=>$input['idAdresse'], 'archiAffichage'=>'adresseDetail', 'archiIdEvenementGroupeAdresse'=>$input['idEvenementGA'], 'debut'=>'')));
+				$urlDetailOnClick = '';
+				$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)));
+				$urlNomRueOnClick = '';
+				$urlNomSousQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$input['idSousQuartier'],  'debut'=>0)));
+				$urlNomSousQuartierOnClick = '';
+				$urlNomQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'quartier',  'id'=>$input['idQuartier'],  'debut'=>0)));
+				$urlNomQuartierOnClick = '';
+				$urlNomVille = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'ville',  'id'=>$input['idVille'],  'debut'=>0)));
+				$urlNomVilleOnClick = '';
+				$urlNomPays = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$input['idPays'],  'debut'=>0)));
+				$urlNomPaysOnClick = '';
+		
+		
+				// patch laurent pour gerer l'affichage de la liste des dependances d'une source dans l'admin
+				if (isset($this->variablesGet['archiAffichage']) && $this->variablesGet['archiAffichage']=='listeAdressesFromSource' && isset($this->variablesGet['source']) && $this->variablesGet['source']!='' && isset($this->variablesGet['modeAdmin']) && $this->variablesGet['modeAdmin']=='1') {
+					$urlDetailOnClick = "parent.document.location.href='".$urlDetailHref."'";
+					$urlDetailHref = "#";
+				}
+		
+		
+				break;
+		}
+		return array(
+				'urlDetailHref'=>$urlDetailHref,
+				'urlDetailOnClick'=>$urlDetailOnClick,
+				'urlNomRue'=>$urlNomRue,
+				'urlNomRueOnClick'=>$urlNomRueOnClick,
+				'urlNomSousQuartier'=>$urlNomSousQuartier,
+				'urlNomSousQuartierOnClick'=>$urlNomSousQuartierOnClick,
+				'urlNomQuartier'=>$urlNomQuartier,
+				'urlNomQuartierOnClick'=>$urlNomQuartierOnClick,
+				'urlNomVille'=>$urlNomVille,
+				'urlNomVilleOnClick'=>$urlNomVilleOnClick,
+				'urlNomPays'=>$urlNomPays,
+				'urlNomPaysOnClick'=>$urlNomPaysOnClick
+		);
+	}
+	
 }
 
 ?>

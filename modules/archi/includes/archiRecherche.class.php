@@ -2284,8 +2284,7 @@ class archiRecherche extends config {
 			$motcleEscapedLike="".str_replace(' ', '%%', $params['motcle'])."";
 			
 			
-			//				10000000000000 * ((MATCH (concat1) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
-			
+		
 			$request = "
 					
 					
@@ -2383,7 +2382,6 @@ class archiRecherche extends config {
 				.$sqlWhere.
 				"";
 
-			debug($requestAdresse);
 
 			$requetePersonne = "
 					SELECT 

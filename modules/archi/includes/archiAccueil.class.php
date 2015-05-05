@@ -2121,7 +2121,7 @@ class ArchiAccueil extends config
 		$whereSimpleArray = array();
 		if($auth->estConnecte()){
 			$arrayInterest = $interest->getFavorisByCategories();
-			//debug($arrayInterest);
+			debug($arrayInterest);
 			if(!empty($arrayInterest)){
 				if(isset($arrayInterest['rue'])){
 					$fieldRue = implode(',', $arrayInterest['rue']);
@@ -2190,6 +2190,35 @@ class ArchiAccueil extends config
 		
 		
 		
+		
+		
+		/*
+		 * SELECT tmp.idEvenementGroupeAdresse,tmp.idAdresse,tmp.idEvenementGroupeAdresse,tmp.idEvenement,
+evt.idEvenementRecuperationTitre ,
+					evt.idImagePrincipale AS idHistoriqueImage,
+					te.nom as typeEvenement,
+					date_format(evt.dateCreationEvenement,"%e/%m/%Y") as dateCreationEvenement,					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
+					evt.description
+FROM(
+SELECT ae.idAdresse, ee.idEvenement AS idEvenementGroupeAdresse, evt.idEvenement, DATE_FORMAT( evt.dateCreationEvenement, '%Y%m%d%H%i%s' ) AS DateTri
+FROM historiqueEvenement evt, _evenementEvenement ee, _adresseEvenement ae, historiqueAdresse ha
+WHERE ae.idAdresse IS NOT NULL
+AND (
+ha.idQuartier =11
+OR ha.idVille =1
+)
+AND evt.idEvenement = ee.idEvenementAssocie
+AND ha.idAdresse = ae.idAdresse
+AND ae.idEvenement = ee.idEvenement
+    ) as tmp , evenements evt, typeEvenement te
+WHERE tmp.idEvenement = evt.idEvenement
+AND evt.idTypeEvenement = te.idTypeEvenement
+GROUP BY tmp.idAdresse
+ORDER BY tmp.DateTri DESC
+LIMIT 8
+		 */
+		
+		
 		$requeteIdAdresse = "select distinct tmp.idEvenementGroupeAdresse from(
 		SELECT ae.idAdresse,
 		ee.idEvenement AS idEvenementGroupeAdresse,
@@ -2205,8 +2234,7 @@ class ArchiAccueil extends config
 		";
 		
 		
-		
-		//debug($requeteIdAdresse);
+		debug($requeteIdAdresse);
 		
 		/*
 		 * SELECT * from (SELECT ee.idEvenement AS idEvenementGroupeAdresse, evt.idEvenement AS idEvenement, ae.idAdresse, evt.idEvenementRecuperationTitre, evt.idImagePrincipale AS idHistoriqueImage, te.nom AS typeEvenement, date_format( evt.dateCreationEvenement, "%e/%m/%Y" ) AS dateCreationEvenement, DATE_FORMAT( evt.dateCreationEvenement, '%Y%m%d%H%i%s' ) AS DateTri, evt.description, 1 AS priorite
@@ -2260,7 +2288,7 @@ LIMIT 8
 					LIMIT ".$nbElts."
 				";
 		
-		//debug($requeteElements);
+		debug($requeteElements);
 		
 		
 		/*

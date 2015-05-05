@@ -902,9 +902,12 @@ if (isset($_GET['archiAffichage'])) {
             break;
         case 'recherche':
             $a = new archiRecherche();
-            echo $a->search();
-            
+        	echo $a->search();
             break;
+        case 'rechercheLegacy':
+        	$a = new archiRecherche();
+        	echo $a->rechercher();
+        	break;
         case 'source':
             $s = new archiSource();
             echo $s->afficher($_GET['idSource']);
