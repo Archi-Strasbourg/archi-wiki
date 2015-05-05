@@ -480,8 +480,6 @@ class ArchiAccueil extends config
 
 				}
 
-
-
 				$news = $this->getLatestNewsInfo(1);
 					
 				//Simple templates
@@ -519,7 +517,6 @@ class ArchiAccueil extends config
 					$t->assign_block_vars('commentaire', $commentaire);
 				}
 
-				//Gestion des dernieres modifs
 				$lastModifs = $this->getLatestModification(8);
 				foreach ($lastModifs as $modif){
 					$idAdresse = $modif['idAdresse'];
@@ -2114,9 +2111,7 @@ class ArchiAccueil extends config
 
 	public function getLatestModification($nbElts){
 		$interest = new archiInterest();
-		$arrayIdEvenement = $interest->getFavorisIdEvenementGroupeAdresse(0);
 		$auth = new ArchiAuthentification();
-		//$whereClause = "WHERE ae.idAdresse IS NOT NULL ";
 		$whereSimple = "WHERE ae.idAdresse IS NOT NULL ";
 		$whereSimpleArray = array();
 		if($auth->estConnecte()){
