@@ -6348,7 +6348,7 @@ class archiAdresse extends ArchiContenu
 						}
 
 
-						$t->assign_vars(array('description'=>"<table border=''><tr>$logoSource<td>".$bbCode->convertToDisplay(array('text'=>stripslashes($fetchSource['description'])))."</td></tr><tr><td $colspan><b><div style='font-size:12px;'>Voici la liste des adresses où nous mentionnons cette source</div></b></td></tr></table>"));
+						$t->assign_vars(array('description'=>"<table border=''><tr>$logoSource<td>".$bbCode->convertToDisplay(array('text'=>stripslashes($fetchSource['description'])))."</td></tr><tr><td $colspan><b><div style='font-size:12px;'>Voici la liste des adresses auxquelles cette source est attachée</div></b></td></tr></table>"));
 					}
 				} else {
 					$t->assign_vars(array('titre'=>'Adresses'));

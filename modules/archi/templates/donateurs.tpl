@@ -1,6 +1,6 @@
 ﻿﻿<h1>Donateurs</h1>
  
-Vous trouverez ci-dessous la liste de nos mécènes et donateurs (par ordre de don, du plus récent au plus ancien) :<br>
+Merci à tout nos mécènes et donateurs qui permettent au site de continuer à exister.<br><br>
 
 <table>
 
@@ -8,8 +8,8 @@ Vous trouverez ci-dessous la liste de nos mécènes et donateurs (par ordre de d
 <!----		Rêve d'Altitude         	                    		         ->
 <!------------------------------------------------------------------------------>
 <tr>
-<td>
-<img border=0 src='images/donateurs/revealtitude.png'>
+<td style="text-align:center">
+<a href='http://www.revedaltitude.com' target=_blank><img border=0 src='images/donateurs/revealtitude.png'></a>
 </td>
 <!--<td class='textePetit'>-->
 <td>
@@ -23,7 +23,6 @@ M. Adrien Adloff<br>
 67500 Haguenau<br>
 Tél: 06 43 29 09 65
 <br><br>
-<a href='http://www.revedaltitude.com' target=_blank>Consulter le site de la société</a>
 <br>
 </td>
 </tr>
@@ -33,8 +32,8 @@ Tél: 06 43 29 09 65
 <!----		Chamar'Elle         	                    ->
 <!------------------------------------------------------------------------------>
 <tr>
-<td>
-<img border=0 src='images/donateurs/chamar-elle.jpg'>
+<td style="text-align:center">
+<a href='http://www.chamar-elle.fr' target=_blank><img border=0 src='images/donateurs/chamar-elle.jpg'></a>
 </td>
 <!--<td class='textePetit'>-->
 <td>
@@ -49,7 +48,6 @@ BP 7031<br>
 67026 Strasbourg Cedex 1<br>
 Tél: 06 19 32 57 92
 <br><br>
-<a href='http://www.chamar-elle.fr' target=_blank>Consulter le site de la société</a>
 
 </td>
 </tr>
@@ -57,8 +55,8 @@ Tél: 06 19 32 57 92
 
 
 <tr>
-<td>
-<img border=0 src='images/donateurs/logo_balloide.jpg'>
+<td style="text-align:center">
+<a href='http://bannwarth.balloide-photo.com' target=_blank><img border=0 src='images/donateurs/logo_balloide.jpg'></a>
 </td>
 <!--<td class='textePetit'>-->
 <td>
@@ -72,33 +70,31 @@ Jean-Marc Bannwarth<br>
 67270 Durningen<br>
 Tél: 0033 642 227 604
 <br><br>
-<a href='http://bannwarth.balloide-photo.com' target=_blank>Consulter le site de la société</a>
 
 </td>
 </tr>
 
 
 <tr>
-<td>
-<img border=0 src='images/donateurs/logo_dianex.jpg'>
+<td style="text-align:center">
+<a href='http://dianex-alsace.fr' target=_blank><img border=0 src='images/donateurs/logo_dianex.jpg'></a>
 </td>
 <!--<td class='textePetit'>-->
 <td>
 <font size=2>
 <b>Dianex</b>
 <br>
-Maîtres d'oeuvre et ou d’ouvrages, urbanistes, architectes, Vous avez des projets d’urbanisme ou d’infrastructure  sur une « zone historique ». Vous vous interrogez sur la nature des matières enfouies dans le sous-sol de votre projet ?
+Maîtres d'oeuvre et ou d’ouvrages, urbanistes, architectes, vous avez des projets d’urbanisme ou d’infrastructure  sur une « zone historique ». Vous vous interrogez sur la nature des matières enfouies dans le sous-sol de votre projet ?
 
 <br><br>
-<a href='http://dianex-alsace.fr' target=_blank>Consulter le site de l'entreprise</a>
 
 </td>
 </tr>
 
 
 <tr>
-<td>
-<img border=0 src='http://www.archi-strasbourg.org/images/donateurs/recto_verso200.jpg'>
+<td style="text-align:center">
+<a href="mailto:rectoverso67%40orange.fr"><img border=0 src='http://www.archi-strasbourg.org/images/donateurs/recto_verso200.jpg'></a>
 </td>
 <!--<td class='textePetit'>-->
 <td>
@@ -113,7 +109,6 @@ Recto - Verso<br>
 67000 STRASBOURG<br>
 <br>
 03 88 25 61 80<br>
-<a href="mailto:rectoverso67%40orange.fr">rectoverso67 (at) orange.fr</a>
 
 </td>
 </tr>
@@ -122,7 +117,7 @@ Recto - Verso<br>
 
 
 <tr>
-<td>
+<td style="text-align:center">
 <a href='http://www.raphaelimmo.com' target=_blank><img border=0 src='http://www.archi-strasbourg.org/images/donateurs/logo_raphaelimmo.jpg'></a>
 </td>
 <!--<td class='textePetit'>-->
@@ -131,8 +126,7 @@ Recto - Verso<br>
 <b>Agence Raphaëlimmo</b>
 <br>
 Raphaëlimmo est une agence immobilière spécialisée où vous trouverez des biens immobiliers dans la région de Strasbourg
-<br><br>
-<a href='http://www.raphaelimmo.com' target=_blank>Consulter le site de l'agence</a>
+<br>
 
 </td>
 </tr>
@@ -141,7 +135,7 @@ Raphaëlimmo est une agence immobilière spécialisée où vous trouverez des bi
 
 
 <tr>
-<td>
+<td style="text-align:center">
 <a href='http://villa17blog.wordpress.com' target=_blank><img border=0 src='http://www.archi-strasbourg.org/images/donateurs/logo_villa17.jpg'></a>
 </td>
 <!--<td class='textePetit'>-->
@@ -151,14 +145,13 @@ Raphaëlimmo est une agence immobilière spécialisée où vous trouverez des bi
 <br>
 Villa 17 est une association pour la défense du patrimoine Wilhelmien.
 <br><br>
-<a href='http://villa17blog.wordpress.com' target=_blank>Consulter le site de l'association</a>
 
 </td>
 </tr>
 
 
 <tr>
-<td>
+<td style="text-align:center">
 <a href='http://strasweb.fr/' target=_blank><img alt="" src='images/Logo%20StrasWeb.png' width="169"></a>
 </td>
 <!--<td class='textePetit'>-->
@@ -167,15 +160,12 @@ Villa 17 est une association pour la défense du patrimoine Wilhelmien.
 <br>
 <?_("StrasWeb est une association d'étudiants passionnés par le Web.")?>
 <br><br>
-<a href='http://strasweb.fr/' target=_blank><?_("Consulter le site de l'association")?></a>
 </td>
 </tr>
 
 
 
 </table>
-
-Merci à tout nos mécènes et donateurs qui permettent au site de continuer à exister.<br><br>
 
 Pour faire partie de nos mécènes et ainsi bénéficier de votre logo et d'un lien vers votre site (entreprise et association), vous pouvez soutenir notre association par un don à partir de 80 euros pour une année.
 <br>Les particuliers peuvent aussi nous aider, à partir de 40 euros pour un membre donateur, et ainsi figurer s'il le souhaite, sur cette page.

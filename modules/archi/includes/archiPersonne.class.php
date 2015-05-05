@@ -1159,7 +1159,7 @@ class ArchiPersonne extends ArchiContenu
 
         if (isset($people)) {
             $already=array();
-            print "<b>Voici la liste des personnes où nous mentionnons cette source</b>";
+            print "<b>Voici la liste des personnes auxquelles cette source est attachée</b>";
             print('<table class="results">');
             foreach ($people as $person) {
                 if (!in_array($person['idPersonne'], $already)) {

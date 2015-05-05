@@ -706,7 +706,7 @@ class ArchiSource extends config
         $bbCode = new bbCodeObject();
         
         $html = "<h1>"._("Nos sources")."</h1><br>";
-        $html.="<br>"._("L'une des difficultés d'un site collaboratif,  c'est la crédibilité que l'on peut apporter aux informations renseignées par chaque internaute. C'est pourquoi,  par soucis de transparence,  nous vous livrons ici de façon exhaustive l'ensemble des sources qui sont consultées pour enrichir le site :")."<br><br>";
+        $html.="<br>"._("Pour assurer la crédibilité des informations renseignées par chaque internaute, nous vous livrons ici, de façon exhaustive et en toute transparence l'ensemble des sources qui sont consultées pour enrichir le site :")."<br><br>";
         $reqCount = "SELECT 0 FROM source";
         $resCount = $this->connexionBdd->requete($reqCount);
         
