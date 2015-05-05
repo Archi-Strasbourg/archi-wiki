@@ -2121,7 +2121,6 @@ class ArchiAccueil extends config
 		$whereSimpleArray = array();
 		if($auth->estConnecte()){
 			$arrayInterest = $interest->getFavorisByCategories();
-			debug($arrayInterest);
 			if(!empty($arrayInterest)){
 				if(isset($arrayInterest['rue'])){
 					$fieldRue = implode(',', $arrayInterest['rue']);
@@ -2169,11 +2168,12 @@ class ArchiAccueil extends config
 				if(!empty($whereSimpleArray)){
 					$whereSimple .=" AND (".implode(' OR ', $whereSimpleArray).")";					
 				}
+				$leftjoinCondition ="AND ".implode (' AND ',$whereSimpleArray);
 			}
 
 		}
 		
-		//debug($whereSimple);
+		//debug($leftjoinCondition);
 		$requeteIdAdresse = "select distinct tmp.idEvenementGroupeAdresse from(
 		SELECT ae.idAdresse,
 		ee.idEvenement AS idEvenementGroupeAdresse,
@@ -2234,7 +2234,7 @@ LIMIT 8
 		";
 		
 		
-		debug($requeteIdAdresse);
+		//debug($requeteIdAdresse);
 		
 		/*
 		 * SELECT * from (SELECT ee.idEvenement AS idEvenementGroupeAdresse, evt.idEvenement AS idEvenement, ae.idAdresse, evt.idEvenementRecuperationTitre, evt.idImagePrincipale AS idHistoriqueImage, te.nom AS typeEvenement, date_format( evt.dateCreationEvenement, "%e/%m/%Y" ) AS dateCreationEvenement, DATE_FORMAT( evt.dateCreationEvenement, '%Y%m%d%H%i%s' ) AS DateTri, evt.description, 1 AS priorite
@@ -2263,34 +2263,6 @@ LIMIT 8
 		 */
 		
 		
-		$requeteElements = "
-					SELECT
-					ee.idEvenement as idEvenementGroupeAdresse,
-					evt.idEvenement AS idEvenement,
-					ae.idAdresse,
-					evt.idEvenementRecuperationTitre ,
-					evt.idImagePrincipale AS idHistoriqueImage,
-					te.nom as typeEvenement,
-					date_format(evt.dateCreationEvenement," . _ ( '"%e/%m/%Y"' ) . ") as dateCreationEvenement,
-					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
-									
-					evt.description,
-					1 as priorite
-					
-					FROM evenements evt
-					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
-					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse  ".$whereClause."
-					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
-							
-					WHERE ae.idAdresse IS NOT NULL 
-					ORDER BY DateTri DESC
-					LIMIT ".$nbElts."
-				";
-		
-		debug($requeteElements);
-		
-		
 		/*
 		$resultElement = $this->connexionBdd->requete($requeteElements);
 		$arrayEvenement=array();
@@ -2302,18 +2274,43 @@ LIMIT 8
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
 
-		$resultIdAdresse = $this->connexionBdd->requete($requeteIdAdresse);
+		$requeteElements = "
+				select * from (
+					SELECT
+					ee.idEvenement as idEvenementGroupeAdresse,
+					evt.idEvenement AS idEvenement,
+					ae.idAdresse,
+					evt.idEvenementRecuperationTitre ,
+					evt.idImagePrincipale AS idHistoriqueImage,
+					te.nom as typeEvenement,
+					date_format(evt.dateCreationEvenement," . _ ( '"%e/%m/%Y"' ) . ") as dateCreationEvenement,
+					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
+					
+					evt.description,
+					1 as priorite
+			
+					FROM evenements evt
+					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
+					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse  ".$leftjoinCondition."
+					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
+				
+					WHERE ae.idAdresse IS NOT NULL
+							) as tmp
+							
+					GROUP BY tmp.idEvenementGroupeAdresse
+					ORDER BY tmp.DateTri DESC
+					LIMIT ".$nbElts."
+				";
+		
+		//debug($requeteElements);
+
+		$resultIdAdresse = $this->connexionBdd->requete($requeteElements);
+		//$resultIdAdresse = $this->connexionBdd->requete($requeteIdAdresse);
 		$arrayIdEvenement = array();
 		$arrayEvenement = array();
-		while($row= mysql_fetch_assoc($resultIdAdresse)){
+	/*	while($row= mysql_fetch_assoc($resultIdAdresse)){
 
 			$requeteSingleEvent = "
 					SELECT
@@ -2344,9 +2341,11 @@ LIMIT 8
 			$resultSingleEvenement = $this->connexionBdd->requete($requeteSingleEvent);
 			$arrayEvenement[]=mysql_fetch_assoc($resultSingleEvenement);
 		}
+		*/
 		
-		foreach ($arrayEvenement as $lastModif){
-			
+		while($lastModif = mysql_fetch_assoc($resultIdAdresse)){
+		//foreach ($arrayEvenement as $lastModif){
+			//debug($lastModif);
 			$tmp = $lastModif;
 			$requeteTitre = "SELECT e1.titre , e2.idImagePrincipale
 					FROM evenements e1,evenements e2
@@ -2357,11 +2356,9 @@ LIMIT 8
 			$titreArray = mysql_fetch_assoc($restitre);
 
 			$tmp['titre'] = $titreArray['titre'];
+			$tmp['titre']="titre";
 			$idImagePrincipale = $titreArray['idImagePrincipale'];
-
-			
 			if(isset($idImagePrincipale) && !empty($idImagePrincipale)){
-			//else{
 				$requeteIdHistoImage = "
 						SELECT idHistoriqueImage
 						FROM historiqueImage hi 

@@ -816,7 +816,6 @@ if (isset($_GET['archiAffichage'])) {
         case 'adresseDetail':
         	$u = new archiUtilisateur();
         	$idEvenementGroupeAdresse = "";
-        	/*
         	if(isset($_GET['archiIdEvenementGroupeAdresse'])&&$_GET['archiIdEvenementGroupeAdresse']!=''){
         		$idEvenementGroupeAdresse=$_GET['archiIdEvenementGroupeAdresse'];
         	}
@@ -825,7 +824,7 @@ if (isset($_GET['archiAffichage'])) {
         		$_GET['archiIdEvenementGroupeAdresse']=$_GET['archiIdEvenement'];
         	}
         	$u->updateVisitedLink($_GET['archiIdAdresse'],$idEvenementGroupeAdresse);
-        	*/
+        	 
         	$a = new archiAdresse();
         	echo $a->afficherDetail($_GET['archiIdAdresse']);
             //$a = new archiAdresse();

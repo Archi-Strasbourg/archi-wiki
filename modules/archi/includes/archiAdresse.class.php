@@ -14360,7 +14360,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     				AND ae.idEvenement = " . $id ['idEvenementGroupeAdresse'] . "
     				GROUP BY ha.idHistoriqueAdresse
 							";
-					debug($req);
 					$res = $this->connexionBdd->requete ( $req );
 					$row = mysql_fetch_assoc ( $res );
 					$arrayAdresse [] = $row;
