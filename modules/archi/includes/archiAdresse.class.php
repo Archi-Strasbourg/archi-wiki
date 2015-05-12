@@ -14230,12 +14230,19 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				
 				$titre = $info['titre'];
 				
+				debug(array($nom,$fulladdress,$titre));
+				
+				
 				$input=array(
 						'idEvenementGA'=>$info['idEvenementGroupeAdresse'],
 						'idAdresse'=>$info['idAdresse']
 						
 				);
-				$arrayUrl = $this->generateUrlListAddresses($input,$this->variablesGet['modeAffichage'],$nom);
+				$intituleAdresse="";
+				if(isset($titre) && !empty($titre) && $titre !='')
+					$intituleAdresse="<b>".$titre."</b>";
+				$intituleAdresse.=$fulladdress.' '; 
+				$arrayUrl = $this->generateUrlListAddresses($input,$this->variablesGet['modeAffichage'],$intituleAdresse);
 				
 				//If prisdepuis
 				if(isset($this->variablesGet['modeAffichage']) && ($this->variablesGet['modeAffichage'] == 'popupRechercheAdressePrisDepuis')){
