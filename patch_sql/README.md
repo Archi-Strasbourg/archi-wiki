@@ -35,7 +35,13 @@ Father has field "parent" set to 0 and children set to idEvenement of his parent
 Orphan events (unlinked to any other events) have "parent" field set to -1
 
 
-**1.2-Commentaires-adresse.sql :
+**1.3-historiqueEvenementSplit.sql
+
+Séparation de l'historique evenement de l'evenement
+
+Split of historiqueEvenement to regular event and historic of the event 
+
+**1.4-Commentaires-adresse.sql :
 
 Add comment table related to addresses
 
@@ -48,6 +54,7 @@ Create the table for the fulltext research with index creation and the engine sw
 **1.6-contraints.sql :
 
 Add missing constraints
+Might fail in some case so use phpmyadmin to modified it
 
 
 **1.7-trigger.sql
@@ -60,12 +67,7 @@ Add trigger to paralelly add/delete/update data to research table and other tabl
  Create interests tables
  
  
-**1.9.1-historiqueEvenementSplit :
+**1.9.3-contraintesIntegrites.sql :
 
-Split historiqueEvenement and evenements tables so processing of the events will be easier 
-
-
-**1.9.2-evenementAdressePatching.sql
-
-Path on _adresseEvenement table so the adresse carry a group of events and there is no more empty event link to others  
-
+Add missing constraints
+Might fail in some case so use phpmyadmin to modified it
