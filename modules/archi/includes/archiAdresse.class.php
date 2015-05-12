@@ -167,7 +167,7 @@ class archiAdresse extends ArchiContenu
 	{
 		$html = '';
 		$formulaire = new formGenerator();
-		// en premier la suppresion de l'historique, si l'évènement n'a qu'un historique
+		// en premier la suppresion de l'historique, si l'événement n'a qu'un historique
 		// on initialisera la variable idEvenement pour utiliser le code plus bas
 		if ( $formulaire->estChiffre($idHistoriqueAdresse) == 1)
 		{
@@ -181,14 +181,14 @@ class archiAdresse extends ArchiContenu
 
 			if ( $res->nbEvenement == 1)
 			{
-				// on initialise la variable idEvenement pour utiliser la supression d'un évènement
+				// on initialise la variable idEvenement pour utiliser la supression d'un événement
 				$idEvenement = $res->idEvenement;
 			}
 			else
 			{
 				$t = new Template('modules/archi/templates/');
 				$t->set_filenames(array('suppr'=>'suppression.tpl'));
-				$t->assign_vars(array('nom'=>'Historique évènement'));
+				$t->assign_vars(array('nom'=>'Historique événement'));
 
 				$sql = "DELETE FROM evenements WHERE idEvenement=".$idHistoriqueEvenement;
 				$this->connexionBdd->requete($sql);
@@ -202,18 +202,18 @@ class archiAdresse extends ArchiContenu
 		}
 
 
-		// suppression de toutes les informations sur l'évènement
+		// suppression de toutes les informations sur l'événement
 		if ( $formulaire->estChiffre($idAdresse) == 1)
 		{
-			$tabSql[] = array( "DELETE FROM evenements WHERE idEvenement=".$idEvenement, 'évènement');
+			$tabSql[] = array( "DELETE FROM evenements WHERE idEvenement=".$idEvenement, 'événement');
 			$tabSql[] = array( "DELETE FROM _evenementImage     WHERE idEvenement=".$idEvenement, 'liens images');
 			$tabSql[] = array( "DELETE FROM _adresseEvenement   WHERE idEvenement=".$idEvenement, 'liens adresse');
 			$tabSql[] = array( "DELETE FROM _evenementPersonne  WHERE idEvenement=".$idEvenement, 'liens personnes');
-			$tabSql[] = array( "DELETE FROM _evenementEvenement WHERE idEvenement=".$idEvenement." OR idEvenementAssocie=".$idEvenement, 'liens évènements');
+			$tabSql[] = array( "DELETE FROM _evenementEvenement WHERE idEvenement=".$idEvenement." OR idEvenementAssocie=".$idEvenement, 'liens événements');
 
 			$t = new Template('modules/archi/templates');
 			$t->set_filenames(array('suppr'=>'suppression.tpl'));
-			$t->assign_vars(array('nom'=>'Évènement'));
+			$t->assign_vars(array('nom'=>'Événement'));
 
 			foreach($tabSql AS $suppression)
 			{
@@ -530,7 +530,7 @@ class archiAdresse extends ArchiContenu
 		$t->assign_block_vars('actionsSommaire',
 				array(
 						'urlAction'=>$this->creerUrl('', 'ajouterSousEvenement',array('idAdresse'=>$idAdresse,'archiIdEvenement' =>$idEvenementGroupeAdresse)),
-						'labelAction' => 'Ajouter un évènement'
+						'labelAction' => 'Ajouter un événement'
 			) );
 		
 		// Selection des images
@@ -613,7 +613,7 @@ class archiAdresse extends ArchiContenu
 								'archiIdAdresse' => $idAdresse,
 								'affichePositionnementEvenements' => $affichePositionnementEvenements 
 						) ),
-						'labelAction' => 'Repositionner les évènements' 
+						'labelAction' => 'Repositionner les événements' 
 				) );
 			}
 		}
@@ -6330,7 +6330,7 @@ class archiAdresse extends ArchiContenu
 
 					$description .= $fetchSource['descriptionSource'];
 					$t->assign_vars(array('titre'=>$titre));
-					$t->assign_vars(array('description'=>"<br>".$bbCode->convertToDisplay(array('text'=>$description))."<br><br><h2>Liste des évènements concernés :</h2>"));
+					$t->assign_vars(array('description'=>"<br>".$bbCode->convertToDisplay(array('text'=>$description))."<br><br><h2>Liste des événements concernés :</h2>"));
 				} elseif (isset($this->variablesGet['archiAffichage']) && $this->variablesGet['archiAffichage']=='listeAdressesFromSource' && isset($this->variablesGet['source']) && $this->variablesGet['source']!='') {
 					if (!isset($this->variablesGet['noDescription'])) {
 						$bbCode = new bbCodeObject();
@@ -6772,7 +6772,7 @@ class archiAdresse extends ArchiContenu
 								break;
 							case "popupDeplacerEvenementVersGroupeAdresse":
 								$urlDetailHref    = "#";
-								$urlDetailOnClick = "if (confirm('Etes vous sûr de vouloir deplacer cet évènement ?')){parent.location.href='".$this->creerUrl('deplacerEvenementVersGA', 'evenement', array('idEvenementADeplacer'=>$this->variablesGet['idEvenementADeplacer'], 'deplacerVersIdGroupeAdresse'=>$fetch['idEvenementGA'], 'idEvenement'=>$this->variablesGet['idEvenementADeplacer']))."';}";
+								$urlDetailOnClick = "if (confirm('Etes vous sûr de vouloir deplacer cet événement ?')){parent.location.href='".$this->creerUrl('deplacerEvenementVersGA', 'evenement', array('idEvenementADeplacer'=>$this->variablesGet['idEvenementADeplacer'], 'deplacerVersIdGroupeAdresse'=>$fetch['idEvenementGA'], 'idEvenement'=>$this->variablesGet['idEvenementADeplacer']))."';}";
 								$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$fetch['idRue'],  'debut'=>0)));
 								$urlNomRueOnClick = '';
 								$urlNomSousQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$fetch['idSousQuartier'],  'debut'=>0)));
@@ -7934,8 +7934,8 @@ class archiAdresse extends ArchiContenu
             // AFFICHAGE DES ENCARTS DES EVENEMENTS CULTURELS
             // ****************************************************************************************************************************************************************************
             case 'culturel':
-                $titre = "Derniers évènements culturels";
-                $t->assign_vars(array('lienVersTout'=>"<a href='".$this->creerUrl('','tousLesEvenementsCulturels',array())."'>Tous les évènements culturels</a>"));
+                $titre = "Derniers événements culturels";
+                $t->assign_vars(array('lienVersTout'=>"<a href='".$this->creerUrl('','tousLesEvenementsCulturels',array())."'>Tous les événements culturels</a>"));
                 // cas des trois encart sauf celui des derniereAdresses
                 // recherche des derniers evenenements 
                 $req="
@@ -14230,15 +14230,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				
 				$titre = $info['titre'];
 				
-				
-				
-				
 				$input=array(
 						'idEvenementGA'=>$info['idEvenementGroupeAdresse'],
 						'idAdresse'=>$info['idAdresse']
 						
 				);
-				$arrayUrl = $this->generateUrlListAddresses($input,$this->variablesGet['modeAffichage']);
+				$arrayUrl = $this->generateUrlListAddresses($input,$this->variablesGet['modeAffichage'],$nom);
 				
 				//If prisdepuis
 				if(isset($this->variablesGet['modeAffichage']) && ($this->variablesGet['modeAffichage'] == 'popupRechercheAdressePrisDepuis')){
@@ -14771,7 +14768,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 	
 	
 	
-	public function generateUrlListAddresses($input, $modeAffichage){
+	public function generateUrlListAddresses($input, $modeAffichage,$nomAdresse){
 		// mise en place du lien de l'adresse suivant l'affichage ou l'on est
 		switch ($modeAffichage) {
 			case 'calqueImage':
@@ -14872,7 +14869,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				break;
 			case "popupDeplacerEvenementVersGroupeAdresse":
 				$urlDetailHref    = "#";
-				$urlDetailOnClick = "if (confirm('Etes vous sûr de vouloir deplacer cet évènement ?')){parent.location.href='".$this->creerUrl('deplacerEvenementVersGA', 'evenement', array('idEvenementADeplacer'=>$this->variablesGet['idEvenementADeplacer'], 'deplacerVersIdGroupeAdresse'=>$input['idEvenementGA'], 'idEvenement'=>$this->variablesGet['idEvenementADeplacer']))."';}";
+				$urlDetailOnClick = "if (confirm('Etes vous sûr de vouloir deplacer cet événement ?')){parent.location.href='".$this->creerUrl('deplacerEvenementVersGA', 'evenement', array('idEvenementADeplacer'=>$this->variablesGet['idEvenementADeplacer'], 'deplacerVersIdGroupeAdresse'=>$input['idEvenementGA'], 'idEvenement'=>$this->variablesGet['idEvenementADeplacer']))."';}";
 				$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)));
 				$urlNomRueOnClick = '';
 				$urlNomSousQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$input['idSousQuartier'],  'debut'=>0)));

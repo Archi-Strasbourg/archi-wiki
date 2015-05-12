@@ -202,7 +202,7 @@ class archiEvenement extends config
 		else
 		{
 			// erreur dans la saisie de l'evenement
-			$this->erreurs->ajouter("Erreur dans la saisie de l'évènement");
+			$this->erreurs->ajouter("Erreur dans la saisie de l'événement");
 			echo "erreur dans la saise de l'evenement";
 			$retour = array('idEvenementGroupeAdresse'=>0,'idSousEvenement'=>0,'errors'=>$errors);
 		}
@@ -297,7 +297,7 @@ class archiEvenement extends config
 				{
 					$this->erreurs->ajouter(_("Exactement le même enregistrement existe déjà !"));
 
-					// on défini les informations pour pouvoir tout de même afficher l'évènement
+					// on défini les informations pour pouvoir tout de même afficher l'événement
 					$rep         = mysql_fetch_object($res);
 					$idEvenement = $rep->idEvenement;
 					$ajoutOk     = true;
@@ -308,9 +308,9 @@ class archiEvenement extends config
 					//**  ENREGISTREMENT
 					//**
 					//$idEvenement = $this->getNewIdEvenement();
-					// si c'est un évènement sans évènements parents
+					// si c'est un événement sans événements parents
 					// c'est qu'il faut créer un evenement vide
-					// ayant pour type d'évènement un groupe d'adresses
+					// ayant pour type d'événement un groupe d'adresses
 					// sur lequel on va donc lier les adresses
 
 					if (!isset($this->variablesPost['evenementGroupeAdresse']) || $this->variablesPost['evenementGroupeAdresse']=='')//(empty($tabForm['evenements']['value']))
@@ -504,14 +504,14 @@ class archiEvenement extends config
 						$infosUtilisateur = $utilisateur->getArrayInfosFromUtilisateur($idUtilisateurAdresse);
 						if($infosUtilisateur['alerteAdresses']=='1' && $infosUtilisateur['compteActif']=='1' && $infosUtilisateur['idProfil']!='4')
 						{
-							$messageDebut = "Un utilisateur a ajouté un évènement sur une adresse dont vous êtes l'auteur.";
-							$messageDebut.= "Pour vous rendre sur l'évènement : <br>";
+							$messageDebut = "Un utilisateur a ajouté un événement sur une adresse dont vous êtes l'auteur.";
+							$messageDebut.= "Pour vous rendre sur l'événement : <br>";
 							$messageDebut.="<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$arrayAdresses[0],'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse))."'>".$intituleAdresse."</a><br>";
 							$messageFin= $this->getMessageDesabonnerAlerteMail();
 
 							if($utilisateur->isMailEnvoiImmediat($idUtilisateurAdresse))
 							{
-								$mail->sendMail($mail->getSiteMail(),$infosUtilisateur['mail'],'Mise a jour d\'un évènement d\'une adresse dont vous êtes l\'auteur.',$messageDebut.$messageFin,true);
+								$mail->sendMail($mail->getSiteMail(),$infosUtilisateur['mail'],'Mise a jour d\'un événement d\'une adresse dont vous êtes l\'auteur.',$messageDebut.$messageFin,true);
 							}
 							else
 							{
@@ -527,10 +527,10 @@ class archiEvenement extends config
 				// ************************************************************************************************************************************************
 
 				$message = "";
-				$message .= "Un nouvel évènement a été ajouté sur l'adresse suivante : <br>";
+				$message .= "Un nouvel événement a été ajouté sur l'adresse suivante : <br>";
 				$message.="<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$arrayAdresses[0],'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse))."'>".$adresse->getIntituleAdresseFrom($idSousEvenement,'idEvenement')."</a>";
 
-				$mail->sendMailToAdministrators($mail->getSiteMail(),"Un nouvel évènement a été ajouté - ".$intituleAdresse,$message," AND alerteAdresses='1' ",true);
+				$mail->sendMailToAdministrators($mail->getSiteMail(),"Un nouvel événement a été ajouté - ".$intituleAdresse,$message," AND alerteAdresses='1' ",true);
 				$utilisateur->ajouteMailEnvoiRegroupesAdministrateurs(array('contenu'=>$message,'idTypeMailRegroupement'=>10,'criteres'=>" and alerteAdresses='1' "));
 				// ************************************************************************************************************************************************
 
@@ -549,7 +549,7 @@ class archiEvenement extends config
 							if($u->isMailEnvoiImmediat($idModerateur))
 							{
 								$mailModerateur = $u->getMailUtilisateur($idModerateur);
-								$mail->sendMail($mail->getSiteMail(),$mailModerateur,"Un nouvel évènement a été ajouté - ".$intituleAdresse,$message,true);
+								$mail->sendMail($mail->getSiteMail(),$mailModerateur,"Un nouvel événement a été ajouté - ".$intituleAdresse,$message,true);
 							}
 							else
 							{
@@ -753,12 +753,12 @@ class archiEvenement extends config
 
 		if( !$formulaire->estChiffre($id))
 		{
-			$this->erreurs->ajouter('Modification d\'un évènement : l\'identifiant est incorrect !');
+			$this->erreurs->ajouter('Modification d\'un événement : l\'identifiant est incorrect !');
 		}
 
 		if ($aAuthentification->estConnecte() != true)
 		{
-			$this->erreurs->ajouter('Modification d\'un évènement : vous n\'etes pas connecté !');
+			$this->erreurs->ajouter('Modification d\'un événement : vous n\'etes pas connecté !');
 		}
 		else if (isset($this->variablesPost['evenementSimple'])) // evenementSimple correspond au nom du bouton submit du formulaire, on enregistre les modifications
 		{
@@ -1048,11 +1048,11 @@ class archiEvenement extends config
 					if($infosUtilisateur['alerteAdresses']=='1' && $infosUtilisateur['idProfil']!='4' && $infosUtilisateur['compteActif']=='1')
 					{
 						$messageDebut = "Un utilisateur a modifié une adresse dont vous êtes l'auteur.";
-						$messageDebut.= "Pour vous rendre sur l'évènement : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$fetchAdresses['idAdresse'],'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse))."'>".$intituleAdresse."</a><br>";
+						$messageDebut.= "Pour vous rendre sur l'événement : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$fetchAdresses['idAdresse'],'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse))."'>".$intituleAdresse."</a><br>";
 						$messageFin= $this->getMessageDesabonnerAlerteMail();
 						if($utilisateur->isMailEnvoiImmediat($idUtilisateurAdresse))
 						{
-							$mail->sendMail($mail->getSiteMail(),$infosUtilisateur['mail'],'Mise a jour d\'un évènement d\'une adresse dont vous êtes l\'auteur. - '.$intituleAdresse,$messageDebut.$messageFin,true);
+							$mail->sendMail($mail->getSiteMail(),$infosUtilisateur['mail'],'Mise a jour d\'un événement d\'une adresse dont vous êtes l\'auteur. - '.$intituleAdresse,$messageDebut.$messageFin,true);
 						}
 						else
 						{
@@ -1066,8 +1066,8 @@ class archiEvenement extends config
 			//
 
 
-			//$message="Un évènement a été édité. :<br> <a href='".$this->creerUrl('','evenement',array('idEvenement'=>$id))."'>Lien vers l'évènement</a><br>";
-			$message="Un évènement a été édité.<br> Il concerne l'adresse : $intituleAdresse<br> <a href='".$this->creerUrl('','comparaisonEvenement',array('idHistoriqueEvenementNouveau'=>$idHistoriqueEvenementNouveau,'idHistoriqueEvenementAncien'=>$idHistoriqueEvenementAvantModif))."'>Comparer les deux versions</a></br>";
+			//$message="Un événement a été édité. :<br> <a href='".$this->creerUrl('','evenement',array('idEvenement'=>$id))."'>Lien vers l'événement</a><br>";
+			$message="Un événement a été édité.<br> Il concerne l'adresse : $intituleAdresse<br> <a href='".$this->creerUrl('','comparaisonEvenement',array('idHistoriqueEvenementNouveau'=>$idHistoriqueEvenementNouveau,'idHistoriqueEvenementAncien'=>$idHistoriqueEvenementAvantModif))."'>Comparer les deux versions</a></br>";
 
 			// recuperation des infos sur l'utilisateur qui fais la modif
 			$utilisateur = new archiUtilisateur();
@@ -1076,7 +1076,7 @@ class archiEvenement extends config
 			$message .="<br>".$arrayInfosUtilisateur['nom']." - ".$arrayInfosUtilisateur['prenom']." - ".$arrayInfosUtilisateur['mail']."<br>";
 
 
-			$mail->sendMailToAdministrators($mail->getSiteMail(),"Edition d'un évènement - ".$intituleAdresse,$message," AND alerteAdresses='1' ",true);
+			$mail->sendMailToAdministrators($mail->getSiteMail(),"Edition d'un événement - ".$intituleAdresse,$message," AND alerteAdresses='1' ",true);
 			$utilisateur->ajouteMailEnvoiRegroupesAdministrateurs(array('contenu'=>$message,'idTypeMailRegroupement'=>11,'criteres'=>" and alerteAdresses='1' "));
 
 
@@ -1126,7 +1126,7 @@ class archiEvenement extends config
 							if($u->isMailEnvoiImmediat($idModerateur))
 							{
 								$mailModerateur = $u->getMailUtilisateur($idModerateur);
-								$mail->sendMail($mail->getSiteMail(),$mailModerateur,"Edition d'un évènement - ".$intituleAdresse,$message,true);
+								$mail->sendMail($mail->getSiteMail(),$mailModerateur,"Edition d'un événement - ".$intituleAdresse,$message,true);
 							}
 							else
 							{
@@ -1148,7 +1148,7 @@ class archiEvenement extends config
 			// est ce que l'element est deja en cours d'edition
 			if($this->connexionBdd->isLocked('evenement'.$id,$aAuthentification->getIdUtilisateur()))
 			{
-				$this->erreurs->ajouter(_("Cet évènement est déjà en cours d'édition. Veuillez retenter dans quelques minutes."));
+				$this->erreurs->ajouter(_("Cet événement est déjà en cours d'édition. Veuillez retenter dans quelques minutes."));
 				//echo $this->erreurs->afficher();
 			}
 			else
@@ -1169,7 +1169,7 @@ class archiEvenement extends config
 				}
 				else
 				{
-					$html .= "L'évènement n'existe pas.";
+					$html .= "L'événement n'existe pas.";
 				}
 			}
 		}
@@ -1309,13 +1309,13 @@ class archiEvenement extends config
 					elseif(mysql_num_rows($res)==0)
 					{
 						// probleme , il n'y a pas d'evenements fils correspondant a l'idEvenementGroupeAdresse
-						echo "l'évènement n'existe plus. Veuillez contacter l'administrateur.<br>";
+						echo "l'événement n'existe plus. Veuillez contacter l'administrateur.<br>";
 					}
 
 				}
 				else
 				{
-					echo "L'évènement parent n'est pas de type groupe d'adresse : veuillez contactez l'administrateur.<br>";
+					echo "L'événement parent n'est pas de type groupe d'adresse : veuillez contactez l'administrateur.<br>";
 				}
 			}
 			elseif(mysql_num_rows($resVerifParent)>1)
@@ -1641,7 +1641,7 @@ class archiEvenement extends config
 			$nbHistorique  = mysql_num_rows($rep)-1; // on ne compte pas le groupe d'adresse qui a le meme idEvenement
 			$res = mysql_fetch_object($rep);
 			$idEvenement = $res->idEvenement;
-			// si c'est un groupe d'adresse, on n'affiche pas le détail de l'évènement, juste ses évènements enfants
+			// si c'est un groupe d'adresse, on n'affiche pas le détail de l'événement, juste ses événements enfants
 			if ($res->groupe!=3)
 			{
 				if ($modeAffichage === 'simple' || $modeAffichage=='consultationHistoriqueEvenement')
@@ -2106,7 +2106,7 @@ class archiEvenement extends config
 			}
 			// *************************************************************************************************************************************
 			// affichage des adresses et evenements lies dans la partie supérieur du detail
-			// que l'évènement soit un groupe d'adresse ou non, on affiche les enfants
+			// que l'événement soit un groupe d'adresse ou non, on affiche les enfants
 			// *************************************************************************************************************************************
 			if($modeAffichage!='simple' && $modeAffichage!='consultationHistoriqueEvenement')
 			{
@@ -2600,7 +2600,7 @@ class archiEvenement extends config
 	// **********************************************************************************************
 	// recherche s'il y a des images 'vuesSur' a associer sur les evenements du groupe d'adresse de l'evenement passé en parametre
 	// on retour un tableau de correspondance entre les evenements du groupe d'adresses et les images vuesSur a afficher
-	// dans la liste des images liées à l'évènement
+	// dans la liste des images liées à l'événement
 	// **********************************************************************************************
 	public function getArrayCorrespondancesIdImageVuesSurAndEvenementByDateFromGA($idGA=0)
 	{
@@ -3338,11 +3338,11 @@ class archiEvenement extends config
 		}
 
 		//
-		// si c'est une recherche alors on ne cherche pas dans les type d'évènements étant des groupes d'adresses
-		// !!!!! ATTENTION à l'ID du type d'évènement en cas de vidage et changement des ID
-		// !!!!! ATTENTION à l'ID du type d'évènement en cas de vidage et changement des ID
-		// !!!!! ATTENTION à l'ID du type d'évènement en cas de vidage et changement des ID
-		// !!!!! ATTENTION à l'ID du type d'évènement en cas de vidage et changement des ID
+		// si c'est une recherche alors on ne cherche pas dans les type d'événements étant des groupes d'adresses
+		// !!!!! ATTENTION à l'ID du type d'événement en cas de vidage et changement des ID
+		// !!!!! ATTENTION à l'ID du type d'événement en cas de vidage et changement des ID
+		// !!!!! ATTENTION à l'ID du type d'événement en cas de vidage et changement des ID
+		// !!!!! ATTENTION à l'ID du type d'événement en cas de vidage et changement des ID
 		//$tabSqlWhere[] = 'hE.idTypeEvenement!=3';
 
 
@@ -4110,7 +4110,7 @@ class archiEvenement extends config
 	public function afficherHistorique($idEvenement)
 	{
 		//
-		// affiche la liste des modifications faites sur un évènement
+		// affiche la liste des modifications faites sur un événement
 		//
 		$html = '';
 		$formulaire = new formGenerator();
@@ -4147,7 +4147,7 @@ class archiEvenement extends config
 	public function afficherHistoriqueDetail($idHistoriqueEvenement)
 	{
 		//
-		// affiche un historique évènement
+		// affiche un historique événement
 		//
 
 		$html = $this->afficher('','', $idHistoriqueEvenement);
@@ -4384,7 +4384,7 @@ class archiEvenement extends config
 		else
 		{
 			$erreurObject = new objetErreur();
-			$erreurObject->ajouter("L'évènement ne peut pas être affiché. Celui-ci a été effacé.");
+			$erreurObject->ajouter("L'événement ne peut pas être affiché. Celui-ci a été effacé.");
 			$html.=$erreurObject->afficher();
 
 
@@ -4530,7 +4530,7 @@ class archiEvenement extends config
 		$liens = array( "Ajouter des images" => array('url'=>$this->creerUrl('','ajoutImageEvenement',array('archiIdEvenement'=>$idEvenement)),'archiAffichage'=>'ajoutImageEvenement'),
 				"Modifier les images"=>array('url'=>$this->creerUrl('','modifierImageEvenement',array('archiIdEvenement'=>$idEvenement)),'archiAffichage'=>'modifierImageEvenement'),
 				"Position des images"=>array('url'=>$this->creerUrl('','modifierPositionsImages',array('archiIdEvenement'=>$idEvenement)),'archiAffichage'=>'modifierPositionsImages'),
-				"Modifier l'évènement"=>array('url'=>$this->creerUrl('','modifierEvenement',array('archiIdEvenement'=>$idEvenement)),'archiAffichage'=>'modifierEvenement')
+				"Modifier l'événement"=>array('url'=>$this->creerUrl('','modifierEvenement',array('archiIdEvenement'=>$idEvenement)),'archiAffichage'=>'modifierEvenement')
 
 		);
 
@@ -7224,7 +7224,7 @@ class archiEvenement extends config
 				'source'=>$source,
 				'labelStructure' =>"Structure  : ",
 				'typeStructure'=>$typeStructure,
-				'labelTypeEvenement' => 'Type d\'Évènement : ',
+				'labelTypeEvenement' => 'Type d\'Événement : ',
 				'urlTypeEvenement'=>$this->creerUrl('', 'evenementListe', array('selection' => 'typeEvenement', 'id' => $fetch['idTypeEvenement'])),
 				'lienTypeEvenement'=> $lienTypeEvenement,
 				'typeEvenement'=>$fetch['nomTypeEvenement'],
@@ -7272,7 +7272,7 @@ class archiEvenement extends config
 				
 			$menuArray[] = array('evenement.menuAction.rowName.secondAction', array(
 					'urlAction'=>$urlMenuAction['modifierEvenement'],
-					'actionTarget'=>'Évènement'
+					'actionTarget'=>'Événement'
 			));
 		}
 	
