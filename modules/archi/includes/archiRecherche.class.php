@@ -456,7 +456,8 @@ class archiRecherche extends config {
 	}
 
 	public function afficheFormulaire($tabTravail = array(), $afficheTitreEtLiens = 1,$params = array())
-	{
+	{		
+		
 		$t=new Template('modules/archi/templates/');
 		$t->set_filenames(array('rechercheSimple'=>'rechercheSimple.tpl'));
 
@@ -524,17 +525,15 @@ class archiRecherche extends config {
 			$t->assign_vars(array("motCleStyle"=>"width:300px;"));
 		}
 
-
 		if(!isset($params['noDisplayRechercheAvancee']) || $params['noDisplayRechercheAvancee']==false)
 		{
 			$t->assign_block_vars('displayRechercheAvancee',array());
 		}
-
+		
 		if(!isset($params['noDisplayCheckBoxResultatsCarte']) || $params['noDisplayCheckBoxResultatsCarte']==false)
 		{
 			$t->assign_block_vars('displayCheckBoxResultatsCarte',array());
 		}
-
 		ob_start();
 		$t->pparse('rechercheSimple');
 		$html = ob_get_contents();
@@ -2074,12 +2073,13 @@ class archiRecherche extends config {
 				'rue'          => array('default'=> '0' , 'value' => '', 'required'=>false,'error'=>'','type'=>'multiple', 'checkExist'=>
 						array('table'=> 'rue', 'primaryKey'=> 'idRue'))
 		);
-		
-
-		
-		$html .= $this->afficheFormulaire($tabForm);
-		
-		$html .= $this->searchByCriterias($criteres);
+		$params=array();
+		if (isset ( $this->variablesGet ['noHeaderNoFooter'] ) && $this->variablesGet ['noHeaderNoFooter'] == true) {
+			$params['noDisplayRechercheAvancee'] = true;
+			$params['noDisplayCheckBoxResultatsCarte'] = true;
+		}
+		$html .= $this->afficheFormulaire ( $tabForm ,1,$params);
+		$html .= $this->searchByCriterias ( $criteres );
 		
 		return $html;
 	}
