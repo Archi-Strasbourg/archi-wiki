@@ -14239,7 +14239,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				);
 				$intituleAdresse="";
 				if(isset($titre) && !empty($titre) && $titre !='')
-					$intituleAdresse="<b>".$titre."</b>";
+					$intituleAdresse="<b>".$titre."</b> ";
 				$intituleAdresse.=$fulladdress.' '; 
 				$arrayUrl = $this->generateUrlListAddresses($input,$this->variablesGet['modeAffichage'],$intituleAdresse);
 				
