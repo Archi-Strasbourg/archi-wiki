@@ -14230,7 +14230,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				
 				$titre = $info['titre'];
 				
-				debug(array($nom,$fulladdress,$titre));
 				
 				
 				$input=array(
