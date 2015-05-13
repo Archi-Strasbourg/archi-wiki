@@ -2345,9 +2345,9 @@ Page d'accueil
 	text-align: left;
 }
 
-.rechercheBlock{
-	text-align: center;
-}
+.rechercheBlock.noHeaderNoFooter{
+	text-align:center;
+} 
 
 .rechercheBottomElements>span:nth-child(1) {
 	float: left;

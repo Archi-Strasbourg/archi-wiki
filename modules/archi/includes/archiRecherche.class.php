@@ -467,6 +467,7 @@ class archiRecherche extends config {
 		{
 			$t->assign_block_vars('noHeaderNoFooter',array());
 			$arrayModeAffichage['noHeaderNoFooter']=1;
+			$t->assign_vars(array('rechercheBlockClass'=> 'noHeaderNoFooter'));
 		}
 
 

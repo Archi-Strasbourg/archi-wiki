@@ -1,4 +1,4 @@
-<div class="rechercheBlock">
+<div class="rechercheBlock {rechercheBlockClass}">
 	<!-- BEGIN titreEtLiens -->
 	<h1><?_("Recherche")?></h1>
 	<!-- END titreEtLiens -->
