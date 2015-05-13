@@ -14086,10 +14086,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					'nbReponses' => "Aucune adresse !",
 					'titre' => 'Adresses'
 			));
-			
-			
-			$this->messages->addWarning("Aucune adresse à afficher.");
-			$this->messages->display();
 		}
 		else{
 			
