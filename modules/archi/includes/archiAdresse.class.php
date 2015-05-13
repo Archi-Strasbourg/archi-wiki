@@ -14083,10 +14083,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 
 		if(empty($idList)){
 			$t->assign_vars(array(
-					'messageInfo' => "Aucune adresse !",
+					'messageInfo' => "Aucun résultat !",
 					'titre' => 'Résultats'
 			));
-			$this->messages->addWarning("Aucune adresse à afficher.");
+			$this->messages->addWarning("Aucun résultat à afficher.");
 			$this->messages->display();
 				
 		}
