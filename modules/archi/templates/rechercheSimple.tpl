@@ -27,15 +27,17 @@
 	<input type='hidden' name="{parametres.nom}" id="{parametres.id}" value="{parametres.value}">
 	<!-- END parametres -->
 	<input type="text" accesskey="F"  name="motcle" value="{motcle}" style='{motCleStyle}' placeholder="<?_("Indiquez une adresse, un nom de rue ou de bâtiment")?>" class="searchInput" required/>&nbsp;
-		<input type="submit"  name="submit" class="loupe" value="<?_("OK")?>" />
+	<input type="submit"  name="submit" class="loupe" value="<?_("OK")?>" />
 	
 	<div class="rechercheBottomElements">
+	<div>
 		<!-- BEGIN displayCheckBoxResultatsCarte -->
-		<span><input type='checkbox' name='afficheResultatsSurCarte' id='afficheResultatsSurCarte' value='1' {checkBoxAfficheResultatsSurCarte}>&nbsp;<label for="afficheResultatsSurCarte"><?_("Afficher les résultats sur une carte")?></label></span>
+		<div class="inline-block"><input type='checkbox' name='afficheResultatsSurCarte' id='afficheResultatsSurCarte' value='1' {checkBoxAfficheResultatsSurCarte}>&nbsp;<label for="afficheResultatsSurCarte"><?_("Afficher les résultats sur une carte")?></label></div>
 		<!-- END displayCheckBoxResultatsCarte -->
 		<!-- BEGIN displayRechercheAvancee -->
-		<a class="lienRechercheAvancee" href='{urlRechercheAvancee}'><?_("Recherche avancée")?></a><br />
+		<div class="inline-block lienRechercheAvancee"><a class="lienRechercheAvancee" href='{urlRechercheAvancee}'><?_("Recherche avancée")?></a><br /></div>
 		<!-- END displayRechercheAvancee -->
+		</div>
 	</div>
 	</form>
 </div>

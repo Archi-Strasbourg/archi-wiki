@@ -2342,7 +2342,11 @@ Page d'accueil
 .push-menu-top-search .rechercheBlock {
 	margin: auto;
 	width: 700px;
-	
+	text-align: left;
+}
+
+.rechercheBlock{
+	text-align: center;
 }
 
 .rechercheBottomElements>span:nth-child(1) {
@@ -2354,7 +2358,6 @@ Page d'accueil
 }
 
 .lienRechercheAvancee {
-	float: left;
 	margin-left: 20px;
 }
 
