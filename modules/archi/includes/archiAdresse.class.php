@@ -14083,9 +14083,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 
 		if(empty($idList)){
 			$t->assign_vars(array(
-					'nbReponses' => "Aucune adresse !",
-					'titre' => 'Adresses'
+					'messageInfo' => "Aucune adresse !",
+					'titre' => 'Résultats'
 			));
+			$this->messages->addWarning("Aucune adresse à afficher.");
+			$this->messages->display();
+				
 		}
 		else{
 			
@@ -14163,7 +14166,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 						array(
 								'urlNbOnClick' => '',
 								'urlNb'        => $url[$indexPage] ,
-								'nb'           => $indexPage+1
+								'nb'           => $indexPage+1,
+								'urlPrecendant' =>$url[$siblingIndex['previousPage']],
+								'urlSuivant'=>$url[$siblingIndex['nextPage']]
 						)
 				);
 				
@@ -14176,16 +14181,19 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					);
 				}
 			}
-					
-			$t->assign_vars(
-					array(
-						'urlPrecendant' =>$url[$siblingIndex['previousPage']],
-						'urlSuivant'=>$url[$siblingIndex['nextPage']]
-			));
-			
 
-			
-			
+			$t->assign_block_vars(
+					'urlNextPagination',
+					array(
+							'urlSuivant'=>$url[$siblingIndex['nextPage']]
+					)
+			);
+			$t->assign_block_vars(
+					'urlBackPagination',
+					array(
+							'urlPrecedent'=>$url[$siblingIndex['previousPage']]
+					)
+			);
 			/*
 			 * Addresses display
 			 * Loop on each address infos
@@ -14607,7 +14615,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		return $indexRange;
 	}
 	
-	private function getNextPreviousPages($currentPage=0,$nbPages){
+	private function getNextPreviousPages($currentPage=0,$nbPages=0){
 		$nextPage=$currentPage+1;
 		$previousPage=$currentPage-1;
 		if($previousPage<=-1){

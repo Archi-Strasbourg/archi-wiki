@@ -1,7 +1,10 @@
 <h1>{titre}</h1>
-
+{messageInfo}
 {nbReponses}
-<a href="{urlPrecedent}" onclick="{urlPrecedentOnClick}">&lt;</a>
+
+<!-- BEGIN urlBackPagination -->
+	<a href="{urlBackPagination.urlPrecedent}" onclick="{urlBackPagination.urlPrecedentOnClick}">&lt;</a>
+<!-- END urlBackPagination -->
 <!-- BEGIN nav -->
 	<!-- BEGIN courant -->
 		<strong>
@@ -11,7 +14,9 @@
 		</strong>
 	<!-- END courant -->
 <!-- END nav -->
-<a href="{urlSuivant}" onclick="{urlSuivantOnClick}">&gt;</a>
+<!-- BEGIN urlNextPagination -->	
+	<a href="{urlNextPagination.urlSuivant}" onclick="{urlNextPagination.urlSuivantOnClick}">&gt;</a>
+<!-- END urlNextPagination -->
 
 <div class="results">
 	<div>
@@ -43,7 +48,9 @@
 <br />
 
 {nbReponses}
-<a href="{urlPrecedent}" onclick="{urlPrecedentOnClick}">&lt;</a>
+<!-- BEGIN urlBackPagination -->
+	<a href="{urlBackPagination.urlPrecedent}" onclick="{urlBackPagination.urlPrecedentOnClick}">&lt;</a>
+<!-- END urlBackPagination -->
 <!-- BEGIN nav -->
 	<!-- BEGIN courant -->
 		<strong>
@@ -53,4 +60,7 @@
 		</strong>
 	<!-- END courant -->
 <!-- END nav -->
-<a href="{urlSuivant}" onclick="{urlSuivantOnClick}">&gt;</a>
+<!-- BEGIN urlNextPagination -->	
+	<a href="{urlNextPagination.urlSuivant}" onclick="{urlNextPagination.urlSuivantOnClick}">&gt;</a>
+<!-- END urlNextPagination -->
+		
