@@ -710,7 +710,12 @@ abstract class ArchiContenu extends config
             //$cache->refreshCache();
         } else if (isset($_POST["metier"]) && !empty($_POST["nom"])) {
             $this->ajouter();
-            $newPerson=array(array("idAdresse"=>mysql_insert_id()));
+            $newPerson=array(
+            		array(
+            				"idAdresse"=>mysql_insert_id(),
+            				'newAdresse'=>true
+            		)
+            );
             $this->addEvent("personne",  $newPerson);
         } else {
             $this->erreurs->ajouter("Aucune fiche n'a pu être ajoutée. Vérifiez la saisie du champ.");
@@ -748,21 +753,22 @@ abstract class ArchiContenu extends config
         //$arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier();
         
         foreach ($arrayNewAdresses as $newAddress){
-        	debug(array(
+        	/*debug(array(
+        	'newAddreess'=>$newAddress,
         	'isset'=>isset($newAddress['newAdresse']) ,
         	'not empty' => !empty($newAddress['newAdresse']),
         	'newAdresse'=>$newAddress['newAdresse']
-        	));
+        	));*/
 	        if(isset($newAddress['newAdresse']) && !empty($newAddress['newAdresse']) || $newAddress['newAdresse'] ==1){
-	        	debug("full ajout");
+	        	//debug("full ajout");
 	        	$arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier();
 	        }
 	        else{
-	        	debug("ajout simple id : ".$newAddress['idAdresse']);
+	        	//debug("ajout simple id : ".$newAddress['idAdresse']);
 	        	$arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier($newAddress['idAdresse']);
 	        }
         }
-        debug($arrayRetourEvenementNouveauDossier);
+        //debug($arrayRetourEvenementNouveauDossier);
 
         // s'il n'y a pas eu d'erreurs ,  on peut faire l'ajout des liaisons entre evenement et adresses
         if (count($arrayRetourEvenementNouveauDossier['errors'])==0 && count($arrayNewAdresses)>0) {
@@ -784,6 +790,7 @@ abstract class ArchiContenu extends config
                 $reqLiaisons = "INSERT INTO $linkTable ($field, idEvenement)
                                 VALUES ('".$idAdresse."', '".$idEvenementGroupeAdresses."')
                 ";
+                //debug($reqLiaisons);
                 $resLiaisons = $this->connexionBdd->requete($reqLiaisons);
             }
 
@@ -791,12 +798,12 @@ abstract class ArchiContenu extends config
             if(isset($newAddress['newAdresse']) && !empty($newAddress['newAdresse']) || $newAddress['newAdresse'] ==1){
 	            
 	            $sqlAssociationNettoie = "delete from _evenementEvenement where idEvenement = '".$arrayRetourEvenementNouveauDossier['idEvenementGroupeAdresse']."'";
-	            debug($sqlAssociationNettoie);
+	            //debug($sqlAssociationNettoie);
 	            
 	            $resAssociationNettoie = $this->connexionBdd->requete($sqlAssociationNettoie);
             }
             $sqlAssociation = "insert into _evenementEvenement (idEvenement,idEvenementAssocie) values ('".$arrayRetourEvenementNouveauDossier['idEvenementGroupeAdresse']."','".$arrayRetourEvenementNouveauDossier['idSousEvenement']."')";
-            debug($sqlAssociation);
+            //debug($sqlAssociation);
             $resAssociation = $this->connexionBdd->requete($sqlAssociation);
             
             if ($type=="personne") {
