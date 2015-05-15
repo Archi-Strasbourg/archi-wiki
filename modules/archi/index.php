@@ -823,7 +823,8 @@ if (isset($_GET['archiAffichage'])) {
         		$idEvenementGroupeAdresse=$_GET['archiIdEvenement'];
         		$_GET['archiIdEvenementGroupeAdresse']=$_GET['archiIdEvenement'];
         	}
-        	if(isset($_GET['archiIdEvenementGroupeAdresse'])&&empty($_GET['archiIdEvenementGroupeAdresse'])&&$_GET['archiIdEvenementGroupeAdresse']!=''){
+
+        	if(isset($_GET['archiIdEvenementGroupeAdresse'])&&!empty($_GET['archiIdEvenementGroupeAdresse'])&&$_GET['archiIdEvenementGroupeAdresse']!=''){
         		$u->updateVisitedLink($_GET['archiIdAdresse'],$idEvenementGroupeAdresse);
         	}
         	$a = new archiAdresse();

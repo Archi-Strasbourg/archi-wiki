@@ -3051,6 +3051,10 @@ class archiEvenement extends config
 				}
 			}
 		}
+		
+		//Dirty redirect but form  is not well handle so have to use dirty method
+		unset($this->variablesGet['archiAction']);
+		header("Location: ".$this->creerUrl('', '', $this->variablesGet, false, false));
 	}
 
 

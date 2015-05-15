@@ -5827,7 +5827,7 @@ class archiAdresse extends ArchiContenu
 	 // afin de changer le comportement des liens et limiter certains affichages,  non utiles dans la popup par exemple
 	 // cette fonction ,  permet maintenant aussi de renvoyer les resultats dans un tableau ,  sans forcement les affichers (utile dans la recherche ...)
 	 *
-	 * InPeople n'est pas responsable de cette fonction sortie des enfersd
+	 * InPeople n'est pas responsable de cette fonction sortie des enfers
 	 *
 	 * @param array  $criteres      Critères
 	 * @param string $modeAffichage Mode d'affichage
@@ -14247,6 +14247,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$intituleAdresse.=$fulladdress.' '; 
 				$arrayUrl = $this->generateUrlListAddresses($input,$this->variablesGet['modeAffichage'],$intituleAdresse);
 				
+				/*
 				//If prisdepuis
 				if(isset($this->variablesGet['modeAffichage']) && ($this->variablesGet['modeAffichage'] == 'popupRechercheAdressePrisDepuis')){
 					$addressUrl="#";
@@ -14280,9 +14281,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 						
 						
 				}
+				*/
 
 				//Regular case
-				else{
+				//else{
 					
 					//Personne case
 					if (isset ( $info['idPersonne'] ) && $info['idPersonne'] != '') {
@@ -14313,8 +14315,22 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					
 					// Event title
 					$titreEvenements = implode ( " - ", $info ['titresEvenements'] ); // Getting all the events links on one line
-				}
+				//}
 				
+					
+					$modeAffichage=$this->variablesGet['modeAffichage'];
+					
+				if($modeAffichage == 'calqueImage' || $modeAffichage =='calqueImageChampsMultiples' 
+						|| $modeAffichage == 'calqueImageChampsMultiplesRetourSimple' || $modeAffichage == 'calqueEvenement'
+						|| $modeAffichage == 'popupRechercheAdressePrisDepuis' || $modeAffichage == 'popupRechercheAdresseVueSur'
+						|| $modeAffichage == "popupAjoutAdressesLieesSurEvenement" || $modeAffichage == "popupDeplacerEvenementVersGroupeAdresse"
+						|| $modeAffichage == 'popupRechercheAdresseAdminParcours'){
+						
+					$titreEvenements = "";
+				}	
+				else
+					$titreEvenements = implode ( " - ", $info ['titresEvenements'] ); // Getting all the events links on one line
+								
 				$t->assign_block_vars(
 						'adresses',
 						array(
