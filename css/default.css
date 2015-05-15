@@ -1376,7 +1376,7 @@ a.white:hover {
 }
 
 .event {
-	padding: 0 10px;
+	padding: 0 10px 5px 10px;
 	border-radius: 5px;
 	width: 730px;
 	float: left;

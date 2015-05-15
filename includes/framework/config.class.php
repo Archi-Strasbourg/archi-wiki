@@ -35,13 +35,16 @@ require_once "debug.php";
 class Config
 {
     
-     
-    protected $bdd_host='localhost';
-    protected $bdd_user='archiwiki'; //"root";
-    protected $bdd_password='archi-dev';
-    protected $bdd_name='archi_v2';
-    protected $adminPass;
 
+	protected $bdd_host;
+	protected $bdd_user; //"root";
+	protected $bdd_password;
+	protected $bdd_name;
+	protected $adminPass;
+
+	
+	public $langs=array('fr_FR', 'de_DE', 'en_US');
+	
     static $default_lang = "fr_FR";
     
     // Pour l'identification unique d'un utilisateur dans la session
@@ -157,7 +160,6 @@ class Config
         */
         $this->erreurs             = new objetErreur();
         $this->messages = new messageCollection();
-       // $coucou = new coucouObject();
     }
     
     /**
