@@ -270,7 +270,7 @@ for each row
 begin
 	
 	delete from recherche 
-	WHERE idEvenementGA in  old.idEvenement; 
+	WHERE idEvenementGA = old.idEvenement; 
 END$$
 delimiter ;
 
