@@ -7400,9 +7400,11 @@ class archiEvenement extends config
 		$return_array = array();
 		while($row = mysql_fetch_assoc($result)){
 			$return_array = $row;
-			$array_numero[]=$row['numero'];
+			if($row['numero'] != 0)
+				$array_numero[]=$row['numero'];
 		}
-		$numero = implode('-', $array_numero);
+		
+		$numero = implode('-', array_unique($array_numero));
 		$return_array['numero'] = $numero;
 		return $return_array;
 	}
