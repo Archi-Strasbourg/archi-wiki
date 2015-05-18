@@ -12,9 +12,9 @@
  * */
 $path="images/placeholder.jpg";
 if (isset($_GET["id"]) && !empty($_GET["id"])) {
-	$ressource = mysql_connect('localhost', 'archi_u_preprod', 'archi_pwd_preprod')
+	$ressource = mysql_connect('localhost', 'archi_user', 'archi_pwd')
 	or die(file_get_contents(__DIR__.'/../../../maintenance.html'));
-	mysql_select_db('archi_dbname_preprod') or die(mysql_error());
+	mysql_select_db('archi_reboot') or die(mysql_error());
 	mysql_query('SET NAMES "utf8"') or die (mysql_error());
 	$req = "
             SELECT dateUpload
@@ -28,7 +28,7 @@ if (isset($_GET["id"]) && !empty($_GET["id"])) {
 	$image=mysql_fetch_object($res);
 	if ($image) {
 		//http://archi-strasbourg.org/photo-detail-16_rue_bastian__cronenbourg__strasbourg-1-evenement-idEvenement-1-adresse1.html
-		$tempPath="http://archi-strasbourg.org/photos--".$image->dateUpload."-".$_GET["id"]."-grand.jpg";
+		$tempPath="images/grand/".$image->dateUpload."-".$_GET["id"]."-grand.jpg";
 		//if (file_exists($tempPath)) {
 		$path = $tempPath;
 		// }
