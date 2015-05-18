@@ -5393,7 +5393,7 @@ class archiImage extends config
 		$image = mysql_fetch_object ( $res );
 		if ($image) {
 			// http://archi-strasbourg.org/photo-detail-16_rue_bastian__cronenbourg__strasbourg-1-evenement-idEvenement-1-adresse1.html
-			$tempPath = "http://archi-strasbourg.org/photos--" . $image->dateUpload . "-" . $idHistoriqueImage . "-grand.jpg";
+			$tempPath = "images/grand/" . $image->dateUpload . "-" . $idHistoriqueImage . "-grand.jpg";
 			// if (file_exists($tempPath)) {
 			$path = $tempPath;
 			// }

@@ -12476,7 +12476,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $isPhotoCentrale = true;
             //list($w,$h) = getimagesize($this->getCheminPhysique()."images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg");
             //TODO : Change back URL for production
-            list($w,$h) = getimagesize("http://archi-strasbourg.org/images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg");
+            list($w,$h) = getimagesize("images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg");
             $newWGrand = round(75*$w/100);
             $newHGrand = round(75*$h/100);
             
@@ -12929,8 +12929,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             if($arrayImage['trouve'])
             {
             	//TODO : Change back URL for production
-                list($w,$h) = getimagesize("http://archi-strasbourg.org/images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
-                //list($w,$h) = getimagesize($this->getCheminPhysique()."images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
+                list($w,$h) = getimagesize("images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
+               // list($w,$h) = getimagesize($this->getCheminPhysique()."images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
                 $newWGrand = round(75*$w/100);
                 $newHGrand = round(75*$h/100);
                     

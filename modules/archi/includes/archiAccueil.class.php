@@ -1950,7 +1950,7 @@ class ArchiAccueil extends config
 		 
 		$result = $this->connexionBdd->requete($requete);
 		$fetch = mysql_fetch_assoc($result);
-		$url = 'http://archi-strasbourg.org/images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
+		$url = 'images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
 		$urlNews = 'actualites-archi-strasbourg-'.$fetch['idActualite'].'.html';
 		$description = strip_tags($fetch['texte']);
 		$so = new StringObject();
