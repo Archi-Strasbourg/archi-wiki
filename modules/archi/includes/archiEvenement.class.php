@@ -7404,7 +7404,7 @@ class archiEvenement extends config
 			if($row['numero'] != 0)
 				$array_numero[]=$row['numero'];
 		}
-		
+		asort($array_numero);
 		$numero = implode('-', array_unique($array_numero));
 		$return_array['numero'] = $numero;
 		return $return_array;

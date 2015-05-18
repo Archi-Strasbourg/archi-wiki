@@ -719,7 +719,8 @@ class ArchiAccueil extends config
 				$t->assign_var_from_handle('dernieresModifs', 'derniereModfis');
 				$t->assign_var_from_handle('commentaires', 'commentaire');
 				$t->assign_var_from_handle('lastVisits', 'lastVisit');
-
+				debug($this->getCheminPhysique());
+				
 				break;
 
 		}
