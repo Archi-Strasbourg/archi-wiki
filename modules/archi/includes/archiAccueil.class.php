@@ -504,7 +504,6 @@ class ArchiAccueil extends config
 
 				foreach ($latestComments as $com){
 					$e = new archiEvenement();
-					$txtAdresse = $e->getArrayAdresse($com['idEvenement']);
 					$commentaire = array(
 							'date'=> $com['date'],
 							'nom' =>  $com['nom'],
@@ -522,18 +521,9 @@ class ArchiAccueil extends config
 					$idAdresse = $modif['idAdresse'];
 					$e = new archiEvenement();
 					$adresseArray = $e->getArrayAdresse($modif['idEvenementGroupeAdresse'],'idEvenementGroupeAdresse');
-
 					//Adresse
 					$adresse = '';
-					if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero'] !='0'){
-						$adresse.=$adresseArray['numero'].' ';
-					}
-					if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-						$adresse.=$adresseArray['prefixe'];
-					}
-					if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
-						$adresse.=' '.$adresseArray['nomRue'];
-					}
+					$adresse = $e->getAddressText($adresseArray);
 
 					//Image
 					$a = new archiAdresse();
@@ -618,15 +608,7 @@ class ArchiAccueil extends config
 
 							//Adresse
 							$adresse = '';
-							if(isset($adresseArray['numero']) && $adresseArray['numero'] !=''&& $adresseArray['numero'] !='0'){
-								$adresse.=$adresseArray['numero'].' ';
-							}
-							if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-								$adresse.=$adresseArray['prefixe'];
-							}
-							if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
-								$adresse.=' '.$adresseArray['nomRue'];
-							}
+							$adresse = $e->getAddressText($adresseArray);
 
 							//Image
 							$requeteImage = "
@@ -721,6 +703,7 @@ class ArchiAccueil extends config
 				$t->assign_var_from_handle('lastVisits', 'lastVisit');
 				
 				break;
+				
 
 		}
 
@@ -1956,7 +1939,7 @@ class ArchiAccueil extends config
 		 
 		$result = $this->connexionBdd->requete($requete);
 		$fetch = mysql_fetch_assoc($result);
-		$url = 'http://archi-strasbourg.org/images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
+		$url = 'images/actualites/'.$fetch['idActualite'].'/'.$fetch['photoIllustration'];
 		$urlNews = 'actualites-archi-strasbourg-'.$fetch['idActualite'].'.html';
 		$description = strip_tags($fetch['texte']);
 		$so = new StringObject();
@@ -1998,6 +1981,7 @@ class ArchiAccueil extends config
 						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 						LEFT JOIN rue r on r.idRue = ha.idRue
 						WHERE c.CommentaireValide =1
+						GROUP BY c.idCommentairesEvenement
 						";
 		
 		$sousRequete2 = "SELECT
@@ -2023,6 +2007,7 @@ class ArchiAccueil extends config
 						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 						LEFT JOIN rue r on r.idRue = ha.idRue
 						WHERE c.CommentaireValide =1
+						GROUP BY c.idCommentaire
 		";
 		
 		$requete= "
@@ -2078,20 +2063,11 @@ class ArchiAccueil extends config
 				$ancre.="Adresse".$latestComment['idCommentaire'];
 			}
 
-
 			if(!archiPersonne::isPerson($idEvenementGroup)){
 				$adresseArray = $e->getArrayAdresse($idEvenement);
+				//Adresse
 				$adresse = '';
-				if(isset($adresseArray['numero']) && $adresseArray['numero'] !='' && $adresseArray['numero']!=0){
-					$adresse.=$adresseArray['numero'].' ';
-				}
-				if(isset($adresseArray['prefixe']) && $adresseArray['prefixe'] != ''){
-					$adresse.=$adresseArray['prefixe'];
-				}
-				if(isset($adresseArray['nomRue']) && $adresseArray['nomRue'] != ''){
-					$adresse.=' '.$adresseArray['nomRue'];
-				}
-
+				$adresse = $e->getAddressText($adresseArray);
 				$url = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail',"archiIdAdresse"=>$idAdresse,"archiIdEvenementGroupeAdresse"=>$idEvenementGroup));
 			}
 
