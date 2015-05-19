@@ -41,8 +41,6 @@ class archiInterest extends config{
 	
 			//Generate address form
 			$formAddressAddInterest=$a->afficheChoixAdresse(array('afficheNombreResultat' => 1));
-			//$formAddressAddInterest=$a->afficheChoixAdresse();
-			
 	
 			$paramsFields= array();
 			$paramsFields[] = array('table' => 'pays' ,'value' => 'idPays','title'=>'nom');
