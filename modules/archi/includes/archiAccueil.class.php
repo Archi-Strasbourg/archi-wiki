@@ -2234,7 +2234,6 @@ class ArchiAccueil extends config
 		
 				";
 		
-/*
 		$requeteElements = "select * from (
    					 SELECT
 					 ee.idEvenement as idEvenementGroupeAdresse,
@@ -2279,18 +2278,18 @@ class ArchiAccueil extends config
 				    WHERE pe.idPersonne IS NOT NULL
 		
 				) as tmp
-								WHERE tmp.DateTri = (
-    SELECT max(DATE_FORMAT(evt2.dateCreationEvenement, '%Y%m%d%H%i%s'))
-    FROM evenements evt2
-    LEFT JOIN _evenementEvenement ee2 on ee2.idEvenementAssocie = evt2.idEvenement
-    WHERE ee2.idEvenement = tmp.idEvenementGroupeAdresse
-)
+			
+				WHERE tmp.DateTri = (
+				    SELECT max(DATE_FORMAT(evt2.dateCreationEvenement, '%Y%m%d%H%i%s'))
+				    FROM evenements evt2
+				    LEFT JOIN _evenementEvenement ee2 on ee2.idEvenementAssocie = evt2.idEvenement
+				    WHERE ee2.idEvenement = tmp.idEvenementGroupeAdresse
+				)
 				GROUP BY tmp.idEvenement
 				ORDER BY tmp.DateTri DESC
 				LIMIT 8
 		
 				";
-		*/
 	
 		
 		
