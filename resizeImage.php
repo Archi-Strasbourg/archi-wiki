@@ -15,21 +15,11 @@ $config = new Config();
 
 $path="images/placeholder.jpg";
 if (isset($_GET["id"]) && !empty($_GET["id"])) {
-	/*$ressource = mysql_connect('localhost', 'archi_user', 'archi_pwd')
-	or die(file_get_contents(__DIR__.'/../../../maintenance.html'));
-	mysql_select_db('archi_reboot') or die(mysql_error());
-	mysql_query('SET NAMES "utf8"') or die (mysql_error());
-	*/
 	$req = "
             SELECT dateUpload
             FROM  historiqueImage
             WHERE idHistoriqueImage = '".mysql_real_escape_string($_GET["id"])."'";
 	$res=$config->connexionBdd->requete($req);
-	/*$res = mysql_query($req)
-	or
-	die($requete.' -- '.mysql_error().' -- <br/> Request in file : <b>'.debug_backtrace()[0]['file'].'</b><br/> on line <b>'.debug_backtrace()[0]['line']).'</b>';
-	*/
-	//$res =$config->connexionBdd->requete($req);
 	$image=mysql_fetch_object($res);
 	if ($image) {
 		//http://archi-strasbourg.org/photo-detail-16_rue_bastian__cronenbourg__strasbourg-1-evenement-idEvenement-1-adresse1.html
