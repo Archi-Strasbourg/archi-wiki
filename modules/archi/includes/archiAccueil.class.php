@@ -2233,7 +2233,7 @@ class ArchiAccueil extends config
 				LIMIT 8
 		
 				";
-		
+		/*
 		$requeteElements = "select * from (
    					 SELECT
 					 ee.idEvenement as idEvenementGroupeAdresse,
@@ -2290,7 +2290,7 @@ class ArchiAccueil extends config
 				LIMIT 8
 		
 				";
-	
+	*/
 		
 		
 		
