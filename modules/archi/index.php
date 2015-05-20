@@ -1369,6 +1369,10 @@ if (isset($_GET['archiAffichage'])) {
             $recherche = new archiRecherche();
             echo $recherche->afficheCarteRecherche(array('zoom'=>10));
             break;
+		case 'afficheCarte':
+			$recherche = new archiRecherche();
+            echo $recherche->afficheCarteRecherche(array('zoom'=>10));
+            break;
         case 'afficheFormulaireEvenementAdresseLiee':
             $e = new archiEvenement();
             echo $e->afficheFormulaireAdresseLieeEvenement(
