@@ -2668,7 +2668,13 @@ Evenement block
 .evenement,.commentaire ,.formComment{
 	color: #b2b2b2;
 }
-
+.info_amounts.eventOldStyle{
+	background-color: #99ACB0;
+	padding: 1em;
+	margin-bottom: 3em;
+	border-radius: 5px;
+	min-width: 730px;
+}
 
 /*
 Opendata
