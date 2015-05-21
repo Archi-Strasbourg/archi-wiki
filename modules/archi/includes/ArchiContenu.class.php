@@ -40,7 +40,6 @@ abstract class ArchiContenu extends config
     public function afficheFormulaireNouveauDossier($parametres=array(),  $type="adresse")
     {
         $html="";
-        
         // initialisation de l'objet googlemap pour la recuperation des coordonnees
         $paramsGoogleMap = array('googleMapKey'=>$this->googleMapKey);
 

@@ -160,16 +160,18 @@ if (isset($_GET['archiAction'])) {
 					echo $connexionUtilisateur->erreurs->afficher();
 				}
     	}
+    	
     	if (isset($_GET['archiActionPrecedente']) 
     			&& ($_GET['archiActionPrecedente']=='' 
     			|| $_GET['archiActionPrecedente']=='validAuthentification'	
     			|| $_GET['archiActionPrecedente']=='deconnexion')
-
     			&& !$connexionUtilisateur->erreurs->existe()) {
 				if (isset ( $_GET ['archiAffichage'] ) && $_GET ['archiAffichage'] == 'ajoutNouveauDossier') {
 					$_GET ['archiAffichage'] = 'ajoutNouveauDossier';
 				} elseif (isset ( $_GET ['archiAffichage'] ) && $_GET ['archiAffichage'] == 'imageDetail') {
 					$_GET ['archiAffichage'] = 'imageDetail';
+				} elseif (isset ( $_GET ['archiAffichage'] ) && $_GET ['archiAffichage'] == 'ajoutNouvelPersonne') {
+					$_GET ['archiAffichage'] = 'ajoutNouvelPersonne';
 				} elseif (isset ( $_GET ['archiAffichage'] ) && $_GET ['archiAffichage'] != 'adresseDetail') {
 					$_GET ['archiAffichage'] = 'afficheAccueil';
 				} elseif (! isset ( $_GET ['archiAffichage'] )) {
@@ -371,23 +373,31 @@ if (isset($_GET['archiAction'])) {
             $evenement = new archiEvenement();
             echo $evenement->supprimer('', $_GET['archiIdHistoriqueEvenement']);
             break;
-
         case 'ajoutNouveauDossier':
             $adresses = new archiAdresse();
+            $adresses->ajouterNouveauDossier();
             if ($adresses->erreurs->existe()
                 || $adresses->erreurs->tabFormExiste()
             ) {
+            	/*
+                echo $adresses->erreurs->afficher();
                 echo $adresses->afficheFormulaireNouveauDossier();
+                */
             }
             break;
         case 'ajoutNouvelPersonne':
             $personne = new archiPersonne();
             $personne->ajouterNouveauDossier("personne");
+            
             if ($personne->erreurs->existe()
                 || $personne->erreurs->tabFormExiste()
             ) {
+            	
+            	/*
                 echo $personne->erreurs->afficher();
                 echo $personne->afficheFormulaireNouveauDossier(array(), "personne");
+                
+                */
             }
             break;
         case 'enregistreGroupeAdresses':
@@ -535,7 +545,7 @@ $modesAffichagesAvecAuthentification = array('ajoutImageBibliotheque',
 'modifierImage', 'modifierEvenement', 'modifierAdresse', 'utilisateurDetail',
 'formulaireGroupeAdresses', 'afficheSelectTypeEvenement',
 'afficheSelectSousQuartier', 'afficheSelectQuartier', 'afficheChoixRue',
-'afficheChoixVille', 'ajoutNouveauDossier', 'afficherAjouterPersonne',
+'afficheChoixVille', 'ajoutNouveauDossier','ajoutNouvelPersonne', 'afficherAjouterPersonne',
 'afficherAjouterSource', 'administration', 'comparaisonEvenement',
 'afficheLogsMails', 'adminDroits', 'adminSondages', 'adminParcours',
 'administrationAfficheAjout', 'listeTypeSourceDependancesSourcesAdmin',
@@ -1039,13 +1049,7 @@ if (isset($_GET['archiAffichage'])) {
             echo $personne->afficherFormulaire();
             break;
         // Cas de l'ajout d'un nouveau dossier
-        case 'ajoutNouveauDossier':
-            $a = new archiAdresse();
-            /* Un dossier est une notion qui regroupe un evenement
-             * groupe d'adresse et un evenement 'construction'
-             * */
-            echo $a->afficheFormulaireNouveauDossier(); 
-            break;    
+       
         case "editPerson":
             include "inc/editPerson.php";
             break;
@@ -1064,16 +1068,21 @@ if (isset($_GET['archiAffichage'])) {
         case 'choosePersonEventImage':
             include 'inc/choosePersonEventImage.php';
             break;
+        case 'ajoutNouveauDossier':
+           	$a = new archiAdresse();
+           	echo $a->afficheFormulaireNouveauDossier();
+           	break;
+
         case "ajoutNouvelPersonne":
             $auth=new archiAuthentification();
             if ($auth->estConnecte()) {
                 $p = new archiPersonne();
                 echo $p->afficheFormulaireNouveauDossier(array(), "personne");
             } else {
-                if (!$afficheAuthentificationAction) {
+               // if (!$afficheAuthentificationAction) {
                     $auth = new archiAuthentification();
-                    echo $auth->afficheFormulaireAuthentification();
-                }
+                 //   echo $auth->afficheFormulaireAuthentification();
+                //}
             }
             break;
         case 'afficheChoixVille':
