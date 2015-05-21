@@ -2152,50 +2152,6 @@ class ArchiAccueil extends config
 		
 
 		
-		
-
-
-		
-		
-		
-		
-		
-		
-
-
-		$requeteElements = "
-				select * from (
-					SELECT
-					ee.idEvenement as idEvenementGroupeAdresse,
-					evt.idEvenement AS idEvenement,
-					ae.idAdresse,
-					evt.idEvenementRecuperationTitre ,
-					evt.idImagePrincipale AS idHistoriqueImage,
-					te.nom as typeEvenement,
-					date_format(evt.dateCreationEvenement," . _('"%e/%m/%Y"').") as dateCreationEvenement,
-					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
-					evt.description,
-					1 as priorite
-		
-					FROM evenements evt
-					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
-					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse  ".$leftjoinCondition."
-					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
-		
-					WHERE ae.idAdresse IS NOT NULL
-							) as tmp
-		
-					GROUP BY tmp.idEvenementGroupeAdresse
-					ORDER BY tmp.DateTri DESC
-					LIMIT ".$nbElts."
-				";
-		
-		
-	
-		
-		
-		
 
 		$requeteElements = "select * from (
    					 SELECT
@@ -2214,46 +2170,11 @@ class ArchiAccueil extends config
 					FROM evenements evt
 					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
 					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse  ".$leftjoinCondition."
+					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
 		
 					WHERE ae.idAdresse IS NOT NULL
-		
-				   
-		
-				) as tmp
-								WHERE tmp.DateTri = (
-    SELECT max(DATE_FORMAT(evt2.dateCreationEvenement, '%Y%m%d%H%i%s'))
-    FROM evenements evt2
-    LEFT JOIN _evenementEvenement ee2 on ee2.idEvenementAssocie = evt2.idEvenement
-    WHERE ee2.idEvenement = tmp.idEvenementGroupeAdresse
-)
-				GROUP BY tmp.idEvenement
-				ORDER BY tmp.DateTri DESC
-				LIMIT 8
-		
-				";
-		$requeteElements = "select * from (
-   					 SELECT
-					 ee.idEvenement as idEvenementGroupeAdresse,
-					evt.idEvenement AS idEvenement,
-					ae.idAdresse,
-					null as idPersonne,
-					evt.idEvenementRecuperationTitre ,
-					evt.idImagePrincipale AS idHistoriqueImage,
-					te.nom as typeEvenement,
-					date_format(evt.dateCreationEvenement," . _('"%e/%m/%Y"').") as dateCreationEvenement,
-					DATE_FORMAT(evt.dateCreationEvenement, '%Y%m%d%H%i%s') as DateTri,
-					evt.description,
-					'adresse' as type
-		
-					FROM evenements evt
-					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
-					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse  ".$leftjoinCondition."
-					LEFT JOIN typeEvenement te ON te.idTypeEvenement = evt.idTypeEvenement
-		
-					WHERE ae.idAdresse IS NOT NULL
+		 			".$whereClause."
 		
 				    UNION
 				    SELECT
@@ -2274,10 +2195,10 @@ class ArchiAccueil extends config
 				    LEFT JOIN _personneEvenement pe ON pe.idEvenement = ee.idEvenement
 				    LEFT JOIN personne p on p.idPersonne = pe.idPersonne
 		
-				    WHERE pe.idPersonne IS NOT NULL
+				    WHERE p.idPersonne IS NOT NULL
 		
 				) as tmp
-			
+		
 				WHERE tmp.DateTri = (
 				    SELECT max(DATE_FORMAT(evt2.dateCreationEvenement, '%Y%m%d%H%i%s'))
 				    FROM evenements evt2
@@ -2291,7 +2212,6 @@ class ArchiAccueil extends config
 				";
 		
 		
-
 		$resultIdAdresse = $this->connexionBdd->requete($requeteElements);
 		$arrayIdEvenement = array();
 		$arrayEvenement = array();
