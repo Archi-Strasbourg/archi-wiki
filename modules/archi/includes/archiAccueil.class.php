@@ -2194,8 +2194,15 @@ class ArchiAccueil extends config
 				    LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
 				    LEFT JOIN _personneEvenement pe ON pe.idEvenement = ee.idEvenement
 				    LEFT JOIN personne p on p.idPersonne = pe.idPersonne
+					LEFT JOIN _evenementPersonne ep on ep.idPersonne = p.idPersonne
+					LEFT JOIN _evenementEvenement ee2 on ee2.idEvenementAssocie = ep.idEvenement
+					LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee2.idEvenement
+					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
 		
 				    WHERE p.idPersonne IS NOT NULL
+					".$whereClause."
+							
+					
 		
 				) as tmp
 		
@@ -2210,7 +2217,6 @@ class ArchiAccueil extends config
 				LIMIT 8
 		
 				";
-		
 		
 		$resultIdAdresse = $this->connexionBdd->requete($requeteElements);
 		$arrayIdEvenement = array();
@@ -2248,7 +2254,6 @@ class ArchiAccueil extends config
 			}
 			$arrayLastModif[]=$tmp;
 		}
-	
 		return $arrayLastModif;
 	}
 
