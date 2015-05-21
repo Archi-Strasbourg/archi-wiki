@@ -374,11 +374,9 @@ if (isset($_GET['archiAction'])) {
 
         case 'ajoutNouveauDossier':
             $adresses = new archiAdresse();
-            $adresses->ajouterNouveauDossier();
             if ($adresses->erreurs->existe()
                 || $adresses->erreurs->tabFormExiste()
             ) {
-                echo $adresses->erreurs->afficher();
                 echo $adresses->afficheFormulaireNouveauDossier();
             }
             break;

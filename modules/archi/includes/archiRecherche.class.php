@@ -1532,12 +1532,11 @@ class archiRecherche extends config {
 			{
 				$arrayNomVille = $a->getInfosVille($idVille,array("fieldList"=>'v.nom as nomVille'));
 				$nomVille = $arrayNomVille['nomVille'];
-
 				$arrayCoords[] = array(
 						'libelle'=>'NomVille',
 						'longitude'=>$value['longitude'],
 						'latitude'=>$value['latitude'],
-						'jsCodeOnClickMarker'=>"location.href='".$this->creerUrl('','afficheAccueil',array("archiNomVilleGeneral"=>$nomVille))."';"
+						'jsCodeOnClickMarker'=>"location.href='".$this->creerUrl('','afficheAccueil',array())."';"
 				);
 			}
 		}
@@ -1637,7 +1636,7 @@ class archiRecherche extends config {
 									'archiIdPaysGeneral'=>$fetchVille['idPays'])
 					)
 			);
-			$s->addToSession('archiIdVilleGeneral', $fetchVille['idVille']);
+			//$s->addToSession('archiIdVilleGeneral', $fetchVille['idVille']);
 		}
 		elseif (((isset($this->variablesGet['archiAffichage'])
 				&& $this->variablesGet['archiAffichage']!='afficheCarte')
@@ -1660,7 +1659,7 @@ class archiRecherche extends config {
 										'archiIdPaysGeneral'=>$fetchVille['idPays'])
 						)
 				);
-				$s->addToSession('archiIdVilleGeneral', $fetchVille['idVille']);
+				//$s->addToSession('archiIdVilleGeneral', $fetchVille['idVille']);
 
 				$arrayAdresse = $adresse
 				->getArrayAdresseFromIdAdresse(
@@ -1700,7 +1699,7 @@ class archiRecherche extends config {
 				$fetchVille = $adresse->getInfosVille($adresse->getIdVilleFrom($i->getIdAdresseFromIdImage($this->variablesGet['archiIdImage']),'idAdresse'),array('fieldList'=>'v.idVille as idVille,v.nom as nomVille,v.idPays as idPays, p.nom as nomPays'));
 				$liens[] = array('libelle'=>$fetchVille['nomPays'],'url'=>$this->creerUrl('','afficheCarte'));
 				$liens[] = array('libelle'=>$fetchVille['nomVille'] , 'url'=>$this->creerUrl('','afficheAccueil',array('archiIdVilleGeneral'=>$fetchVille['idVille'],'archiIdPaysGeneral'=>$fetchVille['idPays'])));
-				$s->addToSession('archiIdVilleGeneral',$fetchVille['idVille']);
+				//$s->addToSession('archiIdVilleGeneral',$fetchVille['idVille']);
 			}
 		}
 		elseif (isset($this->variablesGet['archiAffichage']) && $this->variablesGet['archiAffichage']=='adresseListe' && isset($this->variablesGet['recherche_quartier']) && $this->variablesGet['recherche_quartier'])
@@ -1708,7 +1707,7 @@ class archiRecherche extends config {
 			$fetchVille = $adresse->getInfosVille($adresse->getIdVilleFrom($this->variablesGet['recherche_quartier'],'idQuartier'),array('fieldList'=>'v.idVille as idVille,v.nom as nomVille,v.idPays as idPays, p.nom as nomPays'));
 			$liens[] = array('libelle'=>$fetchVille['nomPays'],'url'=>$this->creerUrl('','afficheCarte'));
 			$liens[] = array('libelle'=>$fetchVille['nomVille'] , 'url'=>$this->creerUrl('','afficheAccueil',array('archiIdVilleGeneral'=>$fetchVille['idVille'],'archiIdPaysGeneral'=>$fetchVille['idPays'])));
-			$s->addToSession('archiIdVilleGeneral',$fetchVille['idVille']);
+			//$s->addToSession('archiIdVilleGeneral',$fetchVille['idVille']);
 
 			$reqQuartier = "SELECT idQuartier,nom as nomQuartier FROM quartier WHERE idQuartier='".$this->variablesGet['recherche_quartier']."'";
 			$resQuartier = $this->connexionBdd->requete($reqQuartier);
@@ -1727,7 +1726,7 @@ class archiRecherche extends config {
 			$fetchVille = $adresse->getInfosVille($adresse->getIdVilleFrom($this->variablesGet['recherche_sousQuartier'],'idSousQuartier'),array('fieldList'=>'v.idVille as idVille,v.nom as nomVille,v.idPays as idPays, p.nom as nomPays'));
 			$liens[] = array('libelle'=>$fetchVille['nomPays'],'url'=>$this->creerUrl('','afficheCarte'));
 			$liens[] = array('libelle'=>$fetchVille['nomVille'] , 'url'=>$this->creerUrl('','afficheAccueil',array('archiIdVilleGeneral'=>$fetchVille['idVille'],'archiIdPaysGeneral'=>$fetchVille['idPays'])));
-			$s->addToSession('archiIdVilleGeneral',$fetchVille['idVille']);
+			//$s->addToSession('archiIdVilleGeneral',$fetchVille['idVille']);
 
 			$reqSousQuartier = "
 					SELECT sq.idSousQuartier as idSousQuartier,sq.nom as nomSousQuartier, q.nom as nomQuartier , q.idQuartier as idQuartier
@@ -1757,7 +1756,7 @@ class archiRecherche extends config {
 			$fetchVille = $adresse->getInfosVille($adresse->getIdVilleFrom($this->variablesGet['archiIdQuartier'],'idQuartier'),array('fieldList'=>'v.idVille as idVille,v.nom as nomVille,v.idPays as idPays, p.nom as nomPays'));
 			$liens[] = array('libelle'=>$fetchVille['nomPays'],'url'=>$this->creerUrl('','afficheCarte'));
 			$liens[] = array('libelle'=>$fetchVille['nomVille'] , 'url'=>$this->creerUrl('','afficheAccueil',array('archiIdVilleGeneral'=>$fetchVille['idVille'],'archiIdPaysGeneral'=>$fetchVille['idPays'])));
-			$s->addToSession('archiIdVilleGeneral',$fetchVille['idVille']);
+			//$s->addToSession('archiIdVilleGeneral',$fetchVille['idVille']);
 
 
 			$reqQuartier = "SELECT idQuartier, nom FROM quartier WHERE idQuartier = '".$this->variablesGet['archiIdQuartier']."'";
@@ -1783,9 +1782,8 @@ class archiRecherche extends config {
 			$liens[] = array('libelle'=>$arrayInfosVille['nomPays'],'url'=>$this->creerUrl('','afficheCarte'));
 			$liens[] = array('libelle'=>$arrayInfosVille['nomVille'],'url'=>$this->creerUrl('','afficheAccueil',array('archiIdVilleGeneral'=>$arrayInfosVille['idVille'],'archiIdPaysGeneral'=>$arrayInfosVille['idPays'])));
 		} else {
-			$liens[] = array('libelle'=>'Strasbourg','url'=>$this->creerUrl('','afficheAccueil',array('archiIdVilleGeneral'=>1,'archiIdPaysGeneral'=>1)));
+			$liens[] = array('libelle'=>'France','url'=>$this->creerUrl('','afficheCarte'));
 		}
-
 
 
 		$retour="";
@@ -1798,7 +1796,7 @@ class archiRecherche extends config {
 
 
 		$retour=pia_substr($retour,0,-1);
-
+		
 		return $retour;
 	}
 

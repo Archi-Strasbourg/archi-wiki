@@ -50,7 +50,6 @@ class ArchiAccueil extends config
 	{
 		$t = new Template($this->getCheminPhysique().$this->cheminTemplates);
 		$t->set_filenames(array('accueil'=>'accueil.tpl'));
-
 		$html = '';
 
 		$infos = "";
@@ -1933,6 +1932,7 @@ class ArchiAccueil extends config
 		$requete = '
 				SELECT titre, sousTitre,date,photoIllustration,idActualite, texte
 				FROM actualites
+				WHERE desactive = 0
 				ORDER BY idActualite DESC
 				LIMIT '.$nbNews.'
 						';

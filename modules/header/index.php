@@ -39,7 +39,6 @@ $session = new objetSession();
 
 $i = new imageObject();
 
-
 if (!isset($jsHeader)) // variables récupérée de chaque fonction des classes du site permettant de mettre du javascript recupéré , dans le header , plutot qu'en plein milieu de la page ou dans le bas de page s'il faut qu'il soit executé a la fin
     $jsHeader="";
 if (!isset($jsFooter))
@@ -49,6 +48,8 @@ $titreSite=$config->titreSite;
 $titre=_("Architecture et photos à Strasbourg");
 $description=$config->descSite;
 $motsCle = "";
+
+
 if ($session->isInSession('archiIdVilleGeneral') && $session->getFromSession('archiIdVilleGeneral')!='' && $session->getFromSession('archiIdVilleGeneral')!='1' && !empty($_SESSION["archiIdVilleGeneral"])) {
     //$titreSite = "photos-immeubles.org";
     $infosVille = $adresse->getInfosVille($session->getFromSession('archiIdVilleGeneral'), array("fieldList"=>"v.nom as nomVille"));
@@ -400,5 +401,4 @@ ob_end_clean();
 
 $header = $html;
 //echo $html;
-
 ?>
