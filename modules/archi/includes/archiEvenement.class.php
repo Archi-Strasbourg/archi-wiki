@@ -1916,9 +1916,11 @@ class archiEvenement extends config
 
 				// recherche s'il y a un historique sur l'evenement courant ( plusieurs mises à jour)
 				$lienHistoriqueEvenementCourant="";
+				$labelHistorique="";
 				if($authentification->estConnecte() && $this->getNbEvenementsInHistorique(array('idEvenement'=>$idEvenement))>1 && $modeAffichage!='consultationHistoriqueEvenement' && (!isset($params['isLieFromOtherAdresse']) || $params['isLieFromOtherAdresse']!=true))
 				{
-					$lienHistoriqueEvenementCourant="<a href='".$this->creerUrl('','consultationHistoriqueEvenement',array('archiIdEvenement'=>$idEvenement))."'>("._("Consulter l'historique").")</a>";
+					$labelHistorique = _("(Consulter l'historique)");
+					$lienHistoriqueEvenementCourant=$this->creerUrl('','consultationHistoriqueEvenement',array('archiIdEvenement'=>$idEvenement));
 				}
 
 				$onClickEvenementDeplacerVersGA="";
@@ -1959,10 +1961,7 @@ class archiEvenement extends config
 				$user->setUserId($res->idEvenement);
 				$urlProfilPic = $user->getImageAvatar(array('idUtilisateur'=>$res->idUtilisateur));
 				$utilisateur="<a href='".$this->creerUrl('','detailProfilPublique',array('archiIdUtilisateur'=>$res->idUtilisateur,'archiIdEvenementGroupeAdresseOrigine'=>$idEvenementGroupeAdresse))."'>".$res->nomUtilisateur." ".$res->prenomUtilisateur."</a>";
-				$labelHistorique="";				
-				if($authentification->estConnecte()){
-					$labelHistorique = _("(Consulter l'historique)");
-				}
+	
 				$t->assign_vars(array(
 						'txtEnvoi'    => $txtEnvoi,
 						'dateEnvoi'     =>$dateEnvoi,
