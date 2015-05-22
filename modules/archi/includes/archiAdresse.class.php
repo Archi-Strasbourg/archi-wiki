@@ -101,7 +101,7 @@ class archiAdresse extends ArchiContenu
 																						GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
 																						HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)";
 
-				debug($sql);
+				//debug($sql);
 
 				$resCheckExist=$this->connexionBdd->requete($sql);
 
@@ -475,9 +475,7 @@ class archiAdresse extends ArchiContenu
 				$idEvenementGroupeAdresse = $fetch['idEvenement'];
 			}
 		}
-		debug($idAdresse);
-		debug($idEvenementGroupeAdresse);
-
+		
 		//Getting coordo for the current address
 		$requete = "SELECT latitude , longitude FROM historiqueAdresse WHERE idAdresse = ".$idAdresse;
 		$result = $this->connexionBdd->requete($requete);
@@ -4324,7 +4322,7 @@ class archiAdresse extends ArchiContenu
 				//l'adresse existe deja , on recupere son id
 				$fetchAdresse = mysql_fetch_assoc($resVerifAdresse);
 				$idAdresse = $fetchAdresse['idAdresse'];
-				$arrayRetour = array("idAdresse"=>$idAdresse,"newAdresse"=>false);
+				$arrayRetour = array("idAdresse"=>$idAdresse,"newAdresse"=>true);
 
 				// on va ecraser les coordonnees googlemap dans tous les cas
 				$reqIdHistoriqueAdresse = "
@@ -14745,7 +14743,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			$resIdEvt = $this->connexionBdd->requete($requeteIdEvt);
 			$arrayIdEvt = mysql_fetch_assoc($resIdEvt);
 			$idEvenementGroupeAdresse = $arrayIdEvt['idEvenementGroupeAdresse'];
-			debug($idEvenementGroupeAdresse);
 		}
 
 		if(!(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='')){

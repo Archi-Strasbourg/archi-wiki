@@ -752,12 +752,6 @@ abstract class ArchiContenu extends config
         //$arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier();
         
         foreach ($arrayNewAdresses as $newAddress){
-        	/*debug(array(
-        	'newAddreess'=>$newAddress,
-        	'isset'=>isset($newAddress['newAdresse']) ,
-        	'not empty' => !empty($newAddress['newAdresse']),
-        	'newAdresse'=>$newAddress['newAdresse']
-        	));*/
 	        if(isset($newAddress['newAdresse']) && !empty($newAddress['newAdresse']) || $newAddress['newAdresse'] ==1){
 	        	//debug("full ajout");
 	        	$arrayRetourEvenementNouveauDossier=$evenement->ajouterEvenementNouveauDossier();
@@ -906,7 +900,7 @@ abstract class ArchiContenu extends config
                 }
             }
             
-            
+
             //echo $retourEvenement["html"];
             if ($type=="personne") {
                 header(

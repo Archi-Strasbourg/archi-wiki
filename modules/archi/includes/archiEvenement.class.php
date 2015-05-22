@@ -93,7 +93,6 @@ class archiEvenement extends config
 		$authentification = new archiAuthentification();
 		$idUtilisateur   = $authentification->getIdUtilisateur();
 		$idEvenementGroupeAdresse = 0;
-		
 		/*
 		debug(array(
 			'isset'=>isset($idAdresse),
@@ -103,7 +102,6 @@ class archiEvenement extends config
 			'idAdresse' => $idAdresse
 		));
 		*/
-		
 		if( isset($idAdresse) &&  !is_null($idAdresse ) && $idAdresse!=0 ){
 			$requeteIdEvtGa = "
 					SELECT idEvenement 
@@ -112,15 +110,15 @@ class archiEvenement extends config
 			$resultatIdEvtGa = $this->connexionBdd->requete($requeteIdEvtGa);
 			$array_idEvt = mysql_fetch_assoc($resultatIdEvtGa);	
 			$idEvenementGroupeAdresse = $array_idEvt['idEvenement'];
-				
+			
 		}
-		
 		
 		if(count($errors)==0)
 		{
 			//$this->connexionBdd->getLock(array('historiqueEvenement'));
+/*
 			if( isset($idAdresse) &&  !is_null($idAdresse ) && $idAdresse==0 ){
-								
+*/
 				// *****************************************************
 				// ajout de l'evenement groupe d'adresses
 				$idEvenementGroupeAdresse = $this->getNewIdEvenement();
@@ -128,9 +126,10 @@ class archiEvenement extends config
 				$sql = "INSERT INTO evenements (idEvenement, titre, description, dateDebut, dateFin, idSource, idUtilisateur, idTypeStructure, idTypeEvenement,dateCreationEvenement)
 						VALUES (".$idEvenementGroupeAdresse.", '', '', '', '', ".$tabForm['source']['value'].", ".$idUtilisateur.", 0, ".$this->getIdTypeEvenementGroupeAdresse().",now())";
 				$this->connexionBdd->requete($sql);
-				//debug($sql);
 				$idEvenementGroupeAdresse= $this->connexionBdd->getLastId();
+				/*
 			}
+			*/
 			// *****************************************************
 			// on recupere l'id de l'evenement enfant ( construction)
 			//$idSousEvenement = $this->getNewIdEvenement();
