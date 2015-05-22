@@ -2,7 +2,7 @@
 <h1>Inscription</h1>
 <br>
     <div>
-    <?_("L'inscription sur www.archi-strasbourg.org vous permet de contribuer au site en donnant des informations sur un immeuble, une adresse, en ajoutant des photos, ou en modifiant les articles existants. Vous pourrez aussi recevoir les nouvelles adresses par mail.")?>
+    <?_("L'inscription sur www.archi-wiki.org vous permet de contribuer au site en donnant des informations sur un immeuble, une adresse, en ajoutant des photos, ou en modifiant les articles existants. Vous pourrez aussi recevoir les nouvelles adresses par mail.")?>
     </div>
 <br>
 <form action='{ACTIONFORM}' name='formInscription' method='post' enctype='multipart/form-data'>
