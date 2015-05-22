@@ -528,11 +528,27 @@ class ArchiAccueil extends config
 					$a = new archiAdresse();
 
 					$reqImageEvtRelated = "
-							SELECT hi.idHistoriqueImage
+							SELECT hi.idHistoriqueImage,1 as priorite
 							FROM historiqueImage hi
 							LEFT JOIN _evenementImage ei on ei.idImage = hi.idImage
 							WHERE ei.idEvenement = ".$modif['idEvenement']."
-							ORDER BY hi.idHistoriqueImage DESC
+									
+							UNION 
+
+							SELECT hi.idHistoriqueImage,2 as priorite
+							FROM `evenements` evt
+							LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
+							LEFT JOIN evenements evt2 ON evt2.idEvenement = ee.idEvenement
+							LEFT JOIN historiqueImage hi on hi.idImage = evt2.idImagePrincipale
+							LEFT JOIN _evenementImage ei ON ei.idImage = hi.idImage
+							WHERE ee.idEvenement IS NOT NULL
+							AND evt.idEvenement IS NOT NULL
+							AND evt.idEvenement != 0
+							AND evt.idEvenement =".$modif['idEvenement']."
+							AND ei.idEvenement =".$modif['idEvenement']."
+									
+						
+							ORDER BY priorite DESC
 							LIMIT 1
 							";
 					$resImageEvtRelated = $this->connexionBdd->requete($reqImageEvtRelated);
@@ -580,7 +596,7 @@ class ArchiAccueil extends config
 							'miniatureLabelLeft'=>$modif['typeEvenement'],
 							'miniatureLabelRight' => $modif['dateCreationEvenement'],
 							'adresse' => ucfirst($adresse),
-							'ville'=>ucfirst($adresseArray['nomVille']),
+							'ville'=>ucfirst($adresseArray[0]['nomVille']),
 							'urlMiniature' => $urlImage,
 							'urlEvenement' => $urlEvenement,
 							'description' => $description,
