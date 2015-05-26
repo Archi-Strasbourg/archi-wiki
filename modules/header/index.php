@@ -45,7 +45,7 @@ if (!isset($jsFooter))
     $jsFooter = "";
 
 $titreSite=$config->titreSite;
-$titre=_("Architecture et photos à Strasbourg");
+$titre=_("Archi-Wiki. Tous architectes ! Partageons la ville, ses bâtiments, ses lieux.");
 $description=$config->descSite;
 $motsCle = "";
 
@@ -53,7 +53,7 @@ $motsCle = "";
 if ($session->isInSession('archiIdVilleGeneral') && $session->getFromSession('archiIdVilleGeneral')!='' && $session->getFromSession('archiIdVilleGeneral')!='1' && !empty($_SESSION["archiIdVilleGeneral"])) {
     //$titreSite = "photos-immeubles.org";
     $infosVille = $adresse->getInfosVille($session->getFromSession('archiIdVilleGeneral'), array("fieldList"=>"v.nom as nomVille"));
-    $titre=_("Architecture et photos à")." ".$infosVille['nomVille'];
+    $titre=_("Archi-Wiki. Tous architectes ! Partageons la ville, ses bâtiments, ses lieux.");
     $description=_("Architecture, photos et patrimoine de")." ".$infosVille['nomVille'];
 } elseif (isset($_GET['archiAffichage']) && $_GET['archiAffichage']=='adresseDetail' && isset($_GET['archiIdAdresse']) && $_GET['archiIdAdresse']!='') {
     if ($adresse->getIdVilleFrom($_GET['archiIdAdresse'], 'idAdresse')!=1) {
