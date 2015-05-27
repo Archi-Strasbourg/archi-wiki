@@ -1929,15 +1929,13 @@ class archiEvenement extends config
 					$onClickEvenementDeplacerVersGA = "document.getElementById('".$params['calquePopupDeplacerEvenement']->getJSIFrameId()."').src='".$this->creerUrl('','recherche',array('noHeaderNoFooter'=>1,'modeAffichage'=>"popupDeplacerEvenementVersGroupeAdresse","idEvenementADeplacer"=>$res->idEvenement))."';document.getElementById('".$params['calquePopupDeplacerEvenement']->getJSDivId()."').style.display='block';";
 				}
 
-				$txtEnvoi = _("envoyé");
 				$dateEnvoi="";
-
+				$txtEnvoi = _("envoyé");
+				
 				if(!$this->isFirstIdHistoriqueEvenementFromHistorique($res->idEvenement))
-				{
 					$txtEnvoi = _("modifié");
-				}
+				
 				$dateEnvoi = _("le")." ".$res->dateCreationEvenement;
-
 
 				$arrayIdAdresseToUrl = array();
 				if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='')
@@ -2773,8 +2771,7 @@ class archiEvenement extends config
 				FROM historiqueEvenement
 				WHERE idEvenement = ".$idEvenement;
 		$result = $this->connexionBdd->requete($requete);
-		
-		if(mysql_num_rows($result)>2){
+		if(mysql_num_rows($result)>=2){
 			return false;
 		}
 		return true;
