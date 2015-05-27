@@ -527,14 +527,12 @@ class ArchiAccueil extends config
 					//Image
 					$a = new archiAdresse();
 
-					$reqImageEvtRelated = "
+					$reqImageEvtRelated = "				
 							SELECT hi.idHistoriqueImage,1 as priorite
 							FROM historiqueImage hi
 							LEFT JOIN _evenementImage ei on ei.idImage = hi.idImage
 							WHERE ei.idEvenement = ".$modif['idEvenement']."
-									
-							UNION 
-
+					UNION
 							SELECT hi.idHistoriqueImage,2 as priorite
 							FROM `evenements` evt
 							LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
@@ -544,10 +542,13 @@ class ArchiAccueil extends config
 							WHERE ee.idEvenement IS NOT NULL
 							AND evt.idEvenement IS NOT NULL
 							AND evt.idEvenement != 0
-							AND evt.idEvenement =".$modif['idEvenement']."
 							AND ei.idEvenement =".$modif['idEvenement']."
+							AND ee.idEvenement =".$modif['idEvenementGroupeAdresse']."
+							
+									 
+																	
+							
 									
-						
 							ORDER BY priorite DESC
 							LIMIT 1
 							";
@@ -557,19 +558,28 @@ class ArchiAccueil extends config
 						$infoImage=$arrayImage;
 					}
 					else{
-						if($modif['idHistoriqueImage']==0 || !isset($modif['idHistoriqueImage']) || $modif['idHistoriqueImage']==''){
-							$resImage = $a->getUrlImageFromAdresse($idAdresse,'moyen');
-							if($resImage['trouve'] != 1){
-								$resImgEvt = $a->getUrlImageFromEvenement($modif['idEvenement']);
-								$infoImage = $resImgEvt;
-							}
-							else{
-								$infoImage = $resImage;
-							}
-
+						$reqImagePrincipale = "
+						
+							SELECT hi.idHistoriqueImage,2 as priorite
+							FROM `evenements` evt
+							LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
+							LEFT JOIN evenements evt2 ON evt2.idEvenement = ee.idEvenement
+							LEFT JOIN historiqueImage hi on hi.idImage = evt2.idImagePrincipale
+							LEFT JOIN _evenementImage ei ON ei.idImage = hi.idImage
+							WHERE ee.idEvenement IS NOT NULL
+							AND evt.idEvenement IS NOT NULL
+							AND evt.idEvenement != 0
+							AND ee.idEvenement =".$modif['idEvenementGroupeAdresse']."
+							ORDER BY priorite DESC
+							LIMIT 1
+							";
+						$resImagePrincipale = $this->connexionBdd->requete($reqImagePrincipale);
+						//$infoImage = mysql_fetch_assoc($resImagePrincipale);
+						if(mysql_num_rows($resImagePrincipale)>=1){
+							$infoImage = mysql_fetch_assoc($resImagePrincipale);
 						}
 						else{
-							$infoImage['idHistoriqueImage']=$modif['idHistoriqueImage'];
+							$infoImage['idHistoriqueImage']=0;
 						}
 					}
 					$urlImage = "";
