@@ -532,7 +532,9 @@ class ArchiAccueil extends config
 							FROM historiqueImage hi
 							LEFT JOIN _evenementImage ei on ei.idImage = hi.idImage
 							WHERE ei.idEvenement = ".$modif['idEvenement']."
-					UNION
+					
+									UNION
+									
 							SELECT hi.idHistoriqueImage,2 as priorite
 							FROM `evenements` evt
 							LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
@@ -545,10 +547,6 @@ class ArchiAccueil extends config
 							AND ei.idEvenement =".$modif['idEvenement']."
 							AND ee.idEvenement =".$modif['idEvenementGroupeAdresse']."
 							
-									 
-																	
-							
-									
 							ORDER BY priorite DESC
 							LIMIT 1
 							";
@@ -560,27 +558,35 @@ class ArchiAccueil extends config
 					else{
 						$reqImagePrincipale = "
 						
-							SELECT hi.idHistoriqueImage,2 as priorite
-							FROM `evenements` evt
-							LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
-							LEFT JOIN evenements evt2 ON evt2.idEvenement = ee.idEvenement
-							LEFT JOIN historiqueImage hi on hi.idImage = evt2.idImagePrincipale
-							LEFT JOIN _evenementImage ei ON ei.idImage = hi.idImage
-							WHERE ee.idEvenement IS NOT NULL
-							AND evt.idEvenement IS NOT NULL
-							AND evt.idEvenement != 0
-							AND ee.idEvenement =".$modif['idEvenementGroupeAdresse']."
-							ORDER BY priorite DESC
+							SELECT hi.idHistoriqueImage
+							FROM historiqueImage hi
+							LEFT JOIN evenements evt on evt.idImagePrincipale = hi.idImage
+							WHERE evt.idEvenement =".$modif['idEvenementGroupeAdresse']."
 							LIMIT 1
 							";
 						$resImagePrincipale = $this->connexionBdd->requete($reqImagePrincipale);
 						//$infoImage = mysql_fetch_assoc($resImagePrincipale);
-						if(mysql_num_rows($resImagePrincipale)>=1){
+						if(mysql_num_rows($reqImagePrincipale)>=1){
 							$infoImage = mysql_fetch_assoc($resImagePrincipale);
+							debug($infoImage);
 						}
 						else{
 							
-							$infoImage['idHistoriqueImage']=0;
+							$reqOtherImage = "SELECT hi.idHistoriqueImage
+							FROM historiqueImage hi
+							LEFT JOIN _evenementImage ei ON ei.idImage = hi.idImage
+							LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = ei.idEvenement
+							WHERE ee.idEvenement IS NOT NULL
+							AND ee.idEvenement =".$modif['idEvenementGroupeAdresse']."
+							
+							LIMIT 1
+							";
+							$resOtherImage = $this->connexionBdd->requete($reqOtherImage);
+							if(mysql_num_rows($resOtherImage)>=1){
+								$infoImage = mysql_fetch_assoc($resOtherImage);
+								
+							}
+								
 						}
 					}
 					$urlImage = "";
