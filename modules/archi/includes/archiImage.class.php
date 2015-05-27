@@ -500,7 +500,6 @@ class archiImage extends config
             }
         }
         // ************************************************************************************************************************************************
-        
         if (isset($this->variablesPost['formulaireRetour']) && $this->variablesPost['formulaireRetour']!='') {
             switch($this->variablesPost['formulaireRetour']) {
                 case 'evenement':
@@ -516,8 +515,8 @@ class archiImage extends config
             }
             
             if ($idEvenementGroupeAdresseRetour!=0) {
-            	header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresseRetour), false, false));
-            	 
+            	$a = new archiAdresse();
+            	echo $a->afficherDetail(0,  $idEvenementGroupeAdresseRetour);
             } else {
                 echo $this->afficher($idImageModifiee);
             }
