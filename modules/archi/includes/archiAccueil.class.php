@@ -646,7 +646,6 @@ class ArchiAccueil extends config
 							}
 							else{
 								$infoImage['idHistoriqueImage']=$array_image['idHistoriqueImage'];
-								debug($infoImage);
 							}
 							$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
 
