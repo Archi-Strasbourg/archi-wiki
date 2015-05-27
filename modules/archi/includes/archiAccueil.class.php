@@ -523,7 +523,7 @@ class ArchiAccueil extends config
 					//Adresse
 					$adresse = '';
 					$adresse = $e->getAddressText($adresseArray);
-
+					$infoImage= array();
 					//Image
 					$a = new archiAdresse();
 
@@ -579,6 +579,7 @@ class ArchiAccueil extends config
 							$infoImage = mysql_fetch_assoc($resImagePrincipale);
 						}
 						else{
+							
 							$infoImage['idHistoriqueImage']=0;
 						}
 					}
