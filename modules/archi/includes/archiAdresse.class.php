@@ -2146,6 +2146,7 @@ class archiAdresse extends ArchiContenu
 						HAVING hi.idHistoriqueImage = max(hi2.idHistoriqueImage)
 						LIMIT 1
 						";
+		debug($reqImage);
 		$resImage = $this->connexionBdd->requete($reqImage);
 
 		if(mysql_num_rows($resImage)==1)

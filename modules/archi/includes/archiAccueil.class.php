@@ -639,18 +639,14 @@ class ArchiAccueil extends config
 								
 							$a = new archiAdresse();
 							if($array_image['idHistoriqueImage']==0 || !isset($array_image['idHistoriqueImage']) || $array_image['idHistoriqueImage']==''){
-								$resImage = $a->getUrlImageFromAdresse($idAdresse,'moyen');
-								if($resImage['trouve'] != 1){
-									$resImgEvt = $a->getUrlImageFromEvenement($lastVisit['idEvenementGroupeAdresse']);
-									$infoImage = $resImgEvt;
-								}
-								else{
-									$infoImage = $resImage;
-								}
+								$infoImage = $a->getUrlImageFromAdresse($idAdresse,'moyen');
+								$image = new archiImage();
+								$resImage = $image->getImagesEvenementsFromAdresse($idAdresse,  $lastVisit);
+								$infoImage = mysql_fetch_assoc($resImage);
 							}
 							else{
-								
 								$infoImage['idHistoriqueImage']=$array_image['idHistoriqueImage'];
+								debug($infoImage);
 							}
 							$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
 
