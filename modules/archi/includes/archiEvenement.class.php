@@ -5156,6 +5156,9 @@ class archiEvenement extends config
 			$res = $this->connexionBdd->requete($req);
 			// retour a l'affichage de l'adresse
 			$idAdresse = $this->variablesPost['idEvenementGroupeAdresse'];
+			$idEvenement = $this->variablesPost['idEvenementGroupeAdresse'];
+			$idEvenementGroupeAdresse = $this->getIdEvenementGroupeAdresseFromIdEvenement($idEvenement);
+			$idAdresse=$this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
 			
 
 			$idCommentaire = mysql_insert_id();
@@ -5165,12 +5168,12 @@ class archiEvenement extends config
 			// ************************************************************************************************************************************************
 			$mail = new mailObject();
 			$utilisateur = new archiUtilisateur();
-			$arrayUtilisateurs = $utilisateur->getParticipantsCommentaires($this->variablesPost['idEvenementGroupeAdresse']);
-			$arrayCreatorAdresse = $utilisateur->getCreatorsFromAdresseFrom($this->variablesPost['idEvenementGroupeAdresse'],'idEvenementGroupeAdresse');
-			$arrayUtilisateurs = array_merge($arrayUtilisateurs,$arrayCreatorAdresse);
+			$arrayUtilisateurs = $utilisateur->getParticipantsCommentairesEvenement($this->variablesPost['idEvenementGroupeAdresse']);
+			//$arrayCreatorAdresse = $utilisateur->getCreatorsFromAdresseFrom($this->variablesPost['idEvenementGroupeAdresse'],'idEvenementGroupeAdresse');
+			//$arrayUtilisateurs = array_merge($arrayUtilisateurs,$arrayCreatorAdresse);
 			$arrayUtilisateurs = array_unique($arrayUtilisateurs);
-			$intituleAdresse = $this->getIntituleAdresseFrom($idAdresse,'idHistoriqueEvenement');
-			$idAdresse = $this->getIdEvenementFromIdHistoriqueEvenement($this->variablesPost['idEvenementGroupeAdresse']);
+			$intituleAdresse = $this->getIntituleAdresseFrom($idEvenement,'idEvenement');
+			//$idAdresse = $this->getIdEvenementFromIdHistoriqueEvenement($this->variablesPost['idEvenementGroupeAdresse']);
 				
 			foreach($arrayUtilisateurs as $indice => $idUtilisateurAdresse)
 			{
@@ -5179,8 +5182,8 @@ class archiEvenement extends config
 					$infosUtilisateur = $utilisateur->getArrayInfosFromUtilisateur($idUtilisateurAdresse);
 					if($infosUtilisateur['alerteCommentaires']=='1' && $infosUtilisateur['compteActif']=='1' && $infosUtilisateur['idProfil']!='4')
 					{
-						$message = "Un utilisateur a ajouté un commentaire sur une adresse ou vous avez participé.";
-						$message.= "Pour vous rendre sur l'adresse : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$this->variablesPost['idEvenementGroupeAdresse']))."'>".$intituleAdresse."</a><br>";
+						$message = "Un utilisateur a ajouté un commentaire sur un evenement que vous avez créé.";
+						$message.= "Pour vous rendre sur l'adresse : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse))."'>".$intituleAdresse."</a><br>";
 						$message.= $this->getMessageDesabonnerAlerteMail();
 						$mail->sendMail($mail->getSiteMail(),$infosUtilisateur['mail'],'Ajout d\'un commentaire sur une adresse sur laquelle vous avez participé.',$message,true);
 
@@ -5208,12 +5211,12 @@ class archiEvenement extends config
 				$message .= "prenom : ".strip_tags($this->variablesPost['prenom'])."<br>";
 				$message .= "email : ".strip_tags($this->variablesPost['email'])."<br>";
 				$message .= "commentaire : ".stripslashes(strip_tags($this->variablesPost['commentaire']))."<br>";
-				$message .="<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdEvenementGroupeAdresse'=>$this->variablesPost['idEvenementGroupeAdresse'],'archiIdAdresse'=>$idAdresse))."'>".$intituleAdresse."</a><br>";
+				$message .="<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse,'archiIdAdresse'=>$idAdresse))."'>".$intituleAdresse."</a><br>";
 
 				$mail->sendMailToAdministrators($envoyeur,'Un utilisateur a ajouté un commentaire', $message, " AND alerteCommentaires='1' ", true, true);
 				// envoi mail aussi au moderateur si ajout sur adresse de ville que celui ci modere
 				$arrayVilles=array();
-				$arrayVilles[] = $this->getIdVilleFrom($idAdresse,'idEvenement');
+				$arrayVilles[] = $this->getIdVilleFrom($idEvenement,'idEvenement');
 				$arrayVilles = array_unique($arrayVilles);
 				$arrayListeModerateurs = $u->getArrayIdModerateursActifsFromVille($arrayVilles[0],array("sqlWhere"=>" AND alerteCommentaires='1' "));
 				if(count($arrayListeModerateurs)>0)

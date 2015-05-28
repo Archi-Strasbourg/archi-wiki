@@ -1576,7 +1576,6 @@ if (isset($_GET['archiAffichage'])) {
 			$s = new archiRecherche();
 			echo $s->advancedSearch($criteres);
         	break;
-        	
         case 'displayImage':
         	$i=new archiImage();
         	$i->displayImage($_GET['idHistoriqueImage'],array($_GET['height'],$_GET['width']));

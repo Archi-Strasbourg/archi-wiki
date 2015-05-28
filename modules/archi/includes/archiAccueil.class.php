@@ -568,7 +568,6 @@ class ArchiAccueil extends config
 						//$infoImage = mysql_fetch_assoc($resImagePrincipale);
 						if(mysql_num_rows($reqImagePrincipale)>=1){
 							$infoImage = mysql_fetch_assoc($resImagePrincipale);
-							debug($infoImage);
 						}
 						else{
 							

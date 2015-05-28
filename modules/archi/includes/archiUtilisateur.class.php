@@ -1604,6 +1604,26 @@ class archiUtilisateur extends config {
         return array_unique($utilisateurs);
     }
     
+
+    /**
+     * Clone of the previous func with commentaireEvenement 
+     * @param number $idEvenementGroupeAdresse
+     * @return multitype:
+     */
+    public function getParticipantsCommentairesEvenement($idEvenement=0)
+    {
+    	$utilisateurs = array();
+    	$req = "SELECT idUtilisateur FROM commentairesEvenement WHERE idEvenement = '".$idEvenement."'";
+    	$res = $this->connexionBdd->requete($req);
+    	while($fetch = mysql_fetch_assoc($res))
+    	{
+    		$utilisateurs[] = $fetch['idUtilisateur'];
+    	}
+    	return array_unique($utilisateurs);
+    }
+    
+    
+    
     // affiche le formulaire ou la personne rentre son adresse mail pour reinitialiser son mot de passe
     public function afficheFormulaireMotDePasseOublie($configFields = array())
     {
