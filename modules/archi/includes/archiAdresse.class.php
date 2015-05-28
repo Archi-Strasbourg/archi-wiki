@@ -6532,7 +6532,6 @@ class archiAdresse extends ArchiContenu
 			}
 
 
-			
 
 			// ***************************************************************************************************************************************
 			// affichage des resultats de la recherche
@@ -12680,7 +12679,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 ORDER BY ((acos(sin(".$arrayCoordonnees['latitude']."*PI()/180) * sin(ha1.latitude*PI()/180) + cos(".$arrayCoordonnees['latitude']."*PI()/180) * cos(ha1.latitude*PI()/180) * cos((".$arrayCoordonnees['longitude']." - ha1.longitude)*PI()/180))/ pi() * 180.0)* 60 * 1.1515 * 1.609344)*1000 ASC
                 LIMIT 1
             ";
-            
             $resAdresseProche = $this->connexionBdd->requete($reqAdresseProche);
             $fetchAdresseProche = mysql_fetch_assoc($resAdresseProche);
             

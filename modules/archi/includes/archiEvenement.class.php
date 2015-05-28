@@ -2117,6 +2117,7 @@ class archiEvenement extends config
 
 					} else {
 						$retourAdresse=$adresse->afficherListe(array('archiIdEvenement'=>$idEvenement,'useTemplateFile'=>'listeAdressesDetailEvenement.tpl'),"listeDesAdressesDuGroupeAdressesSurDetailAdresse"); // modeAffichage => listeDesAdressesDuGroupeAdressesSurDetailAdresse
+						//debug($idEvenement);
 					}
 					$idAdresseCourante = 0;
 					if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='')
@@ -2154,7 +2155,8 @@ class archiEvenement extends config
 
 						// ************************************************************************************************************************
 						// affichage de l'encars des adresses avec les photos avant et apres l'adresse courante
-						$arrayEncartAdresses = $adresse->getArrayEncartAdressesImmeublesAvantApres(array('idEvenementGroupeAdresse'=>$idEvenement));
+						$arrayEncartAdresses = $adresse->getArrayEncartAdressesImmeublesAvantApres(array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
+						//$arrayEncartAdresses = $adresse->getArrayEncartAdressesImmeublesAvantApres(array('idEvenementGroupeAdresse'=>$idEvenement));
 						$t->assign_block_vars('noSimple.adresses', array(
 								'adressesLiees' => $arrayEncartAdresses['html']));
 						$t->assign_vars(
@@ -2164,6 +2166,12 @@ class archiEvenement extends config
 								)
 						);
 
+						/*
+						debug(array(
+								$retourAdresse['arrayRetourLiensVoirBatiments']['urlAutresBiensRue'],
+								$retourAdresse['arrayRetourLiensVoirBatiments']['urlAutresBiensQuartier']
+						));
+						*/
 						if($authentification->estConnecte())
 						{
 							$t->assign_block_vars('noSimple.isConnected', array());

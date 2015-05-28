@@ -1581,6 +1581,11 @@ if (isset($_GET['archiAffichage'])) {
         	$i=new archiImage();
         	$i->displayImage($_GET['idHistoriqueImage'],array($_GET['height'],$_GET['width']));
         	break;
+        case 'listByVille': 
+        	$r=new archiRecherche();
+        	$html = $r->searchByCriterias(array('ville'=>$_GET['recherche_ville']));
+        	echo $html;
+        	break;
         }
     }
 }
