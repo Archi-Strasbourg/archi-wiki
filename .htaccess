@@ -19,8 +19,6 @@ RewriteEngine on
 ########################################
 
 
-
-
 RewriteRule images/(.+) images/$1 [L,QSA]
 
 
@@ -60,7 +58,7 @@ RewriteRule sous-quartier-(.+)-([0-9]+)\.html index.php?archiAffichage=adresseLi
 RewriteRule quartier-(.+)-([0-9]+)\.html index.php?archiAffichage=listeDossiers&archiIdQuartier=$2&modeAffichageListe=parRuesDeQuartier [QSA,L]
 RewriteRule quartier-(.+)-([0-9]+)-page([0-9]+)\.html index.php?archiAffichage=listeDossiers&archiIdQuartier=$2&modeAffichageListe=parRuesDeQuartier&archiPageRuesQuartier=$3 [QSA,L]
 
-RewriteRule ville-(.+)-([0-9]+)\.html index.php?archiAffichage=adresseListe&recherche_ville=$2 [QSA,L]
+RewriteRule ville-(.+)-([0-9]+)\.html index.php?archiAffichage=listByVille&recherche_ville=$2 [QSA,L]
 
 RewriteRule statistiques-adresses-photos-architectes-strasbourg\.html index.php?archiAffichage=statistiquesAccueil [L,QSA]
 
