@@ -2166,12 +2166,6 @@ class archiEvenement extends config
 								)
 						);
 
-						/*
-						debug(array(
-								$retourAdresse['arrayRetourLiensVoirBatiments']['urlAutresBiensRue'],
-								$retourAdresse['arrayRetourLiensVoirBatiments']['urlAutresBiensQuartier']
-						));
-						*/
 						if($authentification->estConnecte())
 						{
 							$t->assign_block_vars('noSimple.isConnected', array());

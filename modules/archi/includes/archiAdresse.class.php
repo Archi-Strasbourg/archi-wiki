@@ -6833,14 +6833,16 @@ class archiAdresse extends ArchiContenu
 						$styleAdresse = "";
 						if ($modeAffichage=='listeDesAdressesDuGroupeAdressesSurDetailAdresse') {
 							$idAdresse=0;
-							
 							if (isset($criteres['archiIdEvenement'])) {
-								$reqAdresse = $this->getIdAdressesFromIdEvenement(array('idEvenement'=>$criteres['archiIdEvenement']));
+								$reqAdresse = "      
+					                SELECT  distinct ae.idAdresse as idAdresse
+					                FROM _adresseEvenement ae
+					                WHERE ae.idEvenement = '".$params['idEvenement']."'
+        						";
 								$resAdresse = $this->connexionBdd->requete($reqAdresse);
 								$fetchAdresse = mysql_fetch_assoc($resAdresse);
 								$idAdresse = $fetchAdresse['idAdresse'];
 
-								
 								$e = new archiEvenement();
 
 								$idEvenementTitreAdresses = $e->getIdEvenementTitre(array("idEvenementGroupeAdresse"=>$criteres['archiIdEvenement']));
