@@ -6976,7 +6976,7 @@ class archiAdresse extends ArchiContenu
 						// **********************************************************************************************************************************************
 						// lien vers la liste des adresses relatives a l'adresse courante:
 						// **********************************************************************************************************************************************
-						$arrayRetourLiensVoirBatiments = $this->getArrayRetourLiensVoirBatiments($fetch['idRue'],$fetch['idQuartier']);
+						$arrayRetourLiensVoirBatiments = $this->getArrayRetourLiensVoirBatiments($fetch['idAdresse']);
 						// **********************************************************************************************************************************************
 						// recherche des images liées a l'adresse et uniquement les images de la table de liaison _adresseImage
 						// **********************************************************************************************************************************************
