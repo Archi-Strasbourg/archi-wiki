@@ -682,7 +682,7 @@ class ArchiAccueil extends config
 							$so = new StringObject();
 							$description = $so->sansBalises($arrayDescription['description']);
 							$description = stripslashes($description);
-							$description = $so->truncateStringToWord($description, 75,'','...');
+							$description = $so->truncateStringToWord($description, 80,' ','...');
 
 							if(isset($lastVisit) && !empty($lastVisit) && isset($lastVisit['idEvenementGroupeAdresse'] )&& !empty($lastVisit['idEvenementGroupeAdresse']) && isset($lastVisit['idAdresse']) && !empty($lastVisit['idAdresse'])){
 								//Titre

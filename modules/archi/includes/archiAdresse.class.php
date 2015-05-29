@@ -6837,7 +6837,7 @@ class archiAdresse extends ArchiContenu
 								$reqAdresse = "      
 					                SELECT  distinct ae.idAdresse as idAdresse
 					                FROM _adresseEvenement ae
-					                WHERE ae.idEvenement = '".$params['idEvenement']."'
+					                WHERE ae.idEvenement = '".$criteres['archiIdEvenement']."'
         						";
 								$resAdresse = $this->connexionBdd->requete($reqAdresse);
 								$fetchAdresse = mysql_fetch_assoc($resAdresse);

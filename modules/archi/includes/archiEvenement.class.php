@@ -2117,7 +2117,6 @@ class archiEvenement extends config
 
 					} else {
 						$retourAdresse=$adresse->afficherListe(array('archiIdEvenement'=>$idEvenement,'useTemplateFile'=>'listeAdressesDetailEvenement.tpl'),"listeDesAdressesDuGroupeAdressesSurDetailAdresse"); // modeAffichage => listeDesAdressesDuGroupeAdressesSurDetailAdresse
-						//debug($idEvenement);
 					}
 					$idAdresseCourante = 0;
 					if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='')
