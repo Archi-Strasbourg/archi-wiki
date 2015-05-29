@@ -26,10 +26,6 @@
 <script src="js/utils.js"></script>
 
 <script src='includes/common.js'></script>
-<!-- BEGIN utilisateurNonConnecte -->
-<script src="https://browserid.org/include.js" type="text/javascript"></script>  
-<script src="js/browserid.js" type="text/javascript"></script>  
-<!-- END utilisateurNonConnecte -->
 <script src="js/analytics.js" type="text/javascript"></script> 
 <script src="js/jquery-ui/js/jquery-1.7.2.min.js"></script>
 <script src="js/jquery-ui/js/jquery-ui-1.8.21.custom.min.js"></script>

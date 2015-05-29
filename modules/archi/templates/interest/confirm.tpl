@@ -1,4 +1,4 @@
 <div>
 	{message}
-	<a href="#" onClick="history.back();"> {textLink} </a>
+	<a href="{urlBack}" onClick=""> {textLink} </a>
 </div>
