@@ -6847,6 +6847,9 @@ class archiAdresse extends ArchiContenu
 
 								$idEvenementTitreAdresses = $e->getIdEvenementTitre(array("idEvenementGroupeAdresse"=>$criteres['archiIdEvenement']));
 								
+								if($this->variablesGet['archiAffichage']=='modifierEvenement'){
+									$idEvenementTitreAdresses = $this->variablesGet['archiIdEvenement'];
+								}
 								$reqTitreAdresse = "
 										SELECT he1.titre as titre
 										FROM evenements he2,  evenements he1
@@ -6854,6 +6857,7 @@ class archiAdresse extends ArchiContenu
 										AND he1.idEvenement='".$idEvenementTitreAdresses."'
 												GROUP BY he1.idEvenement  
 												";
+								
 								$resTitreAdresse = $this->connexionBdd->requete($reqTitreAdresse);
 								$fetchTitreAdresse = mysql_fetch_assoc($resTitreAdresse);
 								$titreAdresse = stripslashes($fetchTitreAdresse['titre']);
