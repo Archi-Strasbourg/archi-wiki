@@ -411,7 +411,7 @@ class StringObject extends config
     	$string = mb_substr($string, 0, $limit);
     	if (false !== ($breakpoint = mb_strrpos($string, $break)))
     		$string = mb_substr($string, 0, $breakpoint);
-    	
+ 
     	return trim($string).$pad;
     }
 
