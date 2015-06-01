@@ -3579,7 +3579,6 @@ class archiEvenement extends config
 	// *******************************************************************************************************************************************************
 	public function afficheFormulaire($tabTravail = array(), $modif='', $idParent=0, $typeParentId='')
 	{
-		
 		$html = '';
 		$t = new Template('modules/archi/templates/');
 		//$t->set_filenames((array('evl'=>'evenementFormulaire.tpl')));

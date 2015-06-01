@@ -668,18 +668,21 @@ class ArchiAccueil extends config
 							//Url Evenement
 							$idEvenementGroupeAdresses = $lastVisit['idEvenementGroupeAdresse'];
 							$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
-
-
-							//Description
-							$requeteDescription  = "
+								
+								// Description
+							$requeteDescription = "
+									
 									SELECT evt.description
 									FROM evenements evt
-									LEFT JOIN positionsEvenements pe on pe.idEvenementGroupeAdresse = ".$lastVisit['idEvenementGroupeAdresse']."
-									WHERE pe.idEvenement = evt.idEvenement
+									LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
+									LEFT JOIN positionsEvenements pe ON pe.idEvenementGroupeAdresse = ee.idEvenement
+									WHERE ee.idEvenement =" . $lastVisit ['idEvenementGroupeAdresse'] . "
+									ORDER BY pe.position
 											";
-							$resDescription = $this->connexionBdd->requete($requeteDescription);
+							$resDescription = $this->connexionBdd->requete ( $requeteDescription );
 							$arrayDescription = mysql_fetch_assoc($resDescription);
 							$so = new StringObject();
+							
 							$description = $so->sansBalises($arrayDescription['description']);
 							$description = stripslashes($description);
 							$description = $so->truncateStringToWord($description, 80,' ','...');

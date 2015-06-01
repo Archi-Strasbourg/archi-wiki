@@ -3388,6 +3388,12 @@ class archiAdresse extends ArchiContenu
 
 		$sqlWherePays ="";
 
+		$urlAfficheInteret = "";
+		isset($criteres['affichageInteret'])? $affichageInteret = $criteres['affichageInteret'] : $affichageInteret=0;
+		if($affichageInteret==0){
+			isset($this->variablesGet['affichageInteret'])? $affichageInteret = $this->variablesGet['affichageInteret'] : $affichageInteret=0;
+		}
+		
 		// est ce que l'on affiche tous les champs de choix ou seulement ceux dont on a besoin ?
 		$urlTypeNew='';
 		$a = new archiAuthentification();
@@ -3474,6 +3480,12 @@ class archiAdresse extends ArchiContenu
 			$afficheNombreResultat = 1;
 			$urlAfficheNbResultat = "&afficheNombreResultat=1";
 		}
+		
+		 if($affichageInteret==1){
+		 	$urlAfficheInteret = "&affichageInteret=1";
+		 }
+	
+		
 
 		// initialisation des identifiants de pays, ville,quartier, sousquartier,rue selectionnés par l'utilisateur
 		$idPaysChoixAdresse=0;
@@ -3504,6 +3516,8 @@ class archiAdresse extends ArchiContenu
 		$tabUrl['sousQuartier']="+'&idSousQuartierChoixAdresse='+document.getElementById('sousQuartier').value";
 		$tabUrl['quartier']="+'&idQuartierChoixAdresse='+document.getElementById('quartier').value";
 		$tabUrl['rue']="+'&idRueChoixAdresse='+document.getElementById('rue').value";
+		
+		
 		//**********************************************************************************************************************************
 		// gestion des favoris :
 		// s'il n'y a pas de pays choisi ni de ville et qu'il existe une information sur les favoris dans la session de l'utilisateur connecté
@@ -3537,11 +3551,11 @@ class archiAdresse extends ArchiContenu
 
 		if( !isset($criteres['modeAffichage_pays']))
 		{
-			$t->assign_vars(array('paysOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheNbResultat.$tabUrl['pays'].$urlTypeNew.",'choixAdresse')"));
+			$t->assign_vars(array('paysOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheNbResultat.$urlAfficheInteret.$tabUrl['pays'].$urlTypeNew.",'choixAdresse')"));
 			if($a->getIdProfil()==3) // l'utilisateur est moderateur , on n'affiche seulements les pays des villes qu'il peut moderer et par defaut le pays = france
 			{
 				$arrayVillesModerees = $u->getArrayVillesModereesPar($a->getIdUtilisateur());
-				if(count($arrayVillesModerees)>0)
+				if(count($arrayVillesModerees)>0 &&  $this->variablesGet['affichageInteret']!=1)
 				{
 					$arrayIdPays=array();
 					$reqPaysModeres = "SELECT distinct idPays FROM ville WHERE idVille in (".implode(",",$arrayVillesModerees).")";
@@ -3598,17 +3612,17 @@ class archiAdresse extends ArchiContenu
 		// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		if($idPaysChoixAdresse!=0 && !isset($criteres['modeAffichage_ville']))
 		{
-			$t->assign_vars(array('villeOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheNbResultat.$tabUrl['pays'].$tabUrl['ville'].$urlTypeNew.",'choixAdresse')"));
+			$t->assign_vars(array('villeOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheNbResultat.$urlAfficheInteret.$tabUrl['pays'].$tabUrl['ville'].$urlTypeNew.",'choixAdresse')"));
 
 			$sqlWhereVilles="";
 			if($a->getIdProfil()==3) // l'utilisateur est un moderateur , on limite a l'affichage des villes qu'il modere
 			{
 				$arrayVillesModerees = $u->getArrayVillesModereesPar($a->getIdUtilisateur());
-				if(count($arrayVillesModerees)>0)
+				if(count($arrayVillesModerees)>0 && $affichageInteret!=1)
 				{
 					$sqlWhereVilles = " AND idVille IN (".implode(",",$arrayVillesModerees).") ";
 				}
-				else
+				elseif($affichageInteret!=1)
 				{
 					$sqlWhereVilles = " AND idVille = '0' ";
 				}
@@ -3640,7 +3654,7 @@ class archiAdresse extends ArchiContenu
 		// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		if( $idVilleChoixAdresse!='0' && !isset($criteres['modeAffichage_quartier']))
 		{
-			$t->assign_vars(array('quartierOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheNbResultat.$tabUrl['pays'].$tabUrl['ville'].$tabUrl['quartier'].$urlTypeNew.",'choixAdresse')"));
+			$t->assign_vars(array('quartierOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheInteret.$urlAfficheNbResultat.$tabUrl['pays'].$tabUrl['ville'].$tabUrl['quartier'].$urlTypeNew.",'choixAdresse')"));
 
 			$resQuartier = $this->connexionBdd->requete("select idQuartier, nom from quartier where idVille='".$idVilleChoixAdresse."' and lower(nom)<>'autre' order by nom");
 
@@ -3669,7 +3683,7 @@ class archiAdresse extends ArchiContenu
 		// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		if($idQuartierChoixAdresse!=0 && !isset($criteres['modeAffichage_sousQuartier']))
 		{
-			$t->assign_vars(array('sousQuartierOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheNbResultat.$tabUrl['pays'].$tabUrl['ville'].$tabUrl['quartier'].$tabUrl['sousQuartier'].$urlTypeNew.",'choixAdresse')"));
+			$t->assign_vars(array('sousQuartierOnChange'=>"appelAjax('index.php?archiAffichage=afficheChoixAdresse&noHeaderNoFooter=1".$urlAfficheNbResultat.$urlAfficheInteret.$tabUrl['pays'].$tabUrl['ville'].$tabUrl['quartier'].$tabUrl['sousQuartier'].$urlTypeNew.",'choixAdresse')"));
 
 			$resSousQuartier = $this->connexionBdd->requete("select idSousQuartier, nom from sousQuartier where idQuartier='".$idQuartierChoixAdresse."' and lower(nom)<>'autre' order by nom");
 			while($fetchSousQuartier=mysql_fetch_array($resSousQuartier))
@@ -5459,9 +5473,11 @@ class archiAdresse extends ArchiContenu
 
 					$totalAdresses = $nbRues + $nbQuartiers + $nbVilles;
 
+					$recherche = new archiRecherche();
+								
+					$nbResult = $recherche->getNumberOfAdresse(array('ville' => $fetch['idVille']));
 
-					$nbResultats = " (".$totalAdresses.")";
-
+					$nbResultats = " (".$nbResult.")";
 
 					$htmlPhoto="";
 					$urlPhoto = $this->getUrlImageFromVille($fetch['idVille'],'moyen');

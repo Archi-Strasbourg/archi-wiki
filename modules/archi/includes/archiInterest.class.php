@@ -40,8 +40,16 @@ class archiInterest extends config{
 			$a = new archiAdresse();
 	
 			//Generate address form
-			$formAddressAddInterest=$a->afficheChoixAdresse(array('afficheNombreResultat' => 1));
-	
+			$formParam = array(
+					'afficheNombreResultat' => 1,
+					'modeAffichage_rue'=>1,
+					'modeAffichage_sousQuartier'=>1,
+					'modeAffichage_quartier'=>1,
+					'modeAffichage_ville'=>1,
+					'modeAffichage_pays='>1
+			);
+			
+			$formAddressAddInterest=$a->afficheChoixAdresse(array('afficheNombreResultat' => 1,'affichageInteret'=>1));
 			$paramsFields= array();
 			$paramsFields[] = array('table' => 'pays' ,'value' => 'idPays','title'=>'nom');
 			$paramsFields[] = array('table' => 'ville' ,'value' => 'idVille','title'=>'nom');
@@ -716,5 +724,9 @@ class archiInterest extends config{
 		$row = mysql_fetch_assoc($result);
 		return $row['nom'];
 	}
+	
 }
+
+
+
 ?>
