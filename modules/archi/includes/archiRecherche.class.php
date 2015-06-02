@@ -2364,9 +2364,14 @@ class archiRecherche extends config {
 			}
 		}
 		else{
+			$relevance=" 1 as relevance ";
+			if(isset($params['rue'])&& $params['rue']!=''){
+				$relevance = "( CONVERT(numeroAdresse  , UNSIGNED INTEGER) ) as relevance ";
+				$order = " ASC ";
+			}
 			$request = "
 				SELECT * from(
-				SELECT idHistoriqueAdresse, idEvenementGA, null as idPersonne,  1 as relevance
+				SELECT idHistoriqueAdresse, idEvenementGA, null as idPersonne,  $relevance
 				FROM recherche "
 				.$sqlWhere.
 				" 
@@ -2453,6 +2458,7 @@ class archiRecherche extends config {
 				FROM recherche "
 				.$sqlWhere.
 				"
+				ORDER BY relevance DESC
 				LIMIT 0,10
 				";
 		
