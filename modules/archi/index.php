@@ -1305,7 +1305,10 @@ if (isset($_GET['archiAffichage'])) {
         
         case 'listeAdressesFromRue':
         	$r=new archiRecherche();
-        	$html = $r->searchByCriterias(array('rue'=>$_GET['recherche_rue']));
+        	if(isset($_GET['debut']))
+        		$html = $r->searchByCriterias(array('rue'=>$_GET['recherche_rue'],'debut'=>$_GET['debut']));
+        	else 
+        		$html = $r->searchByCriterias(array('rue'=>$_GET['recherche_rue'],'debut'=>0));
             echo $html;
             break;
         
