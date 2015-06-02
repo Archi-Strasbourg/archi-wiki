@@ -9573,7 +9573,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     if($infosUtilisateur['alerteCommentaires']=='1' && $infosUtilisateur['compteActif']=='1' && $infosUtilisateur['idProfil']!='4')
                     {
                         $message = "Un utilisateur a ajouté un commentaire sur une adresse ou vous avez participé.";
-                        $message.= "Pour vous rendre sur l'adresse : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$this->variablesPost['idEvenementGroupeAdresse']))."'>".$intituleAdresse."</a><br>";
+                        $message.= "Pour vous rendre sur l'adresse : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$this->variablesPost['idEvenementGroupeAdresse'])).'#commentaireAdresse'.$idCommentaire."'>".$intituleAdresse."</a><br>";
                         $message.= $this->getMessageDesabonnerAlerteMail();
                         $mail->sendMail($mail->getSiteMail(),$infosUtilisateur['mail'],'Ajout d\'un commentaire sur une adresse sur laquelle vous avez participé.',$message,true);
                         
@@ -9603,7 +9603,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $message .= "prenom : ".strip_tags($this->variablesPost['prenom'])."<br>";
                 $message .= "email : ".strip_tags($this->variablesPost['email'])."<br>";
                 $message .= "commentaire : ".stripslashes(strip_tags($this->variablesPost['commentaire']))."<br>";
-                $message .="<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdEvenementGroupeAdresse'=>$this->variablesPost['idEvenementGroupeAdresse'],'archiIdAdresse'=>$idAdresse))."'>".$intituleAdresse."</a><br>";
+                $message .="<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdEvenementGroupeAdresse'=>$this->variablesPost['idEvenementGroupeAdresse'],'archiIdAdresse'=>$idAdresse)).'#commentaireAdresse'.$idCommentaire."'>".$intituleAdresse."</a><br>";
 
                 $mail->sendMailToAdministrators($envoyeur,'Un utilisateur a ajouté un commentaire', $message, " AND alerteCommentaires='1' ", true, true);
                 // envoi mail aussi au moderateur si ajout sur adresse de ville que celui ci modere

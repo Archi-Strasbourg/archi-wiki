@@ -727,26 +727,24 @@ class archiEvenement extends config
 		// recuperation de l'idHistoriqueEvenement Courant pour le renvoyer en tant que idHistoriquePrecedent a la fin de la modification ( visualisation de l'administrateur de l'ancien evenement)
 		// *************************************************************************************************************************************
 
-		//debug("Modification de la requete qui n a plus aucun sens a présent : On la bypass");
 		$reqIdHistoriqueEvenementAvantModif = "
-				SELECT he1.idEvenement as idHistoriqueEvenementAvantModif
-				FROM evenements he2,evenements he1
-				WHERE he2.idEvenement = he1.idEvenement
-				AND he1.idEvenement = '".$id."'
-						GROUP BY he1.idEvenement
-						";
-
-		/*
-		$resIdHistoriqueEvenementAvantModif = $this->connexionBdd->requete($reqIdHistoriqueEvenementAvantModif);
-		$fetchIdHistoriqueEvenementAvantModif = mysql_fetch_assoc($resIdHistoriqueEvenementAvantModif);
-		$idHistoriqueEvenementAvantModif = $fetchIdHistoriqueEvenementAvantModif['idHistoriqueEvenementAvantModif'];
-		*/
-		$idHistoriqueEvenementAvantModif =$id;
+                SELECT he1.idHistoriqueEvenement as idHistoriqueEvenementAvantModif
+                FROM historiqueEvenement he2,historiqueEvenement he1
+                WHERE he2.idEvenement = he1.idEvenement
+                AND he1.idEvenement = '".$id."'
+                GROUP BY he1.idEvenement,he1.idHistoriqueEvenement
+                HAVING he1.idHistoriqueEvenement=max(he2.idHistoriqueEvenement)
+        ";
+        
+        $resIdHistoriqueEvenementAvantModif = $this->connexionBdd->requete($reqIdHistoriqueEvenementAvantModif);
+        $fetchIdHistoriqueEvenementAvantModif = mysql_fetch_assoc($resIdHistoriqueEvenementAvantModif);
+        $idHistoriqueEvenementAvantModif = $fetchIdHistoriqueEvenementAvantModif['idHistoriqueEvenementAvantModif'];
+        // *************************************************************************************************************************************
+		//$idHistoriqueEvenementAvantModif =$id;
 		// *************************************************************************************************************************************
 
 
 		$idHistoriqueEvenementNouveau = 0; // cette variable va contenir le nouvel idHistoriqueEvenement une fois celui ci créé
-
 
 		$idProfilUtilisateur = $u->getIdProfilFromUtilisateur($aAuthentification->getIdUtilisateur());
 
@@ -775,7 +773,7 @@ class archiEvenement extends config
 				$nouvelleLiaison      = false;
 
 				$tabAncien= $this->recupTableauTravail($id);//$tabForm['idEvenement']['value']
-
+				debug($idHistoriqueEvenementNouveau);
 
 				// ****************************************************************************************
 				// ici on va chercher s'il existe des differences entre l'enregistrement de l'evenement précédent et les nouvelles données,
@@ -810,7 +808,7 @@ class archiEvenement extends config
 						}
 					}
 				}
-
+				debug($idHistoriqueEvenementNouveau);
 				if ($nouvelEnregistrement == true)
 				{
 					//********************************************
@@ -844,7 +842,7 @@ class archiEvenement extends config
 					$MH             = $tabForm['MH']['value'];
 					$isDateDebutEnviron = $tabForm['isDateDebutEnviron']['value'];
 					$numeroArchive  = $tabForm['numeroArchive']['value'];
-
+					debug($idHistoriqueEvenementNouveau);
 					// debug
 					if($nbEtages=='')
 						$nbEtages = 0;
@@ -876,8 +874,16 @@ class archiEvenement extends config
 					
 					$this->connexionBdd->requete($sqlHistoriqueEvenement);
 
-					
-					$idHistoriqueEvenementNouveau = mysql_insert_id();
+					$requeteNouvelIdHistoriqueEvenement = "
+							SELECT idHistoriqueEvenement 
+							FROM historiqueEvenement 
+							WHERE idEvenement = ".$idEvenement."
+							ORDER BY idHistoriqueEvenement DESC 
+							LIMIT 1
+							";
+					$resNouvelIdHistoEvt = $this->connexionBdd->requete($requeteNouvelIdHistoriqueEvenement);
+					$fetchIdHistoEvt = mysql_fetch_assoc($resNouvelIdHistoEvt);
+					$idHistoriqueEvenementNouveau = $fetchIdHistoEvt['idHistoriqueEvenement'];
 
 
 					// recuperation de l'idEvenementGroupeAdresse
@@ -889,7 +895,7 @@ class archiEvenement extends config
 				/*if ($nouvelleLiaison == true)
 				 {*/
 				$idEvenement = $id;//$tabForm['idEvenement']['value'];
-
+				debug($idHistoriqueEvenementNouveau);
 				// ********************************************************************************************************
 				// GESTION DES COURANTS ARCHITECTURAUX
 				if(is_array($tabForm['courant']['value']) && count($tabForm['courant']['value'])>0)
@@ -991,7 +997,6 @@ class archiEvenement extends config
 		}
 		elseif(isset($this->variablesPost['evenementGroupeAdresse']) && $this->variablesPost['evenementGroupeAdresse']!='') // on est connecté
 		{
-
 			$this->connexionBdd->getLock(array('_adresseEvenement'));
 
 			// cas d'un groupe d'adresse ( le formulaire d'ou l'on provient ne comporte que des listes d'adresses
@@ -1065,7 +1070,6 @@ class archiEvenement extends config
 			//
 
 
-			//$message="Un événement a été édité. :<br> <a href='".$this->creerUrl('','evenement',array('idEvenement'=>$id))."'>Lien vers l'événement</a><br>";
 			$message="Un événement a été édité.<br> Il concerne l'adresse : $intituleAdresse<br> <a href='".$this->creerUrl('','comparaisonEvenement',array('idHistoriqueEvenementNouveau'=>$idHistoriqueEvenementNouveau,'idHistoriqueEvenementAncien'=>$idHistoriqueEvenementAvantModif))."'>Comparer les deux versions</a></br>";
 
 			// recuperation des infos sur l'utilisateur qui fais la modif
@@ -1091,12 +1095,7 @@ class archiEvenement extends config
 			else{
 				header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$fetchAdresse['idAdresse'], 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
 			}
-			//$html = $adresse->afficherDetail('',$idEvenementGroupeAdresse);
-			/*$arrayAffichage = $this->afficher($id);
-			 $html .= $arrayAffichage['html'];
-			*/
-
-
+	
 			// *************************************************************************************************************************************************************
 			// envoi mail aussi au moderateur si ajout sur adresse de ville que celui ci modere
 			$u = new archiUtilisateur();
@@ -4344,7 +4343,7 @@ class archiEvenement extends config
 		$evenement = new archiEvenement();
 
 		// on recupere l'idEvenement
-		$query = "select idEvenement from evenements where idEvenement = '".$idHistoriqueEvenementNouveau."'";
+		$query = "select idEvenement from historiqueEvenement where idHistoriqueEvenement = '".$idHistoriqueEvenementNouveau."'";
 		$res = $this->connexionBdd->requete($query);
 		$fetch = mysql_fetch_assoc($res);
 
@@ -5181,7 +5180,7 @@ class archiEvenement extends config
 					if($infosUtilisateur['alerteCommentaires']=='1' && $infosUtilisateur['compteActif']=='1' && $infosUtilisateur['idProfil']!='4')
 					{
 						$message = "Un utilisateur a ajouté un commentaire sur un evenement que vous avez créé.";
-						$message.= "Pour vous rendre sur l'adresse : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse))."'>".$intituleAdresse."</a><br>";
+						$message.= "Pour vous rendre sur l'adresse : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse)).'#commentaireEvenement'.$idCommentaire."'>".$intituleAdresse."</a><br>";
 						$message.= $this->getMessageDesabonnerAlerteMail();
 						$mail->sendMail($mail->getSiteMail(),$infosUtilisateur['mail'],'Ajout d\'un commentaire sur une adresse sur laquelle vous avez participé.',$message,true);
 
@@ -5209,7 +5208,7 @@ class archiEvenement extends config
 				$message .= "prenom : ".strip_tags($this->variablesPost['prenom'])."<br>";
 				$message .= "email : ".strip_tags($this->variablesPost['email'])."<br>";
 				$message .= "commentaire : ".stripslashes(strip_tags($this->variablesPost['commentaire']))."<br>";
-				$message .="<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse,'archiIdAdresse'=>$idAdresse))."'>".$intituleAdresse."</a><br>";
+				$message .="<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse,'archiIdAdresse'=>$idAdresse)).'#commentaireEvenement'.$idCommentaire."'>".$intituleAdresse."</a><br>";
 
 				$mail->sendMailToAdministrators($envoyeur,'Un utilisateur a ajouté un commentaire', $message, " AND alerteCommentaires='1' ", true, true);
 				// envoi mail aussi au moderateur si ajout sur adresse de ville que celui ci modere

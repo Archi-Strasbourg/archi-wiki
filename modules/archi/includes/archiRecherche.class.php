@@ -2300,7 +2300,7 @@ class archiRecherche extends config {
 				100000000000 * (MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 				10000000000 * (MATCH (concat1) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
 		
-				(10000000000 - (10*CONVERT(numeroAdresse  , UNSIGNED INTEGER))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) ))) +
+				((10000000000 - (10*CONVERT(numeroAdresse  , UNSIGNED INTEGER)))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) ))) +
 		
 				100000000 * (MATCH (titre) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 				10000000 * (MATCH (titre) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
@@ -2377,12 +2377,94 @@ class archiRecherche extends config {
 				.						
 				"";
 		}
+		
+		$requestTestMatch ="
+				SELECT *,
+				(MATCH (concat3) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) as concat3Match1,
+				(MATCH (concat3) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) as concat3Match2,
+				(MATCH (concat3) AGAINST ('".$motCleFullEscaped."' IN BOOLEAN MODE)) as concat3Match3,
+						
+				((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) as concat2Match1,
+				((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) )) as concat2Match2	,	
+				
+				((((MATCH (titre,nomQuartier,nomSousQuartier) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE))) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) as quartierMatch,
+				
+				(MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) as concat1Match1,
+				(MATCH (concat1) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) as concat1Match2,
+				
+				((10000000000 - (10*CONVERT(numeroAdresse  , UNSIGNED INTEGER)))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) ))) as rueDegressiveMatch,
+				(MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) ) as rueDegresSubMatch,
+						
+				(MATCH (titre) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) as matchTitre,
+				(MATCH (titre) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) as matchTitre2,
+				
+				(MATCH (description) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) as matchDescription1,
+				(MATCH (description) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) as matchDescription2,
+
+						
+				((MATCH (nomQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) as matchQuartierWut,
+				(MATCH (nomRue) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE))  as matchNomRue,
+				(MATCH (nomSousQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) as matchSousQuartier,
+				(MATCH (nomQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) as matchQuartier,
+				(MATCH (nomVille) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) as matchVille,
+				(MATCH (nomPays) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) as matchPays,
+				(MATCH (description) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) as matchDescription,
+						
+						
+				(
+				10000000000000000* (MATCH (concat3) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				1000000000000000* (MATCH (concat3) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
+				100000000000000* (MATCH (concat3) AGAINST ('".$motCleFullEscaped."' IN BOOLEAN MODE)) +
+			
+				10000000000000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 12 THEN 1 ELSE 0 END))) +
+				10000000000000 * ((MATCH (concat2) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE) )) +
+			
+				10000000000000 * ((((MATCH (titre,nomQuartier,nomSousQuartier) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE))) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
+			
+				100000000000 * (MATCH (concat1) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				10000000000 * (MATCH (concat1) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
+		
+				(10000000000 - (10*CONVERT(numeroAdresse  , UNSIGNED INTEGER))* ((MATCH (concat2) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) ))) +
+		
+				100000000 * (MATCH (titre) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				10000000 * (MATCH (titre) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
+		
+				1000000 * (MATCH (description) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE))+
+				100000 * (MATCH (description) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE))+
+		
+				10000* (MATCH (concat4) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				1000 * (MATCH (concat4) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				10000 * (MATCH (concat5) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+				1000 * (MATCH (concat5) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
+			
+				100 * (MATCH (concat4) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
+				100 * (MATCH (concat5) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
+			
+				100 * ((MATCH (nomQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE) * (CASE idTypeStructure WHEN 22 THEN 1 ELSE 0 END))) +
+				10 * (MATCH (nomRue) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
+				10 * (MATCH (nomSousQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
+				10 * (MATCH (nomQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
+				10 * (MATCH (nomVille) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
+				10 * (MATCH (nomPays) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
+			
+				1 * (MATCH (description) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE))
+		
+				) as relevance
+				FROM recherche "
+				.$sqlWhere.
+				"
+				LIMIT 0,10
+				";
+		
+		//debug($requestTestMatch);
+		
 		$requestCount = $request;
 		$request.=" ".$limit." ;";
 		$idHistoriqueAdresse  = array();
 		$resCount = $this->connexionBdd->requete($requestCount);
 		$res = $this->connexionBdd->requete($request);
 		$nbResult = mysql_num_rows($resCount);
+		//debug($request);
 		while($fetch = mysql_fetch_assoc($res)){
 			$idHistoriqueAdresse[] = array(
 					'idHistoriqueAdresse'=>$fetch['idHistoriqueAdresse'],
@@ -2435,26 +2517,17 @@ class archiRecherche extends config {
 				$resArray = $this->getInfoAdresses($sqlWhere,$criterias); //Execute the fulltext research with the Where clause generated by
 				$idHistoriqueEvenementArray=$resArray['idHistoriqueAdresse'];
 				$nbResult=$resArray['nbResult'];
-				//$nbResult = count($this->getInfoAdresses($sqlWhere,$criterias)); //Count the nb of result
 				$html.=$this->displayOnMap($criterias , $idHistoriqueEvenementArray,$nbResult);
 			}
 			//Affichage par liste
 			else{
 				$sqlWhere = $this->buildWhereClause($criterias); // Generating the where clause with the criterias
-				//$idHistoriqueEvenementArray = $this->getInfoAdresses($sqlWhere,$criterias); //Execute the fulltext research with the Where clause generated by
 				$resArray = $this->getInfoAdresses($sqlWhere,$criterias); //Execute the fulltext research with the Where clause generated by
-				//$nbResult = count($this->getInfoAdresses($sqlWhere,array('motcle' => $motcle))); //Count the nb of result
 				$idHistoriqueEvenementArray=$resArray['idHistoriqueAdresse'];
 				$nbResult=$resArray['nbResult'];
 				$a = new archiAdresse();
 				$html.=$a->displayList($idHistoriqueEvenementArray,$nbResult);
 			}
-			/*
-			if(isset($criterias['motcle'])){
-				$p = new archiPersonne();
-				$html.=$p->search($criterias['motcle']);
-			}
-			*/
 		}
 		else{
 			$this->messages->addError("Erreur, aucun critères n'a été renseigné.");
