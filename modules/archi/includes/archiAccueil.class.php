@@ -528,14 +528,14 @@ class ArchiAccueil extends config
 					$a = new archiAdresse();
 
 					$reqImageEvtRelated = "				
-							SELECT hi.idHistoriqueImage,1 as priorite
+							SELECT hi.idHistoriqueImage,hi.dateUpload,1 as priorite
 							FROM historiqueImage hi
 							LEFT JOIN _evenementImage ei on ei.idImage = hi.idImage
 							WHERE ei.idEvenement = ".$modif['idEvenement']."
 					
 									UNION
 									
-							SELECT hi.idHistoriqueImage,2 as priorite
+							SELECT hi.idHistoriqueImage,hi.dateUpload,2 as priorite
 							FROM `evenements` evt
 							LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = evt.idEvenement
 							LEFT JOIN evenements evt2 ON evt2.idEvenement = ee.idEvenement
@@ -558,7 +558,7 @@ class ArchiAccueil extends config
 					else{
 						$reqImagePrincipale = "
 						
-							SELECT hi.idHistoriqueImage
+							SELECT hi.idHistoriqueImage,hi.dateUpload
 							FROM historiqueImage hi
 							LEFT JOIN evenements evt on evt.idImagePrincipale = hi.idImage
 							WHERE evt.idEvenement =".$modif['idEvenementGroupeAdresse']."
@@ -571,7 +571,7 @@ class ArchiAccueil extends config
 						}
 						else{
 							
-							$reqOtherImage = "SELECT hi.idHistoriqueImage
+							$reqOtherImage = "SELECT hi.idHistoriqueImage,hi.dateUpload
 							FROM historiqueImage hi
 							LEFT JOIN _evenementImage ei ON ei.idImage = hi.idImage
 							LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = ei.idEvenement
@@ -594,7 +594,8 @@ class ArchiAccueil extends config
 					$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($modif['idEvenement']);
 					if($modif['type']=='adresse'){
 						$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
-						$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
+						//$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
+						$urlImage = "images/grand/".$infoImage['dateUpload']."/".$infoImage['idHistoriqueImage'].".jpg";
 					}
 					else{
 						$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$modif['idPersonne']));
@@ -643,7 +644,7 @@ class ArchiAccueil extends config
 
 							//Image
 							$requeteImage = "
-									SELECT hi.idHistoriqueImage , e.idEvenement
+									SELECT hi.idHistoriqueImage ,hi.dateUpload, e.idEvenement
 									FROM historiqueImage hi
 									LEFT JOIN evenements e on e.idImagePrincipale = hi.idImage
 									WHERE e.idEvenement = ".$lastVisit['idEvenementGroupeAdresse']."
@@ -661,10 +662,12 @@ class ArchiAccueil extends config
 								$infoImage = mysql_fetch_assoc($resImage);
 							}
 							else{
-								$infoImage['idHistoriqueImage']=$array_image['idHistoriqueImage'];
+								$infoImage=$array_image;
 							}
-							$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
-
+							//$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
+							$urlImage = "images/grand/".$infoImage['dateUpload']."/".$infoImage['idHistoriqueImage'].".jpg";
+								
+							
 							//Url Evenement
 							$idEvenementGroupeAdresses = $lastVisit['idEvenementGroupeAdresse'];
 							$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
