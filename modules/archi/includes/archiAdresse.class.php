@@ -6511,6 +6511,7 @@ class archiAdresse extends ArchiContenu
 
 			ha1.numero as numero,
 			ha1.idHistoriqueAdresse,
+			ha1.idAdresse,
 			ha1.idIndicatif as idIndicatif
 
 
