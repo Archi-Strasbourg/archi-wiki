@@ -2224,6 +2224,9 @@ Page d'accueil
 	max-width: 100px;
 }
 
+.newsMiniature img{
+	max-width: 150px;
+}
 
 .miniatureWrapper a , .miniatureWrapper a:hover{
 	color: white;
