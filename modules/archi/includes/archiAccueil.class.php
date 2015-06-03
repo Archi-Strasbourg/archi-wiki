@@ -595,7 +595,13 @@ class ArchiAccueil extends config
 					if($modif['type']=='adresse'){
 						$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
 						//$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
-						$urlImage = "images/grand/".$infoImage['dateUpload']."/".$infoImage['idHistoriqueImage'].".jpg";
+
+						if(isset($infoImage['dateUpload']) && isset($infoImage['idHistoriqueImage'])&& $infoImage['idHistoriqueImage'] !='' && $infoImage['dateUpload'] !=''){
+							$urlImage = "images/grand/".$infoImage['dateUpload']."/".$infoImage['idHistoriqueImage'].".jpg";
+						}
+						else{
+							$urlImage="images/placeholder.jpg";
+						}
 					}
 					else{
 						$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$modif['idPersonne']));
@@ -665,7 +671,14 @@ class ArchiAccueil extends config
 								$infoImage=$array_image;
 							}
 							//$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
-							$urlImage = "images/grand/".$infoImage['dateUpload']."/".$infoImage['idHistoriqueImage'].".jpg";
+							//$urlImage = "images/grand/".$infoImage['dateUpload']."/".$infoImage['idHistoriqueImage'].".jpg";
+
+							if(isset($infoImage['dateUpload']) && isset($infoImage['idHistoriqueImage'])&& $infoImage['idHistoriqueImage'] !='' && $infoImage['dateUpload'] !=''){
+								$urlImage = "images/grand/".$infoImage['dateUpload']."/".$infoImage['idHistoriqueImage'].".jpg";
+							}
+							else{
+								$urlImage="images/placeholder.jpg";
+							}
 								
 							
 							//Url Evenement
