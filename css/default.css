@@ -2218,14 +2218,23 @@ Page d'accueil
 
 .lastModifElement img{
 	min-width: 200px;
+	min-height: 200px;
+	height: 200px;
+	
 }
 
 .lastVisitElement img{
 	max-width: 100px;
+	min-height: 100px;
+	height: 100px;
+	
 }
 
 .newsMiniature img{
 	max-width: 150px;
+	min-height: 150px;
+	height: 150px;
+	
 }
 
 .miniatureWrapper a , .miniatureWrapper a:hover{
