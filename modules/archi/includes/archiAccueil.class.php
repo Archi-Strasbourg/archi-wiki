@@ -2284,7 +2284,6 @@ class ArchiAccueil extends config
 				$requeteTitreLegacy ="SELECT titre from evenements where idEvenement = $idTitre";
 				$resTitreLegacy = $this->connexionBdd->requete($requeteTitreLegacy);
 				$titreArray = mysql_fetch_assoc($resTitreLegacy);
-				debug($titreArray);
 				
 				$tmp ['titre'] = $titreArray ['titre'];
 				$idImagePrincipale = $titreArray ['idImagePrincipale'];
