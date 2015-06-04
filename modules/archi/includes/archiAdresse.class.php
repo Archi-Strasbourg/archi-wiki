@@ -14267,44 +14267,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$intituleAdresse.=$fulladdress.' '; 
 				$arrayUrl = $this->generateUrlListAddresses($input,$this->variablesGet['modeAffichage'],$intituleAdresse);
 				
-				/*
-				//If prisdepuis
-				if(isset($this->variablesGet['modeAffichage']) && ($this->variablesGet['modeAffichage'] == 'popupRechercheAdressePrisDepuis')){
-					$addressUrl="#";
-					$nomMod = str_replace(array("'", "\""), array("\\'", "&#34;"), $nom);
-					$urlDetailOnClick = "
-							parent.document.getElementById('listePrisDepuisDiv'+parent.document.getElementById('identifiantRetour').value).innerHTML+=
-							'".$nomMod."
-									<a style=\'cursor:pointer;\' onclick=\'retirerPrisDepuis(&#34;".$info['idAdresse']."_".$info['idEvenementGroupeAdresse']."&#34;, '
-											+parent.document.getElementById('identifiantRetour').value+');\'>(-)</a>
-											<br>';
-							parent.document.getElementById('prisDepuis'+parent.document.getElementById('identifiantRetour').value).innerHTML+=
-											'<option value=\'".$info["idAdresse"]."_".$info['idEvenementGroupeAdresse']."\' SELECTED>".$nomMod."
-											</option>';";
-					$urlDetailOnClick = "addPrisDepuis('".$info['idEvenementGroupeAdresse']."' , '".$info['idAdresse']."' , '".$nomMod."');";
-						
-				}
-				//elseif vueSur
-				elseif (isset($this->variablesGet['modeAffichage']) && ($this->variablesGet['modeAffichage'] == 'popupRechercheAdresseVueSur')){
-					$addressUrl    = "#";
-					$nomMod = str_replace(array("'", "\""), array("\\'", "&#34;"), $nom);
-					$urlDetailOnClick = "
-							parent.document.getElementById('listeVueSurDiv'+parent.document.getElementById('identifiantRetour').value).innerHTML+=
-							'".$nomMod."
-									<a style=\'cursor:pointer;\' onclick=\' retirerVueSur(&#34;".$info['idAdresse']."_".$info['idEvenementGroupeAdresse']."&#34;, &#34;'+parent.document.getElementById('identifiantRetour').value+'&#34;); \'>
-											(-)
-											</a><br>';
-							parent.document.getElementById('vueSur'+parent.document.getElementById('identifiantRetour').value).innerHTML+='
-									<option value=\'".$info['idAdresse']."_".$info['idEvenementGroupeAdresse']."\' SELECTED>".$nomMod."
-									</option>';";
-					$urlDetailOnClick = "addVueSur('".$info['idEvenementGroupeAdresse']."' , '".$info['idAdresse']."' , '".$nomMod."');";
-						
-						
-				}
-				*/
+
 
 				//Regular case
-				//else{
 					
 					//Personne case
 					if (isset ( $info['idPersonne'] ) && $info['idPersonne'] != '') {
@@ -14335,7 +14300,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					
 					// Event title
 					$titreEvenements = implode ( " - ", $info ['titresEvenements'] ); // Getting all the events links on one line
-				//}
 				
 					
 					$modeAffichage=$this->variablesGet['modeAffichage'];
@@ -14383,6 +14347,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 	 * @param unknown $idList
 	 */
 	private function getAddressesInfoFromIdHA($idList =array() , $optionsPagination = array()){
+		//debug($idList);
 		$addressesInformations = array();
 		if(!empty($idList)){
 			$i=0;
@@ -14439,33 +14404,40 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			 * Previous request
 			 */
 			//Processing all the adresses get from the request : getting address title and link to the events linked
-			
-			
+						
 			
 			//while($fetch = mysql_fetch_assoc($res)){
 			foreach ($arrayAdresse as $fetch){
-				$titreRequest = "
+				$evenement = new archiEvenement();
+				$idTitre = $evenement->getIdEvenementTitre($fetch);
+				$requeteTitreLegacy ="SELECT titre from evenements where idEvenement = $idTitre";
+				$resTitreLegacy = $this->connexionBdd->requete($requeteTitreLegacy);
+				$arrayTitre = mysql_fetch_assoc($resTitreLegacy);
+				
+				if(!isset($arrayTitre['titre']) || $arrayTitre['titre'] == '' || empty($arrayTitre['titre'])){
+					$titreRequest = "
 						SELECT evt2.titre
 						FROM evenements evt , evenements evt2
 						WHERE evt.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
 						AND evt2.idEvenement = evt.idEvenementRecuperationTitre
 						";
-				$resTitre = $this->connexionBdd->requete($titreRequest);
-				$arrayTitre = mysql_fetch_assoc($resTitre);
-				
-				if(!isset($arrayTitre['titre']) || $arrayTitre['titre'] == '' || empty($arrayTitre['titre'])){
-					$requeteAutreTitre ="
+					$resTitre = $this->connexionBdd->requete($titreRequest);
+					$arrayTitre = mysql_fetch_assoc($resTitre);
+					if(!isset($arrayTitre['titre']) || $arrayTitre['titre'] == '' || empty($arrayTitre['titre'])){
+						$requeteAutreTitre ="
 							SELECT evt.titre
-							FROM evenements evt 
+							FROM evenements evt
 							LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
 							WHERE ee.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
 							";
-					$resultAutreTitre = $this->connexionBdd->requete($requeteAutreTitre);
-					if(mysql_num_rows($resultAutreTitre)==1){ //Si il n'y a qu'un résultat...
-						$arrayTitre = mysql_fetch_assoc($resultAutreTitre);
+						$resultAutreTitre = $this->connexionBdd->requete($requeteAutreTitre);
+						if(mysql_num_rows($resultAutreTitre)==1){ //Si il n'y a qu'un résultat...
+							$arrayTitre = mysql_fetch_assoc($resultAutreTitre);
+						}
 					}
+						
 				}
-				$fetch['titre'] = stripslashes($arrayTitre['titre']);
+				$fetch ['titre'] = stripslashes ( $arrayTitre ['titre'] );
 				
 				$reqTitresEvenements ="
 					SELECT  distinct he1.titre,he1.idEvenement
