@@ -451,7 +451,7 @@ class Config
             && $autre['selection']=='personne'
             && isset($autre['id'])
         ) {
-            $personne = new archiPersonne();
+            $personne = new archiPersonne($autre['id']);
             $nomPrenom=$personne->getPersonneLibelle($autre['id']);
             $url = "personnalite-".$string->convertStringToUrlRewrite($nomPrenom).
             "-".$autre['id'].".html";
