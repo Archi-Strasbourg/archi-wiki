@@ -1706,25 +1706,19 @@ class archiEvenement extends config
 						$t->assign_block_vars('simple.menuAction.isAdmin', array());
 					}
 
-					if($u->isAuthorized('evenement_supprimer',$authentification->getIdUtilisateur()))
-					{
+					if($u->isAuthorized('evenement_supprimer',$authentification->getIdUtilisateur())){
 						$isModerateurFromVilleCourante = false;
-						if($authentification->getIdProfil() == 3) // moderateur
-						{
+						if($authentification->getIdProfil() == 3) { //moderateur
 							$arrayVillesModerees = $u->getArrayVillesModereesPar($authentification->getIdUtilisateur());
 							$idVilleAdresseCourante = $adresse->getIdVilleFrom($idEvenement, 'idEvenement');
-							if(in_array($idVilleAdresseCourante,$arrayVillesModerees))
-							{
+							if(in_array($idVilleAdresseCourante,$arrayVillesModerees)){
 								$isModerateurFromVilleCourante=true;
 							}
 						}
-
-						if($authentification->getIdProfil() == 4 || $isModerateurFromVilleCourante) // est on administrateur ou moderateur de la ville ?
-						{
+						if($authentification->getIdProfil() == 4 || $isModerateurFromVilleCourante){ // est on administrateur ou moderateur de la ville ?
 							$t->assign_block_vars('simple.menuAction.isAdminOrModerateurFromVille',array());
-							if($authentification->estConnecte() && $authentification->estAdmin() && isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1')
-							{
-								$t->assign_block_vars('simple.menuAction.isAdminOrModerateurFromVille.isAffichageSelectionImages',array());
+							if($authentification->estConnecte() && $authentification->estAdmin() && isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1'){
+								$t->assign_block_vars('simple.menuAction.isAdmin.isAffichageSelectionImages',array());
 							}
 						}
 					}
