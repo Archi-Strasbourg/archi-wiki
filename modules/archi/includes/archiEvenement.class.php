@@ -7434,8 +7434,7 @@ public function getArrayAdresse($id,$type ='idEvenement'){
 		$numero = implode('-', array_unique($array_numero));
 		$return_array['numero'] = $numero;
 		return $arrayAddresses;
-		//return $return_array;
-}
+	}
 	
 	public function getAddressText($arrayAddresses){
 		$returnText = "";
@@ -7452,62 +7451,17 @@ public function getArrayAdresse($id,$type ='idEvenement'){
 			if($key+1 < count($arrayAddresses))
 				$returnText.=" / ";
 		}
+		if (empty ( $arrayAddresses [0] ['nomRue'] ) && $arrayAddresses [0] ['numero'] == 0) {
+			if (! empty ( $arrayAddresses [0] ['nomQuartier'] )) {
+				if (! empty ( $arrayAddresses [0] ['nomSousQuartier'] )) {
+					$returnText .= $arrayAddresses [0] ['nomSousQuartier']." / ";
+				}
+				$returnText .= $arrayAddresses [0] ['nomQuartier'];
+			}
+		}
 		return $returnText;
 	}
 	
-	
-	
-	public function getArrayAdresseBis($arrayId){
-		$arrayWhere=array();
-		if (isset ( $arrayId ['idEvenementGroupeAdresse'] ) && $arrayId ['idEvenementGroupeAdresse'] != '') 
-			$arrayWhere [] = "ae.idEvenement = " . $arrayId ['idEvenementGroupeAdresse'];
-		if (isset ( $arrayId ['idAdresse'] ) && $arrayId ['idAdresse'] != '') 
-			$arrayWhere [] = "ha.idAdresse = " . $arrayId ['idAdresse'];
-/*
-		if (isset ( $arrayId ['idEvenement'] ) && $arrayId ['idEvenement'] != '' && !isset ( $arrayId ['idAdresse'] ) && isset ( $arrayId ['idEvenementGroupeAdresse'] ))
-			$arrayWhere [] = "evt.idEvenement = " . $arrayId ['idEvenement'];
-			*/
-		if(!empty($arrayWhere))
-			$whereClause = "WHERE ".implode(' AND ', $arrayWhere);
-		
-		$requete = "SELECT ha.numero,
-						r.nom as nomRue,
-						r.prefixe,
-						sq.nom as nomSousQuartier ,
-						q.nom as nomQuartier,
-						v.codepostal as codepostal ,
-						v.nom as nomVille,
-						p.nom as nomPays
-						FROM evenements evt
-						LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
-						LEFT JOIN _adresseEvenement ae  on ae.idEvenement = ee.idEvenement
-						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
-						LEFT JOIN rue r on r.idRue = ha.idRue
-						LEFT JOIN sousQuartier sq on sq.idSousQuartier = ha.idSousQuartier
-						LEFT JOIN quartier q on q.idQuartier = ha.idQuartier
-						LEFT JOIN ville v on v.idVille = ha.idVille
-						LEFT JOIN pays p on p.idPays = ha.idPays
-							"
-						.$whereClause
-		;
-		
-		
-		
-		$result = $this->connexionBdd->requete($requete);
-		$array_numero = array();
-		$return_array = array();
-		while($row = mysql_fetch_assoc($result)){
-			$return_array = $row;
-			if($row['numero'] != 0)
-				$array_numero[]=$row['numero'];
-		}
-		asort($array_numero);
-		$numero = implode('-', array_unique($array_numero));
-		$return_array['numero'] = $numero;
-		return $return_array;
-	}
-	
-
 	
 	/**
 	 * Get idEvenement of the group of evenement with a regular idEvenement

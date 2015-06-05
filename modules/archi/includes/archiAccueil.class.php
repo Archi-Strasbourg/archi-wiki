@@ -644,6 +644,7 @@ class ArchiAccueil extends config
 							$e = new archiEvenement();
 							$adresseArray = $e->getArrayAdresse($lastVisit['idEvenementGroupeAdresse'], 'idEvenementGroupeAdresse');
 
+							debug($adresseArray);
 							//Adresse
 							$adresse = '';
 							$adresse = $e->getAddressText($adresseArray);

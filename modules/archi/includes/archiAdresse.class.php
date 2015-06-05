@@ -8045,13 +8045,6 @@ class archiAdresse extends ArchiContenu
     //  ************************************************************************************************************************
     public function getDerniersEvenementsParCategorie($nbAdressesParEncart=5,$params=array())
     {
-    	$locations = $this->getLocationTables();
-    	$T_RUE = $locations['rue'];
-    	$T_S_QUARTIER = $locations['sousQuartier'];
-    	$T_QUARTIER = $locations['quartier'];
-    	$T_VILLE = $locations['ville'];
-    	$T_PAYS = $locations['pays'];
-    	
         // ville de Strasbourg par defaut
         $sqlWhere = "AND v.idVille=1";
         if(isset($params['idVille']) && $params['idVille']!='')
@@ -8060,9 +8053,7 @@ class archiAdresse extends ArchiContenu
         }
         
         
-        
-        
-        $reqEvenementsOriginal = "
+        $reqEvenements = "
         
             SELECT  he1.idEvenement as idEvenement, he1.dateCreationEvenement as dateCreationEvenement,he1.dateDebut as dateDebut,extract(YEAR FROM he1.dateDebut) as annneeDebut, he1.idTypeEvenement as idTypeEvenement,
                     ha1.idAdresse as idAdresse, ha1.date as dateAdresse, ha1.numero as numero, ha1.idRue as idRue, ha1.idQuartier as idQuartier, 
@@ -8076,7 +8067,7 @@ class archiAdresse extends ArchiContenu
                     ae.idEvenement as idEvenementGroupeAdresses
                     
                                         
-            FROM evenements he2, evenements he1
+            FROM historiqueEvenement he2, historiqueEvenement he1
             RIGHT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = he1.idEvenement
             RIGHT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
             RIGHT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
@@ -8096,39 +8087,19 @@ class archiAdresse extends ArchiContenu
             
             ".$sqlWhere."
 
-            GROUP BY he1.idEvenement,ha1.idAdresse, ha1.idHistoriqueAdresse
-            HAVING  ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
+            GROUP BY he1.idEvenement,ha1.idAdresse, he1.idHistoriqueEvenement, ha1.idHistoriqueAdresse
+            HAVING he1.idHistoriqueEvenement = max(he2.idHistoriqueEvenement) AND ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
             ORDER BY he1.dateCreationEvenement DESC
-        ";
+        ";//,dateCreationEvenement DESC,dateAdresse DESC
         
+       echo $reqEvenements."<br/>";
+        /*
+                    LEFT JOIN rue r ON r.idRue = ha1.idRue
+            LEFT JOIN sousQuartier sq ON sq.idSousQuartier = ha1.idSousQuartier
+            LEFT JOIN quartier q ON q.idQuartier = ha1.idQuartier
+            LEFT JOIN ville v ON v.idVille = ha1.idVille
         
-        $reqEvenementsCustom = "
-        
-            SELECT  he1.idEvenement as idEvenement, he1.dateCreationEvenement as dateCreationEvenement,he1.dateDebut as dateDebut,extract(YEAR FROM he1.dateDebut) as annneeDebut, he1.idTypeEvenement as idTypeEvenement,
-                    ha1.idAdresse as idAdresse, ha1.date as dateAdresse, ha1.numero as numero, ha1.idRue as idRue, ha1.idQuartier as idQuartier,
-                    ha1.idSousQuartier as idSousQuartier, ha1.idPays as idPays, ha1.idVille as idVille, ha1.idIndicatif as idIndicatif,
-        
-                    ae.idEvenement as idEvenementGroupeAdresses
-        
-        
-            FROM evenements he2, evenements he1
-            RIGHT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = he1.idEvenement
-            RIGHT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-            RIGHT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
-            RIGHT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
-        
-            LEFT JOIN typeEvenement te ON te.idTypeEvenement = he1.idTypeEvenement
-        
-        
-            WHERE he2.idEvenement = he1.idEvenement
-        
-            GROUP BY he1.idEvenement,ha1.idAdresse, ha1.idHistoriqueAdresse
-            HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-            ORDER BY he1.dateCreationEvenement DESC
-        ";
-        
-        
-        $reqEvenements=$reqEvenementsCustom;
+        */
                 
         $resEvenements = $this->connexionBdd->requete($reqEvenements);
                 
@@ -8152,7 +8123,7 @@ class archiAdresse extends ArchiContenu
             //{
                 //$this->getUrlImage("moyen")."/".$fetchEvenements['dateUpload']."/".$fetchEvenements['idHistoriqueImage'].".jpg"
                 $positionEvenement = $this->getPositionFromEvenement($fetchEvenements['idEvenement']);
-                $infosAdresseCouranteOriginal = array(
+                $infosAdresseCourante = array(
                     "idAdresse"=>$fetchEvenements['idAdresse'],
                     "idIndicatif"=>$fetchEvenements['idIndicatif'],
                     "numero"=>$fetchEvenements['numero'],
@@ -8166,53 +8137,6 @@ class archiAdresse extends ArchiContenu
                     "idEvenement"=>$fetchEvenements['idEvenement'],
                     "idEvenementGroupeAdresse"=>$fetchEvenements['idEvenementGroupeAdresses']
                 );
-                
-  				$idRue = $fetchEvenements['idRue'];
-  				if($fetchEvenements['idRue']=='0' && $fetchEvenements['idSousQuartier']!='0'){
-  					$idSousQuartier = $fetchEvenements['idSousQuartier'];
-  				}   
-  				else{
-  					$idSousQuartier = $T_RUE[$idRue]['idSousQuartier'];
-  				}       
-          		if($fetchEvenements['idRue']=='0' && $fetchEvenements['idSousQuartier']=='0' && $fetchEvenements['idQuartier']!='0'){
-  					$idQuartier = $fetchEvenements['idQuartier'];
-  				}
-  				else{
-  					$idQuartier = $T_S_QUARTIER[$idSousQuartier]['idQuartier'];
-  				}    
-          				if($fetchEvenements['idRue']=='0' && $fetchEvenements['idSousQuartier']=='0' && $fetchEvenements['idQuartier']=='0' && $fetchEvenements['idVille']!='0'){
-  					$idVille = $fetchEvenements['idVille'];
-  				}
-  				else{
-  					$idVille = $T_QUARTIER[$idQuartier]['idVille'];
-  				}
-  				if($fetchEvenements['idRue']=='0' && $fetchEvenements['idSousQuartier']=='0' && $fetchEvenements['idQuartier']=='0' && $fetchEvenements['idVille']=='0' && $fetchEvenements['idPays']!=0){
-  					$idPays = $fetchEvenements['idPays'];
-  				}
-  				else{
-  					$idPays = $T_VILLE[$idVille]['idPays'];
-  				}
-  				
-  				
-                $infosAdresseCouranteCustom = array(
-                		"idAdresse"=>$fetchEvenements['idAdresse'],
-                		"idIndicatif"=>$fetchEvenements['idIndicatif'],
-                		"numero"=>$fetchEvenements['numero'],
-                		"nomRue"=>$T_RUE[$idRue]['nom'],
-                		"nomQuartier"=>$T_QUARTIER[$idQuartier]['nom'],
-                		"nomSousQuartier"=>$T_S_QUARTIER[$idSousQuartier]['nom'],
-                		"nomVille"=>$T_VILLE[$idVille]['nom'],
-                		"prefixeRue"=>$T_RUE[$idRue]['prefixe'],
-                		"dateCreationEvenement"=>$fetchEvenements['dateCreationEvenement'],
-                		"positionEvenement"=>$positionEvenement,
-                		"idEvenement"=>$fetchEvenements['idEvenement'],
-                		"idEvenementGroupeAdresse"=>$fetchEvenements['idEvenementGroupeAdresses']
-                );
-                
-                $infosAdresseCourante=$infosAdresseCouranteCustom;
-                
-                
-                
                 //"titreEvenement"=>$fetchEvenements['titreEvenement'],
                 //"description"=>$fetchEvenements['descriptionEvenement'],
                 //"idHistoriqueImage"=>$fetchEvenements['idHistoriqueImage'],
@@ -8400,7 +8324,7 @@ class archiAdresse extends ArchiContenu
         
         //
         
-        $reqAdressesOriginal = "
+        $reqAdresses = "
             SELECT  ha1.idAdresse as idAdresse, ha1.date as dateCreationAdresse,ha1.numero as numero, ha1.idRue as idRue , ha1.idQuartier as idQuartier, ha1.idSousQuartier as idSousQuartier,
                     ha1.idVille as idVille,ha1.idPays as idPays, ha1.idIndicatif as idIndicatif,
                     
@@ -8419,8 +8343,8 @@ class archiAdresse extends ArchiContenu
             
             
 
-            LEFT JOIN evenements he1 ON he1.idEvenement = ee.idEvenementAssocie
-            LEFT JOIN evenements he2 ON he2.idEvenement = he1.idEvenement
+            LEFT JOIN historiqueEvenement he1 ON he1.idEvenement = ee.idEvenementAssocie
+            LEFT JOIN historiqueEvenement he2 ON he2.idEvenement = he1.idEvenement
             
             
             
@@ -8434,38 +8358,10 @@ class archiAdresse extends ArchiContenu
             WHERE ha2.idAdresse = ha1.idAdresse
             ".$sqlWhere."
             ".$sqlAdressesExclues."
-            GROUP BY ha1.idAdresse ,he1.idEvenement, ha1.idHistoriqueAdresse
-            HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
+            GROUP BY ha1.idAdresse ,he1.idEvenement, ha1.idHistoriqueAdresse, he1.idHistoriqueEvenement
+            HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) and he1.idHistoriqueEvenement = max(he2.idHistoriqueEvenement)
             ORDER BY ha1.date DESC
         ";
-        
-        
-        $reqAdressesCustom = "
-            SELECT  ha1.idAdresse as idAdresse, ha1.date as dateCreationAdresse,ha1.numero as numero, ha1.idRue as idRue , ha1.idQuartier as idQuartier, ha1.idSousQuartier as idSousQuartier,
-                    ha1.idVille as idVille,ha1.idPays as idPays, ha1.idIndicatif as idIndicatif,
-
-                        ae.idEvenement as idEvenementGroupeAdresses
-        
-        
-        
-            FROM historiqueAdresse ha2, historiqueAdresse ha1
-            LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
-            LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-        
-        
-        
-            LEFT JOIN evenements he1 ON he1.idEvenement = ee.idEvenementAssocie
-            LEFT JOIN evenements he2 ON he2.idEvenement = he1.idEvenement
-        
-        
-            WHERE ha2.idAdresse = ha1.idAdresse
-            ".$sqlAdressesExclues."
-            GROUP BY ha1.idAdresse ,he1.idEvenement, ha1.idHistoriqueAdresse
-            HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-            ORDER BY ha1.date DESC
-        ";
-        
-        $reqAdresses=$reqAdressesOriginal;
         
         
         $resAdresses = $this->connexionBdd->requete($reqAdresses);
@@ -8475,38 +8371,11 @@ class archiAdresse extends ArchiContenu
         {
             if(!in_array($fetchAdresses['idAdresse'],$tabAdressesNouvellesAdressesAffichees) && !in_array($fetchAdresses['idEvenementGroupeAdresses'],$tabEvenementGroupeAdressesAffichees))
             {
-            	
-            	$idRue = $fetchEvenements['idRue'];
-            	if($fetchEvenements['idRue']=='0' && $fetchEvenements['idSousQuartier']!='0'){
-            		$idSousQuartier = $fetchEvenements['idSousQuartier'];
-            	}
-            	else{
-            		$idSousQuartier = $T_RUE[$idRue]['idSousQuartier'];
-            	}
-            	if($fetchEvenements['idRue']=='0' && $fetchEvenements['idSousQuartier']=='0' && $fetchEvenements['idQuartier']!='0'){
-            		$idQuartier = $fetchEvenements['idQuartier'];
-            	}
-            	else{
-            		$idQuartier = $T_S_QUARTIER[$idSousQuartier]['idQuartier'];
-            	}
-            	if($fetchEvenements['idRue']=='0' && $fetchEvenements['idSousQuartier']=='0' && $fetchEvenements['idQuartier']=='0' && $fetchEvenements['idVille']!='0'){
-            		$idVille = $fetchEvenements['idVille'];
-            	}
-            	else{
-            		$idVille = $T_QUARTIER[$idQuartier]['idVille'];
-            	}
-            	if($fetchEvenements['idRue']=='0' && $fetchEvenements['idSousQuartier']=='0' && $fetchEvenements['idQuartier']=='0' && $fetchEvenements['idVille']=='0' && $fetchEvenements['idPays']!=0){
-            		$idPays = $fetchEvenements['idPays'];
-            	}
-            	else{
-            		$idPays = $T_VILLE[$idVille]['idPays'];
-            	}
-            	
             
                 $tabAdressesNouvellesAdressesAffichees[]=$fetchAdresses['idAdresse'];
                 $tabEvenementGroupeAdressesAffichees[] = $fetchAdresses['idEvenementGroupeAdresses'];
                 //$this->getUrlImage("moyen")."/".$fetchAdresses['dateUpload']."/".$fetchAdresses['idHistoriqueImage'].".jpg"
-                $infosAdresseCouranteOriginal = array(
+                $infosAdresseCourante = array(
                                                         "idAdresse"=>$fetchAdresses['idAdresse'],
                                                         "idIndicatif"=>$fetchAdresses['idIndicatif'],
                                                         "numero"=>$fetchAdresses['numero'],
@@ -8519,22 +8388,7 @@ class archiAdresse extends ArchiContenu
                                                         "dateCreationAdresse"=>$fetchAdresses['dateCreationAdresse']
                                                         
                                                         );// ,"description"=>"" 
-                $infosAdresseCouranteCustom = array(
-                		"idAdresse"=>$fetchAdresses['idAdresse'],
-                		"idIndicatif"=>$fetchAdresses['idIndicatif'],
-                		"numero"=>$fetchAdresses['numero'],
-                		"nomRue"=>$T_RUE[$idRue]['nom'],
-                		"nomQuartier"=>$T_QUARTIER[$idQuartier]['nom'],
-                		"nomSousQuartier"=>$T_S_QUARTIER[$idSousQuartier]['nom'],
-                		"nomVille"=>$T_VILLE[$idVille]['nom'],
-                		"prefixeRue"=>$T_RUE[$idRue]['nom'],
-                		"idEvenementGroupeAdresse"=>$fetchAdresses['idEvenementGroupeAdresses'],
-                		"dateCreationAdresse"=>$fetchAdresses['dateCreationAdresse']
-                
-                );
-                
-                $infosAdresseCourante=$infosAdresseCouranteCustom;
-                
+
                 $tabDernieresAdresses[] = $infosAdresseCourante;
             }
             
