@@ -30,7 +30,9 @@
 	<!-- BEGIN adresses -->
 	<div class="listAddressItem">
         	<a href="{adresses.urlDetailHref}">
-        		<img src='{adresses.urlImageIllustration}' border=0 alt="{adresses.alt}" title="{adresses.alt}">
+        		<div class="addrListImageWrapper miniatureWrapper">
+        			<img src='{adresses.urlImageIllustration}' border=0 alt="{adresses.alt}" title="{adresses.alt}">
+        		</div>
         	</a> 
         	<span>
         	<br/>

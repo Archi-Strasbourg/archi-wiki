@@ -2482,8 +2482,14 @@ class archiAdresse extends ArchiContenu
 		$trouveImage = true;
 		if($url=='')
 		{
-			$url = $this->getUrlImage().'transparent.gif';
-			$trouveImage = false;
+			if(isset($params['placeholder']) && $params['placeholder']!=""){
+				$url=$params['placeholder'];
+				$trouveImage=false;
+			}
+			else{
+				$url = $this->getUrlImage().'transparent.gif';
+				$trouveImage = false;
+			}
 		}
 
 		return array('url'=>$url,'dateUpload'=>$dateUpload,'idHistoriqueImage'=>$idHistoriqueImage,'trouve'=>$trouveImage);
@@ -6548,7 +6554,7 @@ class archiAdresse extends ArchiContenu
 						";////ORDER BY  ".pia_substr($sqlOrderByPoidsMotCle, 0, -1)."
 			}
 
-
+debug($sql);
 
 			// ***************************************************************************************************************************************
 			// affichage des resultats de la recherche
@@ -7045,6 +7051,25 @@ class archiAdresse extends ArchiContenu
 		return array('html'=>$html, 'nbAdresses'=>$nbAdresses, 'arrayLiens'=>$arrayRetour, 'arrayIdAdresses'=>$arrayIdAdressesRetour, 'arrayIdEvenementsGroupeAdresse'=>$arrayIdEvenementsGARetour, 'arrayRetourLiensVoirBatiments'=>$arrayRetourLiensVoirBatiments);
 	}
 
+	public function aliasAfficherListe() {
+		if (isset ( $this->variablesGet ['selection'] ) && $this->variablesGet ['selection'] != '' && isset ( $this->variablesGet ['id'] ) && $this->variablesGet ['id'] != '') {
+			
+			if(isset($this->variablesGet['debut']) && $this->variablesGet['debut']!=""){
+				$debut = $this->variablesGet['debut'];
+			}
+			else {
+				$debut=0;
+			}
+			$criteres = array (
+					$this->variablesGet ['selection'] => $this->variablesGet ['id'] ,
+					'debut'=>$debut
+			);
+			$s = new archiRecherche ();
+			return $s->searchByCriterias ( $criteres );
+		}
+	}
+	
+	
 	// **********************************************************************************************************************************************************************
 	// affichage de la liste alphabetique en fonction du resultat de la requete (on affiche les lettres ou il y a un resultat dans la requete)
 	// **********************************************************************************************************************************************************************
@@ -13980,6 +14005,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			if(isset($this->variablesGet['debut']) && $this->variablesGet['debut']!=''){
 				$optionsPagination['currentPage'] = ($this->variablesGet['debut'] / $optionsPagination['nbResultPerPage']) ;
 			}
+			else{
+				$optionsPagination['debut']=0;
+				$optionsPagination['currentPage']=0;
+			}
 			$addressesInfromations = $this->getAddressesInfoFromIdHA($idList,$optionsPagination);
 			if($nbResult > 1){
 				$optionsPagination['nbResult']  = $nbResult;
@@ -14096,18 +14125,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$titreEvenements="";
 				$illustration = $this->getUrlImageFromAdresse(
 						$info['idHistoriqueAdresse'], 
-						'mini', 
+						'moyen', 
 						array(
-								'idEvenementGroupeAdresse'=>$info['idEvenementGroupeAdresse']
-								
+								'idEvenementGroupeAdresse'=>$info['idEvenementGroupeAdresse'],
+								'placeholder'=> "images/placeholder.jpg"
 				));
-				
+
 				//Processing name of the address
 				$nom = ucfirst($info['nom']);
 				$fulladdress =  ucfirst($this->getIntituleAdresseFrom($info['idEvenementGroupeAdresse'],$type='idEvenementGroupeAdresse'));
 				
 				$titre = $info['titre'];
-				
 				
 				
 				$input=array(
@@ -14139,23 +14167,20 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					} 
 					//Adresse case
 					else {
-						$urlImageIllustration = 'resizeImage.php?id='.$illustration['idHistoriqueImage'];
+						$urlImageIllustration = $illustration['url'];
 						$addressUrl = $this->creerUrl ( '', '', array (
 								'archiAffichage' => 'adresseDetail',
 								"archiIdAdresse" => $info ['idAdresse'],
 								"archiIdEvenementGroupeAdresse" => $info ['idEvenementGroupeAdresse'] 
 						) );
 						
-						
 						$addressUrl=$arrayUrl['urlDetailHref'];
 						$urlDetailOnClick=$arrayUrl['urlDetailOnClick'];
-						
 					}
 					
 					// Event title
 					$titreEvenements = implode ( " - ", $info ['titresEvenements'] ); // Getting all the events links on one line
 				
-					
 					$modeAffichage=$this->variablesGet['modeAffichage'];
 					
 				if($modeAffichage == 'calqueImage' || $modeAffichage =='calqueImageChampsMultiples' 

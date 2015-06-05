@@ -814,8 +814,16 @@ if (isset($_GET['archiAffichage'])) {
             }
             break;
         case 'evenementListe':
-            $a = new archiEvenement();
-            echo $a->afficherListe();
+            $a = new archiAdresse();
+            $e = new archiEvenement();
+            if(isset($_GET['selection']) && $_GET['selection']=="personne"){
+            	echo $e->afficherListe();
+            }
+            else{
+            	echo $a->aliasAfficherListe();
+            }
+            //echo $e->afficherListe();
+            //echo $a->aliasAfficherListe();
             break;
         case 'ajoutAdresse':
             $a = new archiAdresse();

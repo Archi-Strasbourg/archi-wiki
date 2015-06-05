@@ -2237,6 +2237,20 @@ Page d'accueil
 	
 }
 
+.addrListImageWrapper{
+	height: 130px;
+	width: 130px;
+	overflow: hidden;
+	float: left;
+	margin-right: 20px;
+}
+.addrListImageWrapper img{
+	min-width: 130px;
+	min-height: 130px;
+	height: 130px;
+}
+
+
 .miniatureWrapper a , .miniatureWrapper a:hover{
 	color: white;
 }
@@ -2507,6 +2521,10 @@ del{
 
 .adresseLastModif .lienVille {
 	font-size: 11px;
+}
+
+.adresseLastModif{
+	overflow: hidden;	
 }
 
 .formComment {
