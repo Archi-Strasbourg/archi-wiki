@@ -5,6 +5,7 @@
 CREATE TABLE recherche AS 
   (
         SELECT distinct ee.idEvenement as idEvenementGA ,
+        		ae.idAdresse,
                 r.nom as nomRue,
                 sq.nom as nomSousQuartier,
                 q.nom as nomQuartier,

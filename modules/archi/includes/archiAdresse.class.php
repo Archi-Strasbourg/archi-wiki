@@ -14224,7 +14224,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 	 * @param unknown $idList
 	 */
 	private function getAddressesInfoFromIdHA($idList =array() , $optionsPagination = array()){
-		//debug($idList);
 		$addressesInformations = array();
 		if(!empty($idList)){
 			$i=0;
@@ -14241,8 +14240,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		
     				FROM historiqueAdresse ha
 					LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
-    				WHERE ha.idHistoriqueAdresse =" . $id ['idHistoriqueAdresse'] . "
-    				AND ae.idEvenement = " . $id ['idEvenementGroupeAdresse'] . "
+    				WHERE ha.idAdresse =" . $id ['idAdresse'] . "
+    				or ae.idEvenement = " . $id ['idEvenementGroupeAdresse'] . "
     				GROUP BY ha.idHistoriqueAdresse
 							";
 					$res = $this->connexionBdd->requete ( $req );
@@ -14282,7 +14281,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			 */
 			//Processing all the adresses get from the request : getting address title and link to the events linked
 						
-			
 			//while($fetch = mysql_fetch_assoc($res)){
 			foreach ($arrayAdresse as $fetch){
 				$evenement = new archiEvenement();
@@ -14299,7 +14297,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 						AND evt2.idEvenement = evt.idEvenementRecuperationTitre
 						";
 					$resTitre = $this->connexionBdd->requete($titreRequest);
-					$arrayTitre = mysql_fetch_assoc($resTitre);
+					//$arrayTitre = mysql_fetch_assoc($resTitre);
 					if(!isset($arrayTitre['titre']) || $arrayTitre['titre'] == '' || empty($arrayTitre['titre'])){
 						$requeteAutreTitre ="
 							SELECT evt.titre

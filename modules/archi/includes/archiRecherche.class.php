@@ -2286,7 +2286,7 @@ class archiRecherche extends config {
 			$requestAdresse = "
 			
 			
-				SELECT idHistoriqueAdresse, idEvenementGA,null as idPersonne,
+				SELECT idHistoriqueAdresse, idEvenementGA,null as idPersonne, idAdresse,
 				(
 				10000000000000000* (MATCH (concat3) AGAINST ('\"".$params['motcle']."\"' IN BOOLEAN MODE)) +
 				1000000000000000* (MATCH (concat3) AGAINST ('".$motCleEscaped."' IN BOOLEAN MODE)) +
@@ -2326,7 +2326,7 @@ class archiRecherche extends config {
 				1 * (MATCH (description) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE))
 		
 				) as relevance
-				FROM recherche "
+				FROM rechercheTest "
 				.$sqlWhere.
 				"";
 
@@ -2336,6 +2336,7 @@ class archiRecherche extends config {
 					null as idHistoriqueAdresse,
 					ep.idEvenement as idEvenementGA,
 					p.idPersonne,
+					null as idAdresse,
 					10000000000000000 as relevance 
 					FROM _personneEvenement ep
 					LEFT JOIN personne p on p.idPersonne = ep.idPersonne
@@ -2372,7 +2373,7 @@ class archiRecherche extends config {
 			$request = "
 				SELECT * from(
 				SELECT idHistoriqueAdresse, idEvenementGA, null as idPersonne,  $relevance
-				FROM recherche "
+				FROM rechercheTest "
 				.$sqlWhere.
 				" 
 						
@@ -2455,7 +2456,7 @@ class archiRecherche extends config {
 				1 * (MATCH (description) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE))
 		
 				) as relevance
-				FROM recherche "
+				FROM rechercheTest "
 				.$sqlWhere.
 				"
 				ORDER BY relevance DESC
@@ -2474,7 +2475,8 @@ class archiRecherche extends config {
 			$idHistoriqueAdresse[] = array(
 					'idHistoriqueAdresse'=>$fetch['idHistoriqueAdresse'],
 					'idEvenementGroupeAdresse'=>$fetch['idEvenementGA'],
-					'idPersonne'=>$fetch['idPersonne']
+					'idPersonne'=>$fetch['idPersonne'],
+					'idAdresse'=>$fetch['idAdresse']
 			);
 		}
 		return array('idHistoriqueAdresse'=>$idHistoriqueAdresse,'nbResult'=>$nbResult);
