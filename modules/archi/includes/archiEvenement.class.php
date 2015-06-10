@@ -2375,10 +2375,11 @@ class archiEvenement extends config
 							{
 								$titreAncre="<span style='color:red;'>".$titreAncre."</span>";
 							}
-							$t->assign_block_vars('noSimple.ancres',array(-
+							$t->assign_block_vars('noSimple.ancres',array(
 									'titre' => $titreAncre,
 									'url'=> $this->creerUrl('selectTitreAdresse','adresseDetail',array('archiIdAdresse'=>$idAdresse,'idEvenementTitreSelection'=>$value['idEvenementAssocie'],'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse))
 							));
+							debug(array($titreAncre ,$this->creerUrl('selectTitreAdresse','adresseDetail',array('archiIdAdresse'=>$idAdresse,'idEvenementTitreSelection'=>$value['idEvenementAssocie'],'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse))));
 
 						}
 						else
