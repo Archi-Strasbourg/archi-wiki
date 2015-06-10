@@ -2375,7 +2375,7 @@ class archiEvenement extends config
 							{
 								$titreAncre="<span style='color:red;'>".$titreAncre."</span>";
 							}
-							$t->assign_block_vars('noSimple.ancres',array(
+							$t->assign_block_vars('noSimple.ancres',array(-
 									'titre' => $titreAncre,
 									'url'=> $this->creerUrl('selectTitreAdresse','adresseDetail',array('archiIdAdresse'=>$idAdresse,'idEvenementTitreSelection'=>$value['idEvenementAssocie'],'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse))
 							));
@@ -2784,7 +2784,6 @@ class archiEvenement extends config
 			//debug("Modifier la requete et les param de la fonction : utiliser _adresseEvenement et l'idAdresse pour trouver touts les evenements liés");
 			//Modifier la requete et les param de la fonction : utiliser _adresseEvenement et l'idAdresse pour trouver touts les evenements liés
 			$req = "update evenements set idEvenementRecuperationTitre=".$this->variablesGet['idEvenementTitreSelection']." WHERE idEvenement=$idEvenementGroupeAdresse";
-				
 			$res = $this->connexionBdd->requete($req);
 			header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse), false, false));
 		}
@@ -2809,7 +2808,7 @@ class archiEvenement extends config
 			$req = "SELECT idEvenementRecuperationTitre 
 					FROM evenements e
 					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie =e.idEvenement   
-					WHERE ee.idEvenement=".$params['idEvenementGroupeAdresse'];
+					WHERE e.idEvenement=".$params['idEvenementGroupeAdresse'];
 			$res = $this->connexionBdd->requete($req);
 			$fetch = mysql_fetch_assoc($res);
 
@@ -6403,14 +6402,11 @@ class archiEvenement extends config
 		// si le groupe d'adresse est precisé dans l'url , on ne va afficher que celui ci
 		if(isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!='')
 		{
+			debug("func call");
 			$retourEvenement = $evenement->afficher($this->variablesGet['archiIdEvenementGroupeAdresse'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 			$html.=$retourEvenement['html'];
-			
-			
-			//$contenu = new ArchiContenu();
 			$html.=	$this->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields());
 			$html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
-			//$html.= $this->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
 		}
 		elseif($idEvenementGroupeAdresse!='' && $idEvenementGroupeAdresse !='0')
 		{
@@ -6459,7 +6455,6 @@ class archiEvenement extends config
 					while($fetch = mysql_fetch_assoc($res))
 					{
 						$retourEvenement = $evenement->afficher($fetch['idEvenementGroupeAdresse'],'',null,array(),array()); // cette fonction va afficher les evenements liés au groupe d'adresse
-						//'rechercheAdresseCalqueObject'=>$c
 						$html.=$retourEvenement['html'];
 					}
 				}

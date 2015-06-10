@@ -2776,7 +2776,6 @@ class archiAdresse extends ArchiContenu
 						group by ha.idAdresse, ha.idHistoriqueAdresse
 						having ha.idHistoriqueAdresse = max(hab.idHistoriqueAdresse)
 						";
-
 		$res=$this->connexionBdd->requete($req);
 		return mysql_fetch_assoc($res);
 	}
@@ -5828,11 +5827,7 @@ class archiAdresse extends ArchiContenu
 					break;
 
 			}
-
-
-
 		}
-
 
 		ob_start();
 		$t->pparse('listeVille');
@@ -6201,8 +6196,6 @@ class archiAdresse extends ArchiContenu
 
 		FROM historiqueAdresse ha2, historiqueAdresse ha1
 
-
-
 		RIGHT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
 		RIGHT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
 		RIGHT JOIN evenements he1 ON he1.idEvenement = ee.idEvenementAssocie
@@ -6213,8 +6206,6 @@ class archiAdresse extends ArchiContenu
 		LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' , ha1.idQuartier , sq.idQuartier )
 		LEFT JOIN ville v        ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' , ha1.idVille , q.idVille )
 		LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' , ha1.idPays , v.idPays )
-
-		 
 		LEFT JOIN _evenementPersonne ep ON ep.idEvenement = he1.idEvenement
 		LEFT JOIN personne pers ON pers.idPersonne = ep.idPersonne
 		LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
@@ -6226,7 +6217,6 @@ class archiAdresse extends ArchiContenu
 		GROUP BY ha1.idAdresse,  he1.idEvenement, ha1.idHistoriqueAdresse
 		HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
 		";
-
 
 		$result = $this->connexionBdd->requete($sqlCount);
 
@@ -6559,6 +6549,7 @@ class archiAdresse extends ArchiContenu
 			// ***************************************************************************************************************************************
 			$requeteAdresse = $this->connexionBdd->requete($sql);
 
+			
 			// dans le cas de la popup on ne veut pas afficher le detail d'une adresse
 			// ceci arrive quand le resultat de la recherche ne renvoit qu'un resultat ,  par defaut on va sur l'evenement,  sauf pour les cas suivant:
 			switch ($modeAffichage) {
@@ -12576,7 +12567,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 AND v.idVille = '".$idVilleAdresseCourante."'
                 GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse,ee.idEvenement
                 HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) AND count(ee.idEvenement)>0
-                ORDER BY ((acos(sin(".$arrayCoordonnees['latitude']."*PI()/180) * sin(ha1.latitude*PI()/180) + cos(".$arrayCoordonnees['latitude']."*PI()/180) * cos(ha1.latitude*PI()/180) * cos((".$arrayCoordonnees['longitude']." - ha1.longitude)*PI()/180))/ pi() * 180.0)* 60 * 1.1515 * 1.609344)*1000 ASC
+                ORDER BY distance ASC
                 LIMIT 1
             ";
             $resAdresseProche = $this->connexionBdd->requete($reqAdresseProche);
@@ -13988,7 +13979,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				
 		}
 		else{
-			
+			$starttime = microtime(true);
 			$optionsPagination=array(
 					'nbResult' => 0,
 					'nbPages' => 0,
@@ -14008,6 +13999,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$optionsPagination['currentPage']=0;
 			}
 			$addressesInfromations = $this->getAddressesInfoFromIdHA($idList,$optionsPagination);
+
 			if($nbResult > 1){
 				$optionsPagination['nbResult']  = $nbResult;
 				$nbReponses = $nbResult ;
@@ -14027,21 +14019,18 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				}
 				
 				$url = array();
-				
 				//Call link generation
 				$url = $this->generatePaginationLinks($optionsPagination);
-				
 				$nbReponses.=" réponses";
 			}
 			else{
-				$nbReponses = $nbResult ." résponse";
+				$nbReponses = $nbResult ." réponse";
 			}
 			$t->assign_vars(array(
 					'nbReponses' => $nbReponses,
 					'titre' => 'Résultats'					
 			));
 
-			
 			// Template filling
 			$paramsUrlDesc = $this->variablesGet;
 			$paramsUrlAsc = $this->variablesGet;
@@ -14061,6 +14050,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			//Generating next/previous pagination link
 			$siblingIndex = $this->getNextPreviousPages($optionsPagination['currentPage'] , $optionsPagination['nbPages']);
 			$indexToDisplay = $this->getPaginationIndex($optionsPagination);
+
 			foreach ($indexToDisplay as $indexPage){
 				$t->assign_block_vars(
 						'nav',
@@ -14119,6 +14109,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				        )
 				)
 			 */
+			
 			foreach ($addressesInfromations as $info){
 				$titreEvenements="";
 				$illustration = $this->getUrlImageFromAdresse(
@@ -14132,7 +14123,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				//Processing name of the address
 				$nom = ucfirst($info['nom']);
 				$fulladdress =  ucfirst($this->getIntituleAdresseFrom($info['idEvenementGroupeAdresse'],$type='idEvenementGroupeAdresse'));
-				
 				$titre = $info['titre'];
 				
 				
@@ -14205,7 +14195,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 						)
 				);
 				
-			}//End foreach			
+			}//End foreach		
 		}//End else (regular display w/ errors)
 		
 		
@@ -14241,7 +14231,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     				FROM historiqueAdresse ha
 					LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
     				WHERE ha.idAdresse =" . $id ['idAdresse'] . "
-    				or ae.idEvenement = " . $id ['idEvenementGroupeAdresse'] . "
+    				and ae.idEvenement = " . $id ['idEvenementGroupeAdresse'] . "
     				GROUP BY ha.idHistoriqueAdresse
 							";
 					$res = $this->connexionBdd->requete ( $req );
@@ -14281,7 +14271,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			 */
 			//Processing all the adresses get from the request : getting address title and link to the events linked
 						
-			//while($fetch = mysql_fetch_assoc($res)){
 			foreach ($arrayAdresse as $fetch){
 				$evenement = new archiEvenement();
 				$idTitre = $evenement->getIdEvenementTitre($fetch);

@@ -2326,7 +2326,7 @@ class archiRecherche extends config {
 				1 * (MATCH (description) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE))
 		
 				) as relevance
-				FROM rechercheTest "
+				FROM recherche "
 				.$sqlWhere.
 				"";
 
@@ -2373,7 +2373,7 @@ class archiRecherche extends config {
 			$request = "
 				SELECT * from(
 				SELECT idHistoriqueAdresse, idEvenementGA, null as idPersonne,  $relevance
-				FROM rechercheTest "
+				FROM recherche "
 				.$sqlWhere.
 				" 
 						
@@ -2456,21 +2456,34 @@ class archiRecherche extends config {
 				1 * (MATCH (description) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE))
 		
 				) as relevance
-				FROM rechercheTest "
+				FROM recherche "
 				.$sqlWhere.
 				"
 				ORDER BY relevance DESC
 				LIMIT 0,10
 				";
 		
-		//debug($requestTestMatch);
+		$requestCount="
+			SELECT count(*) as nbResult
+			
+			FROM (
+			    
+			    SELECT *
+				FROM recherche
+				".$sqlWhere." 
+			    GROUP BY idEvenementGA
+			    ) as tmp
+				";
 		
-		$requestCount = $request;
 		$request.=" ".$limit." ;";
 		$idHistoriqueAdresse  = array();
 		$resCount = $this->connexionBdd->requete($requestCount);
 		$res = $this->connexionBdd->requete($request);
-		$nbResult = mysql_num_rows($resCount);
+		
+		$arrayNbResult = mysql_fetch_assoc($resCount);
+		$nbResult=$arrayNbResult['nbResult'];
+
+		
 		while($fetch = mysql_fetch_assoc($res)){
 			$idHistoriqueAdresse[] = array(
 					'idHistoriqueAdresse'=>$fetch['idHistoriqueAdresse'],
