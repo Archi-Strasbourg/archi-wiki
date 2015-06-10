@@ -2379,7 +2379,6 @@ class archiEvenement extends config
 									'titre' => $titreAncre,
 									'url'=> $this->creerUrl('selectTitreAdresse','adresseDetail',array('archiIdAdresse'=>$idAdresse,'idEvenementTitreSelection'=>$value['idEvenementAssocie'],'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse))
 							));
-							debug(array($titreAncre ,$this->creerUrl('selectTitreAdresse','adresseDetail',array('archiIdAdresse'=>$idAdresse,'idEvenementTitreSelection'=>$value['idEvenementAssocie'],'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse))));
 
 						}
 						else
