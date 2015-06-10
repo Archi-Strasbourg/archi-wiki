@@ -1922,6 +1922,7 @@ hr.classic{
 #menu-button{
 	height: 100%;
 	width: 120px;
+	cursor: pointer;
 }
 
 #menu-button:active,#menu-button:focus,#menu-button:active {
