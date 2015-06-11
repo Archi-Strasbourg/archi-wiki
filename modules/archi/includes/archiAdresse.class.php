@@ -6219,7 +6219,6 @@ class archiAdresse extends ArchiContenu
 		";
 
 		$result = $this->connexionBdd->requete($sqlCount);
-
 		$nbReponses = mysql_num_rows($result);
 		$nbResult=$nbReponses;
 
@@ -6541,7 +6540,7 @@ class archiAdresse extends ArchiContenu
 			DESC,  CAST(ha1.numero as signed) ASC";
 			if (!isset($params['sqlNoLimit']) || $params['sqlNoLimit']==false) {
 				$sql.= " LIMIT ".$sqlLimit."
-						";////ORDER BY  ".pia_substr($sqlOrderByPoidsMotCle, 0, -1)."
+						";
 			}
 
 			// ***************************************************************************************************************************************
@@ -6549,7 +6548,6 @@ class archiAdresse extends ArchiContenu
 			// ***************************************************************************************************************************************
 			$requeteAdresse = $this->connexionBdd->requete($sql);
 
-			
 			// dans le cas de la popup on ne veut pas afficher le detail d'une adresse
 			// ceci arrive quand le resultat de la recherche ne renvoit qu'un resultat ,  par defaut on va sur l'evenement,  sauf pour les cas suivant:
 			switch ($modeAffichage) {
@@ -6584,6 +6582,7 @@ class archiAdresse extends ArchiContenu
 				
 				if (mysql_num_rows($requeteAdresse)>0) {
 					while ($fetch=mysql_fetch_assoc($requeteAdresse)) {
+						
 						
 						// on recupere un idAdresse,  idQuartier ,  idRue etc appartenant au groupe d'adresse pour l'urlRewriting
 
@@ -6839,7 +6838,6 @@ class archiAdresse extends ArchiContenu
 						$illustration = $this->getUrlImageFromAdresse($fetch['idAdresse'], 'mini', array('idEvenementGroupeAdresse'=>$fetch['idEvenementGA']));
 
 
-
 						// si on est en mode d'affichage du detail d'une adresse,  on affiche le titre de l'evenement avant la liste des adresses concernées par le groupe d'adresse
 						$titreAdresse = "";
 						$styleAdresse = "";
@@ -6980,7 +6978,6 @@ class archiAdresse extends ArchiContenu
 										'urlDetailOnClick'     => $urlDetailOnClick,
 										'urlImageIllustration'    => 'resizeImage.php?id='.$illustration['idHistoriqueImage'],
 										'alt'=>''
-										//'alt'=>str_replace("'", " ", $nomAdresseNoStyle)
 								)
 						);
 
@@ -12363,16 +12360,16 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         if($arrayImage2['trouve'])
         {
             $isPhotoCentrale = true;
-            list($w,$h) = getimagesize($this->getCheminPhysique()."images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg");
+           // list($w,$h) = getimagesize($this->getCheminPhysique()."images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg");
             //TODO : Change back URL for production
-            //list($w,$h) = getimagesize("images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg");
+            list($w,$h) = getimagesize("images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg");
             $newWGrand = round(75*$w/100);
             $newHGrand = round(75*$h/100);
             
             $newWPetit = round(35*$w/100);
             $newHPetit = round(35*$h/100);
             
-            $t->assign_vars(array('image2'=>"<div id='divImagePetit2' style='display:none;'><img src='".$arrayImage2['url']."' alt='' width=$newWPetit height=$newHPetit id='image2Petit'></div><div id='divImageGrand2' style='display:block;'><img src='resizeImage.php?id=".$arrayImage2['idHistoriqueImage']."' alt=''  id='image2Grand' itemprop='image'></div>"));
+            $t->assign_vars(array('image2'=>"<div id='divImagePetit2' style='display:none;'><img src='".$arrayImage2['url']."' alt='' width=$newWPetit height=$newHPetit id='image2Petit'></div><div id='divImageGrand2' style='display:block;'><img src='images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg' alt=''  id='image2Grand' itemprop='image'></div>"));
             
             
 
@@ -12824,7 +12821,16 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     
                 $newWPetit = round(35*$w/100);
                 $newHPetit = round(35*$h/100);
-                $image = "<div id='divImagePetit".$numeroImage."' style='display:block;'><img src='".$arrayImage['url']."'  width=$newWPetit height=$newHPetit id='image".$numeroImage."Petit' alt=''></div><div id='divImageGrand".$numeroImage."' style='display:none;'><a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$params['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'><img src='resizeImage.php?id=".$arrayImage['idHistoriqueImage']."'   height=$newHGrand alt='' id='image".$numeroImage."Grand'></a></div>";
+                
+                $image = "
+                		<div id='divImagePetit".$numeroImage."' style='display:block;'>
+                			<img src='".$arrayImage['url']."'  width=$newWPetit height=$newHPetit id='image".$numeroImage."Petit' alt=''>
+                		</div>
+                		<div id='divImageGrand".$numeroImage."' style='display:none;'>
+                			<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$params['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'>
+                				<img src='".$arrayImage['url']."'   height=$newHGrand alt='' id='image".$numeroImage."Grand'>
+                			</a>
+                		</div>";
             }
             else
             {
