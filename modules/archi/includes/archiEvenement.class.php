@@ -759,6 +759,7 @@ class archiEvenement extends config
 		}
 		else if (isset($this->variablesPost['evenementSimple'])) // evenementSimple correspond au nom du bouton submit du formulaire, on enregistre les modifications
 		{
+			debug($this->variablesPost);
 			// modification de l'evnement
 			$afficheFormulaire = true;
 
@@ -861,6 +862,7 @@ class archiEvenement extends config
 							idSource = '".$idSource."',
 							idUtilisateur = '".$idUtilisateur."',
 							idTypeStructure = '".$idTypeStructure."',
+							idTypeEvenement = '".$idTypeEvenement."',
 							dateCreationEvenement = NOW(),
 							nbEtages = '".$nbEtages."', 
 							ISMH ='".$ISMH."', 
@@ -885,6 +887,8 @@ class archiEvenement extends config
 					$fetchIdHistoEvt = mysql_fetch_assoc($resNouvelIdHistoEvt);
 					$idHistoriqueEvenementNouveau = $fetchIdHistoEvt['idHistoriqueEvenement'];
 
+					
+					debug(array($sqlHistoriqueEvenement,$sqlHistoriqueEvenement,$requeteNouvelIdHistoriqueEvenement));
 
 					// recuperation de l'idEvenementGroupeAdresse
 					$idEvGA = $this->getIdEvenementGroupeAdresseFromIdEvenement($idEvenement);
@@ -1088,6 +1092,7 @@ class archiEvenement extends config
 
 			$resAdresse = $this->connexionBdd->requete($reqAdresse);
 			$fetchAdresse = mysql_fetch_assoc($resAdresse);
+			
 			if ($idPerson=archiPersonne::isPerson($idEvenementGroupeAdresse)) {
 				header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$idPerson), false, false));
 			}
