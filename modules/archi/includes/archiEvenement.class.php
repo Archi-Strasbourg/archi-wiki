@@ -759,7 +759,6 @@ class archiEvenement extends config
 		}
 		else if (isset($this->variablesPost['evenementSimple'])) // evenementSimple correspond au nom du bouton submit du formulaire, on enregistre les modifications
 		{
-			debug($this->variablesPost);
 			// modification de l'evnement
 			$afficheFormulaire = true;
 
@@ -774,7 +773,6 @@ class archiEvenement extends config
 				$nouvelleLiaison      = false;
 
 				$tabAncien= $this->recupTableauTravail($id);//$tabForm['idEvenement']['value']
-				debug($idHistoriqueEvenementNouveau);
 
 				// ****************************************************************************************
 				// ici on va chercher s'il existe des differences entre l'enregistrement de l'evenement précédent et les nouvelles données,
@@ -809,7 +807,6 @@ class archiEvenement extends config
 						}
 					}
 				}
-				debug($idHistoriqueEvenementNouveau);
 				if ($nouvelEnregistrement == true)
 				{
 					//********************************************
@@ -899,7 +896,6 @@ class archiEvenement extends config
 				/*if ($nouvelleLiaison == true)
 				 {*/
 				$idEvenement = $id;//$tabForm['idEvenement']['value'];
-				debug($idHistoriqueEvenementNouveau);
 				// ********************************************************************************************************
 				// GESTION DES COURANTS ARCHITECTURAUX
 				if(is_array($tabForm['courant']['value']) && count($tabForm['courant']['value'])>0)
