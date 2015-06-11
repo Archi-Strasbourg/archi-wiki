@@ -2251,6 +2251,12 @@ Page d'accueil
 	height: 130px;
 }
 
+#image2Grand{
+	max-height: 130px;
+	max-width: 130px;
+	height: 130px;
+}
+
 
 .miniatureWrapper a , .miniatureWrapper a:hover{
 	color: white;
