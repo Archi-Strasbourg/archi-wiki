@@ -11060,20 +11060,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $ajax = new ajaxObject();
             $html.=$ajax->getAjaxFunctions();
         
-        
-        
             $longitude = $this->variablesGet['longitude'];
             $latitude = $this->variablesGet['latitude'];
             
-
-            
             $listeCoords = array();
-            
             
             // si archiIdAdresse est précisé , on remplace les coordonnées par celle de l'adresse ( car celle envoyée sont celle de la premiere du groupe d'adresse)
             $isCoordonneesAdresseCouranteValide = true;
             $isCoordonneesGroupeAdresseOK = false;
-            
             
             if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='' && isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!='')
             {
@@ -11087,10 +11081,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $latitude = $fetchCoordonneesGroupeAdresse['latitudeGroupeAdresse'];
                     $isCoordonneesGroupeAdresseOK = true;
                 }
-            
             }
-            
-            
             
             if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='' && $this->variablesGet['archiIdAdresse']!='0' && !$isCoordonneesGroupeAdresseOK)
             {
@@ -11118,7 +11109,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $isCoordonneesAdresseCouranteValide = false;
                     }
                 }
-                
             }
             
             $affichageCoordonneesVille = false;
@@ -11139,9 +11129,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $latitude = $fetchCoordonneesVille['latitude'];
                     $affichageCoordonneesVille = true;
                 }
-                
             }
-            
 
             // rayon en metres
             if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']=='popupDetailAdresse')
@@ -11183,8 +11171,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 }
             }
             
-            
-            
             if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']=='popupDetailAdresse')
             {
                 // affichage pour la popup sur le detail d'une adresse
@@ -11209,8 +11195,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $gm = new googleMap(array('googleMapKey'=>$this->googleMapKey,'width'=>275,'height'=>275,'zoom'=>16,'noDisplayZoomSelectionSquare'=>true,'noDisplayZoomSlider'=>false,'zoomType'=>'mini','noDisplayEchelle'=>true,'noDisplayMapTypeButtons'=>true,'centerLong'=>$longitude,'centerLat'=>$latitude,'mapType'=>'G_SATELLITE_MAP'));//,'divStyle'=>'margin-top:-17px;'
                 }
             }
-            
-            
             $html.=$gm->getJsFunctions();
             //$html.="<script  >".$gm->setFunctionAddPointsCallableFromChild()."</script>";
             $html.=$gm->getMap(array('listeCoordonnees'=>$listeCoords,'urlImageIcon'=>$this->getUrlImage()."pointGM.png",'pathImageIcon'=>$this->getCheminPhysique()."images/pointGM.png"));
@@ -11227,8 +11211,6 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 
                 //var iconMarkerHome = new GIcon(iconHome);
                 ";
-            
-            
             
             if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']=='popupDetailAdresse' && $isAuthorizedToDrag)
             {
@@ -11267,18 +11249,11 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     //$html.="GEvent.addListener(map,'dragend',function(){document.getElementById('iFrameMajCenter').src='".$this->creerUrl('','majGoogleMapNewCenter',array('noHeaderNoFooter'=>1,'latitudeHome'=>$latitude,'longitudeHome'=>$longitude))."&longitudeCenter='+map.getCenter().lng()+'&latitudeCenter='+map.getCenter().lat();});";
             }           
                 
-
-            
             //$html.=$gm->setFunctionAddPointsCallableFromChild(array());
             
             $html.="</script>";
             //$html.="<div id='jsMiseAJourCenter' ><iframe id='iFrameMajCenter' src=''></iframe></div>";//style='position:absolute;left:0px;top:0px;'
-            
-            
-            
         }
-        
-        
         
         return $html;
     
@@ -11303,21 +11278,19 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $rayon = $params['rayon'];
             
             $reqListeCoords = "
+
+                        select * from (
                         SELECT ((acos(sin($latitude*PI()/180) * sin(ha1.latitude*PI()/180) + cos($latitude*PI()/180) * cos(ha1.latitude*PI()/180) * cos(($longitude - ha1.longitude)*PI()/180))/ pi() * 180.0)* 60 * 1.1515 * 1.609344) as distanceFromPoint,ha1.longitude as longitude,ha1.latitude as latitude,ha1.idAdresse as idAdresse
                         FROM historiqueAdresse ha1,historiqueAdresse ha2
-                        WHERE 
-
-                            ha1.latitude<>''    
-                            AND 
-                            ha1.longitude<>''
-                            AND 
-                            ((acos(sin($latitude*PI()/180) * sin(ha1.latitude*PI()/180) + cos($latitude*PI()/180) * cos(ha1.latitude*PI()/180) * cos(($longitude - ha1.longitude)*PI()/180))/ pi() * 180.0)* 60 * 1.1515 * 1.609344)*1000<$rayon
-
-
+                        WHERE ha1.latitude<>''    
+                        AND ha1.longitude<>''
                         AND ha2.idAdresse = ha1.idAdresse
                         
                         GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse
-                        HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
+                        HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
+
+                        ) as tmp
+                        WHERE tmp.distanceFromPoint*1000<$rayon
                 ";
                 
             $resListeCoords = $this->connexionBdd->requete($reqListeCoords);
@@ -11340,6 +11313,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             // on fait la requete pour une recherche sur la table _adresseEvenement
             $reqListeCoordsGA = "
             
+            select * from (
                         SELECT ((acos(sin($latitude*PI()/180) * sin(ae.latitudeGroupeAdresse*PI()/180) + cos($latitude*PI()/180) * cos(ae.latitudeGroupeAdresse*PI()/180) * cos(($longitude - ae.longitudeGroupeAdresse)*PI()/180))/ pi() * 180.0)* 60 * 1.1515 * 1.609344) as distanceFromPoint,ae.longitudeGroupeAdresse as longitude,ae.latitudeGroupeAdresse as latitude,ae.idAdresse as idAdresse,ae.idEvenement as idEvenementGroupeAdresse
                         FROM _adresseEvenement ae
                         WHERE 
@@ -11352,8 +11326,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             AND 
                             ae.longitudeGroupeAdresse<>'0'
                          $sqlCritere
-                        AND
-                        ((acos(sin($latitude*PI()/180) * sin(ae.latitudeGroupeAdresse*PI()/180) + cos($latitude*PI()/180) * cos(ae.latitudeGroupeAdresse*PI()/180) * cos(($longitude - ae.longitudeGroupeAdresse)*PI()/180))/ pi() * 180.0)* 60 * 1.1515 * 1.609344)*1000<$rayon
+                                                ) as tmp
+                        WHERE tmp.distanceFromPoint*1000<$rayon 
             
             ";
             
