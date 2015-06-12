@@ -6408,7 +6408,6 @@ class archiEvenement extends config
 		// si le groupe d'adresse est precisé dans l'url , on ne va afficher que celui ci
 		if(isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!='')
 		{
-			debug("func call");
 			$retourEvenement = $evenement->afficher($this->variablesGet['archiIdEvenementGroupeAdresse'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 			$html.=$retourEvenement['html'];
 			$html.=	$this->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields());
