@@ -6167,6 +6167,7 @@ class archiAdresse extends ArchiContenu
 		// bidouille pour que l'on affiche encore toutes les adresses en mode detail dans l'encars qui affiche la liste des adresses,  ce qui va faire que la requete ne renvoie des groupes d'adresses en double
 		$critereSelectionIdAdressesModeAffichageListeAdressesCount = "";
 		$critereSelectionIdAdressesModeAffichageListeAdressesRequete = "";
+		
 		if ($modeAffichage == 'listeDesAdressesDuGroupeAdressesSurDetailAdresse') {
 			$critereSelectionIdAdressesModeAffichageListeAdressesCount = ",  ha1.idAdresse";
 			$critereSelectionIdAdressesModeAffichageListeAdressesRequete = ",  ha1.idAdresse as idAdresse,  ha1.numero,  ha1.idQuartier,  ha1.idVille, ind.nom,
@@ -6542,11 +6543,13 @@ class archiAdresse extends ArchiContenu
 				$sql.= " LIMIT ".$sqlLimit."
 						";
 			}
-
 			// ***************************************************************************************************************************************
 			// affichage des resultats de la recherche
 			// ***************************************************************************************************************************************
-			$requeteAdresse = $this->connexionBdd->requete($sql);
+			
+
+			if($modeAffichage!="listeDesAdressesDuGroupeAdressesSurDetailAdresse")
+				$requeteAdresse = $this->connexionBdd->requete($sql);
 
 			// dans le cas de la popup on ne veut pas afficher le detail d'une adresse
 			// ceci arrive quand le resultat de la recherche ne renvoit qu'un resultat ,  par defaut on va sur l'evenement,  sauf pour les cas suivant:
@@ -6567,7 +6570,6 @@ class archiAdresse extends ArchiContenu
 			if (isset($this->variablesGet['archiAffichage']) && $this->variablesGet['archiAffichage']=='listeAdressesFromSource') {
 				$criteres['desactivateRedirection']=true;
 			}
-			
 
 			// si on utilise le template par defaut ,  c'est qu'on est dans un affichage de resultat de recherche ,  sinon c'est un affichage de detail d'adresse
 			if (!isset($criteres['useTemplateFile']) && $nbReponses==1 && !isset($criteres['desactivateRedirection'])) {
@@ -6576,17 +6578,13 @@ class archiAdresse extends ArchiContenu
 				// a voir pour ne pas utiliser le javascript et afficher directement avec la fonction afficherDetail
 
 				$fetchIdAdresse = $this->getFetchOneAdresseElementsFromGroupeAdresse($fetch['idEvenementGA']);
-				
 				header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$fetchIdAdresse['idAdresse'], 'archiIdEvenementGroupeAdresse'=>$fetch['idEvenementGA']), false, false));
 			} else {
 				
 				if (mysql_num_rows($requeteAdresse)>0) {
 					while ($fetch=mysql_fetch_assoc($requeteAdresse)) {
 						
-						
 						// on recupere un idAdresse,  idQuartier ,  idRue etc appartenant au groupe d'adresse pour l'urlRewriting
-
-
 						/*
 						 * Desactivated for now because we are getting all the necessary fields in the previous request
 						*/
@@ -6843,6 +6841,7 @@ class archiAdresse extends ArchiContenu
 						$styleAdresse = "";
 						if ($modeAffichage=='listeDesAdressesDuGroupeAdressesSurDetailAdresse') {
 							$idAdresse=0;
+							debug("hopppppp");
 							if (isset($criteres['archiIdEvenement'])) {
 								$reqAdresse = "      
 					                SELECT  distinct ae.idAdresse as idAdresse
@@ -6856,7 +6855,6 @@ class archiAdresse extends ArchiContenu
 								$e = new archiEvenement();
 
 								$idEvenementTitreAdresses = $e->getIdEvenementTitre(array("idEvenementGroupeAdresse"=>$criteres['archiIdEvenement']));
-								
 								if($this->variablesGet['archiAffichage']=='modifierEvenement'){
 									$idEvenementTitreAdresses = $this->variablesGet['archiIdEvenement'];
 								}
@@ -6874,6 +6872,7 @@ class archiAdresse extends ArchiContenu
 								$t->assign_vars(array('titreAdresses'=>$titreAdresse."<br>"));
 								if ($idEvenementTitreAdresses!=0 && $titreAdresse!='')
 									$styleAdresse = "font-size:13px;";
+								
 								
 							} elseif (isset($this->variablesGet['archiIdEvenement'])) {
 								$reqAdresse = $this->getIdAdressesFromIdEvenement(array('idEvenement'=>$this->variablesGet['archiIdEvenement']));
@@ -6920,8 +6919,6 @@ class archiAdresse extends ArchiContenu
 									$styleAdresse = "font-size:13px;";
 							}
 						}
-
-
 
 						// a la suite de titresEvenements je rajoutes les images qui concerne la source courante quand on est en mode listeAdressesFromSource
 						if (isset($this->variablesGet['archiAffichage']) && $this->variablesGet['archiAffichage']=='listeAdressesFromSource' && isset($this->variablesGet['source']) && $this->variablesGet['source']!='') {
@@ -6986,6 +6983,7 @@ class archiAdresse extends ArchiContenu
 						$arrayRetour[] = "<a href='".$this->creerUrl('', '', array('archiIdAdresse'=>$fetch['idAdresse'], 'archiAffichage'=>'adresseDetail', 'debut'=>''))."'>".$nomAdresse."</a>";
 						$arrayIdAdressesRetour[] = $fetch['idAdresse'];
 						$arrayIdEvenementsGARetour[] = $fetch['idEvenementGA'];
+						
 						// **********************************************************************************************************************************************
 						// lien vers la liste des adresses relatives a l'adresse courante:
 						// **********************************************************************************************************************************************

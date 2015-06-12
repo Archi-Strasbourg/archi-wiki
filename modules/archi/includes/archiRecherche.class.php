@@ -2372,7 +2372,7 @@ class archiRecherche extends config {
 			}
 			$request = "
 				SELECT * from(
-				SELECT idHistoriqueAdresse, idEvenementGA, null as idPersonne,  $relevance
+				SELECT idHistoriqueAdresse, idEvenementGA, null as idPersonne, idAdresse, $relevance
 				FROM recherche "
 				.$sqlWhere.
 				" 
@@ -2483,7 +2483,6 @@ class archiRecherche extends config {
 		$arrayNbResult = mysql_fetch_assoc($resCount);
 		$nbResult=$arrayNbResult['nbResult'];
 
-		
 		while($fetch = mysql_fetch_assoc($res)){
 			$idHistoriqueAdresse[] = array(
 					'idHistoriqueAdresse'=>$fetch['idHistoriqueAdresse'],
