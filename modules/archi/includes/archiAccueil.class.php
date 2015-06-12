@@ -51,27 +51,14 @@ class ArchiAccueil extends config
 		$t = new Template($this->getCheminPhysique().$this->cheminTemplates);
 		$t->set_filenames(array('accueil'=>'accueil.tpl'));
 		$html = '';
-
 		$infos = "";
-		// recherche du nombre d'evenements
-		$reqEvenements = "SELECT DISTINCT idEvenement as nbEvenements FROM evenements;";
-		$resEvenements = $this->connexionBdd->requete($reqEvenements);
-		$infos .= "<b>"._("Nombre d'évènements :")."</b> ".mysql_num_rows($resEvenements);
-
-		// recherche du nombre d'adresses
-		$reqAdresses = "SELECT DISTINCT idAdresse as nbAdresses FROM historiqueAdresse;";
-		$resAdresses = $this->connexionBdd->requete($reqAdresses);
-		$infos .= "&nbsp;&nbsp;&nbsp;<b>"._("Adresses :")."</b> ".mysql_num_rows($resAdresses);
-
-		// recherche du nombre de photos
-		$reqPhotos = "SELECT DISTINCT idImage as nbImages FROM historiqueImage;";
-		$resPhotos = $this->connexionBdd->requete($reqPhotos);
-		$infos .= "&nbsp;&nbsp;&nbsp;<b>"._("Photos :")."</b> ".mysql_num_rows($resPhotos);
 
 		$calque = new calqueObject();
 		$date = new dateObject();
 		$auth = new archiAuthentification();
 
+		
+		
 		if ($auth->estConnecte()) {
 			$t->assign_block_vars('estConnecte', array());
 		}
@@ -565,7 +552,6 @@ class ArchiAccueil extends config
 							LIMIT 1
 							";
 						$resImagePrincipale = $this->connexionBdd->requete($reqImagePrincipale);
-						//$infoImage = mysql_fetch_assoc($resImagePrincipale);
 						if(mysql_num_rows($reqImagePrincipale)>=1){
 							$infoImage = mysql_fetch_assoc($resImagePrincipale);
 						}
@@ -670,8 +656,6 @@ class ArchiAccueil extends config
 							else{
 								$infoImage=$array_image;
 							}
-							//$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
-							//$urlImage = "images/grand/".$infoImage['dateUpload']."/".$infoImage['idHistoriqueImage'].".jpg";
 
 							if(isset($infoImage['dateUpload']) && isset($infoImage['idHistoriqueImage'])&& $infoImage['idHistoriqueImage'] !='' && $infoImage['dateUpload'] !=''){
 								$urlImage = "images/grand/".$infoImage['dateUpload']."/".$infoImage['idHistoriqueImage'].".jpg";

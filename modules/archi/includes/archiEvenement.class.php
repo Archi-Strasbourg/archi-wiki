@@ -1413,7 +1413,13 @@ class archiEvenement extends config
 		// *************************************************************************************************************************************
 	// le parametre idHistoriqueEvenement n'est plus utilisé
 	public function afficher($idEvenement = null,$modeAffichage='', $idHistoriqueEvenement = null, $paramChampCache=array(),$params=array())
-	{
+	{        	
+		$authentification = new ArchiAuthentification();
+		$estConnecte=$authentification->estConnecte();
+		$estAdmin = $authentification->estAdmin();
+		$estModerateur = $authentification->estModerateur();
+		$userId = $authentification->getIdUtilisateur();
+		 
 		$html = '';
 		$erreurObject = new objetErreur();
 
@@ -1424,7 +1430,6 @@ class archiEvenement extends config
 		$isAffichageSingleEvenement=false;
 		$listeGroupeAdressesAffichees = array(); // liste des groupes d'adresses reellement affichés , donc dans cette liste ne figure pas les groupe d'adresses ou il n'y a pas d'evenements liés
 
-		$authentification = new archiAuthentification();
 		$u = new archiUtilisateur();
 
 		// on renvoi le nom de type de structure ( ceci sert a voir si on affiche aussi le type de structure sur l'evenement suivant du groupe d'adresse (pour eviter les redondances) )
@@ -1496,7 +1501,7 @@ class archiEvenement extends config
 				// si on est en mode de deplacement d'image
 				// ou de selection de titre
 				// on rajoute le formulaire sur la page
-				if($authentification->estConnecte() && ((isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1')||(isset($this->variablesGet['afficheSelectionTitre']) && $this->variablesGet['afficheSelectionTitre']=='1') ))
+				if($estConnecte && ((isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1')||(isset($this->variablesGet['afficheSelectionTitre']) && $this->variablesGet['afficheSelectionTitre']=='1') ))
 				{
 					$html.="<form action='' name='formulaireEvenement' method='POST' enctype='multipart/form-data' id='formulaireEvenement'>
 							<input type='hidden' name='actionFormulaireEvenement' id='actionFormulaireEvenement' value=''>";
@@ -1561,7 +1566,7 @@ class archiEvenement extends config
 		// ***************************
 		$styleColorDeplacementActif="";
 		$afficheSelectionImages=1;
-		if($authentification->estConnecte() && isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1')
+		if($estConnecte && isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1')
 		{
 			$styleColorDeplacementActif="color:red;";
 			$afficheSelectionImages=0;
@@ -1580,7 +1585,7 @@ class archiEvenement extends config
 		// **********************************
 		$styleColorSelectionTitreActif = "";
 		$afficheSelectionTitre = 1;
-		if($authentification->estConnecte() && isset($this->variablesGet['afficheSelectionTitre']) && $this->variablesGet['afficheSelectionTitre']=='1')
+		if($estConnecte && isset($this->variablesGet['afficheSelectionTitre']) && $this->variablesGet['afficheSelectionTitre']=='1')
 		{
 			$styleColorSelectionTitreActif = "color:red;";
 			$afficheSelectionTitre = 0;
@@ -1599,7 +1604,7 @@ class archiEvenement extends config
 		// *******************************************
 		$styleColorSelectionImagePrincipaleActif = "";
 		$afficheSelectionImagePrincipale = 1;
-		if ($authentification->estConnecte() && isset($this->variablesGet['afficheSelectionImagePrincipale']) && $this->variablesGet['afficheSelectionImagePrincipale']=='1') {
+		if ($estConnecte && isset($this->variablesGet['afficheSelectionImagePrincipale']) && $this->variablesGet['afficheSelectionImagePrincipale']=='1') {
 			$styleColorSelectionImagePrincipaleActif = "color:red";
 			$afficheSelectionImagePrincipale = 0;
 		}
@@ -1617,7 +1622,7 @@ class archiEvenement extends config
 		// *******************************************
 		$styleColorPositionnementEvenements = "";
 		$affichePositionnementEvenements = 1;
-		if($authentification->estConnecte() && isset($this->variablesGet['affichePositionnementEvenements']) && $this->variablesGet['affichePositionnementEvenements']=='1')
+		if($estConnecte && isset($this->variablesGet['affichePositionnementEvenements']) && $this->variablesGet['affichePositionnementEvenements']=='1')
 		{
 			$styleColorPositionnementEvenements = "color:red";
 			$affichePositionnementEvenements = 0;
@@ -1673,7 +1678,7 @@ class archiEvenement extends config
 							$t->assign_vars(array("divDisplayMenuAction"=>"table"));
 					}
 
-					if($authentification->estConnecte())
+					if($estConnecte)
 					{
 						$t->assign_block_vars('simple.menuAction',array());
 						if($modeAffichage!='consultationHistoriqueEvenement')
@@ -1693,24 +1698,24 @@ class archiEvenement extends config
 						}
 
 
-						if($u->isAuthorized('evenement_lier_adresses',$authentification->getIdUtilisateur()))
+						if($u->isAuthorized('evenement_lier_adresses',$userId))
 						{
-							if (!archiPersonne::isPerson($idEvenementGroupeAdresse) && ($u->getIdProfil($authentification->getIdUtilisateur())==4 || $u->isModerateurFromVille($authentification->getIdUtilisateur(), $idEvenementGroupeAdresse, 'idEvenementGroupeAdresse')))
+							if (!archiPersonne::isPerson($idEvenementGroupeAdresse) && ($u->getIdProfil($userId)==4 || $u->isModerateurFromVille($userId, $idEvenementGroupeAdresse, 'idEvenementGroupeAdresse')))
 							{
 								$t->assign_block_vars('simple.menuAction.afficheElementMenuLierAdresse', array());
 							}
 						}
 					}
 
-					if($authentification->estAdmin())
+					if($estAdmin)
 					{
 						$t->assign_block_vars('simple.menuAction.isAdmin', array());
 					}
 
-					if($u->isAuthorized('evenement_supprimer',$authentification->getIdUtilisateur())){
+					if($u->isAuthorized('evenement_supprimer',$userId)){
 						$isModerateurFromVilleCourante = false;
 						if($authentification->getIdProfil() == 3) { //moderateur
-							$arrayVillesModerees = $u->getArrayVillesModereesPar($authentification->getIdUtilisateur());
+							$arrayVillesModerees = $u->getArrayVillesModereesPar($userId);
 							$idVilleAdresseCourante = $adresse->getIdVilleFrom($idEvenement, 'idEvenement');
 							if(in_array($idVilleAdresseCourante,$arrayVillesModerees)){
 								$isModerateurFromVilleCourante=true;
@@ -1718,18 +1723,18 @@ class archiEvenement extends config
 						}
 						if($authentification->getIdProfil() == 4 || $isModerateurFromVilleCourante){ // est on administrateur ou moderateur de la ville ?
 							$t->assign_block_vars('simple.menuAction.isAdminOrModerateurFromVille',array());
-							if($authentification->estConnecte() && $authentification->estAdmin() && isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1'){
+							if($estConnecte && $estAdmin && isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1'){
 								$t->assign_block_vars('simple.menuAction.isAdmin.isAffichageSelectionImages',array());
 							}
 						}
 					}
 
-					if(!archiPersonne::isPerson($idEvenementGroupeAdresse) && $u->isAuthorized('evenement_deplacer', $authentification->getIdUtilisateur()))
+					if(!archiPersonne::isPerson($idEvenementGroupeAdresse) && $u->isAuthorized('evenement_deplacer', $userId))
 					{
 						$t->assign_block_vars('simple.menuAction.afficheElementMenuDeplacerEvenement',array());
 					}
 
-					if($authentification->estConnecte() && $authentification->estAdmin() && isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1')
+					if($estConnecte && $estAdmin && isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1')
 					{
 						//$t->assign_block_vars('simple.menuAction.isAdminOrModerateurFromVille',array());
 					}
@@ -1911,14 +1916,14 @@ class archiEvenement extends config
 				// recherche s'il y a un historique sur l'evenement courant ( plusieurs mises à jour)
 				$lienHistoriqueEvenementCourant="";
 				$labelHistorique="";
-				if($authentification->estConnecte() && $this->getNbEvenementsInHistorique(array('idEvenement'=>$idEvenement))>1 && $modeAffichage!='consultationHistoriqueEvenement' && (!isset($params['isLieFromOtherAdresse']) || $params['isLieFromOtherAdresse']!=true))
+				if($estConnecte && $this->getNbEvenementsInHistorique(array('idEvenement'=>$idEvenement))>1 && $modeAffichage!='consultationHistoriqueEvenement' && (!isset($params['isLieFromOtherAdresse']) || $params['isLieFromOtherAdresse']!=true))
 				{
 					$labelHistorique = _("(Consulter l'historique)");
 					$lienHistoriqueEvenementCourant=$this->creerUrl('','consultationHistoriqueEvenement',array('archiIdEvenement'=>$idEvenement));
 				}
 
 				$onClickEvenementDeplacerVersGA="";
-				if($authentification->estConnecte() && $u->isAuthorized('evenement_deplacer',$authentification->getIdUtilisateur()) && $modeAffichage!='consultationHistoriqueEvenement' && isset($params['calquePopupDeplacerEvenement']))
+				if($estConnecte && $u->isAuthorized('evenement_deplacer',$userId) && $modeAffichage!='consultationHistoriqueEvenement' && isset($params['calquePopupDeplacerEvenement']))
 				{
 					$onClickEvenementDeplacerVersGA = "document.getElementById('".$params['calquePopupDeplacerEvenement']->getJSIFrameId()."').src='".$this->creerUrl('','recherche',array('noHeaderNoFooter'=>1,'modeAffichage'=>"popupDeplacerEvenementVersGroupeAdresse","idEvenementADeplacer"=>$res->idEvenement))."';document.getElementById('".$params['calquePopupDeplacerEvenement']->getJSDivId()."').style.display='block';";
 				}
@@ -2079,7 +2084,7 @@ class archiEvenement extends config
 							'idPerson' => $res->idPersonne,
 							'idEvent' => $idEvenement
 					));
-					if($authentification->estConnecte())
+					if($estConnecte)
 					{
 						$t->assign_block_vars('simple.pers.connected',array());
 					}
@@ -2159,7 +2164,7 @@ class archiEvenement extends config
 								)
 						);
 
-						if($authentification->estConnecte())
+						if($estConnecte)
 						{
 							$t->assign_block_vars('noSimple.isConnected', array());
 							$t->assign_block_vars('noSimple.adresses.isConnected', array());
@@ -2174,23 +2179,23 @@ class archiEvenement extends config
 							$t->assign_vars(array('intituleActionAdresses'=>_("Modifier")));
 						}
 
-						if($authentification->estConnecte() && $authentification->estAdmin())
+						if($estConnecte && $estAdmin)
 						{
 							// si l'utilisateur est connecté et est admin, on affiche le lien pour selectionner des images
 							$t->assign_block_vars('noSimple.isConnected.afficheLienSelectionImages',array());
 						}
 
-						if($authentification->estConnecte() && $u->isAuthorized('affiche_menu_evenement_choix_titre',$authentification->getIdUtilisateur()))
+						if($estConnecte && $u->isAuthorized('affiche_menu_evenement_choix_titre',$userId))
 						{
-							if($u->getIdProfil($authentification->getIdUtilisateur())==4 || $u->isModerateurFromVille($authentification->getIdUtilisateur(),$idEvenementGroupeAdresse,'idEvenementGroupeAdresse'))
+							if($u->getIdProfil($userId)==4 || $u->isModerateurFromVille($userId,$idEvenementGroupeAdresse,'idEvenementGroupeAdresse'))
 							{
 								// tout utilisateur autorisé (admin+moderateur de la ville)  peut changer le titre par defaut du groupe d'adresse en selectionnant l'evenement de son choix ( le titre est récupéré de cet evenement),si l'autorisation est faite dans la gestion des droites de l'admin du site
 								$t->assign_block_vars('noSimple.isConnected.afficheLienSelectionTitre',array());
 							}
 						}
-						if($authentification->estConnecte() && $u->isAuthorized('affiche_menu_evenement_choix_image_principale',$authentification->getIdUtilisateur()))
+						if($estConnecte && $u->isAuthorized('affiche_menu_evenement_choix_image_principale',$userId))
 						{
-							if($u->getIdProfil($authentification->getIdUtilisateur())==4 || $u->isModerateurFromVille($authentification->getIdUtilisateur(),$idEvenementGroupeAdresse,'idEvenementGroupeAdresse'))
+							if($u->getIdProfil($userId)==4 || $u->isModerateurFromVille($userId,$idEvenementGroupeAdresse,'idEvenementGroupeAdresse'))
 							{
 								// un utilisateur moderateur de la ville de l'adresse courant ou un admin peuvent selectionner ou changer l'image principale du groupe d'adresse,si l'autorisation est faite dans la gestion des droites de l'admin du site
 								$t->assign_block_vars('noSimple.isConnected.afficheLienSelectionImagePrincipale',array());
@@ -2198,9 +2203,9 @@ class archiEvenement extends config
 						}
 
 
-						if($authentification->estConnecte() && $u->isAuthorized('affiche_menu_evenement_positionnement_evenements',$authentification->getIdUtilisateur()))
+						if($estConnecte && $u->isAuthorized('affiche_menu_evenement_positionnement_evenements',$userId))
 						{
-							if($u->getIdProfil($authentification->getIdUtilisateur())==4 || $u->isModerateurFromVille($authentification->getIdUtilisateur(),$idEvenementGroupeAdresse,'idEvenementGroupeAdresse'))
+							if($u->getIdProfil($userId)==4 || $u->isModerateurFromVille($userId,$idEvenementGroupeAdresse,'idEvenementGroupeAdresse'))
 							{
 								// un utilisateur moderateur de la ville courante ou admin peuvent changer la position des evenements, independemment de la date de debut de l'evenement ,si l'autorisation est faite dans la gestion des droites de l'admin du site
 								$t->assign_block_vars('noSimple.isConnected.afficheLienPositionnementEvenements',array());
@@ -2211,7 +2216,7 @@ class archiEvenement extends config
 
 
 					//popup pour la recherche d'adresse dans le cas d'un deplacement d'evenement
-					if($authentification->estConnecte() && $u->isAuthorized('evenement_deplacer',$authentification->getIdUtilisateur()))
+					if($estConnecte && $u->isAuthorized('evenement_deplacer',$userId))
 					{
 						$c = new calqueObject(array('idPopup'=>"divPopupDeplacerEvenementVersGA".$idEvenementGroupeAdresse));
 						$t->assign_vars(array('divDeplacerEvenementVersGA'=>$c->getDiv(array(
@@ -2505,7 +2510,7 @@ class archiEvenement extends config
 		// on ferme le formulaire s'il a ete ouvert
 		if($modeAffichage!='simple' && $modeAffichage!='consultationHistoriqueEvenement')
 		{
-			if($authentification->estConnecte() && ((isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1') || (isset($this->variablesGet['afficheSelectionTitre']) && $this->variablesGet['afficheSelectionTitre']=='1')))
+			if($estConnecte && ((isset($this->variablesGet['afficheSelectionImage']) && $this->variablesGet['afficheSelectionImage']=='1') || (isset($this->variablesGet['afficheSelectionTitre']) && $this->variablesGet['afficheSelectionTitre']=='1')))
 			{
 				$html.="</form>";
 			}

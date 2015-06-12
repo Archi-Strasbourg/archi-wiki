@@ -163,7 +163,6 @@ if ($session->isInSession('archiIdVilleGeneral') && $session->getFromSession('ar
     $arrayIdVilleGeneral['archiIdVilleGeneral'] = $session->getFromSession('archiIdVilleGeneral');
 }
 
-
 $listPages=archiPage::getListMenu(LANG);
 $htmlListPages="";
 foreach ($listPages as $page) {
@@ -351,23 +350,23 @@ if (isset($_GET['archiAffichage']) && $_GET['archiAffichage']=='adresseDetail') 
 $informations =array();
 
 // recherche du nombre d'evenements
-$reqEvenements = "SELECT DISTINCT idEvenement as nbEvenements FROM historiqueEvenement;";
+$reqEvenements = "SELECT count(DISTINCT idEvenement) as nbEvenements FROM historiqueEvenement";
 $resEvenements = $config->connexionBdd->requete($reqEvenements);
-//$infos .= "<b>"._("Évènements :")."</b> ".mysql_num_rows($resEvenements).'<br/>';
-$informations['evenement'] = mysql_num_rows($resEvenements);
+//$informations['evenement'] = mysql_num_rows($resEvenements);
+$arrayStats= mysql_fetch_assoc($resEvenements);
+$informations['evenement'] = $arrayStats['nbEvenements'];
 
 // recherche du nombre d'adresses
-$reqAdresses = "SELECT DISTINCT idAdresse as nbAdresses FROM historiqueAdresse;";
-$resAdresses = $config->connexionBdd->requete($reqAdresses);
-//$infos .= "<b>"._("Adresses :")."</b> ".mysql_num_rows($resAdresses).'<br/>';
-$informations['adresse'] = mysql_num_rows($resAdresses);
-
+$requeteAdresse =" SELECT count(distinct idAdresse) as nbAdresse from  historiqueAdresse";
+$resultatAdresse = $config->connexionBdd->requete($requeteAdresse);
+$tableauStats = mysql_fetch_assoc($resultatAdresse);
+$informations['adresse'] = $tableauStats['nbAdresse'];
 
 // recherche du nombre de photos
-$reqPhotos = "SELECT DISTINCT idImage as nbImages FROM historiqueImage;";
+$reqPhotos = "SELECT count(distinct idImage) as nbImages FROM  historiqueImage";
 $resPhotos = $config->connexionBdd->requete($reqPhotos);
-//$infos .= "<b>"._("Photos :")."</b> ".mysql_num_rows($resPhotos);
-$informations['photo'] = mysql_num_rows($resPhotos);
+$arrayStats = mysql_fetch_assoc($resPhotos);
+$informations['photo'] = $arrayStats['nbImages'];
 
 $t->assign_block_vars('informations', $informations);
 

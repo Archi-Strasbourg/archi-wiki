@@ -11337,11 +11337,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             while($fetchListeCoordsAdressesGA = mysql_fetch_assoc($resListeCoordsGA))
             {
                 $fetchListeCoordsArray[] = $fetchListeCoordsAdressesGA;
-                
             }
-            
-            
-            
             
         }
         $i=0;
@@ -11592,7 +11588,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $indiceArrayId++;
             
         }
-            
+
         return array('arrayConfigCoordonnees'=>$listeCoords);
     }
     
