@@ -6219,6 +6219,7 @@ class archiAdresse extends ArchiContenu
 		HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
 		";
 
+		if($modeAffichage!="listeDesAdressesDuGroupeAdressesSurDetailAdresse")
 		$result = $this->connexionBdd->requete($sqlCount);
 		$nbReponses = mysql_num_rows($result);
 		$nbResult=$nbReponses;
