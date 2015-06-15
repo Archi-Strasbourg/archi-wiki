@@ -190,7 +190,6 @@ class BBCodeObject extends config
         if (isset($params['text'])) {
             $description = $params['text'];
 
-debug($description);
 
             $description = stripslashes($this->BBversHTML(htmlspecialchars($description)));//nl2br
             
@@ -214,7 +213,6 @@ debug($description);
             $description = preg_replace("#\\[url=\\'http\\://(.+)\\'\\](.+)\\[/url\\]#isU", "<a href=\"http://\\1\">\\2</a>", $description);
             $description = preg_replace("#\\[url\=http\\://(.+)\\](.+)\\[/url\\]#isU", "<a href=\"http://\\1\">\\2</a>", $description);
 
-            debug($description);
 
             $description = preg_replace("#\\[url=\"(.+)\"\\](.+)\\[/url\\]#isU", "<a href=\"\\1\">\\2</a>", $description);
             $description = preg_replace("#\\[url=\\'(.+)\\'\\](.+)\\[/url\\]#isU", "<a href=\"\\1\">\\2</a>", $description);

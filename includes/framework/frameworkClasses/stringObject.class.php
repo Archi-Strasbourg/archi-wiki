@@ -366,6 +366,10 @@ class StringObject extends config
 
     public function replaceUrl($input){
     	$regex = "#(?<!\[url=)(?<!\[urlExterne=)(((https?:\/\/(www\.)?)|(ftp:\/\/)|(www\.)).*?[a-z_\/0-9\-\#=&])(?=(\.|,|;|\?|\!)?(\"|'|«|»|\[|\s|\r|\n|$))#iS";
+    	
+    	$regex="#((?<!\[url=)(?<!\[urlExterne=)(((https?:\/\/)(www\.)?).*?[a-z_\/0-9\-\#=&])|((?<!\[url=)(?<!\[urlExterne=)(?<!http:\/\/)(?<!https:\/\/)(((www\.)).*?[a-z_\/0-9\-\#=&])))(?=(\.|,|;|\?|\!)?(\"|'|«|»|\[|\s|\r|\n|$))#iS";
+    	
+    	
     	$text = preg_replace_callback($regex, function($url) {
     		if($url[3] == ''){
     			$returnUrl = "http://".$url[0];
