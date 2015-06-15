@@ -6552,6 +6552,7 @@ class archiAdresse extends ArchiContenu
 					|| $this->variablesGet['archiAffichage'] == "ajoutImageEvenement"
 					|| $this->variablesGet['archiAffichage'] == "modifierImageEvenement"
 					|| $this->variablesGet['archiAffichage'] == "formulaireGroupeAdresses"
+					|| $this->variablesGet['archiAffichage'] == "ajouterSousEvenement"
 			){
 				$requeteAdresse = $this->connexionBdd->requete($sql);
 			}
@@ -14214,6 +14215,25 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 							";
 					$res = $this->connexionBdd->requete ( $req );
 					$row = mysql_fetch_assoc ( $res );
+					
+					
+					//Sometimes addresses and goup event are strangely not linked between each other so double check 
+					if(empty($row)){
+						$req = "
+							SELECT ha.nom ,
+							ha.idHistoriqueAdresse ,
+							ha.idAdresse ,
+							ae.idEvenement as idEvenementGroupeAdresse
+								
+		    				FROM historiqueAdresse ha
+							LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
+		    				WHERE ae.idEvenement = " . $id ['idEvenementGroupeAdresse'] . "
+		    				GROUP BY ha.idHistoriqueAdresse
+							";
+						$res = $this->connexionBdd->requete ( $req );
+						$row = mysql_fetch_assoc ( $res );
+					}
+					
 					$arrayAdresse [] = $row;
 				} 
 				//Else it's a person
@@ -14256,71 +14276,78 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$resTitreLegacy = $this->connexionBdd->requete($requeteTitreLegacy);
 				$arrayTitre = mysql_fetch_assoc($resTitreLegacy);
 				
-				if(!isset($arrayTitre['titre']) || $arrayTitre['titre'] == '' || empty($arrayTitre['titre'])){
-					$titreRequest = "
-						SELECT evt2.titre
-						FROM evenements evt , evenements evt2
-						WHERE evt.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
-						AND evt2.idEvenement = evt.idEvenementRecuperationTitre
-						";
-					$resTitre = $this->connexionBdd->requete($titreRequest);
-					//$arrayTitre = mysql_fetch_assoc($resTitre);
+				if(isset($fetch['idEvenementGroupeAdresse']) &&$fetch['idEvenementGroupeAdresse']!=''){
 					if(!isset($arrayTitre['titre']) || $arrayTitre['titre'] == '' || empty($arrayTitre['titre'])){
-						$requeteAutreTitre ="
-							SELECT evt.titre
-							FROM evenements evt
-							LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
-							WHERE ee.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
+						$titreRequest = "
+							SELECT evt2.titre
+							FROM evenements evt , evenements evt2
+							WHERE evt.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
+							AND evt2.idEvenement = evt.idEvenementRecuperationTitre
 							";
-						$resultAutreTitre = $this->connexionBdd->requete($requeteAutreTitre);
-						if(mysql_num_rows($resultAutreTitre)==1){ //Si il n'y a qu'un résultat...
-							$arrayTitre = mysql_fetch_assoc($resultAutreTitre);
+						$resTitre = $this->connexionBdd->requete($titreRequest);
+						$arrayTitre = mysql_fetch_assoc($resTitre);
+						if(!isset($arrayTitre['titre']) || $arrayTitre['titre'] == '' || empty($arrayTitre['titre'])){
+							$requeteAutreTitre ="
+								SELECT evt.titre
+								FROM evenements evt
+								LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = evt.idEvenement
+								WHERE ee.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
+								";
+							$resultAutreTitre = $this->connexionBdd->requete($requeteAutreTitre);
+							if(mysql_num_rows($resultAutreTitre)==1){ //Si il n'y a qu'un résultat...
+								$arrayTitre = mysql_fetch_assoc($resultAutreTitre);
+							}
 						}
+							
 					}
-						
+					$fetch ['titre'] = stripslashes ( $arrayTitre ['titre'] );
+					
+					$reqTitresEvenements ="
+						SELECT  distinct he1.titre,he1.idEvenement
+	    				FROM evenements he1
+						LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = he1.idEvenement
+						LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
+						LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
+						WHERE ee.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
+						AND TRIM(he1.titre) <> ''
+							";
+					
+					$resTitresEvenements = $this->connexionBdd->requete($reqTitresEvenements);
+					$titresEvenements = array();
+					$positionAncre=0;
+					$defaultEventTitle= "Événement sans titre";
+					
+					//Generating all the link to the events linked to current address 
+					while ($row = mysql_fetch_assoc($resTitresEvenements)) {
+						$titre = ($row['titre']=="") ? $defaultEventTitle : ucfirst($row['titre']); //Assigning default title to event which doesn't have one
+						//Link creation with the ancre to each event
+						$titresEvenements[] =
+					 	"<a href='".
+					 	$this->creerUrl(
+					 			'', 
+					 			'adresseDetail', 
+					 			array(
+					 					'archiIdAdresse'=>$fetch['idAdresse'], 
+					 					'archiIdEvenementGroupeAdresse'=>$fetch['idEvenementGroupeAdresse'], 
+					 					'debut'=>'')
+					 			)
+					 	."#evenement".$row['idEvenement']."'>"
+					 	.stripslashes($titre).
+					 	"</a>";
+					 
+					}
+					//Putting all this in a nice array
+					if(isset($fetch['idHistoriqueAdresse']) && $fetch['idHistoriqueAdresse']!=''){
+						$fetch['titresEvenements'] = $titresEvenements;
+					}
+					$addressesInformations[]=$fetch;
+					$positionAncre++;
 				}
-				$fetch ['titre'] = stripslashes ( $arrayTitre ['titre'] );
-				
-				$reqTitresEvenements ="
-					SELECT  distinct he1.titre,he1.idEvenement
-    				FROM evenements he1
-					LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = he1.idEvenement
-					LEFT JOIN _adresseEvenement ae on ae.idEvenement = ee.idEvenement
-					LEFT JOIN historiqueAdresse ha on ha.idAdresse = ae.idAdresse
-					WHERE ee.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
-					AND TRIM(he1.titre) <> ''
-						";
-				
-				$resTitresEvenements = $this->connexionBdd->requete($reqTitresEvenements);
-				$titresEvenements = array();
-				$positionAncre=0;
-				$defaultEventTitle= "Événement sans titre";
-				
-				//Generating all the link to the events linked to current address 
-				while ($row = mysql_fetch_assoc($resTitresEvenements)) {
-					$titre = ($row['titre']=="") ? $defaultEventTitle : ucfirst($row['titre']); //Assigning default title to event which doesn't have one
-					//Link creation with the ancre to each event
-					$titresEvenements[] =
-				 	"<a href='".
-				 	$this->creerUrl(
-				 			'', 
-				 			'adresseDetail', 
-				 			array(
-				 					'archiIdAdresse'=>$fetch['idAdresse'], 
-				 					'archiIdEvenementGroupeAdresse'=>$fetch['idEvenementGroupeAdresse'], 
-				 					'debut'=>'')
-				 			)
-				 	."#evenement".$row['idEvenement']."'>"
-				 	.stripslashes($titre).
-				 	"</a>";
-				 
+				else{
+					$this->messages->addError("Problème dans la recherche");
+					$this->messages->display();
+					return null;
 				}
-				//Putting all this in a nice array
-				if(isset($fetch['idHistoriqueAdresse']) && $fetch['idHistoriqueAdresse']!=''){
-					$fetch['titresEvenements'] = $titresEvenements;
-				}
-				$addressesInformations[]=$fetch;
-				$positionAncre++;
 			}
 		}
 		return $addressesInformations;

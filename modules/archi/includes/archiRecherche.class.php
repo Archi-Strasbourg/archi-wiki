@@ -2479,7 +2479,6 @@ class archiRecherche extends config {
 		$idHistoriqueAdresse  = array();
 		$resCount = $this->connexionBdd->requete($requestCount);
 		$res = $this->connexionBdd->requete($request);
-
 		$arrayNbResult = mysql_fetch_assoc($resCount);
 		$nbResult=$arrayNbResult['nbResult'];
 		while($fetch = mysql_fetch_assoc($res)){
