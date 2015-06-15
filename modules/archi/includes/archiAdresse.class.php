@@ -6547,11 +6547,15 @@ class archiAdresse extends ArchiContenu
 			// ***************************************************************************************************************************************
 			// affichage des resultats de la recherche
 			// ***************************************************************************************************************************************
-			
-
-			if($modeAffichage!="listeDesAdressesDuGroupeAdressesSurDetailAdresse")
+			if($modeAffichage!="listeDesAdressesDuGroupeAdressesSurDetailAdresse"  
+					|| $this->variablesGet['archiAffichage'] == "modifierEvenement"
+					|| $this->variablesGet['archiAffichage'] == "ajoutImageEvenement"
+					|| $this->variablesGet['archiAffichage'] == "modifierImageEvenement"
+					|| $this->variablesGet['archiAffichage'] == "formulaireGroupeAdresses"
+			){
 				$requeteAdresse = $this->connexionBdd->requete($sql);
-
+			}
+			
 			// dans le cas de la popup on ne veut pas afficher le detail d'une adresse
 			// ceci arrive quand le resultat de la recherche ne renvoit qu'un resultat ,  par defaut on va sur l'evenement,  sauf pour les cas suivant:
 			switch ($modeAffichage) {
@@ -6842,7 +6846,6 @@ class archiAdresse extends ArchiContenu
 						$styleAdresse = "";
 						if ($modeAffichage=='listeDesAdressesDuGroupeAdressesSurDetailAdresse') {
 							$idAdresse=0;
-							debug("hopppppp");
 							if (isset($criteres['archiIdEvenement'])) {
 								$reqAdresse = "      
 					                SELECT  distinct ae.idAdresse as idAdresse
