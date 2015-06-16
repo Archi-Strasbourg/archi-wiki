@@ -508,7 +508,6 @@ class archiAdresse extends ArchiContenu
 				'urlAutresBiensRue'=>$urlAutreBiens['urlAutresBiensRue'],
 				'urlAutresBiensQuartier' => $urlAutreBiens['urlAutresBiensQuartier']
 				));
-
 		$t->assign_block_vars('sommaireEvenements', array());
 
 		
@@ -6490,9 +6489,8 @@ class archiAdresse extends ArchiContenu
 
 
 			$sql = "
-			SELECT distinct ee.idEvenement as idEvenementGA $critereSelectionIdAdressesModeAffichageListeAdressesRequete,
+			SELECT DISTINCT ee.idEvenement as idEvenementGA $critereSelectionIdAdressesModeAffichageListeAdressesRequete,
 
-			ae.idEvenement as idEvenementGA,
 			r.nom as nomRue,
 			sq.nom as nomSousQuartier,
 			q.nom as nomQuartier,
@@ -6544,19 +6542,13 @@ class archiAdresse extends ArchiContenu
 				$sql.= " LIMIT ".$sqlLimit."
 						";
 			}
+
+
 			// ***************************************************************************************************************************************
 			// affichage des resultats de la recherche
 			// ***************************************************************************************************************************************
-			if($modeAffichage!="listeDesAdressesDuGroupeAdressesSurDetailAdresse"  
-					|| $this->variablesGet['archiAffichage'] == "modifierEvenement"
-					|| $this->variablesGet['archiAffichage'] == "ajoutImageEvenement"
-					|| $this->variablesGet['archiAffichage'] == "modifierImageEvenement"
-					|| $this->variablesGet['archiAffichage'] == "formulaireGroupeAdresses"
-					|| $this->variablesGet['archiAffichage'] == "ajouterSousEvenement"
-			){
-				$requeteAdresse = $this->connexionBdd->requete($sql);
-			}
-			
+			$requeteAdresse = $this->connexionBdd->requete($sql);
+				
 			// dans le cas de la popup on ne veut pas afficher le detail d'une adresse
 			// ceci arrive quand le resultat de la recherche ne renvoit qu'un resultat ,  par defaut on va sur l'evenement,  sauf pour les cas suivant:
 			switch ($modeAffichage) {
@@ -6681,7 +6673,6 @@ class archiAdresse extends ArchiContenu
 							$nomAdresse = stripslashes($this->getIntituleAdresse($fetch));
 							$nomAdresseNoStyle= $nomAdresse;
 						}
-
 
 
 						// mise en place du lien de l'adresse suivant l'affichage ou l'on est
@@ -8975,7 +8966,6 @@ class archiAdresse extends ArchiContenu
                 'urlAutresBiensQuartier'=>$retourAdresse['arrayRetourLiensVoirBatiments']['urlAutresBiensQuartier']
             )
         );
-        
         $idAdresseCourante = 0;
         if(isset($this->variablesGet['archiIdAdresse']))
             $idAdresseCourante = $this->variablesGet['archiIdAdresse'];

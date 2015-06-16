@@ -2154,7 +2154,6 @@ class archiEvenement extends config
 						// ************************************************************************************************************************
 						// affichage de l'encars des adresses avec les photos avant et apres l'adresse courante
 						$arrayEncartAdresses = $adresse->getArrayEncartAdressesImmeublesAvantApres(array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
-						//$arrayEncartAdresses = $adresse->getArrayEncartAdressesImmeublesAvantApres(array('idEvenementGroupeAdresse'=>$idEvenement));
 						$t->assign_block_vars('noSimple.adresses', array(
 								'adressesLiees' => $arrayEncartAdresses['html']));
 						$t->assign_vars(
