@@ -6085,7 +6085,9 @@ class archiAdresse extends ArchiContenu
 		if (isset($criteres['archiIdEvenement'])) {
 			$tabSqlWhere[] = "  ae.idEvenement = '".$criteres['archiIdEvenement']."'";
 		}
-
+else{
+	//die(debug(debug_backtrace()));
+}
 		
 		if (!isset($sqlWhere)) // debug laurent : je ne sais pas pourquoi cela n'a pas ete initialisé plus haut ,  a verifier
 			$sqlWhere = '';
@@ -6543,10 +6545,60 @@ class archiAdresse extends ArchiContenu
 						";
 			}
 
+			/*
+			debug(array(
+					"sqlWhere" => (!isset($sqlWhere) || $sqlWhere=="" || $sqlWhere==" "),
+					"sqlAdressesSupplementaires"=>(!isset($sqlAdressesSupplementaires) || $sqlAdressesSupplementaires=="" || $sqlAdressesSupplementaires==" "),
+					'sqlEvenementAddressesSupplementaire'=>(!isset($sqlEvenementsGroupeAdressesSupplementaires) || $sqlEvenementsGroupeAdressesSupplementaires=="" || $sqlEvenementsGroupeAdressesSupplementaires==" "),
+					'sqlSelectionExterne'=>(!isset($sqlSelectionExterne) || $sqlSelectionExterne=="" || $sqlSelectionExterne==" "),
+					'sqlMotCle'=>(!isset($sqlMotCle) || $sqlMotCle=="" || $sqlMotCle==" "),
+					'sqlSElectCoord'=>(!isset($sqlSelectCoordonnees) || $sqlSelectCoordonnees=="" || $sqlSelectCoordonnees==" "),
+					'sqlAddressSupplRechercheRelancee'=> (!isset($sqlAdressesSupplementairesRechercheRelancee) || $sqlAdressesSupplementairesRechercheRelancee=="" || $sqlAdressesSupplementairesRechercheRelancee==" "),
+					'whereVilleModerees' => (!isset($whereVillesModerees) || $whereVillesModerees=="" || $whereVillesModerees==" ")
+			));
+			*/
+			if((!isset($sqlWhere) || $sqlWhere=="" || $sqlWhere==" ")
+				&& (!isset($sqlAdressesSupplementaires) || $sqlAdressesSupplementaires=="" || $sqlAdressesSupplementaires==" ")
+				&& (!isset($sqlEvenementsGroupeAdressesSupplementaires) || $sqlEvenementsGroupeAdressesSupplementaires=="" || $sqlEvenementsGroupeAdressesSupplementaires==" ")
+				&& (!isset($sqlSelectionExterne) || $sqlSelectionExterne=="" || $sqlSelectionExterne==" ")
+					&& (!isset($sqlMotCle) || $sqlMotCle=="" || $sqlMotCle==" ")
+					&& (!isset($sqlSelectCoordonnees) || $sqlSelectCoordonnees=="" || $sqlSelectCoordonnees==" ")
+					&& (!isset($sqlAdressesSupplementairesRechercheRelancee) || $sqlAdressesSupplementairesRechercheRelancee=="" || $sqlAdressesSupplementairesRechercheRelancee==" ")
+					&& (!isset($whereVillesModerees) || $whereVillesModerees=="" || $whereVillesModerees==" ")
+					){
+				die(debug(debug_backtrace()));
+				/*
+				debug(array(
+					"sqlWhere" => $sqlWhere,
+					"sqlAdressesSupplementaires"=>$sqlAdressesSupplementaires,
+					'sqlEvenementAddressesSupplementaire'=>$sqlEvenementsGroupeAdressesSupplementaires,
+					'sqlSelectionExterne'=>$sqlSelectionExterne,
+					'sqlMotCle'=>$sqlMotCle,
+					'sqlSElectCoord'=>$sqlSelectCoordonnees,
+					'sqlAddressSupplRechercheRelancee'=> $sqlAdressesSupplementairesRechercheRelancee,
+					'whereVilleModerees' => $whereVillesModerees
+			));
+			*/
+			}
+
+			
+			/*
+			debug(array(
+					"sqlWhere" => $sqlWhere,
+					"sqlAdressesSupplementaires"=>$sqlAdressesSupplementaires,
+					'sqlEvenementAddressesSupplementaire'=>$sqlEvenementsGroupeAdressesSupplementaires,
+					'sqlSelectionExterne'=>$sqlSelectionExterne,
+					'sqlMotCle'=>$sqlMotCle,
+					'sqlSElectCoord'=>$sqlSelectCoordonnees,
+					'sqlAddressSupplRechercheRelancee'=> $sqlAdressesSupplementairesRechercheRelancee,
+					'whereVilleModerees' => $whereVillesModerees
+			));
+			*/
 
 			// ***************************************************************************************************************************************
 			// affichage des resultats de la recherche
 			// ***************************************************************************************************************************************
+			//debug($sql);
 			$requeteAdresse = $this->connexionBdd->requete($sql);
 				
 			// dans le cas de la popup on ne veut pas afficher le detail d'une adresse
