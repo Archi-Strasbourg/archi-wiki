@@ -10,6 +10,7 @@ for each row
 begin
     INSERT INTO recherche
 	 SELECT  ee.idEvenement as idEvenementGA,
+         		ae.idAdresse,
                 r.nom as nomRue,
                 sq.nom as nomSousQuartier,
                 q.nom as nomQuartier,
@@ -39,9 +40,9 @@ begin
 				he1.ISMH as ISMH,
 				he1.MH as MH,
 				eca.idCourantArchitectural as idCourantArchitectural,
-				CONCAT_WS(' ', CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom), r.prefixe, r.nom, sq.nom, q.nom, v.nom,   p.nom) as concat1,
-				CONCAT_WS(' ', CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe,r.nom) as concat2,
-				CONCAT_WS(' ', he1.titre, CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe, r.nom) as concat3,
+				CONCAT_WS(' ', CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom), r.prefixe, r.nom, sq.nom, q.nom, v.nom,   p.nom) as concat1,
+				CONCAT_WS(' ', CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe,r.nom) as concat2,
+				CONCAT_WS(' ', he1.titre, CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe, r.nom) as concat3,
 				CONCAT_WS(' ', pers.nom,pers.prenom) as concat4,
 				CONCAT_WS(' ', pers.prenom, pers.nom) as concat5
 				
@@ -71,6 +72,7 @@ for each row
 begin
     INSERT INTO recherche
 	 SELECT  ee.idEvenement as idEvenementGA,
+         		ae.idAdresse,
                 r.nom as nomRue,
                 sq.nom as nomSousQuartier,
                 q.nom as nomQuartier,
@@ -100,9 +102,9 @@ begin
 				he1.ISMH as ISMH,
 				he1.MH as MH,
 				eca.idCourantArchitectural as idCourantArchitectural,
-				CONCAT_WS(' ', CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom), r.prefixe, r.nom, sq.nom, q.nom, v.nom,   p.nom) as concat1,
-				CONCAT_WS(' ', CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe,r.nom) as concat2,
-				CONCAT_WS(' ', he1.titre, CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe, r.nom) as concat3,
+				CONCAT_WS(' ', CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom), r.prefixe, r.nom, sq.nom, q.nom, v.nom,   p.nom) as concat1,
+				CONCAT_WS(' ', CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe,r.nom) as concat2,
+				CONCAT_WS(' ', he1.titre, CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe, r.nom) as concat3,
 				CONCAT_WS(' ', pers.nom,pers.prenom) as concat4,
 				CONCAT_WS(' ', pers.prenom, pers.nom) as concat5
 				
@@ -138,6 +140,7 @@ begin
 	DELETE from recherche where idEvenementGA = old.idEvenement;
     INSERT INTO recherche
 	 SELECT  ee.idEvenement as idEvenementGA,
+         		ae.idAdresse,
                 r.nom as nomRue,
                 sq.nom as nomSousQuartier,
                 q.nom as nomQuartier,
@@ -167,9 +170,9 @@ begin
 				he1.ISMH as ISMH,
 				he1.MH as MH,
 				eca.idCourantArchitectural as idCourantArchitectural,
-				CONCAT_WS(' ', CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom), r.prefixe, r.nom, sq.nom, q.nom, v.nom,   p.nom) as concat1,
-				CONCAT_WS(' ', CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe,r.nom) as concat2,
-				CONCAT_WS(' ', he1.titre, CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe, r.nom) as concat3,
+				CONCAT_WS(' ', CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom), r.prefixe, r.nom, sq.nom, q.nom, v.nom,   p.nom) as concat1,
+				CONCAT_WS(' ', CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe,r.nom) as concat2,
+				CONCAT_WS(' ', he1.titre, CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe, r.nom) as concat3,
 				CONCAT_WS(' ', pers.nom,pers.prenom) as concat4,
 				CONCAT_WS(' ', pers.prenom, pers.nom) as concat5
 				
@@ -207,6 +210,7 @@ begin
 	DELETE from recherche where idEvenementGA in (select idEvenement FROM _evenementEvenement where idEvenementAssocie =old.idEvenement);
     INSERT INTO recherche
 	 SELECT  ee.idEvenement as idEvenementGA,
+         		ae.idAdresse,
                 r.nom as nomRue,
                 sq.nom as nomSousQuartier,
                 q.nom as nomQuartier,
@@ -236,11 +240,11 @@ begin
 				he1.ISMH as ISMH,
 				he1.MH as MH,
 				eca.idCourantArchitectural as idCourantArchitectural,
-				CONCAT_WS(' ', CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom), r.prefixe, r.nom, sq.nom, q.nom, v.nom,   p.nom) as concat1,
-				CONCAT_WS(' ', CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe,r.nom) as concat2,
-				CONCAT_WS(' ', he1.titre, CONCAT(CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe, r.nom) as concat3,
+				CONCAT_WS(' ', CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom), r.prefixe, r.nom, sq.nom, q.nom, v.nom,   p.nom) as concat1,
+				CONCAT_WS(' ', CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe,r.nom) as concat2,
+				CONCAT_WS(' ', he1.titre, CONCAT_WS('',CONVERT(ha1.numero USING utf8),  ind.nom),r.prefixe, r.nom) as concat3,
 				CONCAT_WS(' ', pers.nom,pers.prenom) as concat4,
-				CONCAT_WS(' ', pers.prenom, pers.nom) as concat5				
+				CONCAT_WS(' ', pers.prenom, pers.nom) as concat5			
 			
 				FROM historiqueAdresse ha1
 				LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha1.idAdresse

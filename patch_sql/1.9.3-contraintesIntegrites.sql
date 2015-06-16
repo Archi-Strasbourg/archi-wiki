@@ -43,3 +43,8 @@ ALTER TABLE `commentairesEvenement`
 ALTER TABLE `_evenementEvenement` ADD CONSTRAINT `_evenementEvenement_ibfk_2` FOREIGN KEY ( `idEvenement` ) REFERENCES `archi_v2`.`evenements` (
 `idEvenement`
 ) ON DELETE CASCADE ON UPDATE CASCADE ;
+
+ALTER TABLE `_adresseImage` DROP FOREIGN KEY `_adresseImage_ibfk_5` ,
+ADD FOREIGN KEY ( `idEvenementGroupeAdresse` ) REFERENCES `archi_wiki`.`evenements` (
+`idEvenement`
+) ON DELETE CASCADE ON UPDATE CASCADE ;
