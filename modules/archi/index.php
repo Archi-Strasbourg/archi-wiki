@@ -846,6 +846,13 @@ if (isset($_GET['archiAffichage'])) {
         	$a = new archiAdresse();
         	echo $a->afficherDetail($_GET['archiIdAdresse']);
             break;
+            
+        case 'testAdresseDetail':
+        	$a = new archiAdresse();
+        	$e =  new archiEvenement();
+        	echo $a->afficherDetailAdresse($_GET['idAdresse'], $_GET['idEvenementGroupeAdresse']);
+        	//afficherDetailAdresse
+        	break;
         case 'displayAddress':
         	$a = new archiAdresse();
         	echo $a->display();
@@ -1593,7 +1600,8 @@ if (isset($_GET['archiAffichage'])) {
         	break;
         case 'listByVille': 
         	$r=new archiRecherche();
-        	$html = $r->searchByCriterias(array('ville'=>$_GET['recherche_ville']));
+        	isset($_GET['debut'])?$debut=$_GET['debut']:$debut=0;
+        	$html = $r->searchByCriterias(array('ville'=>$_GET['recherche_ville'],'debut'=>$debut));
         	echo $html;
         	break;
         }
