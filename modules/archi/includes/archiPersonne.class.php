@@ -367,7 +367,7 @@ class ArchiPersonne extends ArchiContenu
                 "));
                 */
                 
-                $t->assign_vars(array('codeJavascriptReturnNewElementAjoute'=>"insertOptionInSelect(parent.document.getElementById(parent.document.getElementById('paramChampsAppelantPersonne').value), '".$criteres['newIdPersonneAdded']."', '".$this->getPersonneLibelle($criteres['newIdPersonneAdded'])."')"));
+                $t->assign_vars(array('codeJavascriptReturnNewElementAjoute'=>"insertOptionInSelect(parent.document.getElementById(parent.document.getElementById('paramChampsAppelantPersonne').value), '".$criteres['newIdPersonneAdded']."', '".str_replace("'", "\'", $this->getPersonneLibelle($criteres['newIdPersonneAdded']))."')"));
                 
                 
             }
@@ -533,9 +533,9 @@ class ArchiPersonne extends ArchiContenu
                             'prenom'=>stripslashes($fetchPersonne['prenom']), 
                             'metier'=>stripslashes($fetchPersonne['metier']), 
                             'url'=>'#', 
-                            'onclick'=>"insertOptionInSelect(parent.document.getElementById('personnes'), '".$fetchPersonne['idPersonne']."', '".$fetchPersonne['nom']." ".$fetchPersonne['prenom']."')"
+                            'onclick'=>"insertOptionInSelect(parent.document.getElementById('personnes'), '".str_replace("'", "\'", $fetchPersonne['idPersonne'])."', '".str_replace("'", "\'", $fetchPersonne['nom'])." ".str_replace("'", "\'", $fetchPersonne['prenom'])."')"
                         )
-                    );        //'onclick'=>"parent.document.getElementById('personnes').innerHTML+='<option selected=\'selected\' value=\'".$fetchPersonne['idPersonne']."\'>".$fetchPersonne['nom'].' '.$fetchPersonne['prenom']."</option>';"
+                    );        
                     break;
                 default:
                     $t->assign_block_vars(
@@ -1052,7 +1052,6 @@ class ArchiPersonne extends ArchiContenu
             OR CONCAT_WS(' ', nom, prenom) LIKE '%".mysql_real_escape_string($keyword)."%'
             OR CONCAT_WS(' ', prenom, nom) LIKE '%".mysql_real_escape_string($keyword)."%'
             LIMIT ".(($pos-1)*10).", ".($pos*10);
-        debug($req);
         $res = $config->connexionBdd->requete($req);
         while ($person=mysql_fetch_object($res)) {
             $people[]=($person);
