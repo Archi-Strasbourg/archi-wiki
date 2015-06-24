@@ -3304,8 +3304,37 @@ class archiImage extends config
                     echo "Il s'est produit une erreur lors de l'upload,  la session est terminée ou la bibliothèque gd n'est pas installé sur le serveur.<br>";
                 }
             } else {
-                echo "erreur lors de l'upload : archiImage::ajouter() : peut etre que l'image est de taille trop importante.<br>";
-                echo "Code erreur : ".$_FILES['fichier']['error']."<br/>";
+            	
+            	switch ($_FILES['fichier']['error']){
+            		case 0:
+            			echo "Aucune erreur détectée";
+            			break;
+            		case 1:
+            			echo "Erreur lors de l'upload : archiImage::ajouter() : Taille du fichier trop importante (php.ini)";
+            			break;
+            		case 2:
+            			echo "Erreur lors de l'upload : archiImage::ajouter() : Taille du fichier trop importante (formulaire html)";
+            			break;
+            		case 3:
+            			echo "Erreur lors de l'upload : archiImage::ajouter() : Téléchargement partiel.";
+            			break;
+            		case 4:
+            			echo "Erreur lors de l'upload : archiImage::ajouter() : Aucun fichier n'a été téléchargé";
+            			break;
+            		case 6:
+            			echo "Erreur lors de l'upload : archiImage::ajouter() : Un dossier temporaire est manquant";
+            			break;
+            		case 7:
+            			echo "Erreur lors de l'upload : archiImage::ajouter() : Echec de l'écriture sur le disque";
+            			break;
+            		case 8:
+            			echo "Erreur lors de l'upload : archiImage::ajouter() : Une extension PHP a annulé l'upload";
+            			break;
+            		default:
+	            		echo "Erreur lors de l'upload : archiImage::ajouter() ";
+	            		break;
+            	}
+            	echo "<br/>";
             }
             // *******************************************************************************************************************************************************************************
         }
