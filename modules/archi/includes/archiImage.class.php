@@ -3305,6 +3305,7 @@ class archiImage extends config
                 }
             } else {
                 echo "erreur lors de l'upload : archiImage::ajouter() : peut etre que l'image est de taille trop importante.<br>";
+                echo "Code erreur : ".$_FILES['fichier']['error']."<br/>";
             }
             // *******************************************************************************************************************************************************************************
         }

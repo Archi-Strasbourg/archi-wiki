@@ -2233,7 +2233,6 @@ class archiEvenement extends config
 					$listeAdressesFromEvenement=array();
 					while($fetchAdressesCourantes = mysql_fetch_assoc($resAdressesCourantes))
 					{
-						//$fetchAdressesCourantes = mysql_fetch_assoc($resAdressesCourantes);
 						$listeAdressesFromEvenement[] = $fetchAdressesCourantes['idAdresse'];
 					}
 
@@ -4927,7 +4926,7 @@ class archiEvenement extends config
 						AND he1.idEvenement = '".$idEvenementConcerne."'
 								GROUP BY he1.idEvenement 
 								";
-
+				
 				$resDernierHistoriqueEvenementModifie = $this->connexionBdd->requete($reqDernierHistoriqueEvenementModifie);
 
 				if(mysql_num_rows($resDernierHistoriqueEvenementModifie)==1)
@@ -4969,6 +4968,7 @@ class archiEvenement extends config
 				}
 			}
 
+			
 			if($effectueMaj)
 			{
 				// mise a jour apres ajout d'un nouvel evenement sur le groupe d'adresses
@@ -4996,7 +4996,6 @@ class archiEvenement extends config
 										";
 
 						$resDates = $this->connexionBdd->requete($reqDates);
-
 
 						$tabTravail[$position]['dateDebut'] = "0000-00-00";
 						if(mysql_num_rows($resDates)>0)
@@ -5072,7 +5071,6 @@ class archiEvenement extends config
 				$decalageApresInsertion=0;
 
 
-
 				foreach($tabTravail as $position => $valueEvenement)
 				{
 					if($position == $positionNouvelEvenement)
@@ -5082,6 +5080,7 @@ class archiEvenement extends config
 					}
 
 					$nouveauTableau[$position+$decalageApresInsertion]['idEvenement'] = $valueEvenement['idEvenement'];
+						
 				}
 
 				if($positionNouvelEvenement>count($tabTravail)) // si le nouvel evenement se place en derniere position (le nouvel element n'est donc pas encore dans tabTravail , on le rajoute a la fin du tableau
@@ -5096,6 +5095,7 @@ class archiEvenement extends config
 				$reqDelete = "DELETE FROM positionsEvenements WHERE idEvenementGroupeAdresse = '".$params['idEvenementGroupeAdresse']."'";
 				$resDelete = $this->connexionBdd->requete($reqDelete);
 
+				
 				foreach($nouveauTableau as $positionFinale => $value)
 				{
 					$reqPositions = "INSERT INTO positionsEvenements (idEvenementGroupeAdresse, idEvenement, position) VALUES ('".$params['idEvenementGroupeAdresse']."','".$value['idEvenement']."','".$positionFinale."') ";

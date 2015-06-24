@@ -6086,7 +6086,8 @@ class archiAdresse extends ArchiContenu
 			$tabSqlWhere[] = "  ae.idEvenement = '".$criteres['archiIdEvenement']."'";
 		}
 else{
-	//die(debug(debug_backtrace()));
+//	die(debug(debug_backtrace()));
+	//debug($criteres);
 }
 		
 		if (!isset($sqlWhere)) // debug laurent : je ne sais pas pourquoi cela n'a pas ete initialisé plus haut ,  a verifier
@@ -6190,6 +6191,9 @@ else{
 					ha1.idIndicatif as idIndicatif";
 		}
 
+		else{
+			debug($modeAffichage);
+		}
 		/*
 		 * Getting number of results
 		*/
@@ -6543,9 +6547,14 @@ else{
 			if (!isset($params['sqlNoLimit']) || $params['sqlNoLimit']==false) {
 				$sql.= " LIMIT ".$sqlLimit."
 						";
+				
 			}
-
-			/*
+			else{
+				debug($sql);
+				die(debug(debug_backtrace()));
+				
+			}
+/*debug($sql);
 			debug(array(
 					"sqlWhere" => (!isset($sqlWhere) || $sqlWhere=="" || $sqlWhere==" "),
 					"sqlAdressesSupplementaires"=>(!isset($sqlAdressesSupplementaires) || $sqlAdressesSupplementaires=="" || $sqlAdressesSupplementaires==" "),
@@ -6673,8 +6682,6 @@ else{
 												GROUP BY he1.idEvenement
 												ORDER BY he1.dateDebut, he1.idEvenement
 												";
-
-						
 								$resTitresEvenements = $this->connexionBdd->requete($reqTitresEvenements);
 
 								$positionAncre=0;
@@ -6693,7 +6700,6 @@ else{
 									$positionAncre++;
 								}
 								$titresEvenements = implode(' - ', $tabTitresEvenements);
-
 								break;
 						}
 						// *******************************************************************************************************************
