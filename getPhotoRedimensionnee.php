@@ -57,6 +57,10 @@ putenv('GDFONTPATH=.');
 //$imgsize = $_SESSION['dim_img'];
 //$imgsize = array($imglargeur,$imghauteur);
 //$config = new config();
-resizeImg($photoOriginale, $dimX, $dimX);
+if (is_file($photoOriginale)) {
+    resizeImg($photoOriginale, $dimX, $dimX);
+} else {
+    http_response_code(404);
+}
 
 ?>
