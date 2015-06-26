@@ -1994,7 +1994,7 @@ class archiEvenement extends config
 						'idEvenement'=>$res->idEvenement,
 						'urlProfilPic'=> $urlProfilPic,
 						'infoTitre'=> $utilisateur . " a ".$txtEnvoi." un événement",
-						'txtEnvoi' => $txtEnvoi." le",
+						'txtEnvoi' => $txtEnvoi,
 						'labelLienHistorique'=>$labelHistorique
 				));
 
