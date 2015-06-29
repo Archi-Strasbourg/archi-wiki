@@ -503,22 +503,23 @@ class ArchiAccueil extends config
 				}
 
 				$lastModifs = $this->getLatestModification(8);
-				foreach ($lastModifs as $modif){
-					$idAdresse = $modif['idAdresse'];
-					$e = new archiEvenement();
-					$adresseArray = $e->getArrayAdresse($modif['idEvenementGroupeAdresse'],'idEvenementGroupeAdresse');
-					//Adresse
-					$adresse = '';
-					$adresse = $e->getAddressText($adresseArray);
-					$infoImage= array();
-					//Image
-					$a = new archiAdresse();
-
-					$reqImageEvtRelated = "				
+				foreach ( $lastModifs as $modif ) {
+					if(isset($modif['idEvenement']) && $modif['idEvenement']){
+						$idAdresse = $modif ['idAdresse'];
+						$e = new archiEvenement ();
+						$adresseArray = $e->getArrayAdresse ( $modif ['idEvenementGroupeAdresse'], 'idEvenementGroupeAdresse' );
+						// Adresse
+						$adresse = '';
+						$adresse = $e->getAddressText ( $adresseArray );
+						$infoImage = array ();
+						// Image
+						$a = new archiAdresse ();
+						
+						$reqImageEvtRelated = "				
 							SELECT hi.idHistoriqueImage,hi.dateUpload,1 as priorite
 							FROM historiqueImage hi
 							LEFT JOIN _evenementImage ei on ei.idImage = hi.idImage
-							WHERE ei.idEvenement = ".$modif['idEvenement']."
+							WHERE ei.idEvenement = " . $modif ['idEvenement'] . "
 					
 									UNION
 									
@@ -531,86 +532,91 @@ class ArchiAccueil extends config
 							WHERE ee.idEvenement IS NOT NULL
 							AND evt.idEvenement IS NOT NULL
 							AND evt.idEvenement != 0
-							AND ei.idEvenement =".$modif['idEvenement']."
-							AND ee.idEvenement =".$modif['idEvenementGroupeAdresse']."
+							AND ei.idEvenement =" . $modif ['idEvenement'] . "
+							AND ee.idEvenement =" . $modif ['idEvenementGroupeAdresse'] . "
 							
 							ORDER BY priorite DESC
 							LIMIT 1
 							";
-					$resImageEvtRelated = $this->connexionBdd->requete($reqImageEvtRelated);
-					$arrayImage = mysql_fetch_assoc($resImageEvtRelated);
-					if(isset($arrayImage) && $arrayImage!=''){
-						$infoImage=$arrayImage;
-					}
-					else{
-						$reqImagePrincipale = "
+						$resImageEvtRelated = $this->connexionBdd->requete ( $reqImageEvtRelated );
+						$arrayImage = mysql_fetch_assoc ( $resImageEvtRelated );
+						if (isset ( $arrayImage ) && $arrayImage != '') {
+							$infoImage = $arrayImage;
+						} else {
+							$reqImagePrincipale = "
 						
 							SELECT hi.idHistoriqueImage,hi.dateUpload
 							FROM historiqueImage hi
 							LEFT JOIN evenements evt on evt.idImagePrincipale = hi.idImage
-							WHERE evt.idEvenement =".$modif['idEvenementGroupeAdresse']."
+							WHERE evt.idEvenement =" . $modif ['idEvenementGroupeAdresse'] . "
 							LIMIT 1
 							";
-						$resImagePrincipale = $this->connexionBdd->requete($reqImagePrincipale);
-						if(mysql_num_rows($reqImagePrincipale)>=1){
-							$infoImage = mysql_fetch_assoc($resImagePrincipale);
-						}
-						else{
-							
-							$reqOtherImage = "SELECT hi.idHistoriqueImage,hi.dateUpload
+							$resImagePrincipale = $this->connexionBdd->requete ( $reqImagePrincipale );
+							if (mysql_num_rows ( $reqImagePrincipale ) >= 1) {
+								$infoImage = mysql_fetch_assoc ( $resImagePrincipale );
+							} else {
+								
+								$reqOtherImage = "SELECT hi.idHistoriqueImage,hi.dateUpload
 							FROM historiqueImage hi
 							LEFT JOIN _evenementImage ei ON ei.idImage = hi.idImage
 							LEFT JOIN _evenementEvenement ee on ee.idEvenementAssocie = ei.idEvenement
 							WHERE ee.idEvenement IS NOT NULL
-							AND ee.idEvenement =".$modif['idEvenementGroupeAdresse']."
+							AND ee.idEvenement =" . $modif ['idEvenementGroupeAdresse'] . "
 							
 							LIMIT 1
 							";
-							$resOtherImage = $this->connexionBdd->requete($reqOtherImage);
-							if(mysql_num_rows($resOtherImage)>=1){
-								$infoImage = mysql_fetch_assoc($resOtherImage);
-								
+								$resOtherImage = $this->connexionBdd->requete ( $reqOtherImage );
+								if (mysql_num_rows ( $resOtherImage ) >= 1) {
+									$infoImage = mysql_fetch_assoc ( $resOtherImage );
+								}
 							}
-								
 						}
-					}
-					$urlImage = "";
-					$urlEvenement="";
-					//Url Evenement
-					$idEvenementGroupeAdresses = $e->getIdGroupeEvenement($modif['idEvenement']);
-					if($modif['type']=='adresse'){
-						$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresses));
-						//$urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
-
-						if(isset($infoImage['dateUpload']) && isset($infoImage['idHistoriqueImage'])&& $infoImage['idHistoriqueImage'] !='' && $infoImage['dateUpload'] !=''){
-							$urlImage = "images/grand/".$infoImage['dateUpload']."/".$infoImage['idHistoriqueImage'].".jpg";
+						$urlImage = "";
+						$urlEvenement = "";
+						// Url Evenement
+						$idEvenementGroupeAdresses = $e->getIdGroupeEvenement ( $modif ['idEvenement'] );
+						if ($modif ['type'] == 'adresse') {
+							$urlEvenement = $this->creerUrl ( '', '', array (
+									'archiAffichage' => 'adresseDetail',
+									'archiIdAdresse' => $idAdresse,
+									'archiIdEvenementGroupeAdresse' => $idEvenementGroupeAdresses 
+							) );
+							// $urlImage = "resizeImage.php?id=".$infoImage['idHistoriqueImage']."&height=200&width=200";
+							
+							if (isset ( $infoImage ['dateUpload'] ) && isset ( $infoImage ['idHistoriqueImage'] ) && $infoImage ['idHistoriqueImage'] != '' && $infoImage ['dateUpload'] != '') {
+								$urlImage = "images/grand/" . $infoImage ['dateUpload'] . "/" . $infoImage ['idHistoriqueImage'] . ".jpg";
+							} else {
+								$urlImage = "images/placeholder.jpg";
+							}
+						} else {
+							$urlEvenement = $this->creerUrl ( '', '', array (
+									'archiAffichage' => 'evenementListe',
+									'selection' => "personne",
+									'id' => $modif ['idPersonne'] 
+							) );
+							$urlImage = ArchiPersonne::getImage ( $modif ['idPersonne'], 'resized' );
 						}
-						else{
-							$urlImage="images/placeholder.jpg";
-						}
+						
+						// Description
+						$so = new StringObject ();
+						$bbcode = new bbCodeObject ();
+						$description = $bbcode->stripBBCode ( $modif ['description'] );
+						$description = $so->truncateStringToWord ( $description, 130, ' ', '...' );
+						
+						$t->assign_block_vars ( 'lastModif', array (
+								'miniatureLabelLeft' => $modif ['typeEvenement'],
+								'miniatureLabelRight' => $modif ['dateCreationEvenement'],
+								'adresse' => ucfirst ( $adresse ),
+								'ville' => ucfirst ( $adresseArray [0] ['nomVille'] ),
+								'urlMiniature' => $urlImage,
+								'urlEvenement' => $urlEvenement,
+								'description' => $description,
+								'titre' => $modif ['titre'] 
+						) );
 					}
 					else{
-						$urlEvenement = $this->creerUrl('', '', array('archiAffichage'=>'evenementListe', 'selection'=>"personne", 'id'=>$modif['idPersonne']));
-						$urlImage = ArchiPersonne::getImage($modif['idPersonne'],'resized');
-					}
 						
-					 
-					//Description
-					$so = new StringObject();
-					$bbcode = new bbCodeObject();
-					$description=$bbcode->stripBBCode($modif['description']);
-					$description = $so->truncateStringToWord($description,130,' ','...');
-					
-					$t->assign_block_vars('lastModif', array(
-							'miniatureLabelLeft'=>$modif['typeEvenement'],
-							'miniatureLabelRight' => $modif['dateCreationEvenement'],
-							'adresse' => ucfirst($adresse),
-							'ville'=>ucfirst($adresseArray[0]['nomVille']),
-							'urlMiniature' => $urlImage,
-							'urlEvenement' => $urlEvenement,
-							'description' => $description,
-							'titre'=> $modif['titre']
-					));
+					}
 				}
 
 				 
@@ -2075,7 +2081,6 @@ class ArchiAccueil extends config
 				else{
 					$idAdresse = $e->getIdAdresse($latestComment['idEvenement']);
 				}
-				
 				$ancre.="Evenement".$latestComment['idCommentaire'];
 			}
 			else{

@@ -768,7 +768,7 @@ class archiAdresse extends ArchiContenu
 			$retourEvenement = $evenement->afficher($this->variablesGet['archiIdEvenementGroupeAdresse'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 			$html.=$retourEvenement['html'];
 				
-			if(!archiPersonne::isPerson($this->variablesGet['archiIdEvenementGroupeAdresse'])){
+			if(!archiPersonne::isPerson($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!=0){
 				$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
 				$html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
 			}
@@ -844,6 +844,7 @@ class archiAdresse extends ArchiContenu
 					if($nbGroupesAdressesAffiches==1)
 					{
 						if(!ArchiPersonne::isPerson($groupeAdresse)){
+							debug($groupeAdresse);
 							$html.= $evenement->getFormComment($groupeAdresse,$this->getCommentairesFields(),'');
 							$html.=$this->getListeCommentaires($groupeAdresse);
 						}
@@ -9078,7 +9079,6 @@ else{
     public function getFormulaireCommentaires($idEvenementGroupeAdresse=0,$fieldsCommentaires=array())
     {
         $html="";
-        
         $e = new archiEvenement();
         $idEvenementGroupeAdresse = $e->getIdEvenementGroupeAdresseFromIdEvenement($idEvenementGroupeAdresse);
         
