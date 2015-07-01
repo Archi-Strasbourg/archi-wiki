@@ -6193,7 +6193,7 @@ else{
 		}
 
 		else{
-			debug($modeAffichage);
+			//debug($modeAffichage);
 		}
 		/*
 		 * Getting number of results
