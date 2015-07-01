@@ -30,7 +30,7 @@ $output = imagecreatetruecolor(640, 340);
 if ($infos[1] > $infos[0]) {
     $x=-170;
 } else {
-    $x=0;
+    $x=-85;
 }
 imagecopyresampled(
     $output, $input, 0, $x, 0, 0, $width, $height, $infos[0], $infos[1]
