@@ -5,6 +5,24 @@ Merci à tout nos mécènes et donateurs qui permettent au site de continuer à 
 <table>
 
 <!------------------------------------------------------------------------------>
+<!----		Le Blog de la Robertsau 	                    		         ->
+<!------------------------------------------------------------------------------>
+<tr>
+<td style="text-align:center">
+<a href='http://www.robertsau.eu/' target=_blank><img border=0 src='images/donateurs/logo_blog_robertsau.jpg'></a>
+</td>
+<!--<td class='textePetit'>-->
+<td>
+<font size=2>
+<b>Le Blog de la Robertsau</b>
+<br>
+Depuis le 1er avril 2006, le blog raconte la grande et la petite histoire de ce quartier au nord de Strasbourg : la Robertsau.<br>
+<br><br>
+<br>
+</td>
+</tr>
+
+<!------------------------------------------------------------------------------>
 <!----		Rêve d'Altitude         	                    		         ->
 <!------------------------------------------------------------------------------>
 <tr>
