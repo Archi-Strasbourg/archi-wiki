@@ -35,14 +35,14 @@
 </li>
 
 
-<li><span style='font-weight:bold;'><?_("par chèque à l'ordre de <i>Association Archi-strasbourg</i> en l'envoyant au siège de l'association :")?></span><br/><address>
-Association Archi-Strasbourg<br>
-26 rue Gratien<br>
-67200 Strasbourg<br>
+<li><span style='font-weight:bold;'><?_("par chèque à l'ordre de <i>Association Archi-strasbourg</i> en l'envoyant à notre trésorier :")?></span><br/><address>
+M. Roland Burckel<br>
+103 route de la Meinau<br>
+67100 Strasbourg<br>
 </address>
 </li>
 </ul>
-<U><?_("IMPORTANT :")?></U> <B><?_("Notre association est reconnu d'intérêt général, dès réception du don vous recevrez un reçu fiscal vous permettant de déduire 66% de votre don.")?></B> <?_("Exemple : pour un don de 50 € le coût à votre charge sera de 17€ après réduction d'impôts. Pour les entreprises les dons sont déductible à 60% dans la limite de 0,5% du chiffre d'affaire.")?><br/><?_("Possibilité d'apparaitre dans notre rubrique donateur avec nom et lien sur votre site.")?> <a href='http://www.archi-strasbourg.org/index.php?archiAffichage=donateurs'><?_("Voir notre rubrique donateur")?></a>.
+<U><?_("IMPORTANT :")?></U> <B><?_("Notre association est reconnue d'intérêt général, dès réception du don vous recevrez un reçu fiscal vous permettant de déduire 66% de votre don.")?></B> <?_("Exemple : pour un don de 50 € le coût à votre charge sera de 17€ après réduction d'impôts. Pour les entreprises les dons sont déductible à 60% dans la limite de 0,5% du chiffre d'affaire.")?><br/><?_("Possibilité d'apparaitre dans notre rubrique donateur avec nom et lien sur votre site.")?> <a href='http://www.archi-strasbourg.org/index.php?archiAffichage=donateurs'><?_("Voir notre rubrique donateur")?></a>.
 <br><br>
 
 <?_("Vous pouvez aussi nous aider en rejoignant notre association et en participant à nos activités bénévoles. Merci de ")?><a href='http://www.archi-strasbourg.org/?archiAffichage=contact'><?_("prendre contact avec nous")?></a>.<br><br>

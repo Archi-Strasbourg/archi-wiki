@@ -168,7 +168,7 @@ Villa 17 est une association pour la défense du patrimoine Wilhelmien.
 </table>
 
 Pour faire partie de nos mécènes et ainsi bénéficier de votre logo et d'un lien vers votre site (entreprise et association), vous pouvez soutenir notre association par un don à partir de 80 euros pour une année.
-<br>Les particuliers peuvent aussi nous aider, à partir de 40 euros pour un membre donateur, et ainsi figurer s'il le souhaite, sur cette page.
+<br>Les particuliers peuvent aussi nous aider, à partir de 40 euros pour un membre donateur, et ainsi figurer s'ils le souhaitent, sur cette page.
 
 <br><br>
 Pour rejoindre l'association ou en savoir plus, vous pouvez cliquez sur <a href='http://www.archi-strasbourg.org/?archiAffichage=quiSommesNous'>Qui Somme Nous</a>
