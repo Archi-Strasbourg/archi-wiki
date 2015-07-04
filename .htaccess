@@ -9,7 +9,6 @@ Options +FollowSymlinks
 RewriteEngine on
 
 #Redirection vers le nouveau domaine
-RewriteEngine On
 RewriteCond %{HTTP_HOST} ^archi-strasbourg.org$ [OR]
 RewriteCond %{HTTP_HOST} ^archi-wiki.org$ [OR]
 RewriteCond %{HTTP_HOST} ^www.archi-strasbourg.org$
