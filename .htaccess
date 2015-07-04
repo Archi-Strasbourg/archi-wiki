@@ -7,6 +7,14 @@ Options +FollowSymlinks
 
 # Activation du module de réécriture d'URL :
 RewriteEngine on
+
+#Redirection vers le nouveau domaine
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^archi-strasbourg.org$ [OR]
+RewriteCond %{HTTP_HOST} ^archi-wiki.org$ [OR]
+RewriteCond %{HTTP_HOST} ^www.archi-strasbourg.org$
+RewriteRule (.*)$ http://www.archi-wiki.org/$1 [R=301,L]
+
 #--------------------------------------------------
 # Règles de réécriture d'URL :
 #--------------------------------------------------
