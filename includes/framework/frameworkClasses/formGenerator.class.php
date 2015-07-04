@@ -1208,8 +1208,6 @@ class formGenerator extends config
     // **************************************************************************************************************************************
     public function afficherFromArray($parametres=array())
     {
-        require_once __DIR__.'/../../recaptcha-php-1.11/recaptchalib.php';
-
         $html="";
         $t=new Template($this->cheminTemplates);
         
@@ -1319,7 +1317,12 @@ class formGenerator extends config
 
         if (isset($parametres['captcha'])) {
             $t->assign_block_vars('captcha', array());
-            $t->assign_vars(array('captcha'=>recaptcha_get_html('6LeXTOASAAAAACl6GZmAT8QSrIj8yBrErlQozfWE')));
+            $t->assign_vars(
+				array(
+					'captcha'=>'<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+						<div class="g-recaptcha" data-sitekey="6LeXTOASAAAAACl6GZmAT8QSrIj8yBrErlQozfWE"></div>'
+				)
+			);
             if (isset($parametres['captcha-error'])) {
                 $t->assign_vars(array('captcha-error'=>_('Captcha incorrect !')));
             }
@@ -1560,7 +1563,7 @@ class formGenerator extends config
             case 'envoiMailAdmin':
                 $message="";
                 $parametres = $configForm['fields'];
-                $errors = $this->getArrayFromPost($parametres);
+                $errors = $this->getArrayFromPost($parametres, null, (isset($configForm['captcha']) && $configForm['captcha']));
                 if (count($errors)==0) {
                     foreach ($parametres as $fieldName => $properties)
                     {
@@ -1598,10 +1601,9 @@ class formGenerator extends config
     }
     
     // fonction qui met a jour le tableau des champs du formulaire avec les donnees envoyées en post et qui renvoi aussi un tableau contenant la liste des champs obligatoires qui sont mal renseignés
-    function getArrayFromPost(&$tableauTravail=array(),  $param = null)
+    function getArrayFromPost(&$tableauTravail=array(),  $param = null, $captcha=false)
     {
         global $config;
-        require_once __DIR__.'/../../recaptcha-php-1.11/recaptchalib.php';
         if (empty($param))
             $param = $_POST;
         $errors=array();
@@ -1873,16 +1875,25 @@ class formGenerator extends config
                 }
             }
         }
-        if (isset($param["recaptcha_challenge_field"])) {
-        	$resp = recaptcha_check_answer(
-        			$config->captchakey,
-        			$_SERVER["REMOTE_ADDR"],
-        			$param["recaptcha_challenge_field"],
-        			$param["recaptcha_response_field"]
-        	);
-        	if (!$resp->is_valid) {
-        		$errors['captcha-error']=$resp->error;
-        	}
+        if ($captcha) {
+            if (isset($param["g-recaptcha-response"])) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt(
+                    $ch, CURLOPT_POSTFIELDS,
+                    array(
+                        'secret'=>$config->captchakey,
+                        'response'=>$param["g-recaptcha-response"]
+                    )
+                );
+                $resp = json_decode(curl_exec($ch));
+                if (!$resp->success) {
+                    $errors['captcha-error']='Captcha incorrect !';
+                }
+            } else {
+                $errors['captcha-error']='Captcha manquant !';
+            }
         }
         return $errors;
     }

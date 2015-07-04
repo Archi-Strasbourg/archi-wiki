@@ -11,7 +11,6 @@
  * @link     https://archi-strasbourg.org/
  * 
  * */
-require_once __DIR__.'/../includes/recaptcha-php-1.11/recaptchalib.php';
 
 /**
  * Affichage du formulaire d'adhésion
@@ -124,21 +123,27 @@ function displayForm ()
     }
     echo ' /></span>
     <br/>
-    <div id="info_amounts" class="info_amounts"></div>';
-    echo recaptcha_get_html('6LeXTOASAAAAACl6GZmAT8QSrIj8yBrErlQozfWE');
+    <div id="info_amounts" class="info_amounts"></div>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <div class="g-recaptcha" data-sitekey="6LeXTOASAAAAACl6GZmAT8QSrIj8yBrErlQozfWE"></div>';
     
     echo '<input type="submit" />
     </form>';
 }
 
 if (isset($_POST['email'])) {
-    $resp = recaptcha_check_answer(
-        $config->captchakey,
-        $_SERVER["REMOTE_ADDR"],
-        $_POST["recaptcha_challenge_field"],
-        $_POST["recaptcha_response_field"]
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt(
+        $ch, CURLOPT_POSTFIELDS,
+        array(
+            'secret'=>$config->captchakey,
+            'response'=>$_POST["g-recaptcha-response"]
+        )
     );
-    if ($resp->is_valid) {
+    $resp = json_decode(curl_exec($ch));
+    if ($resp->success) {
         $message = '
         Nom : '.$_POST['surname'].'<br/>
         Prénom : '.$_POST['name'].'<br/>
