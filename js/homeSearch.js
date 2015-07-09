@@ -16,7 +16,10 @@ var switchSearchTxt = function (e) {
 
 var initHomeSearch = function () {
     'use strict';
-    document.getElementById('switchSearchImg').addEventListener('click', switchSearchImg, true);
+    var switchSearchImg = document.getElementById('switchSearchImg');
+    if (switchSearchImg) {
+        switchSearchImg.addEventListener('click', switchSearchImg, true);
+    }
 };
 
 window.addEventListener('load', initHomeSearch, false);
