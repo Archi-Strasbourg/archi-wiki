@@ -7326,6 +7326,9 @@ class archiEvenement extends config
 	 * @return multitype:array of string composing the address
 	 */
 public function getArrayAdresse($id,$type ='idEvenement'){
+		if (!isset($id)) {
+			return false;
+		}
 		switch($type){
 			case 'idEvenement':
 				$requete = "SELECT ha.numero,
@@ -7463,6 +7466,9 @@ public function getArrayAdresse($id,$type ='idEvenement'){
 	 * @return idEvenement of the groupe evenement corresponding
 	 */
 	public function getIdGroupeEvenement($idEvenement){
+		if (!isset($idEvenement)) {
+			return false;
+		}
 		$requete = "
 				SELECT idEvenement 
 				FROM _evenementEvenement
@@ -7489,6 +7495,9 @@ public function getArrayAdresse($id,$type ='idEvenement'){
 	 * @return Ambigous <>
 	 */
 	public function getIdAdresse($idEvenement){
+		if (!isset($idEvenement)) {
+                        return false;
+                }
 		$idEvenementGroup = $this->getIdGroupeEvenement($idEvenement);
 		$requete ="
 				SELECT idAdresse 
