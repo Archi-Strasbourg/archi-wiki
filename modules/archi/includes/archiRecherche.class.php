@@ -2320,7 +2320,7 @@ class archiRecherche extends config {
 				10 * (MATCH (nomRue) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
 				10 * (MATCH (nomSousQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
 				10 * (MATCH (nomQuartier) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
-				10 * (MATCH (nomVille) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
+				100000000000000000 * (MATCH (nomVille) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
 				10 * (MATCH (nomPays) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE)) +
 
 				1 * (MATCH (description) AGAINST ('".$params['motcle']."' IN BOOLEAN MODE))
