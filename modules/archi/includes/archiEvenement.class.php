@@ -730,6 +730,7 @@ class archiEvenement extends config
 		$reqIdHistoriqueEvenementAvantModif = "
                 SELECT he1.idHistoriqueEvenement as idHistoriqueEvenementAvantModif
                 FROM historiqueEvenement he2,historiqueEvenement he1
+
                 WHERE he2.idEvenement = he1.idEvenement
                 AND he1.idEvenement = '".$id."'
                 GROUP BY he1.idEvenement,he1.idHistoriqueEvenement
@@ -2822,7 +2823,7 @@ class archiEvenement extends config
 				$retour='-1';
 				$trouve=true;
 			}
-			elseif($fetch['idEvenementRecuperationTitre']!='0')
+			elseif(isset($fetch['idEvenementRecuperationTitre']) && $fetch['idEvenementRecuperationTitre']!='0')
 			{
 				$reqVerifEvenementTitre = "SELECT idEvenement from evenements WHERE idEvenement=".$fetch['idEvenementRecuperationTitre'];
 				$resVerifEvenementTitre = $this->connexionBdd->requete($reqVerifEvenementTitre);
