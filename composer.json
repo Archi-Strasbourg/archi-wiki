@@ -1,4 +1,7 @@
 {
+    "name": "archi-strasbourg/archi-wiki",
+    "license": "GPL-3.0",
+    "description": "Source code for http://archi-strasbourg.org/",
     "require": {
         "eventviva/php-image-resize": "1.5.*"
     }
