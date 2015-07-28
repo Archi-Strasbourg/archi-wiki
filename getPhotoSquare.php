@@ -12,6 +12,7 @@
  * 
  * */
 require_once "includes/framework/config.class.php";
+require_once 'vendor/autoload.php';
 $config = new Config();
 $path="images/placeholder.jpg";
 if (isset($_GET["id"]) && !empty($_GET["id"])) {
@@ -28,19 +29,7 @@ if (isset($_GET["id"]) && !empty($_GET["id"])) {
         }
     }     
 }
-$infos=getimagesize($path);
-$input = imagecreatefromjpeg($path);
-header("Content-Type: image/jpeg");
-if ($infos[1] > $infos[0]) {
-    $width=130;
-    $height=($infos[1]*130)/$infos[0];
-} else {
-    $height=130;
-    $width=($infos[0]*130)/$infos[1];
-}
-$output = imagecreatetruecolor(130, 130);
-imagecopyresampled(
-    $output, $input, 0, 0, 0, 0, $width, $height, $infos[0], $infos[1]
-);
-imagejpeg($output);
+$image = new \Eventviva\ImageResize($path);
+$image->crop(130, 130, true);
+$image->output();
 ?>

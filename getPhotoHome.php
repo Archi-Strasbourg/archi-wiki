@@ -12,6 +12,7 @@
  * 
  * */
 require_once "includes/framework/config.class.php";
+require_once 'vendor/autoload.php';
 $config = new Config();
 $req = "
         SELECT dateUpload
@@ -20,20 +21,7 @@ $req = "
 $res =$config->connexionBdd->requete($req);
 $image=mysql_fetch_object($res);
 $path="images/grand/".$image->dateUpload."/".$_GET["id"].".jpg";
-$infos=getimagesize($path);
-$input = imagecreatefromjpeg($path);
-header("Content-Type: image/jpeg");
-$width=640;
-$height=($infos[1]*640)/$infos[0];
-$output = imagecreatetruecolor(640, 340);
-//$output = imagecreatetruecolor($width, $height);
-if ($infos[1] > $infos[0]) {
-    $x=-170;
-} else {
-    $x=-85;
-}
-imagecopyresampled(
-    $output, $input, 0, $x, 0, 0, $width, $height, $infos[0], $infos[1]
-);
-imagejpeg($output);
+$image = new \Eventviva\ImageResize($path);
+$image->crop(640, 340, true);
+$image->output();
 ?>
