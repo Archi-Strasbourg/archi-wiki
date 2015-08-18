@@ -428,8 +428,8 @@ class archiAdresse extends ArchiContenu
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @param unknown $idAdresse
 	 * @return idEvenementGroupeAdresse of the idAdresse input
 	 */
@@ -440,20 +440,20 @@ class archiAdresse extends ArchiContenu
 	}
 	/**
 	 * Affiche le detail de l'adresse avec le listing des événements associés
-	 * 
+	 *
 	 * @param unknown $idAdresse : Id de l'adresse a afficher
-	 * 
+	 *
 	 * @return HTML du contenu principal de la page
 	 */
 	public function afficherDetailAdresse($idAdresse,$idEvenementGroupeAdresse){
 		/*
-		 * Etape : 
+		 * Etape :
 		 * Afficher la google map
-		 * Afficher le sommaire des evenements 
-		 * Récupérer la liste des evenements et les afficher un par un 
-		 * 
+		 * Afficher le sommaire des evenements
+		 * Récupérer la liste des evenements et les afficher un par un
+		 *
 		 */
-		
+
 		//Template loading
 		$this->messages->display();
 		$t = new Template('modules/archi/templates/evenement');
@@ -475,15 +475,15 @@ class archiAdresse extends ArchiContenu
 				$idEvenementGroupeAdresse = $fetch['idEvenement'];
 			}
 		}
-		
+
 		//Getting coordo for the current address
 		$requete = "SELECT latitude , longitude FROM historiqueAdresse WHERE idAdresse = ".$idAdresse;
 		$result = $this->connexionBdd->requete($requete);
 		$fetch = mysql_fetch_assoc($result);
 		$coordonnees['longitude'] = $fetch['longitude'];
 		$coordonnees['latitude'] = $fetch['latitude'];
-		
-		
+
+
 		//Displaying google map
 		$e = new archiEvenement();//Should be moved to archiUtils
 		$calqueGoogleMap = new calqueObject(array('idPopup'=>10));
@@ -498,11 +498,11 @@ class archiAdresse extends ArchiContenu
 				'popupGoogleMap'=>$calqueGoogleMap->getDivNoDraggableWithBackgroundOpacity(array('top'=>20,'lienSrcIFrame'=>'','contenu'=>$contenuIFramePopup))
 		));
 
-		//Getting neighborhood addresses 
+		//Getting neighborhood addresses
 		$arrayEncartAdresses = $this->getArrayEncartAdressesImmeublesAvantApres(array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
 		$urlAutreBiens = $this->getArrayRetourLiensVoirBatiments($idAdresse);
-		
-		
+
+
 		$t->assign_block_vars('listeAdressesVoisines', array(
 				'content' => $arrayEncartAdresses['html'],
 				'urlAutresBiensRue'=>$urlAutreBiens['urlAutresBiensRue'],
@@ -510,26 +510,26 @@ class archiAdresse extends ArchiContenu
 				));
 		$t->assign_block_vars('sommaireEvenements', array());
 
-		
+
 		//Preparing the loop on all related event to the current address
 		$requeteIdEvenements = "
 				SELECT DISTINCT ee.idEvenementAssocie as idEvenement
 				FROM _evenementEvenement ee
 				LEFT JOIN positionsEvenements pe on pe.idEvenement = ee.idEvenementAssocie
 				WHERE ee.idEvenement = $idEvenementGroupeAdresse
-				ORDER BY IF(pe.position IS NULL,0, pe.position) ASC 
+				ORDER BY IF(pe.position IS NULL,0, pe.position) ASC
 				";
 		$resultIdEvenements = $this->connexionBdd->requete($requeteIdEvenements);
-		
-		
+
+
 		//Add actions buttons
-		//Ajouter sous evenement 
+		//Ajouter sous evenement
 		$t->assign_block_vars('actionsSommaire',
 				array(
 						'urlAction'=>$this->creerUrl('', 'ajouterSousEvenement',array('idAdresse'=>$idAdresse,'archiIdEvenement' =>$idEvenementGroupeAdresse)),
 						'labelAction' => 'Ajouter un événement'
 			) );
-		
+
 		// Selection des images
 		// Copy/paste code from old function
 		$afficheSelectionImages = 1;
@@ -542,9 +542,9 @@ class archiAdresse extends ArchiContenu
 						'urlAction' => $this->creerUrl ( '', 'evenement', array (
 								'idEvenement' => $idEvenementGroupeAdresse,
 								'archiIdAdresse' => $idAdresse,
-								'afficheSelectionImage' => $afficheSelectionImages 
+								'afficheSelectionImage' => $afficheSelectionImages
 						) ),
-						'labelAction' => 'Sélectionner des images' 
+						'labelAction' => 'Sélectionner des images'
 				) );
 			}
 		}
@@ -562,13 +562,13 @@ class archiAdresse extends ArchiContenu
 						'urlAction' => $this->creerUrl ( '', 'evenement', array (
 								'idEvenement' => $idEvenementGroupeAdresse,
 								'archiIdAdresse' => $idAdresse,
-								'afficheSelectionImagePrincipale' => $afficheSelectionImagePrincipale 
+								'afficheSelectionImagePrincipale' => $afficheSelectionImagePrincipale
 						) ),
-						'labelAction' => 'Sélectionner l\'image principale' 
+						'labelAction' => 'Sélectionner l\'image principale'
 				) );
 			}
 		}
-		
+
 		// Selection du titre
 		$afficheSelectionTitre = 1;
 		/*
@@ -578,18 +578,18 @@ class archiAdresse extends ArchiContenu
 		*/
 		if ($authentification->estConnecte ()) {
 			if ($authentification->estAdmin ()) {
-				
+
 				$t->assign_block_vars ( 'actionsSommaire', array (
 						'urlAction' => $this->creerUrl ( '', 'evenement', array (
 								'idEvenement' => $idEvenementGroupeAdresse,
 								'archiIdAdresse' => $idAdresse,
-								'afficheSelectionTitre' => $afficheSelectionTitre 
+								'afficheSelectionTitre' => $afficheSelectionTitre
 						) ),
-						'labelAction' => 'Sélectionner un titre' 
+						'labelAction' => 'Sélectionner un titre'
 				) );
 			}
 		}
-		
+
 		// Repositionner les evenements
 		$affichePositionnementEvenements = 1;
 		if ($authentification->estConnecte () && isset ( $this->variablesGet ['affichePositionnementEvenements'] ) && $this->variablesGet ['affichePositionnementEvenements'] == '1') {
@@ -597,34 +597,34 @@ class archiAdresse extends ArchiContenu
 			$a = new archiEvenement ();
 			$imageObject = new imageObject (); // objet image du framework
 			$a->addToJsHeader ( $imageObject->getJSFunctionsDragAndDrop ( array (
-					'withBalisesScript' => true 
+					'withBalisesScript' => true
 			) ) ); // rajoute les fonctions de deplacement d'elements dans le header du formulaire
 		}
 		if ($authentification->estConnecte ()) {
 			if ($authentification->estAdmin ()) {
-				
+
 				$t->assign_block_vars ( 'actionsSommaire', array (
 						'urlAction' => $this->creerUrl ( '', 'evenement', array (
 								'archiIdAdresse' => $idAdresse,
 								'idEvenement' => $idEvenementGroupeAdresse,
 								'archiIdAdresse' => $idAdresse,
-								'affichePositionnementEvenements' => $affichePositionnementEvenements 
+								'affichePositionnementEvenements' => $affichePositionnementEvenements
 						) ),
-						'labelAction' => 'Repositionner les événements' 
+						'labelAction' => 'Repositionner les événements'
 				) );
 			}
 		}
-		
+
 		//Loop on all evenet related to this idAdresse specified in argument of this function
 		while($fetch = mysql_fetch_assoc($resultIdEvenements)){
-			//Getting all the infos with this method 
+			//Getting all the infos with this method
 			$evenement = $e->getEventInfos($fetch['idEvenement']);
 			$result = $e->displaySingleEvent($evenement);
 			$t->assign_block_vars('event', array('content'=>$result));
 			//Filling the template with the infos
 			$t->assign_block_vars('evenement', $evenement['evenementData']);
-			
-		
+
+
 			$titre =stripslashes($evenement['evenementData']['titre']);
 			if(isset($evenement['evenementData']['titre']) &&$evenement['evenementData']['titre']!=""){
 				$titre.=" - ";
@@ -636,47 +636,47 @@ class archiAdresse extends ArchiContenu
 					'date' =>$evenement['evenementData']['dates']
 			));
 		}
-		
-		
+
+
 		//Getting all the miscellaneous images (vueSur / prisDepuis)
 		$image = new archiImage();
 		$idVueSur = $image->getIdImageVueSur($idEvenementGroupeAdresse);
 		$idPrisDepuis = $image->getidImagePrisDepuis($idEvenementGroupeAdresse);
-		
-		
+
+
 		if(!empty($idVueSur)){
 			$evenementVueSur = $image->getEventInfosMiscImage($idVueSur,$idAdresse,"Autres vues sur");
 			$t->assign_block_vars('evenement', $evenementVueSur);
 		}
-		
+
 		if(!empty($idPrisDepuis)){
 			$evenementPrisDepuis = $image->getEventInfosMiscImage($idPrisDepuis,$idAdresse,"Vues prises depuis");
 			$t->assign_block_vars('evenement', $evenementPrisDepuis);
 		}
-		
-		
+
+
 		$listeCommentaires=$this->getListeCommentaires($idEvenementGroupeAdresse);
 		$formulaireCommentaire = $e->getFormComment($idEvenementGroupeAdresse, $this->getCommentairesFields(),'');
-		
+
 		$s = new archiSource();
 		$t->assign_vars(array(
 				'title' => $title,
 				'listeCommentairesAdresse' => $listeCommentaires,
 				'formulaireCommentaireAdresse' => $formulaireCommentaire,
 				'popupDescriptionSource' =>	$s->getPopupDescriptionSource()
-				
+
 		));
-		
+
 		ob_start();
 		$t->pparse('index');
 		$html .= ob_get_contents();
 		ob_end_clean();
 		return $html;
 	}
-	
-	
-	
-	
+
+
+
+
 	// ***************************************************************************************************************************************
 	// affiche le detail d'une adresse , c'est a dire les evenements dont le groupe d'adresse correspond
 	// ***************************************************************************************************************************************
@@ -712,12 +712,12 @@ class archiAdresse extends ArchiContenu
 				$titre='';
 			}
 		}
-		 
+
 
 		//    }
 		$html="<div class='social_widgets'><div class='fb-like right' data-send='false' data-layout='button_count' data-show-faces='true' data-action='recommend'></div>
-        <a href='https://twitter.com/share' class='twitter-share-button right' data-via='ArchiStrasbourg' data-lang='fr' data-related='ArchiStrasbourg'>Tweeter</a> 
-        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='//platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div>"; 
+        <a href='https://twitter.com/share' class='twitter-share-button right' data-via='ArchiStrasbourg' data-lang='fr' data-related='ArchiStrasbourg'>Tweeter</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='//platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','twitter-wjs');</script></div>";
 		$html.="<h2>";
 		$e=new archiEvenement();
 		$archiIdEvenementGroupeAdresse=isset($_GET['archiIdEvenementGroupeAdresse'])?$_GET['archiIdEvenementGroupeAdresse']:$e->getIdEvenementGroupeAdresseFromIdEvenement($_GET["archiIdEvenement"]);
@@ -755,7 +755,7 @@ class archiAdresse extends ArchiContenu
 
 		}
 		$html.="</h2>";
-		
+
 		$evenement = new archiEvenement();
 		// si le groupe d'adresse est precisé dans l'url , on ne va afficher que celui ci
 		if(isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!='')
@@ -767,7 +767,7 @@ class archiAdresse extends ArchiContenu
 			}
 			$retourEvenement = $evenement->afficher($this->variablesGet['archiIdEvenementGroupeAdresse'],'',null,array()); // cette fonction va afficher les evenements liés au groupe d'adresse
 			$html.=$retourEvenement['html'];
-				
+
 			if(!archiPersonne::isPerson($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!=0){
 				$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
 				$html.=$this->getListeCommentaires($this->variablesGet['archiIdEvenementGroupeAdresse']);
@@ -777,7 +777,7 @@ class archiAdresse extends ArchiContenu
 		{
 			$retourEvenement = $evenement->afficher($idEvenementGroupeAdresse,'',null,array());
 			$html.=$retourEvenement['html'];
-				
+
 			if(!ArchiPersonne::isPerson($idEvenementGroupeAdresse)){
 				$html.= $evenement->getFormComment($this->variablesGet['archiIdEvenementGroupeAdresse'],$this->getCommentairesFields(),'');
 				$html.=$this->getListeCommentaires($idEvenementGroupeAdresse);
@@ -1157,7 +1157,7 @@ class archiAdresse extends ArchiContenu
 					$fetchTitre = mysql_fetch_assoc($resTitre);
 					if (isset($params["noHTML"])) {
 						$titre=stripslashes($fetchTitre['titre']);
-					} 
+					}
 					else {
 						$titre = "<span $classCSS style='$styleCSSTitre'>".stripslashes($fetchTitre['titre'])."</span> ";
 					}
@@ -1195,7 +1195,7 @@ class archiAdresse extends ArchiContenu
 					$fetchTitre = mysql_fetch_assoc($resTitre);
 					if (isset($params["noHTML"])) {
 						$titre=stripslashes($fetchTitre['titre']);
-					} 
+					}
 					else {
 						$titre = "<b $classCSS>".stripslashes($fetchTitre['titre'])."</b> ";
 					}
@@ -1321,7 +1321,7 @@ class archiAdresse extends ArchiContenu
 
 
 				if(!isset($params['noVille']) ||$params['noVille']==false){
-					if(isset($fetch['nomVille'])) {//  && $fetch['nomVille']!='Strasbourg'	
+					if(isset($fetch['nomVille'])) {//  && $fetch['nomVille']!='Strasbourg'
 						if(isset($params['idAdresseReference']) && $params['idAdresseReference']!=0 && $idVilleAdresseReference ==$fetch['idVille']){
 							// on ne precise pas la ville si c'est la meme que la ville de l'adresse de reference
 						}
@@ -1432,7 +1432,7 @@ class archiAdresse extends ArchiContenu
 					else{
 						// retour = retour
 					}
-				} 
+				}
 				else {
 					if($titre!=''){
 						$retour = "<span style='$styleCSSTitre'>".$titre."</span>".$separatorAfterTitle.implode("/",$arrayNomAdresse);
@@ -2155,7 +2155,7 @@ class archiAdresse extends ArchiContenu
 			$dateUpload = $fetchImage['dateUpload'];
 			$idHistoriqueImage = $fetchImage['idHistoriqueImage'];
 		}
-		 
+
 		if($url=='')
 			$url = $this->getUrlImage().'transparent.gif';
 		return array('url'=>$url,'dateUpload'=>$dateUpload,'idHistoriqueImage'=>$idHistoriqueImage);
@@ -3398,7 +3398,7 @@ class archiAdresse extends ArchiContenu
 		if($affichageInteret==0){
 			isset($this->variablesGet['affichageInteret'])? $affichageInteret = $this->variablesGet['affichageInteret'] : $affichageInteret=0;
 		}
-		
+
 		// est ce que l'on affiche tous les champs de choix ou seulement ceux dont on a besoin ?
 		$urlTypeNew='';
 		$a = new archiAuthentification();
@@ -3485,12 +3485,12 @@ class archiAdresse extends ArchiContenu
 			$afficheNombreResultat = 1;
 			$urlAfficheNbResultat = "&afficheNombreResultat=1";
 		}
-		
+
 		 if($affichageInteret==1){
 		 	$urlAfficheInteret = "&affichageInteret=1";
 		 }
-	
-		
+
+
 
 		// initialisation des identifiants de pays, ville,quartier, sousquartier,rue selectionnés par l'utilisateur
 		$idPaysChoixAdresse=0;
@@ -3521,8 +3521,8 @@ class archiAdresse extends ArchiContenu
 		$tabUrl['sousQuartier']="+'&idSousQuartierChoixAdresse='+document.getElementById('sousQuartier').value";
 		$tabUrl['quartier']="+'&idQuartierChoixAdresse='+document.getElementById('quartier').value";
 		$tabUrl['rue']="+'&idRueChoixAdresse='+document.getElementById('rue').value";
-		
-		
+
+
 		//**********************************************************************************************************************************
 		// gestion des favoris :
 		// s'il n'y a pas de pays choisi ni de ville et qu'il existe une information sur les favoris dans la session de l'utilisateur connecté
@@ -5479,7 +5479,7 @@ class archiAdresse extends ArchiContenu
 					$totalAdresses = $nbRues + $nbQuartiers + $nbVilles;
 
 					$recherche = new archiRecherche();
-								
+
 					$nbResult = $recherche->getNumberOfAdresse(array('ville' => $fetch['idVille']));
 
 					$nbResultats = " (".$nbResult.")";
@@ -6009,7 +6009,7 @@ class archiAdresse extends ArchiContenu
 			}
 		}
 
-		
+
 
 
 		// ************************************************************************************************************************************************
@@ -6081,7 +6081,7 @@ class archiAdresse extends ArchiContenu
 		if (!isset($sqlJoin))
 			$sqlJoin ="";
 
-		
+
 		$selectEvenement="";
 		if (isset($criteres['archiIdEvenement'])) {
 			$tabSqlWhere[] = "  ae.idEvenement = '".$criteres['archiIdEvenement']."'";
@@ -6090,7 +6090,7 @@ else{
 //	die(debug(debug_backtrace()));
 	//debug($criteres);
 }
-		
+
 		if (!isset($sqlWhere)) // debug laurent : je ne sais pas pourquoi cela n'a pas ete initialisé plus haut ,  a verifier
 			$sqlWhere = '';
 
@@ -6101,7 +6101,7 @@ else{
 				$prefix    = 'AND';
 			}
 		}
-		
+
 		if (!isset($criteres['debut']) OR !is_numeric($criteres['debut']) OR $criteres['debut'] < 1) {
 			$sqlLimit = '0,  10';
 			$valDebutSuivant = 0;
@@ -6134,8 +6134,8 @@ else{
 		// si une ville generale est precisé sinon c'est strasbourg
 		if (isset($this->variablesGet['archiIdVilleGeneral']) && $this->variablesGet['archiIdVilleGeneral']!='' && isset($this->variablesGet['archiIdPaysGeneral']) && $this->variablesGet['archiIdPaysGeneral']!='') {
 			$sqlWhere .= " AND v.idVille = '".$this->variablesGet['archiIdVilleGeneral']."' AND p.idPays='".$this->variablesGet['archiIdPaysGeneral']."' ";
-		} 
-		
+		}
+
 		if (isset($criteres['toutesLesDemolitions'])) {
 			$arrayIdAdressesDemolitions = $this->getIdAdressesFromCriteres(array('whereSql'=>"te.nom = 'Démolition'"));
 			$sqlAdressesSupplementaires = " AND ha1.idAdresse in ('".implode("', '", $arrayIdAdressesDemolitions)."')";
@@ -6170,7 +6170,7 @@ else{
 		// bidouille pour que l'on affiche encore toutes les adresses en mode detail dans l'encars qui affiche la liste des adresses,  ce qui va faire que la requete ne renvoie des groupes d'adresses en double
 		$critereSelectionIdAdressesModeAffichageListeAdressesCount = "";
 		$critereSelectionIdAdressesModeAffichageListeAdressesRequete = "";
-		
+
 		if ($modeAffichage == 'listeDesAdressesDuGroupeAdressesSurDetailAdresse') {
 			$critereSelectionIdAdressesModeAffichageListeAdressesCount = ",  ha1.idAdresse";
 			$critereSelectionIdAdressesModeAffichageListeAdressesRequete = ",  ha1.idAdresse as idAdresse,  ha1.numero,  ha1.idQuartier,  ha1.idVille, ind.nom,
@@ -6235,7 +6235,7 @@ else{
 			$valDebutSuivant += 10;
 
 
-		
+
 		$nbAdresses = $nbReponses;
 		$sqlAdressesSupplementairesRechercheRelancee="";
 		// on a effectue une recherche par mot cle ,  mais pas de resultat,  on va donc voir si la recherche concerne une adresse precise et rechercher les numeros autour de cette adresse
@@ -6327,7 +6327,7 @@ else{
 
 					$t->assign_vars(
 							array(
-									'titre'=>$titre, 
+									'titre'=>$titre,
 									'description'=>$description,
 									"divBegin"=>"<div itemscope itemtype='http://schema.org/Person'>",
 									"divEnd"=>"</div>"
@@ -6415,7 +6415,7 @@ else{
 				$urlSuivant = $this->creerUrl('', '', array_merge($this->variablesGet,  array('debut' => $valDebutSuivant)));
 				$urlSuivantOnClick = "";
 				$tabTempo = array(
-					
+
 						array(   'url'     => $this->creerUrl('', '', array_merge($this->variablesGet,  array('ordre' => 'nom'))),
 								'urlOnClick' => '',
 								'titre'   => 'Titre',
@@ -6427,7 +6427,7 @@ else{
 
 				);
 		}
-		
+
 		if (!isset($_GET["selection"]) || $_GET["selection"]!="personne") {
 			// on peut cacher l'affichage du nombre de reponses suivant l'affichage souhaité
 			if (!isset($criteres['cacheNbReponses'])) {
@@ -6542,18 +6542,18 @@ else{
 			".$sqlSelectCoordonnees." ".$sqlAdressesSupplementairesRechercheRelancee." ".$whereVillesModerees."
 			AND ae.idAdresse IS NOT NULL
 			GROUP BY ha1.idAdresse, he1.idEvenement, ha1.idHistoriqueAdresse
-			HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
+			HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
 			ORDER BY  ".$sqlOrderBy."
 			DESC,  CAST(ha1.numero as signed) ASC";
 			if (!isset($params['sqlNoLimit']) || $params['sqlNoLimit']==false) {
 				$sql.= " LIMIT ".$sqlLimit."
 						";
-				
+
 			}
 			else{
 				debug($sql);
 				die(debug(debug_backtrace()));
-				
+
 			}
 /*debug($sql);
 			debug(array(
@@ -6591,7 +6591,7 @@ else{
 			*/
 			}
 
-			
+
 			/*
 			debug(array(
 					"sqlWhere" => $sqlWhere,
@@ -6610,7 +6610,7 @@ else{
 			// ***************************************************************************************************************************************
 			//debug($sql);
 			$requeteAdresse = $this->connexionBdd->requete($sql);
-				
+
 			// dans le cas de la popup on ne veut pas afficher le detail d'une adresse
 			// ceci arrive quand le resultat de la recherche ne renvoit qu'un resultat ,  par defaut on va sur l'evenement,  sauf pour les cas suivant:
 			switch ($modeAffichage) {
@@ -6640,16 +6640,16 @@ else{
 				$fetchIdAdresse = $this->getFetchOneAdresseElementsFromGroupeAdresse($fetch['idEvenementGA']);
 				header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$fetchIdAdresse['idAdresse'], 'archiIdEvenementGroupeAdresse'=>$fetch['idEvenementGA']), false, false));
 			} else {
-				
+
 				if (mysql_num_rows($requeteAdresse)>0) {
 					while ($fetch=mysql_fetch_assoc($requeteAdresse)) {
-						
+
 						// on recupere un idAdresse,  idQuartier ,  idRue etc appartenant au groupe d'adresse pour l'urlRewriting
 						/*
 						 * Desactivated for now because we are getting all the necessary fields in the previous request
 						*/
-						
-						 
+
+
 						// *******************************************************************************************************************
 						// recuperation de l'adresse
 
@@ -6662,7 +6662,7 @@ else{
 						// et on fabrique le lien avec l'ancre vers l'evenement qui pourra etre cliqué directement
 						// on a une adresse qui correspond a un groupe d'adresse ,  on va donc chercher le titre des evenements qui correspondent au groupe d'adresse
 						switch ($modeAffichage) {
-							
+
 							case 'popupRechercheAdressePrisDepuis':
 							case 'popupRechercheAdresseVueSur':
 								// pas d'affichage des evenements dans le cas des popups sur la modification d'image
@@ -6898,7 +6898,7 @@ else{
 						if ($modeAffichage=='listeDesAdressesDuGroupeAdressesSurDetailAdresse') {
 							$idAdresse=0;
 							if (isset($criteres['archiIdEvenement'])) {
-								$reqAdresse = "      
+								$reqAdresse = "
 					                SELECT  distinct ae.idAdresse as idAdresse
 					                FROM _adresseEvenement ae
 					                WHERE ae.idEvenement = '".$criteres['archiIdEvenement']."'
@@ -6918,17 +6918,17 @@ else{
 										FROM evenements he2,  evenements he1
 										WHERE he2.idEvenement = he1.idEvenement
 										AND he1.idEvenement='".$idEvenementTitreAdresses."'
-												GROUP BY he1.idEvenement  
+												GROUP BY he1.idEvenement
 												";
-								
+
 								$resTitreAdresse = $this->connexionBdd->requete($reqTitreAdresse);
 								$fetchTitreAdresse = mysql_fetch_assoc($resTitreAdresse);
 								$titreAdresse = stripslashes($fetchTitreAdresse['titre']);
 								$t->assign_vars(array('titreAdresses'=>$titreAdresse."<br>"));
 								if ($idEvenementTitreAdresses!=0 && $titreAdresse!='')
 									$styleAdresse = "font-size:13px;";
-								
-								
+
+
 							} elseif (isset($this->variablesGet['archiIdEvenement'])) {
 								$reqAdresse = $this->getIdAdressesFromIdEvenement(array('idEvenement'=>$this->variablesGet['archiIdEvenement']));
 								$resAdresse = $this->connexionBdd->requete($reqAdresse);
@@ -6944,7 +6944,7 @@ else{
 										FROM evenements he2,  evenements he1
 										WHERE he2.idEvenement = he1.idEvenement
 										AND he1.idEvenement='".$idEvenementTitreAdresses."'
-												GROUP BY he1.idEvenement  
+												GROUP BY he1.idEvenement
 												";
 								$resTitreAdresse = $this->connexionBdd->requete($reqTitreAdresse);
 								$fetchTitreAdresse = mysql_fetch_assoc($resTitreAdresse);
@@ -7038,7 +7038,7 @@ else{
 						$arrayRetour[] = "<a href='".$this->creerUrl('', '', array('archiIdAdresse'=>$fetch['idAdresse'], 'archiAffichage'=>'adresseDetail', 'debut'=>''))."'>".$nomAdresse."</a>";
 						$arrayIdAdressesRetour[] = $fetch['idAdresse'];
 						$arrayIdEvenementsGARetour[] = $fetch['idEvenementGA'];
-						
+
 						// **********************************************************************************************************************************************
 						// lien vers la liste des adresses relatives a l'adresse courante:
 						// **********************************************************************************************************************************************
@@ -7079,8 +7079,8 @@ else{
 				}
 			}
 		}
-		
-		
+
+
 		ob_start();
 		$t->pparse('listeAdresses');
 		$html=ob_get_contents();
@@ -7092,7 +7092,7 @@ else{
 
 	public function aliasAfficherListe() {
 		if (isset ( $this->variablesGet ['selection'] ) && $this->variablesGet ['selection'] != '' && isset ( $this->variablesGet ['id'] ) && $this->variablesGet ['id'] != '') {
-			
+
 			if(isset($this->variablesGet['debut']) && $this->variablesGet['debut']!=""){
 				$debut = $this->variablesGet['debut'];
 			}
@@ -7107,8 +7107,8 @@ else{
 			return $s->searchByCriterias ( $criteres );
 		}
 	}
-	
-	
+
+
 	// **********************************************************************************************************************************************************************
 	// affichage de la liste alphabetique en fonction du resultat de la requete (on affiche les lettres ou il y a un resultat dans la requete)
 	// **********************************************************************************************************************************************************************
@@ -7255,11 +7255,11 @@ else{
 				{
 				".$javascriptSousQuartier."
 		"));
-        
-        $t->assign_vars(array('onChangeListeQuartier'=>"onChangeListeQuartier();"));
-            
 
-        
+        $t->assign_vars(array('onChangeListeQuartier'=>"onChangeListeQuartier();"));
+
+
+
         ob_start();
         $t->pparse('listeQuartiers');
         $html=ob_get_contents();
@@ -7267,8 +7267,8 @@ else{
 
         return $html;
     }
-    
-    
+
+
     // **********************************************************************************************************************************************************************
     // affiche le champ select avec la liste des sous quartiers en fonction d'un parametre get archiIdQuartier
     // possibilité de passer un identifiant unique dans les parametres GET
@@ -7279,16 +7279,16 @@ else{
         $html="";
         $t=new Template('modules/archi/templates/');
         $t->set_filenames((array('listeSousQuartiers'=>'listeSousQuartiers.tpl')));
-        
-        
+
+
         $a = new archiAuthentification();
         $u = new archiUtilisateur();
-        
+
         $sqlWhereVillesModerees = "";
         if($a->getIdProfil()==3) // l'utilisateur est un moderateur , on affiche que les quartiers qu'il peut moderer suivant les villes qu'il peut moderer
         {
             $arrayIdVilles = $u->getArrayVillesModereesPar($a->getIdUtilisateur());
-            
+
             if(count($arrayIdVilles)>0)
             {
                 $sqlWhereVillesModerees = " AND idQuartier IN (SELECT idQuartier FROM quartier WHERE idVille in (".implode(",",$arrayIdVilles).")) ";
@@ -7298,9 +7298,9 @@ else{
                 $sqlWhereVillesModerees = " AND idQuartier =0 "; // si le moderateur n'a pas de ville a moderer on affiche aucun quartier (sinon la requete les afficheraient tous)
             }
         }
-        
+
         $identifiantUnique="";
-        
+
         if(isset($params['identifiantUnique']))
         {
             $identifiantUnique = $params['identifiantUnique'];
@@ -7309,9 +7309,9 @@ else{
         {
             $identifiantUnique=$this->variablesGet['identifiantUnique'];
         }
-        
+
         $t->assign_vars(array('identifiantUnique'=>$identifiantUnique));
-        
+
         if((isset($this->variablesGet['archiIdQuartier']) && $this->variablesGet['archiIdQuartier']!='') || (isset($params['idQuartier']) && $params['idQuartier']!=''))
         {
             $fromQuartier="";
@@ -7323,7 +7323,7 @@ else{
             {
                 $whereQuartier = " AND idQuartier='".$this->variablesGet['archiIdQuartier']."' ";
             }
-            
+
             $resQuartiers=$this->connexionBdd->requete("select idSousQuartier,nom from sousQuartier where 1=1 and nom<>'autre' ".$sqlWhereVillesModerees." ".$whereQuartier." order by nom");
             while($fetchQuartiers = mysql_fetch_assoc($resQuartiers))
             {
@@ -7333,7 +7333,7 @@ else{
                 {
                     $selected = " selected ";
                 }
-            
+
                 if($fetchQuartiers['nom']!='autre')
                 {
                     $t->assign_block_vars("sousQuartiers",array(
@@ -7348,7 +7348,7 @@ else{
         {
             echo "archiAdresses::afficheSelectQuartier => parametre archiIdVille manquant<br>";
         }
-        
+
         ob_start();
         $t->pparse('listeSousQuartiers');
         $html=ob_get_contents();
@@ -7356,23 +7356,23 @@ else{
 
         return $html;
     }
-    
+
     // affichage de la liste des villes sous forme d'un champ select
     public function afficheSelectVille($params=array())
     {
         $html="";
         $t=new Template('modules/archi/templates/');
         $t->set_filenames((array('listeVille'=>'listeVilleSelect.tpl')));
-        
-        
+
+
         $a = new archiAuthentification();
         $u = new archiUtilisateur();
-        
+
         $sqlWhereVillesModerees = "";
         if($a->getIdProfil()==3) // l'utilisateur est un moderateur , on affiche que les quartiers qu'il peut moderer suivant les villes qu'il peut moderer
         {
             $arrayIdVilles = $u->getArrayVillesModereesPar($a->getIdUtilisateur());
-            
+
             if(count($arrayIdVilles)>0)
             {
                 $sqlWhereVillesModerees = " AND idVille IN (".implode(",",$arrayIdVilles).") ";
@@ -7382,21 +7382,21 @@ else{
                 $sqlWhereVillesModerees = " AND idVille =0 "; // si le moderateur n'a pas de ville a moderer on affiche aucun (sinon la requete les afficheraient tous)
             }
         }
-        
-        
-        
+
+
+
         $wherePays = "";
         if(isset($params['idPays']) && $params['idPays']!='')
         {
             $wherePays = " AND idPays = '".$params['idPays']."' ";
         }
-        
+
         if(isset($this->variablesGet["idPays"]) && $this->variablesGet["idPays"]!='')
         {
             $wherePays=" AND idPays = '".$this->variablesGet['idPays']."' ";
         }
-        
-        
+
+
         $javascriptQuartier = "";
         if(!isset($params['noQuartier']) || $params['noQuartier']!=true)
         {
@@ -7406,7 +7406,7 @@ else{
                     appelAjax('?archiAffichage=afficheSelectQuartier&noHeaderNoFooter=1&idVille='+document.getElementById('ville').value,'champQuartier');
                 ";
         }
-        
+
         $javascriptSousQuartier = "";
         if(!isset($params['noSousQuartier']) || $params['noSousQuartier']!=true)
         {
@@ -7415,7 +7415,7 @@ else{
                 document.getElementById('sousQuartiers').selectedIndex=0;
             ";
         }
-        
+
         $t->assign_vars(array('javascript'=>"
             function onChangeListeVille()
             {
@@ -7423,16 +7423,16 @@ else{
                 ".$javascriptQuartier."
             }
             "));
-        
-        
+
+
         // assignation du javascript pour l'ajax
         $t->assign_vars(array('onChangeListeVille'=>"onChangeListeVille();"));
-        
-        
+
+
         $reqVille = "SELECT idVille, nom FROM ville WHERE 1=1 and nom<>'autre' ".$sqlWhereVillesModerees." ".$wherePays;
-        
+
         $resVille = $this->connexionBdd->requete($reqVille);
-        
+
         while($fetchVille = mysql_fetch_assoc($resVille))
         {
             $selected="";
@@ -7440,14 +7440,14 @@ else{
             {
                 $selected=" selected ";
             }
-            
+
             $t->assign_block_vars('villes',array(
                                                     'id'    =>$fetchVille['idVille'],
                                                     'nom'   =>$fetchVille['nom'],
                                                     'selected'=>$selected
                                                 ));
         }
-        
+
         ob_start();
         $t->pparse('listeVille');
         $html=ob_get_contents();
@@ -7455,19 +7455,19 @@ else{
 
         return $html;
     }
-    
+
     // affichage de la liste des pays sous forme d'un champ select
     public function afficheSelectPays($params=array())
     {
         $html="";
         $t=new Template('modules/archi/templates/');
         $t->set_filenames((array('listePays'=>'listePaysSelect.tpl')));
-        
-        
-        
+
+
+
         $a = new archiAuthentification();
         $u = new archiUtilisateur();
-        
+
         $sqlWhereVillesModerees = "";
         if($a->getIdProfil()==3) // l'utilisateur est un moderateur , on affiche que les quartiers qu'il peut moderer suivant les villes qu'il peut moderer
         {
@@ -7482,31 +7482,31 @@ else{
                 {
                     $arrayIdPays[] = $fetchPaysModeres['idPays'];
                 }
-                
+
                 $sqlWhereVillesModerees = " AND idPays IN (".implode(",",$arrayIdPays).") ";
             }
             else
             {
                 $sqlWhereVillesModerees = " AND idPays = 0 "; // si le moderateur ne gere aucune ville , on rajoute ce critere pour ne pas afficher toutes les villes
             }
-            
-        }       
-        
-        
-        
+
+        }
+
+
+
         $reqPays = "SELECT nom, idPays FROM pays WHERE 1=1 ".$sqlWhereVillesModerees;
         $resPays = $this->connexionBdd->requete($reqPays);
-        
+
         $javascriptVille="";
         if(!isset($params['noVille']) || $params['noVille']!=true)
         {
-            $javascriptVille = "                            
+            $javascriptVille = "
                             document.getElementById('ville').innerHTML='<option value=0>Aucun</option>';
                             document.getElementById('ville').selectedIndex=0;
                             appelAjax('?archiAffichage=afficheSelectVille&noHeaderNoFooter=1&idPays='+document.getElementById('pays').value,'champVille');
                             ";
         }
-        
+
         $javascriptQuartier="";
         if(!isset($params['noQuartier']) || $params['noQuartier']!=true)
         {
@@ -7515,7 +7515,7 @@ else{
                             document.getElementById('quartiers').selectedIndex=0;
             ";
         }
-        
+
         $javascriptSousQuartier="";
         if(!isset($params['noSousQuartier']) || $params['noSousQuartier']!=true)
         {
@@ -7524,8 +7524,8 @@ else{
                             document.getElementById('sousQuartiers').selectedIndex=0;
             ";
         }
-        
-        
+
+
         $t->assign_vars(array('javascript'=>"
                         function onChangeListePays()
                         {
@@ -7534,11 +7534,11 @@ else{
                             ".$javascriptVille."
                         }
                         "));
-        
-        
+
+
         // assignation du javascript pour l'ajax
         $t->assign_vars(array('onChangeListePays'=>"onChangeListePays();"));
-        
+
         while($fetchPays = mysql_fetch_assoc($resPays))
         {
             $selected="";
@@ -7552,7 +7552,7 @@ else{
                                                     'selected'=>$selected
                                                 ));
         }
-        
+
         ob_start();
         $t->pparse('listePays');
         $html=ob_get_contents();
@@ -7560,16 +7560,16 @@ else{
 
         return $html;
     }
-    
-    
-    
+
+
+
     public function afficheSelectTypeEvenement()
     {
         $html="";
         $t=new Template('modules/archi/templates/');
         $t->set_filenames((array('listeTypeEvenement'=>'listeTypeEvenement.tpl')));
-        
-        
+
+
         if(isset($this->variablesGet['archiTypeGroupeEvenement']) && $this->variablesGet['archiTypeGroupeEvenement']!='')
         {
             $res = $this->connexionBdd->requete("select idTypeEvenement, nom from typeEvenement where groupe = '".$this->variablesGet['archiTypeGroupeEvenement']."' order by position ASC");
@@ -7579,13 +7579,13 @@ else{
                                                                 'id'=>$fetch['idTypeEvenement'],
                                                                 'nom'=>$fetch['nom']
                                                             ));
-            
+
             }
         }
-        
-        
-        
-        
+
+
+
+
         ob_start();
         $t->pparse('listeTypeEvenement');
         $html.=ob_get_contents();
@@ -7593,12 +7593,12 @@ else{
 
         return $html;
     }
-    
-    
-    
-    
+
+
+
+
     // **********************************************************************************************************************************************************************
-    // code du contenu de la popup choix rue 
+    // code du contenu de la popup choix rue
     // **********************************************************************************************************************************************************************
     public function afficheChoixRue($lettre='a')
     {
@@ -7606,22 +7606,22 @@ else{
         {
             $lettre = $this->variablesGet['archiLettre'];
         }
-        
+
         $modeAffichage="";
         if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']!='')
             $modeAffichage=$this->variablesGet['modeAffichage'];
-        
+
         $html="";
         $t=new Template('modules/archi/templates/');
         $t->set_filenames((array('listeRues'=>'listeRues.tpl')));
-        
-        
+
+
         // recuperation des parametres
         $idPays         = 1;
         $idVille        = 0;
         $idQuartier     = 0;
         $idSousQuartier = 0;
-        
+
         $sqlLeftJoin="";
         $sqlSelection="";
         // mise en place des parametres de requete sql pour recherche des rue d'une ville
@@ -7633,8 +7633,8 @@ else{
             $sqlSelection = " AND r.idSousQuartier = sq.idSousQuartier ";
             $t->assign_vars(array('idVille'=>$idVille));
         }
-        
-        // mise en place des parametres de requete sql pour recherche des rue d'un quartier 
+
+        // mise en place des parametres de requete sql pour recherche des rue d'un quartier
         if(isset($this->variablesGet['archiIdQuartier']) && $this->variablesGet['archiIdQuartier']!='0' && $this->variablesGet['archiIdQuartier']!='undefined' && $this->variablesGet['archiIdQuartier']!='')
         {
             $idQuartier = $this->variablesGet['archiIdQuartier'];
@@ -7642,7 +7642,7 @@ else{
             $sqlSelection = " AND r.idSousQuartier = sq.idSousQuartier ";
             $t->assign_vars(array('idQuartier'=>$idQuartier));
         }
-        
+
         // mise en place des parametres de requete sql pour recherche des rue d'un sous quartier
         if(isset($this->variablesGet['archiIdSousQuartier']) && $this->variablesGet['archiIdSousQuartier']!='0' && $this->variablesGet['archiIdSousQuartier']!='undefined' && $this->variablesGet['archiIdSousQuartier']!='')
         {
@@ -7651,8 +7651,8 @@ else{
             $sqlSelection = " AND r.idSousQuartier = '".$idSousQuartier."'";
             $t->assign_vars(array('idSousQuartier'=>$idSousQuartier));
         }
-        
-        
+
+
         $reqNbRue = "
                     select lower(substr(r.nom,1,1)) as lettre,r.nom
                     from rue r
@@ -7662,11 +7662,11 @@ else{
                     and lower(substr(r.nom,1,1))='".$lettre."'
                     order by r.nom ASC
                     ";
-        
+
         $resNbRue = $this->connexionBdd->requete($reqNbRue);
-        
+
         $nbEnregistrementTotaux = mysql_num_rows($resNbRue); // nombre d'enregistrements pour la lettre courante
-        
+
         if($nbEnregistrementTotaux ==0)
         {
             // recherche de la premiere lettre ou il y a des resultats
@@ -7685,7 +7685,7 @@ else{
             $fetchNewLettre = mysql_fetch_assoc($resNbRueNew);
             $lettre = $fetchNewLettre['lettre'];
         }
-        
+
         // nombre d'images affichées sur une page
         $nbEnregistrementsParPage = 20;
         $arrayPagination=$this->pagination(array(
@@ -7694,7 +7694,7 @@ else{
                                         'nbEnregistrementsTotaux'=>$nbEnregistrementTotaux,
                                         'typeLiens'=>'noformulaire'
                                         ));
-        
+
         $reqRue = "
                     select r.idRue as idRue, r.nom as nom, lower(substr(r.nom,1,1)) as lettre, prefixe
                     from rue r
@@ -7705,11 +7705,11 @@ else{
                     order by r.nom ASC
                     LIMIT ".$arrayPagination['limitSqlDebut'].",".$nbEnregistrementsParPage;
         $resRue = $this->connexionBdd->requete($reqRue);
-        
-        
+
+
         $html.=$this->afficheListeAlphabetique(array('champ'=>'r.nom','table'=>'rue r','join'=>$sqlLeftJoin,'where'=>$sqlSelection),'popupRue');
         $html.=$arrayPagination['html']."<br>";
-        
+
         if($nbEnregistrementTotaux>0) // est qu'il y a des enregistrement pour la rue courante ?
         {
             mysql_data_seek($resRue,0); // on replace le curseur au debut de la liste des enregistrements
@@ -7732,31 +7732,31 @@ else{
                     $nomGoogleMap = $fetchRue['prefixe'].' '.$nom;
                     $nom = $nom.' ('.$fetchRue['prefixe'].')';
                 }
-                
-            
+
+
                 /*$t->assign_block_vars('rues',array(
                                                     'url'=>"#",
                                                     'onclick'=>"parent.document.getElementById(parent.document.getElementById('paramChampAppelantRue').value+'txt').value='".addslashes($nom)."';parent.document.getElementById(parent.document.getElementById('paramChampAppelantRue').value).value='".$fetchRue['idRue']."';parent.document.getElementById('calqueRue').style.display='none';",
                                                     'nom'=>$nom
                 ));*/
-                
+
                 $colonneHTML .= "<a href=\"#\" onclick=\"parent.document.getElementById(parent.document.getElementById('paramChampAppelantRue').value+'txt').value='".addslashes($nomGoogleMap)."';parent.document.getElementById(parent.document.getElementById('paramChampAppelantRue').value).value='".$fetchRue['idRue']."';parent.document.getElementById('calqueRue').style.display='none';\">".$nom."</a><br>";
                 if($i==9)
                 {
                     $tableauHTML->addValue($colonneHTML);
                     $colonneHTML="";
                 }
-                
+
                 $i++;
         }
-        
+
         if($colonneHTML!='')
         {
             $tableauHTML->addValue($colonneHTML);
         }
-        
+
         $t->assign_vars(array('rues'=>$tableauHTML->createHtmlTableFromArray(2,'border=0;width:400px;font-size:12px;vertical-align:top;','',"valign='top' border=0")));
-        
+
         ob_start();
         $t->pparse('listeRues');
         $html.=ob_get_contents();
@@ -7775,7 +7775,7 @@ else{
         $fetchAdresse = mysql_fetch_assoc($res);
         return $fetchAdresse['newId']+1;
     }
-    
+
     // **********************************************************************************************************************************************************************
     // recuperation d'un encart affichant les adresses pour les derniers evenements  NEST PLUS UTILISE !!!!!!!!!!!!!!!! => a supprimer a terme , une fois la page d'accueil sera validee
     // **********************************************************************************************************************************************************************
@@ -7787,7 +7787,7 @@ else{
         $t->set_filenames((array('encartAccueil'=>'encartAccueil.tpl')));
         ob_start();
         $string = new stringObject();
-        
+
         switch($modeAffichage)
         {
             // ****************************************************************************************************************************************************************************
@@ -7798,39 +7798,39 @@ else{
                 $where = " he.idTypeEvenement='6' ";
                 $t->assign_vars(array('lienVersTout'=>"<a href='".$this->creerUrl('','toutesLesDemolitions',array())."'>Toutes les démolitions</a>"));
                 // cas des trois encart sauf celui des derniereAdresses
-                // recherche des derniers evenenements 
+                // recherche des derniers evenenements
 
                 $req="
                                         SELECT distinct ha.idAdresse as idAdresse,ee.idEvenementAssocie as idEvenementAssocie,ha.date,ha.numero as numero,ha.idRue as idRue,
                                         ha.idQuartier as idQuartier, ha.idSousQuartier as idSousQuartier, ha.idVille as idVille,ha.idIndicatif as idIndicatif,he1.idEvenement as idEvenement,he1.dateCreationEvenement as dateCreationEvenement, he1.description as description,
-                                        
+
                                         r.nom as nomRue,
                                         q.nom as nomQuartier,
                                         sq.nom as nomSousQuartier,
                                         v.nom as nomVille,
                                         r.prefixe as prefixeRue
-                                        
+
                                         FROM historiqueAdresse ha2, historiqueAdresse ha
-                                        
+
                                         RIGHT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
                                         RIGHT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
                                         RIGHT JOIN evenements he1 ON he1.idEvenement = ee.idEvenementAssocie
                                         RIGHT JOIN evenements he2 ON he2.idEvenement = he1.idEvenement
-                                        
+
                                         LEFT JOIN rue r ON r.idRue = ha.idRue
                                         LEFT JOIN sousQuartier sq ON sq.idSousQuartier = ha.idSousQuartier
                                         LEFT JOIN quartier q ON q.idQuartier = ha.idQuartier
                                         LEFT JOIN ville v ON v.idVille = ha.idVille
-                                        
+
                                         WHERE ha2.idAdresse = ha.idAdresse
                                         AND he1.idTypeEvenement = '6'
                                         GROUP BY ha.idAdresse, he1.idEvenement , ha.idHistoriqueAdresse
-                                        HAVING ha.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
+                                        HAVING ha.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                                         ORDER BY he1.dateCreationEvenement DESC,ha.idHistoriqueAdresse DESC
                                         LIMIT 5
                 ";
-                
-                
+
+
                 $res = $this->connexionBdd->requete($req);
                 $i=0;
                 $arrayIdAdresses=array();
@@ -7844,24 +7844,24 @@ else{
                         {
                             $urlImage = $this->getUrlImageFromAdresse($fetch['idAdresse'],'moyen');
                         }
-                        
+
                         if(preg_match('/transparent/i',$urlImage['url'])==false) // recherche du mot 'transparent' dans la chaine, i indique l'insensibilité a la casse
                         {
                             $t->assign_vars(array('photoAdresse1'=>"<img style='border:1px #000000 solid;margin-right:2px;float:left;' align='middle' src='".$urlImage['url']."'>"));
                         }
-                        
+
                         $t->assign_vars(array('descriptionAdresse1'=>"<div><a href='".$this->creerUrl('','adresseDetail',array("archiIdAdresse"=>$fetch['idAdresse']))."' style='font-size:12px;'>".date('d/m/Y',strtotime($fetch['dateCreationEvenement'])).' '.$this->getIntituleAdresse($fetch)."</a><br>".stripslashes($string->sansBalises($string->coupureTexte($fetch['description'],20)))."</div>"));
                     }
                     elseif(!in_array($fetch['idAdresse'],$arrayIdAdresses) && $fetch['idAdresse']!='')
                     {
                         $t->assign_block_vars('listeAdressesSuivantes',array('lien'=>"<a href='".$this->creerUrl('','adresseDetail',array("archiIdAdresse"=>$fetch['idAdresse']))."' style='font-size:12px;'>".date('d/m/Y',strtotime($fetch['dateCreationEvenement'])).' '.$this->getIntituleAdresse($fetch)."</a>"));
                     }
-                    
+
                     $arrayIdAdresses[] = $fetch['idAdresse'];
 
                     $i++;
                 }
-                
+
             break;
             // ****************************************************************************************************************************************************************************
             // AFFICHAGE DES ENCARTS DES DERNIERES ADRESSES AJOUTEES
@@ -7878,39 +7878,39 @@ else{
                     $listeAdressesNePasAfficher = "AND ha.idAdresse not in ('".$listeAdressesNePasAfficher."')";
                 }
 
-            
+
                 // cas de l'encars des dernieres adresses
                 $req="
                                         SELECT distinct ha.idAdresse as idAdresse,ee.idEvenementAssocie as idEvenementAssocie,ha.date,ha.numero as numero,ha.idRue as idRue,
                                         ha.idQuartier as idQuartier, ha.idSousQuartier as idSousQuartier, ha.idVille as idVille,ha.idIndicatif as idIndicatif,he1.idEvenement as idEvenement,he1.dateCreationEvenement as dateCreationEvenement, he1.description as description,
-                                        
+
                                         r.nom as nomRue,
                                         q.nom as nomQuartier,
                                         sq.nom as nomSousQuartier,
                                         v.nom as nomVille,
                                         r.prefixe as prefixeRue
-                                        
+
                                         FROM historiqueAdresse ha2, historiqueAdresse ha
-                                        
+
                                         RIGHT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
                                         RIGHT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
                                         RIGHT JOIN evenements he1 ON he1.idEvenement = ee.idEvenementAssocie
                                         RIGHT JOIN evenements he2 ON he2.idEvenement = he1.idEvenement
-                                        
+
                                         LEFT JOIN rue r ON r.idRue = ha.idRue
                                         LEFT JOIN sousQuartier sq ON sq.idSousQuartier = ha.idSousQuartier
                                         LEFT JOIN quartier q ON q.idQuartier = ha.idQuartier
                                         LEFT JOIN ville v ON v.idVille = ha.idVille
-                                        
+
                                         WHERE ha2.idAdresse = ha.idAdresse
                                         AND YEAR(he1.dateDebut)<>'".date("Y")."'
                                         ".$listeAdressesNePasAfficher."
                                         GROUP BY ha.idAdresse, he1.idEvenement , ha.idHistoriqueAdresse
-                                        HAVING ha.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
+                                        HAVING ha.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                                         ORDER BY ha.date DESC,ha.idHistoriqueAdresse DESC
                                         LIMIT 5
                 ";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 $i=0;
                 $arrayIdAdresses=array();
@@ -7924,64 +7924,64 @@ else{
                         {
                             $urlImage = $this->getUrlImageFromAdresse($fetch['idAdresse'],'moyen');
                         }
-                        
+
                         if(preg_match('/transparent/i',$urlImage['url'])==false) // recherche du mot 'transparent' dans la chaine, i indique l'insensibilité a la casse
                         {
                             $t->assign_vars(array('photoAdresse1'=>"<img style='border:1px #000000 solid;margin-right:2px;float:left;' align='middle' src='".$urlImage['url']."'>"));
                         }
-                        
+
                         $t->assign_vars(array('descriptionAdresse1'=>"<div><a href='".$this->creerUrl('','adresseDetail',array("archiIdAdresse"=>$fetch['idAdresse']))."' style='font-size:12px;'>".date('d/m/Y',strtotime($fetch['dateCreationEvenement'])).' '.$this->getIntituleAdresse($fetch)."</a><br>".stripslashes($string->sansBalises($string->coupureTexte($fetch['description'],20)))."</div>"));
                     }
                     elseif(!in_array($fetch['idAdresse'],$arrayIdAdresses) && $fetch['idAdresse']!='')
                     {
                         $t->assign_block_vars('listeAdressesSuivantes',array('lien'=>"<a href='".$this->creerUrl('','adresseDetail',array("archiIdAdresse"=>$fetch['idAdresse']))."' style='font-size:12px;'>".date('d/m/Y',strtotime($fetch['dateCreationEvenement'])).' '.$this->getIntituleAdresse($fetch)."</a>"));
                     }
-                    
+
                     $arrayIdAdresses[] = $fetch['idAdresse'];
 
                     $i++;
                 }
             break;
-                    
+
             // ****************************************************************************************************************************************************************************
             // AFFICHAGE DES ENCARTS DES EVENEMENTS TRAVAUX
             // ****************************************************************************************************************************************************************************
             case 'travaux':
                 $titre = "Derniers travaux";
                 $t->assign_vars(array('lienVersTout'=>"<a href='".$this->creerUrl('','tousLesTravaux',array())."'>Tous les travaux</a>"));
-                // recherche des derniers evenenements 
-                //he.idTypeEvenement in (1,2,3,4,5) 
+                // recherche des derniers evenenements
+                //he.idTypeEvenement in (1,2,3,4,5)
                 $req="
                                         SELECT distinct ha.idAdresse as idAdresse,ee.idEvenementAssocie as idEvenementAssocie,ha.date,ha.numero as numero,ha.idRue as idRue,
                                         ha.idQuartier as idQuartier, ha.idSousQuartier as idSousQuartier, ha.idVille as idVille,ha.idIndicatif as idIndicatif,he1.idEvenement as idEvenement,he1.dateCreationEvenement as dateCreationEvenement, he1.description as description,
-                                        
+
                                         r.nom as nomRue,
                                         q.nom as nomQuartier,
                                         sq.nom as nomSousQuartier,
                                         v.nom as nomVille,
                                         r.prefixe as prefixeRue
-                                        
+
                                         FROM historiqueAdresse ha2, historiqueAdresse ha
-                                        
+
                                         RIGHT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
                                         RIGHT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
                                         RIGHT JOIN evenements he1 ON he1.idEvenement = ee.idEvenementAssocie
                                         RIGHT JOIN evenements he2 ON he2.idEvenement = he1.idEvenement
-                                        
+
                                         LEFT JOIN rue r ON r.idRue = ha.idRue
                                         LEFT JOIN sousQuartier sq ON sq.idSousQuartier = ha.idSousQuartier
                                         LEFT JOIN quartier q ON q.idQuartier = ha.idQuartier
                                         LEFT JOIN ville v ON v.idVille = ha.idVille
-                                        
+
                                         WHERE ha2.idAdresse = ha.idAdresse
                                         AND (he1.idTypeEvenement in (2,3,4,5) OR (he1.idTypeEvenement='1' AND YEAR(he1.dateDebut)='".date("Y")."'))
-                                        
+
                                         GROUP BY ha.idAdresse, he1.idEvenement , ha.idHistoriqueAdresse
-                                        HAVING ha.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
+                                        HAVING ha.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                                         ORDER BY he1.dateCreationEvenement DESC,ha.idHistoriqueAdresse DESC
                                         LIMIT 5
                 ";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 $i=0;
                 $arrayIdAdresses=array();
@@ -7995,19 +7995,19 @@ else{
                         {
                             $urlImage = $this->getUrlImageFromAdresse($fetch['idAdresse'],'moyen');
                         }
-                        
+
                         if(preg_match('/transparent/i',$urlImage['url'])==false) // recherche du mot 'transparent' dans la chaine, i indique l'insensibilité a la casse
                         {
                             $t->assign_vars(array('photoAdresse1'=>"<img style='border:1px #000000 solid;margin-right:2px;float:left;' align='middle' src='".$urlImage['url']."'>"));
                         }
-                        
+
                         $t->assign_vars(array('descriptionAdresse1'=>"<div><a href='".$this->creerUrl('','adresseDetail',array("archiIdAdresse"=>$fetch['idAdresse']))."' style='font-size:12px;'>".date('d/m/Y',strtotime($fetch['dateCreationEvenement'])).' '.$this->getIntituleAdresse($fetch)."</a><br>".stripslashes($string->sansBalises($string->coupureTexte($fetch['description'],20)))."</div>"));
                     }
                     elseif(!in_array($fetch['idAdresse'],$arrayIdAdresses) && $fetch['idAdresse']!='')
                     {
                         $t->assign_block_vars('listeAdressesSuivantes',array('lien'=>"<a href='".$this->creerUrl('','adresseDetail',array("archiIdAdresse"=>$fetch['idAdresse']))."' style='font-size:12px;'>".date('d/m/Y',strtotime($fetch['dateCreationEvenement'])).' '.$this->getIntituleAdresse($fetch)."</a>"));
                     }
-                    
+
                     $arrayIdAdresses[] = $fetch['idAdresse'];
 
                     $i++;
@@ -8021,37 +8021,37 @@ else{
                 $titre = "Derniers événements culturels";
                 $t->assign_vars(array('lienVersTout'=>"<a href='".$this->creerUrl('','tousLesEvenementsCulturels',array())."'>Tous les événements culturels</a>"));
                 // cas des trois encart sauf celui des derniereAdresses
-                // recherche des derniers evenenements 
+                // recherche des derniers evenenements
                 $req="
                                         SELECT distinct ha.idAdresse as idAdresse,ee.idEvenementAssocie as idEvenementAssocie,ha.date,ha.numero as numero,ha.idRue as idRue,
                                         ha.idQuartier as idQuartier, ha.idSousQuartier as idSousQuartier, ha.idVille as idVille,ha.idIndicatif as idIndicatif,he1.idEvenement as idEvenement,he1.dateCreationEvenement as dateCreationEvenement, he1.description as description,
-                                        
+
                                         r.nom as nomRue,
                                         q.nom as nomQuartier,
                                         sq.nom as nomSousQuartier,
                                         v.nom as nomVille,
                                         r.prefixe as prefixeRue
-                                        
+
                                         FROM historiqueAdresse ha2, historiqueAdresse ha
-                                        
+
                                         RIGHT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
                                         RIGHT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
                                         RIGHT JOIN evenements he1 ON he1.idEvenement = ee.idEvenementAssocie
                                         RIGHT JOIN evenements he2 ON he2.idEvenement = he1.idEvenement
-                                        
+
                                         LEFT JOIN rue r ON r.idRue = ha.idRue
                                         LEFT JOIN sousQuartier sq ON sq.idSousQuartier = ha.idSousQuartier
                                         LEFT JOIN quartier q ON q.idQuartier = ha.idQuartier
                                         LEFT JOIN ville v ON v.idVille = ha.idVille
-                                        
+
                                         WHERE ha2.idAdresse = ha.idAdresse
-                                        AND he1.idTypeEvenement not in (1,2,3,4,5,6,11) 
+                                        AND he1.idTypeEvenement not in (1,2,3,4,5,6,11)
                                         GROUP BY ha.idAdresse, he1.idEvenement , ha.idHistoriqueAdresse
-                                        HAVING ha.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
+                                        HAVING ha.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                                         ORDER BY he1.dateCreationEvenement DESC,ha.idHistoriqueAdresse DESC
                                         LIMIT 5
                 ";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 $i=0;
                 $arrayIdAdresses=array();
@@ -8065,19 +8065,19 @@ else{
                         {
                             $urlImage = $this->getUrlImageFromAdresse($fetch['idAdresse'],'moyen');
                         }
-                        
+
                         if(preg_match('/transparent/i',$urlImage['url'])==false) // recherche du mot 'transparent' dans la chaine, i indique l'insensibilité a la casse
                         {
                             $t->assign_vars(array('photoAdresse1'=>"<img style='border:1px #000000 solid;margin-right:2px;float:left;' align='middle' src='".$urlImage['url']."'>"));
                         }
-                        
+
                         $t->assign_vars(array('descriptionAdresse1'=>"<div><a href='".$this->creerUrl('','adresseDetail',array("archiIdAdresse"=>$fetch['idAdresse']))."' style='font-size:12px;'>".date('d/m/Y',strtotime($fetch['dateCreationEvenement'])).' '.$this->getIntituleAdresse($fetch)."</a><br>".stripslashes($string->sansBalises($string->coupureTexte($fetch['description'],20)))."</div>"));
                     }
                     elseif(!in_array($fetch['idAdresse'],$arrayIdAdresses) && $fetch['idAdresse']!='')
                     {
                         $t->assign_block_vars('listeAdressesSuivantes',array('lien'=>"<a href='".$this->creerUrl('','adresseDetail',array("archiIdAdresse"=>$fetch['idAdresse']))."' style='font-size:12px;'>".date('d/m/Y',strtotime($fetch['dateCreationEvenement'])).' '.$this->getIntituleAdresse($fetch)."</a>"));
                     }
-                    
+
                     $arrayIdAdresses[] = $fetch['idAdresse'];
 
                     $i++;
@@ -8086,22 +8086,22 @@ else{
             break;
         }
 
-        
+
         $t->assign_vars(array('titre'=>$titre));
-        
+
         $t->pparse('encartAccueil');
         $html.=ob_get_contents();
         ob_end_clean();
         $retour =array("html"=>$html , "arrayIdAdresses"=>$arrayIdAdresses);
         return $retour;
     }
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
     //  ************************************************************************************************************************
     // affichage des derniers evenements par categorie , travaux, culturel , dernieresAdresses,demolitions
     // on remplis un tableau au fur et a mesure , le but etant de realiser l'operation en 1 seul requete afin d'eviter les repetitions
@@ -8115,68 +8115,68 @@ else{
         {
             $sqlWhere = "AND v.idVille=".$params['idVille'];
         }
-        
-        
+
+
         $reqEvenements = "
-        
+
             SELECT  he1.idEvenement as idEvenement, he1.dateCreationEvenement as dateCreationEvenement,he1.dateDebut as dateDebut,extract(YEAR FROM he1.dateDebut) as annneeDebut, he1.idTypeEvenement as idTypeEvenement,
-                    ha1.idAdresse as idAdresse, ha1.date as dateAdresse, ha1.numero as numero, ha1.idRue as idRue, ha1.idQuartier as idQuartier, 
+                    ha1.idAdresse as idAdresse, ha1.date as dateAdresse, ha1.numero as numero, ha1.idRue as idRue, ha1.idQuartier as idQuartier,
                     ha1.idSousQuartier as idSousQuartier, ha1.idPays as idPays, ha1.idVille as idVille, ha1.idIndicatif as idIndicatif,
-                                        
+
                                         r.nom as nomRue,
                                         q.nom as nomQuartier,
                                         sq.nom as nomSousQuartier,
                                         v.nom as nomVille,
                                         r.prefixe as prefixeRue,
                     ae.idEvenement as idEvenementGroupeAdresses
-                    
-                                        
+
+
             FROM historiqueEvenement he2, historiqueEvenement he1
             RIGHT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = he1.idEvenement
             RIGHT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
             RIGHT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
             RIGHT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
-            
+
             LEFT JOIN typeEvenement te ON te.idTypeEvenement = he1.idTypeEvenement
-            
+
             LEFT JOIN rue r         ON r.idRue = ha1.idRue
             LEFT JOIN sousQuartier sq   ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' ,ha1.idSousQuartier ,r.idSousQuartier )
             LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' ,ha1.idQuartier ,sq.idQuartier )
             LEFT JOIN ville v       ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' ,ha1.idVille ,q.idVille )
             LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' ,ha1.idPays ,v.idPays )
-        
-        
-        
+
+
+
             WHERE he2.idEvenement = he1.idEvenement
-            
+
             ".$sqlWhere."
 
             GROUP BY he1.idEvenement,ha1.idAdresse, he1.idHistoriqueEvenement, ha1.idHistoriqueAdresse
-            HAVING he1.idHistoriqueEvenement = max(he2.idHistoriqueEvenement) AND ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) 
+            HAVING he1.idHistoriqueEvenement = max(he2.idHistoriqueEvenement) AND ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
             ORDER BY he1.dateCreationEvenement DESC
         ";//,dateCreationEvenement DESC,dateAdresse DESC
-        
+
        echo $reqEvenements."<br/>";
         /*
                     LEFT JOIN rue r ON r.idRue = ha1.idRue
             LEFT JOIN sousQuartier sq ON sq.idSousQuartier = ha1.idSousQuartier
             LEFT JOIN quartier q ON q.idQuartier = ha1.idQuartier
             LEFT JOIN ville v ON v.idVille = ha1.idVille
-        
+
         */
-                
+
         $resEvenements = $this->connexionBdd->requete($reqEvenements);
-                
-        $tabAdressesEvenementsAffichees=array(); // tableau contenant les idAdresses qu'il ne faudra pas reafficher 
+
+        $tabAdressesEvenementsAffichees=array(); // tableau contenant les idAdresses qu'il ne faudra pas reafficher
         $tabEvenementGroupeAdressesAffichees = array(); // on ne reaffiche pas les adresses appartenant au meme groupe d'adresse sinon redondance au niveau de certain titre lors de l'affichage (adresses différentes mais titre identiques)
-        
+
         $tabConstruction=array();
         $tabDemolition=array();
         $tabCulturel=array();
         $tabDernieresAdresses=array();
-        
+
         $tabAdressesNouvellesAdressesAffichees=array();
-        
+
         $isPhotoContruction=false;
         $isPhotoDemolition = false;
         $isPhotoCulturel = false;
@@ -8205,7 +8205,7 @@ else{
                 //"description"=>$fetchEvenements['descriptionEvenement'],
                 //"idHistoriqueImage"=>$fetchEvenements['idHistoriqueImage'],
                 //"dateUpload"=>$fetchEvenements['dateUpload'],
-                                                    
+
                 switch($fetchEvenements['idTypeEvenement'])
                 {
                     // TRAVAUX OU NOUVELLE ADRESSE suivant l'annee
@@ -8222,7 +8222,7 @@ else{
                                     $tabAdressesEvenementsAffichees[] = $fetchEvenements['idAdresse'];
                                     $tabEvenementGroupeAdressesAffichees[] = $fetchEvenements['idEvenementGroupeAdresses'];
                                 //}
-                                
+
                                 $reqImages = $image->getImagesEvenementsFromAdresse($fetchEvenements['idAdresse'],array('idEvenementGroupeAdresse'=>$fetchEvenements['idEvenementGroupeAdresses']));
                                 if(mysql_num_rows($reqImages)>0)
                                 {
@@ -8243,7 +8243,7 @@ else{
                                 }
                             }*/
                         }
-                        
+
                     // TRAVAUX
                     break;
                     case '2': // renovation
@@ -8253,23 +8253,23 @@ else{
                         //if($fetchEvenements['annneeDebut']==date('Y'))
                         //{
                             // TRAVAUX
-                            
+
                             if(!in_array($fetchEvenements['idAdresse'],$tabAdressesEvenementsAffichees) && !in_array($fetchEvenements['idEvenementGroupeAdresses'],$tabEvenementGroupeAdressesAffichees))
                             {
                                 //if(count($tabConstruction)<5)
                                 //{
                                     $tabConstruction[]=$infosAdresseCourante;
-                                                            
+
                                     $tabAdressesEvenementsAffichees[] = $fetchEvenements['idAdresse'];
                                     $tabEvenementGroupeAdressesAffichees[] = $fetchEvenements['idEvenementGroupeAdresses'];
                                 //}
-                                
+
                                 $reqImages = $image->getImagesEvenementsFromAdresse($fetchEvenements['idAdresse'],array('idEvenementGroupeAdresse'=>$fetchEvenements['idEvenementGroupeAdresses']));
                                 if(mysql_num_rows($reqImages)>0)
                                 {
                                     $isPhotoContruction = true;
                                 }
-                                
+
                             }
                         //}
                     break;
@@ -8280,11 +8280,11 @@ else{
                             //if(count($tabDemolition)<5)
                             //{
                                 $tabDemolition[]=$infosAdresseCourante;
-                                                    
+
                                 $tabAdressesEvenementsAffichees[] = $fetchEvenements['idAdresse'];
                                 $tabEvenementGroupeAdressesAffichees[] = $fetchEvenements['idEvenementGroupeAdresses'];
                             //}
-                            
+
                             $reqImages = $image->getImagesEvenementsFromAdresse($fetchEvenements['idAdresse'],array('idEvenementGroupeAdresse'=>$fetchEvenements['idEvenementGroupeAdresses']));
                             if(mysql_num_rows($reqImages)>0)
                             {
@@ -8306,23 +8306,23 @@ else{
                             //if(count($tabCulturel)<5)
                             //{
                                 $tabCulturel[]=$infosAdresseCourante;
-                                                    
+
                                 $tabAdressesEvenementsAffichees[] = $fetchEvenements['idAdresse'];
                                 $tabEvenementGroupeAdressesAffichees[] = $fetchEvenements['idEvenementGroupeAdresses'];
                             //}
-                            
+
                             $reqImages = $image->getImagesEvenementsFromAdresse($fetchEvenements['idAdresse'],array('idEvenementGroupeAdresse'=>$fetchEvenements['idEvenementGroupeAdresses']));
                             if(mysql_num_rows($reqImages)>0)
                             {
                                 $isPhotoCulturel = true;
                             }
-                            
+
                         }
                     break;
-                    
+
                 }
             //}
-            
+
             if(count($tabConstruction)>=5 && count($tabDemolition)>=5 && count($tabCulturel)>=5 && $isPhotoCulturel && $isPhotoDemolition && $isPhotoContruction)
             {
                 break;
@@ -8332,33 +8332,33 @@ else{
 
 
         $tabAdressesEvenementsAffichees = array_unique($tabAdressesEvenementsAffichees);
-        
+
         $sqlAdressesExclues="";
         if(count($tabAdressesEvenementsAffichees)>0)
         {
             $sqlAdressesExclues=" AND ha1.idAdresse NOT IN ('".implode("','",$tabAdressesEvenementsAffichees)."') ";
         }
-        
-        
+
+
 
         // 2 - les dernieres adresses ajoutées moins celles deja affichées dans les rubriques précédentes
         /*$reqAdresses = "
             SELECT  ha1.idAdresse as idAdresse, ha1.numero as numero, ha1.idRue as idRue , ha1.idQuartier as idQuartier, ha1.idSousQuartier as idSousQuartier,
                     ha1.idVille as idVille,ha1.idPays as idPays, ha1.idIndicatif as idIndicatif,ha1.date as dateCreationAdresse,hi1.idHistoriqueImage as idHistoriqueImage, hi1.dateUpload as dateUpload, hi1.idHistoriqueImage,hi1.idImage,
-                    
+
                                         r.nom as nomRue,
                                         q.nom as nomQuartier,
                                         sq.nom as nomSousQuartier,
                                         v.nom as nomVille,
                                         r.prefixe as prefixeRue,ha1.date as date
-                    
+
 
 
             FROM historiqueAdresse ha2, historiqueAdresse ha1
             LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
             LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-            
-            
+
+
 
             LEFT JOIN historiqueEvenement he1 ON he1.idEvenement = ee.idEvenementAssocie
             LEFT JOIN historiqueEvenement he2 ON he2.idEvenement = he1.idEvenement
@@ -8366,16 +8366,16 @@ else{
             LEFT JOIN _evenementImage ei2 ON ei2.idEvenement = he1.idEvenement
             LEFT JOIN historiqueImage hi1 ON hi1.idImage = ei.idImage
             LEFT JOIN historiqueImage hi2 ON hi2.idImage = hi1.idImage
-            
-            
-            
+
+
+
             LEFT JOIN rue r         ON r.idRue = ha1.idRue
             LEFT JOIN sousQuartier sq   ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' ,ha1.idSousQuartier ,r.idSousQuartier )
             LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' ,ha1.idQuartier ,sq.idQuartier )
             LEFT JOIN ville v       ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' ,ha1.idVille ,q.idVille )
             LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' ,ha1.idPays ,v.idPays )
-            
-            
+
+
             WHERE ha2.idAdresse = ha1.idAdresse
             ".$sqlWhere."
             ".$sqlAdressesExclues."
@@ -8385,40 +8385,40 @@ else{
         ";
         */
 
-        
+
         //
-        
+
         $reqAdresses = "
             SELECT  ha1.idAdresse as idAdresse, ha1.date as dateCreationAdresse,ha1.numero as numero, ha1.idRue as idRue , ha1.idQuartier as idQuartier, ha1.idSousQuartier as idSousQuartier,
                     ha1.idVille as idVille,ha1.idPays as idPays, ha1.idIndicatif as idIndicatif,
-                    
+
                                         r.nom as nomRue,
                                         q.nom as nomQuartier,
                                         sq.nom as nomSousQuartier,
                                         v.nom as nomVille,
                                         r.prefixe as prefixeRue,ha1.date as date,
                         ae.idEvenement as idEvenementGroupeAdresses
-                    
+
 
 
             FROM historiqueAdresse ha2, historiqueAdresse ha1
             LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
             LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-            
-            
+
+
 
             LEFT JOIN historiqueEvenement he1 ON he1.idEvenement = ee.idEvenementAssocie
             LEFT JOIN historiqueEvenement he2 ON he2.idEvenement = he1.idEvenement
-            
-            
-            
+
+
+
             LEFT JOIN rue r         ON r.idRue = ha1.idRue
             LEFT JOIN sousQuartier sq   ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' ,ha1.idSousQuartier ,r.idSousQuartier )
             LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' ,ha1.idQuartier ,sq.idQuartier )
             LEFT JOIN ville v       ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' ,ha1.idVille ,q.idVille )
             LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' ,ha1.idPays ,v.idPays )
-            
-            
+
+
             WHERE ha2.idAdresse = ha1.idAdresse
             ".$sqlWhere."
             ".$sqlAdressesExclues."
@@ -8426,8 +8426,8 @@ else{
             HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse) and he1.idHistoriqueEvenement = max(he2.idHistoriqueEvenement)
             ORDER BY ha1.date DESC
         ";
-        
-        
+
+
         $resAdresses = $this->connexionBdd->requete($reqAdresses);
         $image = new archiImage();
         $isImageAdresses=false;
@@ -8435,7 +8435,7 @@ else{
         {
             if(!in_array($fetchAdresses['idAdresse'],$tabAdressesNouvellesAdressesAffichees) && !in_array($fetchAdresses['idEvenementGroupeAdresses'],$tabEvenementGroupeAdressesAffichees))
             {
-            
+
                 $tabAdressesNouvellesAdressesAffichees[]=$fetchAdresses['idAdresse'];
                 $tabEvenementGroupeAdressesAffichees[] = $fetchAdresses['idEvenementGroupeAdresses'];
                 //$this->getUrlImage("moyen")."/".$fetchAdresses['dateUpload']."/".$fetchAdresses['idHistoriqueImage'].".jpg"
@@ -8450,34 +8450,34 @@ else{
                                                         "prefixeRue"=>$fetchAdresses['prefixeRue'],
                                                         "idEvenementGroupeAdresse"=>$fetchAdresses['idEvenementGroupeAdresses'],
                                                         "dateCreationAdresse"=>$fetchAdresses['dateCreationAdresse']
-                                                        
-                                                        );// ,"description"=>"" 
+
+                                                        );// ,"description"=>""
 
                 $tabDernieresAdresses[] = $infosAdresseCourante;
             }
-            
-            
+
+
             $resImages = $image->getImagesEvenementsFromAdresse($fetchAdresses['idAdresse']);
             if(mysql_num_rows($resImages)>0)
             {
                 $isImageAdresses=true;
             }
-            
+
             if(count($tabDernieresAdresses)>=25 && $isImageAdresses)
             {
                 break;
             }
         }
-        
+
 
         // il faut maintenant parcourir les tableaux pour afficher les images de facon correcte
         $image = new archiImage();
-        
+
         $indiceElementPremierePosition=array();
         $imageElementPremierePosition=array();
-        
+
         // *******************************************************************************
-        // recuperation de l'image qui sera affichée pour les demolitions 
+        // recuperation de l'image qui sera affichée pour les demolitions
         $trouveImageDemolition=false;
         $i=0;
         $tab5Demolitions= array();
@@ -8494,18 +8494,18 @@ else{
                     if(isset($fetch['idHistoriqueImage']) && $fetch['idHistoriqueImage']!='' && $fetch['idHistoriqueImage']!='0')
                     {
                         $imageElementPremierePosition['demolition'] =$fetch;//array('idHistoriqueImage'=> $fetchImageDemolition['idHistoriqueImage'], 'dateUpload'=>$fetchImageDemolition['dateUpload'] );
-                        
+
                         //$indiceElementPremierePosition['demolition'] = $indice;
                         $trouveImageDemolition=true;
                         $tab5Demolitions[0] = $value;
                         $indiceElementPremierePosition['demolition'] = 0;
-                        
+
                     }
                     else
                     {
                         $trouveImageDemolition=false;
                     }
-                    
+
                 }
                 /*else
                 {
@@ -8514,10 +8514,10 @@ else{
                     $indiceElementPremierePosition['demolition'] = $indice;
                 }*/
             }
-            
+
             $i++;
         }
-        
+
         // si l'on a pas trouvé d'image sur les evenements on va en chercher au niveau de tous les evenements de l'adresse
         $trouveImageDemolitionSurAdresse=false;
         if(!$trouveImageDemolition)
@@ -8533,15 +8533,15 @@ else{
                         $imageElementPremierePosition['demolition'] = $fetch;
                         //$indiceElementPremierePosition['demolition'] = $indice;
                         $trouveImageDemolitionSurAdresse=true;
-                        
+
                         $tab5Demolitions[0] = $value;
                         $indiceElementPremierePosition['demolition'] = 0;
                     }
                 }
             }
         }
-        
-        
+
+
         // on recupere l'evenement qui comporte l'image et on limite le tableau en sortie a 5
         $i=1;
         if($trouveImageDemolitionSurAdresse || $trouveImageDemolition) // en principe maintenant c'est toujours possible , vu qu'on parcours tout et on s'arrete seulement s'il y a une image dans la boucle précédente
@@ -8559,16 +8559,16 @@ else{
                         $tab5Demolitions[$i] = $value;
                         $i++;
                     }
-                    
+
                 }
             }
-        
-        
+
+
         }
         // *******************************************************************************
         // recuperation de l'image qui sera affichee pour les derniers travaux
-        
-        
+
+
         $trouveImageConstruction=false;
         $i=0;
         $tab5Constructions= array();
@@ -8588,14 +8588,14 @@ else{
                         $trouveImageConstruction=true;
                         $tab5Constructions[0] = $value;
                         $indiceElementPremierePosition['construction'] = 0;
-                        
+
                     }
                     else
                     {
                         $trouveImageConstruction=false;
                     }
 
-                    
+
                 }
                 /*else
                 {
@@ -8604,10 +8604,10 @@ else{
                     $indiceElementPremierePosition['construction'] = $indice;
                 }*/
             }
-            
+
             $i++;
         }
-        
+
         // si l'on a pas trouvé d'image sur les evenements on va en chercher au niveau de tous les evenements de l'adresse
         $trouveImageConstructionSurAdresse=false;
         if(!$trouveImageConstruction)
@@ -8623,15 +8623,15 @@ else{
                         $imageElementPremierePosition['construction'] = $fetch;
                         //$indiceElementPremierePosition['construction'] = $indice;
                         $trouveImageConstructionSurAdresse=true;
-                        
-                        
+
+
                         $tab5Constructions[0] = $value;
                         $indiceElementPremierePosition['construction'] = 0;
                     }
                 }
             }
         }
-        
+
         // on recupere l'evenement qui comporte l'image et on limite le tableau en sortie a 5
         $i=1;
         // en principe maintenant c'est toujours possible, vu qu'on parcours tout et on s'arrete seulement s'il y a une image dans la boucle précédente
@@ -8649,12 +8649,12 @@ else{
                 }
             }
         }
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
 
         // *******************************************************************************
         // recuperation de l'image qui sera affichee pour les derniers evenements culturels
@@ -8674,7 +8674,7 @@ else{
                     if(isset($fetch['idHistoriqueImage']) && $fetch['idHistoriqueImage']!='' && $fetch['idHistoriqueImage']!='0')
                     {
                         $imageElementPremierePosition['culturel'] = $fetch;//$this->getFirstImageFromEvenement($value['idEvenement']);//array('idHistoriqueImage'=> $fetchImageCulturel['idHistoriqueImage'], 'dateUpload'=>$fetchImageCulturel['dateUpload'] );
-                        
+
                         //$indiceElementPremierePosition['culturel'] = $indice;
                         $trouveImageCulturel=true;
                         $indiceElementPremierePosition['culturel'] = 0;
@@ -8692,10 +8692,10 @@ else{
                     $indiceElementPremierePosition['culturel'] = $indice;
                 }*/
             }
-            
+
             $i++;
         }
-        
+
         // si l'on a pas trouvé d'image sur les evenements on va en chercher au niveau de tous les evenements de l'adresse
         $trouveImageCulturelSurAdresse=false;
         if(!$trouveImageCulturel)
@@ -8711,15 +8711,15 @@ else{
                         $imageElementPremierePosition['culturel'] = $fetch;
                         //$indiceElementPremierePosition['culturel'] = $indice;
                         $trouveImageCulturelSurAdresse=true;
-                        
+
                         $indiceElementPremierePosition['culturel'] = 0;
                         $tab5Culturel[0] = $value;
                     }
                 }
             }
         }
-        
-        
+
+
         // on recupere l'evenement qui comporte l'image et on limite le tableau en sortie a 5
         $i=1;
         if($trouveImageCulturelSurAdresse || $trouveImageCulturel) // en principe maintenant c'est toujours possible , vu qu'on parcours tout et on s'arrete seulement s'il y a une image dans la boucle précédente
@@ -8740,14 +8740,14 @@ else{
                 }
             }
         }
-        
-        
-        
+
+
+
 
         // *******************************************************************************
         // recuperation de l'image qui sera affichee pour les dernieres adresses ajoutées
-        
-        
+
+
         $trouveImageDernieresAdresses=false;
         $i=0;
         $tab5DernieresAdresses=array();
@@ -8759,18 +8759,18 @@ else{
                 {
                     // ici on recherche une autre image pour la meme adresse car il n'y en avait pas sur l'evenement concerné
                     $resImagesDernieresAdressesFromAdresse = $image->getImagesEvenementsFromAdresse($value['idAdresse']);
-                    
+
                     if(mysql_num_rows($resImagesDernieresAdressesFromAdresse)>0)
                     {
                         $fetchImageDernieresAdresses = mysql_fetch_assoc($resImagesDernieresAdressesFromAdresse);
-                        
+
                         $imageElementPremierePosition['dernieresAdresses'] = array('idHistoriqueImage'=> $fetchImageDernieresAdresses['idHistoriqueImage'], 'dateUpload'=>$fetchImageDernieresAdresses['dateUpload'] );
                         //$indiceElementPremierePosition['dernieresAdresses'] = $indice;
                         $trouveImageDernieresAdresses=true;
                         //$tabDernieresAdresses[$indice]['description'] = $this->getDescriptionEvenementForDerniereAdresse($value['idAdresse']);
-                        
-                        
-                        
+
+
+
                         $tab5DernieresAdresses[0]=$value;
                         $tab5DernieresAdresses[0]['description'] = $this->getDescriptionEvenementForDerniereAdresse($value['idAdresse']);
                         $indiceElementPremierePosition['dernieresAdresses'] = 0;
@@ -8784,10 +8784,10 @@ else{
                     $tabDernieresAdresses[$indice]['description'] = $this->getDescriptionEvenementForDerniereAdresse($value['idAdresse']);
                 }*/
             }
-            
+
             $i++;
         }
-        
+
         $i=1;
         foreach($tabDernieresAdresses as $indice => $value)
         {
@@ -8803,35 +8803,35 @@ else{
                     $i++;
                 }
             }
-            
-            
+
+
         }
-        
+
         // **********************************************************************************************************************************
         // encars des dernieres vues
-        
+
         $tabDernieresVues = $image->getDernieresVues(array('sqlLimit'=>"LIMIT 5",'noAdressesDoublons'=>true,'listeIdGroupesAdressesVueSurANePasAfficher'=>$tabEvenementGroupeAdressesAffichees));
-        
+
         // **********************************************************************************************************************************
         // encart des actualites
         $accueil = new archiAccueil();
         $tabActualites = $accueil->getDernieresActualites(array('sqlLimit'=>"LIMIT 5",'sqlWhere'=>" AND desactive<>'1' "));
-        
 
-        
+
+
         return array("dernieresAdresses"=>$tab5DernieresAdresses,"constructions"=>$tab5Constructions,"demolitions"=>$tab5Demolitions,"culture"=>$tab5Culturel,"indiceEvenementsPremierePositions"=>$indiceElementPremierePosition,"imagesEvenementsPremieresPositions"=>$imageElementPremierePosition,"dernieresVues"=>$tabDernieresVues,"actualites"=>$tabActualites);
     }
-    
-    
-    
+
+
+
     public function getPositionFromEvenement($idEvenement=0)
     {
         $positionRetour=0;
-        
+
         $req = "
-        
+
             SELECT distinct he1.idEvenement as idEvenement
-            FROM 
+            FROM
                 evenements he1,evenements he2
             RIGHT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = '".$idEvenement."'
             RIGHT JOIN _evenementEvenement ee2 ON ee2.idEvenement = ee.idEvenement
@@ -8841,9 +8841,9 @@ else{
             GROUP BY he1.idEvenement
             ORDER BY he1.dateDebut
         ";
-        
+
         $res = $this->connexionBdd->requete($req);
-        
+
         $position=0;
         $trouve=false;
 
@@ -8856,11 +8856,11 @@ else{
             }
             $position++;
         }
-        
+
         return $positionRetour;
-        
+
     }
-    
+
     // recupere une description appartenant à un evenement de l'adresse donnée en parametre
     function getDescriptionEvenementForDerniereAdresse($idAdresse=0)
     {
@@ -8879,15 +8879,15 @@ else{
                 GROUP BY he1.idEvenement,ha1.idAdresse,ha1.idHistoriqueAdresse
                 HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
         ";
-        
+
         $res = $this->connexionBdd->requete($req);
         $fetch = mysql_fetch_assoc($res);
-        
+
         return $fetch['description'];
     }
-    
-    
-    
+
+
+
     // ************************************************************************************************************************
     // ajoute une rue a partir de l'idSousQuartier avec verification de l'existence de la rue
     // ************************************************************************************************************************
@@ -8897,7 +8897,7 @@ else{
         // recherche de la ville
         $reqVille = "
                     SELECT distinct v.idVille as idVille
-                    FROM ville v 
+                    FROM ville v
                     LEFT JOIN quartier q ON q.idVille = v.idVille
                     LEFT JOIN sousQuartier sq ON sq.idQuartier = q.idQuartier
                     WHERE
@@ -8909,37 +8909,37 @@ else{
         {
             $fetchVille = mysql_fetch_assoc($resVille);
             $idVille =$fetchVille['idVille'];
-            
-            
+
+
             $reqVerif = "
             SELECT r.idRue
             FROM rue r
             LEFT JOIN sousQuartier sq ON sq.idSousQuartier = r.idSousQuartier
             LEFT JOIN quartier q ON q.idQuartier = sq.idQuartier
             LEFT JOIN ville v ON v.idVille = q.idVille
-            WHERE       
+            WHERE
             LOWER(r.nom) = LOWER(\"".$nom."\")
             AND LOWER(r.prefixe) = LOWER(\"".$prefixe."\")
             AND v.idVille = '".$idVille."'
             ";
-            
+
             $resVerif=$this->connexionBdd->requete($reqVerif);
             if(mysql_num_rows($resVerif)>0)
             {
                 $adresseExistante = 1;
             }
-            
+
         }
-    
-    
+
+
         $sql="
-            SELECT idRue 
-            FROM rue 
+            SELECT idRue
+            FROM rue
             WHERE idSousQuartier = '".$idSousQuartier."'
             AND LOWER(nom) = LOWER(\"".$nom."\")
             AND LOWER(prefixe) = LOWER(\"".$prefixe."\")
         ";
-        
+
         $res=$this->connexionBdd->requete($sql);
         $newIdRue = 0;
         if($adresseExistante || mysql_num_rows($res)>0)
@@ -8950,17 +8950,17 @@ else{
         {
             // ajout
             $this->connexionBdd->requete("
-                INSERT INTO rue (idSousQuartier,nom,prefixe) 
+                INSERT INTO rue (idSousQuartier,nom,prefixe)
                 VALUES ('".$idSousQuartier."',\"".$nom."\",\"".$prefixe."\")
             ");
-            
+
             $newIdRue = mysql_insert_id();
-            
+
         }
-        
+
         return $newIdRue;
     }
-    
+
     // ************************************************************************************************************************
     //   te.nom ='Construction' or te.nom='Rénovation' or te.nom='Extension' or te.nom='Transformation' or te.nom='Ravalement'
     //  te.nom = 'Démolition'
@@ -8970,13 +8970,13 @@ else{
         $arrayIdAdresses=array();
         $limitSql="";
         $whereSql="";
-        
+
         if(isset($parametres['limitSql']))
             $limitSql = $parametres['limitSql'];
-        
+
         if(isset($parametres['whereSql']))
             $whereSql = $parametres['whereSql'];
-    
+
         $sql = "
                 SELECT ae.idEvenement, ae.idAdresse,he1.titre , ha1.numero
                 FROM _adresseEvenement ae
@@ -8991,17 +8991,17 @@ else{
                 HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                 ".$limitSql."
         ";
-        
+
         $res=$this->connexionBdd->requete($sql);
-        
+
         while($fetch = mysql_fetch_assoc($res))
         {
             $arrayIdAdresses[] = $fetch['idAdresse'];
         }
-        
+
         return array_unique($arrayIdAdresses);
     }
-    
+
     // ************************************************************************************************************************
     // fonction affichant le recapitulatif des adresses de l'evenement groupe d'adresse donné
     // ************************************************************************************************************************
@@ -9010,14 +9010,14 @@ else{
         $html="";
         $t = new Template('modules/archi/templates/');
         $t->set_filenames((array('recapitulatifAdresses'=>'recapitulatifAdresses.tpl')));
-        
+
         $retourAdresse=$this->afficherListe(
             array(
                 'archiIdEvenement'=>$idEvenementGroupeAdresse, 'useTemplateFile'=>'listeAdressesDetailEvenement.tpl'
             ),
             'listeDesAdressesDuGroupeAdressesSurDetailAdresse'
         );
-        
+
         $t->assign_vars(array('recapitulatifAdresses'=>$retourAdresse['html']));
         $t->assign_vars(
             array(
@@ -9028,27 +9028,27 @@ else{
         $idAdresseCourante = 0;
         if(isset($this->variablesGet['archiIdAdresse']))
             $idAdresseCourante = $this->variablesGet['archiIdAdresse'];
-        
-        
-        
+
+
+
         // ************************************************************************************************************************
         // affichage carte googlemap dans une iframe
-        
+
         // && $coordonnees['latitude']>48.3776285 && $coordonnees['latitude']<48.78554409 && $coordonnees['longitude']>7.47482299 && $coordonnees['longitude']<7.993927001
         $coordonnees = $this->getCoordonneesFrom($retourAdresse['arrayIdAdresses'][0],'idAdresse');
-        
+
         if(count($coordonnees)==2 && $coordonnees['longitude']!='' && $coordonnees['latitude']!='' && $coordonnees['longitude']!='0' && $coordonnees['latitude']!='0' && $coordonnees['longitude']>0 && $coordonnees['latitude']>0 )
         {
             $evenement = new archiEvenement();
             $calqueGoogleMap = new calqueObject(array('idPopup'=>10));
-            
+
             $contenuIFramePopup = $evenement->getContenuIFramePopupGoogleMap(array(
                                         'idAdresseCourante'=>$idAdresseCourante,
                                         'calqueObject'=>$calqueGoogleMap,
                                         'idEvenementGroupeAdresseCourant'=>$idEvenementGroupeAdresse
                                         ));
-        
-        
+
+
             $t->assign_block_vars('isCarteGoogle',array(
                     'src'=>$this->creerUrl('','afficheGoogleMapIframe',array('noHeaderNoFooter'=>1,'longitude'=>$coordonnees['longitude'],'latitude'=>$coordonnees['latitude'],'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse,'archiIdAdresse'=>$idAdresseCourante)),
                     'lienVoirCarteGrand'=>"<a href='#' onclick=\"".$calqueGoogleMap->getJsOpenPopupNoDraggableWithBackgroundOpacity()."document.getElementById('iFrameDivPopupGM').src='".$this->creerUrl('','afficheGoogleMapIframe',array('longitude'=>$coordonnees['longitude'],'latitude'=>$coordonnees['latitude'],'noHeaderNoFooter'=>true,'archiIdAdresse'=>$idAdresseCourante,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse,'modeAffichage'=>'popupDetailAdresse'))."';\" style='font-size:11px;'>"._("voir la carte en + grand")."</a>",
@@ -9061,18 +9061,18 @@ else{
             $t->assign_vars(array('largeurTableauAdresse'=>700,'hauteurRecapAdresse'=>''));
         }
         // ************************************************************************************************************************
-        
-        
-        
-        
+
+
+
+
         ob_start();
         $t->pparse('recapitulatifAdresses');
         $html .= ob_get_contents();
         ob_end_clean();
-        
+
         return $html;
     }
-    
+
     // ************************************************************************************************************************
     // affiche le formulaire d'ajout d'un commentaire
     // ************************************************************************************************************************
@@ -9081,10 +9081,10 @@ else{
         $html="";
         $e = new archiEvenement();
         $idEvenementGroupeAdresse = $e->getIdEvenementGroupeAdresseFromIdEvenement($idEvenementGroupeAdresse);
-        
-        
+
+
         $fieldsCommentaires["idEvenementGroupeAdresse"]['default'] = $idEvenementGroupeAdresse;
-        
+
         // si un utilisateur est connecté , on renseigne directement ces infos , mais on lui laisse la possibilité de modifier
         $authentification = new archiAuthentification();
 
@@ -9112,18 +9112,18 @@ else{
             $fieldsCommentaires['nom']['default']=stripslashes($fetchUtilisateur['nom']);
             $fieldsCommentaires['prenom']['default']=stripslashes($fetchUtilisateur['prenom']);
             $fieldsCommentaires['email']['default']=$fetchUtilisateur['mail'];
-            
-            
+
+
             $fieldsCommentaires['nom']['type']='hidden';
             $fieldsCommentaires['prenom']['type']='hidden';
             $fieldsCommentaires['email']['type']='hidden';
-            
+
             unset($fieldsCommentaires['captcha']); // pas de captcha quand on est connecté
-            
+
         }
-        
+
         $help = $this->getHelpMessages('helpEvenement');
-        
+
         $bbMiseEnFormBoutons= "<div style=''><input type=\"button\" value=\"b\" style=\"width:50px;font-weight:bold\" onclick=\"bbcode_ajout_balise('b', 'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('".$help["msgGras"]."');\" onMouseOut=\"closeContextHelp();\"/>
     <input type=\"button\" value=\"i\" style=\"width:50px;font-style:italic\" onclick=\"bbcode_ajout_balise('i', 'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('".$help["msgItalic"]."');\" onMouseOut=\"closeContextHelp();\"/>
     <input type=\"button\" value=\"u\" style=\"width:50px;text-decoration:underline;\" onclick=\"bbcode_ajout_balise('u', 'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('".$help["msgUnderline"]."');\" onMouseOut=\"closeContextHelp();\"/>
@@ -9131,9 +9131,9 @@ else{
     <!--<input type=\"button\" value=\"code\" style=\"width:50px\" onclick=\"bbcode_ajout_balise('code', 'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('{msgCode}');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this,'apercu');\"/>-->
     <input type=\"button\" value=\"url interne\"  style=\"width:75px\" onclick=\"bbcode_ajout_balise('url',  'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('Insérer une adresse WEB interne à archi-strasbourg.org');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this,'apercu');\"/>
     <input type=\"button\" value=\"url externe\"  style=\"width:80px\" onclick=\"bbcode_ajout_balise('urlExterne',  'formAjoutCommentaire', 'commentaire');bbcode_keyup(this,'apercu');\" onMouseOver=\"getContextHelp('Insérer une adresse WEB externe à archi-strasbourg.org');\" onMouseOut=\"closeContextHelp();\" onkeyup=\"bbcode_keyup(this,'apercu');\"/></div>";
-    
+
         $fieldsCommentaires['commentaire']['htmlCodeBeforeField'] = $bbMiseEnFormBoutons;
-    
+
         $tabCommentaires = array(   'titrePage'=>_("Ajouter un commentaire concernant l'adresse"),
                                     'formName'=>'formAjoutCommentaire',
                                     'formAction'=>$this->creerUrl('enregistreCommentaire','',array()),
@@ -9146,18 +9146,18 @@ else{
         								setTimeout('majDescription()',500);
                                     }</script>",
                                     'fields'=>$fieldsCommentaires);
-        
-        
+
+
         $formulaire = new formGenerator();
-        
-        
+
+
         $bbCode = new bbCodeObject();
-        
+
         $html.= $formulaire->afficherFromArray($tabCommentaires);
-    
+
         return $html;
     }
-    
+
     // ************************************************************************************************************************
     // affiche la liste des commentaires pour un groupe d'adresse donné
     // ************************************************************************************************************************
@@ -9186,13 +9186,13 @@ else{
 	        ));
 
 	        $authentification = new archiAuthentification();
-	        
+
 	        // si l'utilisateur est administrateur, on affiche le bouton de suppression d'un commentaire
 	        $isAdmin=false;
 	        if($authentification->estConnecte() && $authentification->estAdmin()){
 	            $isAdmin=true;
 	        }
-	        
+
 	        while($fetch = mysql_fetch_assoc($res)){
 	            $adresseMail = "";
 	            $boutonSupprimer="";
@@ -9201,13 +9201,13 @@ else{
 	            if($fetch['urlSiteWeb']!=''){
 	                $urlSiteWeb = "<br><a itemprop='url' href='".$fetch['urlSiteWeb']."' target='_blank'><span style='font-size:9px;color:#FFFFFF;'>".$fetch['urlSiteWeb']."</span></a>";
 	            }
-	            
+
 	            $so = new StringObject();
-	            
+
 	            $t->assign_block_vars('commentaires',array(
             		'htmlId'=>'commentaireAdresse'.$fetch['idCommentaire'],
 	                'adresseMail'=>$adresseMail,
-	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']),'type'=>'commentaire')), 
+	                'commentaire'=>$bbCode->convertToDisplay(array('text'=>stripslashes($fetch['commentaire']),'type'=>'commentaire')),
 	                'boutonSupprimer'=>$boutonSupprimer,
 	            	'urlProfilPic'=>$urlProfilePic,
             		'prenom' => $fetch['prenom'],
@@ -9215,7 +9215,7 @@ else{
 	            	'labelCommentAction' => _("a ajouté un commentaire"),
 	            	'date' =>$fetch['dateF'],
 	            	'urlSupprimer'=>$urlSupprimer
-	            		
+
 	            ));
 	            if($isAdmin){
 	            	$archiIdAdresse='';
@@ -9236,7 +9236,7 @@ else{
 	        return $html;
         }
     }
-   
+
     /**
      * Fonction qui permet d'afficher les derniers commentaires postés par les internautes
      * */
@@ -9245,10 +9245,10 @@ else{
         $html = '';
         $string = new stringObject();
         $bbCode = new bbCodeObject();
-        
+
         $sqlLimit="LIMIT 5";
-                
-        
+
+
         if(isset($params['afficherTous']) && $params['afficherTous']==true)
         {
             $reqCount = "
@@ -9260,11 +9260,11 @@ else{
             	FROM commentairesEvenement
             	WHERE CommentaireValide=1
             ";
-            
+
             $resCount = $this->connexionBdd->requete($reqCount);
-            
+
             $nbEnregistrementTotaux = mysql_num_rows($resCount);
-        
+
             $pagination = new paginationObject();
             $nbEnregistrementsParPage = 15;
             $arrayPagination=$pagination->pagination(array(
@@ -9273,12 +9273,12 @@ else{
                                         'nbEnregistrementsTotaux'=>$nbEnregistrementTotaux,
                                         'typeLiens'=>'noformulaire'
                                         ));
-            
+
             $sqlLimit=$pagination->addLimitToQuery();
-            
+
         }
 
-        
+
         $req = "
                 SELECT distinct c.idCommentaire, u.mail,u.nom,u.prenom,c.commentaire,c.idEvenementGroupeAdresse,DATE_FORMAT(c.date,'%d/%m/%Y') as dateF, date,'commentaires' as typeCommentaires
                 FROM commentaires c
@@ -9295,13 +9295,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $sqlLimit
             ";
         $res = $this->connexionBdd->requete($req);
-        
-        
+
+
         // on affiche l'encart seulement s'il y a au moins un commentaire
         if(mysql_num_rows($res)>0)
         {
             $t = new Template('modules/archi/templates/');
-            
+
             if(isset($params['afficherTous']) && $params['afficherTous']==true)
             {
                 $t->set_filenames(array('derniersCommentaires'=>'tousLesCommentaires.tpl'));
@@ -9311,12 +9311,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $t->set_filenames(array('derniersCommentaires'=>'encartAccueilCommentaires.tpl'));
                 $t->assign_vars(array('urlTousLesCommentaires'=>"<a href='".$this->creerUrl('','tousLesCommentaires')."'>"._("Tous les commentaires")."</a>"));
             }
-            
+
             if(isset($params['afficherTous']) && $params['afficherTous']==true)
             {
                 $t->assign_vars(array('pagination'=>$arrayPagination['html']));
             }
-            
+
             while($fetch = mysql_fetch_assoc($res))
             {
             	$ancre="#commentaire";
@@ -9338,7 +9338,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             		$e = new archiEvenement();
             		$idEvenementGroupeAdresse = $e->getIdEvenementGroupeAdresseFromIdEvenement($fetch['idEvenementGroupeAdresse']);
             		$ancre.="Evenement".$fetch['idCommentaire'];
-            		
+
             		if($idPersonne = archiPersonne::isPerson($idEvenementGroupeAdresse)){
             			$nom = archiPersonne::getName($idPersonne) ;
             			$labelItemCommented = $nom->prenom." ".$nom->nom;
@@ -9359,7 +9359,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             			{
             				$arrayIntituleAdresses[]=$this->getIntituleAdresse($fetchAdresses);
             			}
-            			 
+
             			$labelItemCommented = str_replace("( - )", "", implode(" / ", $arrayIntituleAdresses));
             			$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
             			$urlAdresse = $this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
@@ -9367,7 +9367,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             	}
 
             	$urlAdresse.=$ancre;
-            	
+
             	$imageSurListeTousLesCommentaires="";
             	if(isset($params['afficherTous']) && $params['afficherTous']==true)
             	{
@@ -9414,12 +9414,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $html .= ob_get_contents();
             ob_end_clean();
         }
-        
-        
+
+
         return $html;
     }
-    
-    
+
+
     // ************************************************************************************************************************
     // enregistrement du commentaire
     // ************************************************************************************************************************
@@ -9427,16 +9427,16 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     {
         $auth = new archiAuthentification();
         $fieldsCommentaires=$this->getCommentairesFields();
-        $formulaire = new formGenerator();  
-        
-        
+        $formulaire = new formGenerator();
+
+
         if($auth->estConnecte())
         {
             unset($fieldsCommentaires['captcha']);
         }
-        
+
         $error = $formulaire->getArrayFromPost($fieldsCommentaires);
-        
+
         if(count($error)==0)
         {
             $idUtilisateur=0;
@@ -9453,25 +9453,25 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $CommentaireValide=0;
             }
 
-            
+
             // enregistrement du nouveau commentaire
             //$req = "insert into commentaires (nom,prenom,email,commentaire,idEvenementGroupeAdresse,date,idUtilisateur) values (\"".addslashes(strip_tags($this->variablesPost['nom']))."\",\"".addslashes(strip_tags($this->variablesPost['prenom']))."\",\"".addslashes(strip_tags($this->variablesPost['email']))."\",\"".addslashes(strip_tags($this->variablesPost['commentaire']))."\",'".$this->variablesPost['idEvenementGroupeAdresse']."',now(),'".$idUtilisateur."')";
             $nom=$auth->estConnecte()?$userInfos["nom"]:$this->variablesPost['nom'];
             $prenom=$auth->estConnecte()?$userInfos["prenom"]:$this->variablesPost['prenom'];
             $email=$auth->estConnecte()?$user->getMailUtilisateur($idUtilisateur):$this->variablesPost['email'];
             $uniqid = uniqid(null, true);
-            
+
             $req = "INSERT INTO commentaires (nom, prenom, email, commentaire, idEvenementGroupeAdresse, date, idUtilisateur, CommentaireValide, uniqid) VALUES ('".mysql_real_escape_string(strip_tags($nom))."', '".mysql_real_escape_string(strip_tags($prenom))."', '".mysql_real_escape_string(strip_tags($email))."', '".mysql_real_escape_string(strip_tags($this->variablesPost['commentaire']))."', '".mysql_real_escape_string($this->variablesPost['idEvenementGroupeAdresse'])."', now(), '".mysql_real_escape_string($idUtilisateur). "'," . mysql_real_escape_string($CommentaireValide).", '".mysql_real_escape_string($uniqid)."')";
-            
+
             $res = $this->connexionBdd->requete($req);
-            
+
             $idCommentaire = mysql_insert_id();
-            
+
             // retour a l'affichage de l'adresse
             $idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($this->variablesPost['idEvenementGroupeAdresse']);
 
 
-            
+
             // ************************************************************************************************************************************************
             // envoi d'un mail a tous les participants pour le groupe d'adresse
             // ************************************************************************************************************************************************
@@ -9493,22 +9493,22 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $message.= "Pour vous rendre sur l'adresse : <a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$idAdresse,'archiIdEvenementGroupeAdresse'=>$this->variablesPost['idEvenementGroupeAdresse'])).'#commentaireAdresse'.$idCommentaire."'>".$intituleAdresse."</a><br>";
                         $message.= $this->getMessageDesabonnerAlerteMail();
                         $mail->sendMail($mail->getSiteMail(),$infosUtilisateur['mail'],'Ajout d\'un commentaire sur une adresse sur laquelle vous avez participé.',$message,true);
-                        
+
                     }
                 }
             }
             // ************************************************************************************************************************************************
-            
-            
-            
-            
+
+
+
+
             // envoi d'un mail aux administrateur pour la moderation
             $message="Merci d'avoir laissé un commentaire sur Archi-Strasbourg.<br>";
             $message .= "Afin qu'il soit publié, merci de le valider en cliquant sur ";
             $message .="<a href='".$this->getUrlRacine()."script/validateEmail.php?uniqid=".urlencode($uniqid)."'>ce lien</a>.<br>";
             $message .="<br/>Cordialement,</br>";
             $mail = new mailObject();
-            
+
             $envoyeur['envoyeur'] = $mail->getSiteMail();
             $envoyeur['replyTo'] = strip_tags($this->variablesPost['email']);
             $u = new archiUtilisateur();
@@ -9535,27 +9535,27 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         if($auth->getIdUtilisateur()!=$idModerateur)
                         {
                             $mailModerateur = $u->getMailUtilisateur($idModerateur);
-                            
+
                             $mail->sendMail($mail->getSiteMail(),$mailModerateur,'Un utilisateur a ajouté un commentaire',$message,true);
                         }
                     }
                 }
             }
-            
-                        
+
+
             // remise a zero des variables en post sinon on va reafficher les infos
             $_POST['commentaire']="";
             $_POST['email']="";
             $_POST['nom']="";
             $_POST['prenom']="";
-            
+
             $this->variablesGet['archiIdEvenementGroupeAdresse'] = $this->variablesPost['idEvenementGroupeAdresse'];
             $idAdresse=$this->getIdAdresseFromIdEvenementGroupeAdresse($this->variablesGet['archiIdEvenementGroupeAdresse']);
-            
+
             $this->messages->addConfirmation("Commentaire enregistré !");
             $this->messages->display();
             header("Location: ".$this->creerUrl('', '', array('archiAffichage'=>'adresseDetail', 'archiIdAdresse'=>$idAdresse, 'archiIdEvenementGroupeAdresse'=>$this->variablesGet['archiIdEvenementGroupeAdresse']), false, false).'#commentaireAdresse'.$idCommentaire);
-            
+
         }
         else
         {
@@ -9565,7 +9565,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             echo $this->getFormulaireCommentaires($this->variablesPost['idEvenementGroupeAdresse'],$fieldsCommentaires);
         }
     }
-    
+
     // ************************************************************************************************************************
     // supprime un commentaire a partir de son idCommentaire
     // ************************************************************************************************************************
@@ -9576,14 +9576,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $req = "DELETE FROM commentaires WHERE idCommentaire = '".$this->variablesGet['archiIdCommentaire']."'";
             $res = $this->connexionBdd->requete($req);
         }
-        
+
         // redirection javascript ... pas terrible ca , a changer
         if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='')
         {
             echo "<script langage='javascript'>location.href='".$this->creerUrl('','adresseDetail',array('archiIdAdresse'=>$this->variablesGet['archiIdAdresse'] , 'archiIdEvenementGroupeAdresse'=>$this->variablesGet['archiIdEvenementGroupeAdresse']), false, false)."';</script>";
         }
     }
-    
+
     // ************************************************************************************************************************
     // supprime tous les commentaires d'un idEvenementGroupeAdresse
     // ************************************************************************************************************************
@@ -9592,8 +9592,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         $req = "DELETE FROM commentaires WHERE idEvenementGroupeAdresse='".$idEvenementGroupeAdresse."'";
         $res = $this->connexionBdd->requete($req);
     }
-    
-    
+
+
     // ************************************************************************************************************************
     // recupere le premier idAdresse d'un evenement groupeAdresse
     // ************************************************************************************************************************
@@ -9602,16 +9602,16 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         // recherche de l'idAdresse
         $req = "
                 SELECT idAdresse
-                FROM _adresseEvenement 
+                FROM _adresseEvenement
                 WHERE idEvenement = '".$idEvenementGroupeAdresse."'
         ";
-        
+
         $res = $this->connexionBdd->requete($req);
         $fetch = mysql_fetch_assoc($res);
-        
+
         return $fetch['idAdresse'];
     }
-    
+
     // ************************************************************************************************************************
     // recupere la liste des adresses qui sont identique au l'adresses courantes de l'evenement groupe d'adresse transmis en parametre
     // ************************************************************************************************************************
@@ -9619,10 +9619,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     {
         // lien retour vers l'affichage du detail de l'adresse
         $html="<a href=\"".$this->creerUrl('','adresseDetail',array('archiIdAdresse'=>$idAdresse))."\">Retour</a><br>";
-        
+
         // recuperation des adresses liees
         $reqAdresses = "
-        
+
             SELECT ha1.idAdresse as idAdresse,ha1.idRue as idRue, ha1.idQuartier as idQuartier, ha1.idSousQuartier as idSousQuartier, ha1.idPays as idPays , ha1.idVille as idVille
             FROM historiqueAdresse ha2, historiqueAdresse ha1
             WHERE ha2.idAdresse = ha1.idAdresse
@@ -9630,9 +9630,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
             HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
         ";
-        
+
         $res = $this->connexionBdd->requete($reqAdresses);
-        
+
         $rues = array();
         $quartiers = array();
         $sousQuartiers = array();
@@ -9650,7 +9650,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 {
                     if($fetch['idRue']!='0')
                         $rues[] = $fetch['idRue'];
-                    
+
                     $arrayComplementTitre[]="à la rue";
                 }
                 elseif($typeLocalite=="quartier")
@@ -9660,67 +9660,67 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     {
                         // recherche du quartier de la rue
                         $reqQuartier = "
-                            SELECT q.idQuartier as idQuartier 
+                            SELECT q.idQuartier as idQuartier
                             FROM quartier q
                             RIGHT JOIN sousQuartier sq ON sq.idQuartier = q.idQuartier
                             RIGHT JOIN rue r ON r.idSousQuartier = sq.idSousQuartier
                             WHERE r.idRue = '".$fetch['idRue']."'
                         ";
-                        
+
                         $resQuartier = $this->connexionBdd->requete($reqQuartier);
-                        
+
                         while($fetchQuartier = mysql_fetch_assoc($resQuartier))
                         {
                             $quartiers[] = $fetchQuartier['idQuartier'];
                         }
                     }
-                    
+
                     if($fetch['idQuartier']!='0')
                         $quartiers[] = $fetch['idQuartier'];
-                        
+
                     $arrayComplementTitre[]="au quartier";
                 }
-                
+
                 $tabIdAdressesNotToDisplay[]=$fetch['idAdresse'];
             }
-            
+
             if(count($rues)>0)
             {
                 $sql.=" AND ha1.idRue in ('".implode("','",array_unique($rues))."') ";
-                
+
             }
-                
+
             if(count($quartiers)>0)
             {
                 $sql.=" AND q.idQuartier in ('".implode("','",array_unique($quartiers))."') ";
-                
+
             }
-            
+
             if(count($rues)==0 && count($quartiers)==0)
             {
                 $sql.=" AND ha1.idAdresse ='0' ";
             }
-            
-            
+
+
             $sql.=" AND ha1.idAdresse not in ('".implode("','",$tabIdAdressesNotToDisplay)."') ";
-            
+
         }
-        
+
         // affichage de la liste des adresses
         $retour = $this->afficherListe(array('sqlSelectionExterne'=>$sql,'titre'=>'Adresses relatives '.implode(",",$arrayComplementTitre).': ','desactivateRedirection'=>1));
-        
+
         $html .=$retour['html'];
-        
+
         return $html;
     }
-    
-    
+
+
     public function enregistreHistoriqueNomsRues($params=array())
     {
-        //﻿array(8) { ["idHistoriqueNomRue_0"]=>  string(0) "" ["annee_0"]=>  string(4) "1955" ["nomRue_0"]=>  string(5) "plop1" ["commentaire_0"]=>  string(5) "plop2" ["idHistoriqueNomRue_1"]=>  string(0) "" ["annee_1"]=>  string(4) "1956" ["nomRue_1"]=>  string(5) "plop3" ["commentaire_1"]=>  string(5) "plop4" } 
-        
+        //﻿array(8) { ["idHistoriqueNomRue_0"]=>  string(0) "" ["annee_0"]=>  string(4) "1955" ["nomRue_0"]=>  string(5) "plop1" ["commentaire_0"]=>  string(5) "plop2" ["idHistoriqueNomRue_1"]=>  string(0) "" ["annee_1"]=>  string(4) "1956" ["nomRue_1"]=>  string(5) "plop3" ["commentaire_1"]=>  string(5) "plop4" }
+
         $d = new dateObject();
-        
+
         $tabAnnees = array();
         $tabNomsRues = array();
         $tabCommentaires = array();
@@ -9729,7 +9729,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         {
             $tabIntitule = explode("_",$intule);
             $indice = $tabIntitule[1];
-            
+
             switch($tabIntitule[0])
             {
                 case 'annee':
@@ -9746,29 +9746,29 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 break;
             }
         }
-        
+
         // on efface d'abord les valeurs précédentes
         $reqDelete = "DELETE FROM historiqueNomsRues WHERE idRue=".$this->variablesGet['idModification'];
         $resDelete = $this->connexionBdd->requete($reqDelete);
-        
+
         // ensuite on enregistre les nouvelles valeurs
         if(count($tabAnnees)>0)
         {
             foreach($tabAnnees as $indice => $value)
             {
                 $reqInsert="
-                    INSERT INTO historiqueNomsRues 
+                    INSERT INTO historiqueNomsRues
                         (idRue,annee,nomRue,commentaire,prefixe)
                     VALUES
                         ('".$this->variablesGet['idModification']."',\"".$d->toBdd($d->convertYears($tabAnnees[$indice]))."\",\"".mysql_real_escape_string($tabNomsRues[$indice])."\",\"".mysql_real_escape_string($tabCommentaires[$indice])."\",\"".mysql_real_escape_string($tabPrefixes[$indice])."\")
                 ";
                 $resInsert=$this->connexionBdd->requete($reqInsert);
-                
+
             }
         }
-        
-        
-        
+
+
+
     }
 
     // ************************************************************************************************************************
@@ -9779,46 +9779,46 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         // verification des droits
         $a = new archiAuthentification();
         $u = new archiUtilisateur();
-        
+
         $html="";
-        
+
         if($a->estAdmin() || ($u->isAuthorized('admin_rues',$a->getIdUtilisateur()) && $u->isAuthorized('admin_quartiers',$a->getIdUtilisateur()) && $u->isAuthorized('admin_sousQuartiers',$a->getIdUtilisateur())))
         {
             $htmlDependances="";
             $t = new Template('modules/archi/templates/');
-            
-            
+
+
             $idRue          = 0;
             $idQuartier     = 0;
             $idSousQuartier = 0;
             $idVille        = 0;
             $idPays         = 0;
-                    
-            
+
+
             switch($parametres['tableName'])
             {
                 case 'rue':
-                    
+
                     $t->set_filenames((array('modificationElementAdresse'=>'modificationElementAdresseRue.tpl')));
-                    
+
                     $idRue = $parametres['id'];
-                    
+
                     $req = "
                             SELECT r.nom as nomRue, r.prefixe as prefixeRue,sq.idSousQuartier as idSousQuartier,
                                     q.idQuartier as idQuartier, v.idVille as idVille, p.idPays as idPays
-                            FROM rue r 
+                            FROM rue r
                             LEFT JOIN sousQuartier sq ON sq.idSousQuartier = r.idSousQuartier
                             LEFT JOIN quartier q ON q.idQuartier = sq.idQuartier
                             LEFT JOIN ville v ON v.idVille = q.idVille
                             LEFT JOIN pays p ON p.idPays = v.idPays
                             WHERE idRue = '".$idRue."'";
-                    
+
                     $res = $this->connexionBdd->requete($req);
-                    
+
                     if(mysql_num_rows($res)==1)
                     {
                         $fetch=mysql_fetch_assoc($res);
-                        
+
                         $t->assign_vars(array(
                             'intitule'=>stripslashes($fetch['nomRue']),
                             'complement'=>stripslashes($fetch['prefixeRue']),
@@ -9829,26 +9829,26 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             'idRue'=>$idRue
                         ));
                     }
-                    
+
                     // ************************************************************************************************************************
                     // affichage des dependances liées a la rue:
                     // ************************************************************************************************************************
                     $htmlDependances.="<h3>Dependances sur les adresses affichées sur le site</h3>";
 
                     $arrayDependances = $this->getDependancesFrom($idRue,'idRue');
-                    
+
                     $lienSupprRue="";
                     if($arrayDependances['nbDependances']==0)
                     {
                         $lienSupprRue = "<a href='".$this->creerUrl('supprimerRueFromAdminRue','adminElementAdresse',array('tableName'=>'rue','idRueSuppr'=>$idRue))."'>Supprimer la rue</a>";
                     }
-                    
+
                     $htmlDependances.="nombre de dépendances = ".$arrayDependances['nbDependances']." $lienSupprRue<br>";
                     $tableau = new tableau();
-                    
+
                     $tableau->addValue("adresses","style='font-weight:bold'");
                     $tableau->addValue("nombre d'evenements associés","style='font-weight:bold'");
-                    
+
                     foreach($arrayDependances['arrayDependances'] as $indice => $value)
                     {
                         $lienSupprAdresse = "";
@@ -9856,22 +9856,22 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         {
                             $lienSupprAdresse = "&nbsp;&nbsp;&nbsp;<a href='".$this->creerUrl('supprimerAdresseFromAdminRue','adminAdresseDetail',array('tableName'=>'rue','idModification'=>$idRue,'idAdresseSuppr'=>$value['idAdresse']))."'>Supprimer l'adresse</a>";
                         }
-                    
-                    
+
+
                         $tableau->addValue("<a href='".$this->creerUrl('','adresseDetail',array('archiIdAdresse'=>$value['idAdresse']))."'>".$this->getIntituleAdresseFrom($value['idAdresse'],'idAdresse')."</a>");
                         $tableau->addValue($value['nbEvenementsAssocies'].$lienSupprAdresse);
                     }
-                    
+
                     $htmlDependances .=$tableau->createHtmlTableFromArray(2);
-                    
+
                 break;
-                
+
                 case 'sousQuartier':
-                
+
                     $t->set_filenames((array('modificationElementAdresse'=>'modificationElementAdresseSousQuartier.tpl')));
-                
+
                     $idSousQuartier = $parametres['id'];
-                    
+
                     $req = "
                         SELECT sq.nom as nomSousQuartier, sq.idSousQuartier as idSousQuartier,
                                     q.idQuartier as idQuartier, v.idVille as idVille, p.idPays as idPays
@@ -9881,11 +9881,11 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         LEFT JOIN pays p ON p.idPays = v.idPays
                         WHERE sq.idSousQuartier= '".$idSousQuartier."'";
                     $res = $this->connexionBdd->requete($req);
-                    
+
                     if(mysql_num_rows($res)==1)
                     {
                         $fetch=mysql_fetch_assoc($res);
-                        
+
                         $t->assign_vars(array(
                             'intitule'=>stripslashes($fetch['nomSousQuartier']),
                             'quartierField'=>$this->afficheSelectQuartier(array('idVille'=>$fetch['idVille'],'idQuartier'=>$fetch['idQuartier'],'noSousQuartier'=>true)),
@@ -9894,8 +9894,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             'idSousQuartier'=>$idSousQuartier
                         ));
                     }
-                    
-                    
+
+
                     // ************************************************************************************************************************
                     // affichage des dependances liées au sous quartier
                     // ************************************************************************************************************************
@@ -9905,43 +9905,43 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $htmlDependances.="nombre de dépendances = ".$arrayDependances['nbDependances']."<br>";
                     $tableauAdresses = new tableau();
                     $tableauRues = new tableau();
-                    
-                    
+
+
                     $tableauAdresses->addValue("adresses","style='font-weight:bold'");
                     $tableauAdresses->addValue("nombre d'evenements associés","style='font-weight:bold'");
-                    
+
                     $tableauRues->addValue("rues dépendantes de ce sous quartier","style='font-weight:bold'");
-                    
+
                     foreach($arrayDependances['arrayDependances'] as $indice => $value)
                     {
-                        
+
                         if(isset($value['idAdresse']))
                         {
                             $tableauAdresses->addValue("<a href='".$this->creerUrl('','adresseDetail',array('archiIdAdresse'=>$value['idAdresse']))."'>".$this->getIntituleAdresseFrom($value['idAdresse'],'idAdresse')."</a>");
                             $tableauAdresses->addValue($value['nbEvenementsAssocies']);
                         }
-                            
-                        
-                        
+
+
+
                         if(isset($value['idRue']))
                         {
                             $intituleRue = $this->getAdresseComplete($value['idRue'],'rue',array('miseEnForme'=>true));
                             $tableauRues->addValue("<a href='".$this->creerUrl('','adminAdresseDetail',array('tableName'=>'rue','idModification'=>$value['idRue']))."'>".$intituleRue."</a>");
                         }
-                        
-                        
+
+
                     }
-                    
+
                     $htmlDependances .=$tableauAdresses->createHtmlTableFromArray(2);
                     $htmlDependances .=$tableauRues->createHtmlTableFromArray(1);
-                    
+
                 break;
                 case 'quartier':
-                    
+
                     $t->set_filenames((array('modificationElementAdresse'=>'modificationElementAdresseQuartier.tpl')));
-                
+
                     $idQuartier = $parametres['id'];
-                    
+
                     $req = "
                             SELECT q.nom as nomQuartier,v.idVille as idVille, p.idPays as idPays
                             FROM quartier q
@@ -9950,12 +9950,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             WHERE q.idQuartier = '".$idQuartier."'
                     ";
                     $res = $this->connexionBdd->requete($req);
-                    
-                    
+
+
                     if(mysql_num_rows($res)==1)
                     {
                         $fetch=mysql_fetch_assoc($res);
-                        
+
                         $t->assign_vars(array(
                             'intitule'=>stripslashes($fetch['nomQuartier']),
                             'villeField'=>$this->afficheSelectVille(array('idPays'=>$fetch['idPays'],'idVille'=>$fetch['idVille'],'noSousQuartier'=>true,'noQuartier'=>true)),
@@ -9963,9 +9963,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             'idQuartier'=>$idQuartier
                         ));
                     }
-                    
-                    
-                    
+
+
+
                     // ************************************************************************************************************************
                     // affichage des dependances liées au  quartier
                     // ************************************************************************************************************************
@@ -9976,57 +9976,57 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $tableauAdresses = new tableau();
                     $tableauRues = new tableau();
                     $tableauSousQuartiers = new tableau();
-                    
+
                     $tableauAdresses->addValue("adresses","style='font-weight:bold'");
                     $tableauAdresses->addValue("nombre d'evenements associés","style='font-weight:bold'");
-                    
+
                     $tableauRues->addValue("rues dépendantes de ce quartier","style='font-weight:bold'");
-                    
+
                     $tableauSousQuartiers->addValue("sous quartiers dépendants de ce quartier","style='font-weight:bold'");
-                    
+
                     foreach($arrayDependances['arrayDependances'] as $indice => $value)
                     {
-                        
+
                         if(isset($value['idAdresse']))
                         {
                             $tableauAdresses->addValue("<a href='".$this->creerUrl('','adresseDetail',array('archiIdAdresse'=>$value['idAdresse']))."'>".$this->getIntituleAdresseFrom($value['idAdresse'],'idAdresse')."</a>");
                             $tableauAdresses->addValue($value['nbEvenementsAssocies']);
                         }
-                            
-                        
-                        
+
+
+
                         if(isset($value['idRue']))
                         {
                             $intituleRue = $this->getAdresseComplete($value['idRue'],'rue',array('miseEnForme'=>true));
                             $tableauRues->addValue("<a href='".$this->creerUrl('','adminAdresseDetail',array('tableName'=>'rue','idModification'=>$value['idRue']))."'>".$intituleRue."</a>");
                         }
-                        
-                        
+
+
                         if(isset($value['idSousQuartier']))
                         {
                             $intituleSousQuartier = $this->getAdresseComplete($value['idSousQuartier'],'sousQuartier',array('miseEnForme'=>true));
                             $tableauSousQuartiers->addValue("<a href='".$this->creerUrl('','adminAdresseDetail',array('tableName'=>'sousQuartier','idModification'=>$value['idSousQuartier']))."'>".$intituleSousQuartier."</a>");
                         }
-                        
-                        
+
+
                     }
 
                     $htmlDependances .=$tableauAdresses->createHtmlTableFromArray(2);
                     $htmlDependances .=$tableauRues->createHtmlTableFromArray(1);
                     $htmlDependances .=$tableauSousQuartiers->createHtmlTableFromArray(1);
-                    
-                    
-                    
+
+
+
                 break;
                 case 'ville':
                     $googleMap = new googleMap(array('googleMapKey'=>$this->googleMapKey));
-                    
+
                     $jsGoogleMap="";
                     $jsGoogleMap.= $googleMap->getJsFunctions();
                     $jsGoogleMap.= $googleMap->getJSInitGeoCoder();
-            
+
                     $jsToExecute="document.getElementById('formModif').action='".$this->creerUrl('adminEnregistreModifAdresse','',$parametres)."';document.getElementById('formModif').submit();";
-                        
+
                     $arrayJsCoordonneesFromGoogleMap = $googleMap->getJSRetriveCoordonnees(array(
                         'nomChampLatitudeRetour'=>'latitude',
                         'nomChampLongitudeRetour'=>'longitude',
@@ -10037,12 +10037,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     ));
 
                     $jsGoogleMap.= $arrayJsCoordonneesFromGoogleMap['jsFunctionToExecute'];
-                    
-                    
-                    
+
+
+
                     $t->set_filenames((array('modificationElementAdresse'=>'modificationElementAdresseVille.tpl')));
                     $idVille = $parametres['id'];
-                    
+
                     $req = "
                             SELECT v.nom as nomVille,v.codepostal as codePostal, p.idPays as idPays,v.longitude as longitude, v.latitude as latitude
                             FROM ville v
@@ -10050,11 +10050,11 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             WHERE v.idVille = '".$idVille."'
                     ";
                     $res = $this->connexionBdd->requete($req);
-                    
+
                     if(mysql_num_rows($res)==1)
                     {
                         $fetch=mysql_fetch_assoc($res);
-                        
+
                         $t->assign_vars(array(
                             'jsGoogleMap'=>$jsGoogleMap,
                             'intitule'=>stripslashes($fetch['nomVille']),
@@ -10065,9 +10065,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             'idVille'=>$idVille
                         ));
                     }
-                    
-                    
-                    
+
+
+
                     // ************************************************************************************************************************
                     // affichage des dependances liées a la ville
                     // ************************************************************************************************************************
@@ -10079,83 +10079,83 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $tableauRues = new tableau();
                     $tableauSousQuartiers = new tableau();
                     $tableauQuartiers = new tableau();
-                    
+
                     $tableauAdresses->addValue("adresses","style='font-weight:bold'");
                     $tableauAdresses->addValue("nombre d'evenements associés","style='font-weight:bold'");
-                    
+
                     $tableauRues->addValue("rues dépendantes de cette ville","style='font-weight:bold'");
-                    
+
                     $tableauSousQuartiers->addValue("sous quartiers dépendants de cette ville","style='font-weight:bold'");
-                    
+
                     $tableauQuartiers->addValue("quartiers dépendants de cette ville","style='font-weight:bold'");
-                    
+
                     foreach($arrayDependances['arrayDependances'] as $indice => $value)
                     {
-                        
+
                         if(isset($value['idAdresse']))
                         {
                             $tableauAdresses->addValue("<a href='".$this->creerUrl('','adresseDetail',array('archiIdAdresse'=>$value['idAdresse']))."'>".$this->getIntituleAdresseFrom($value['idAdresse'],'idAdresse')."</a>");
                             $tableauAdresses->addValue($value['nbEvenementsAssocies']);
                         }
-                            
-                        
-                        
+
+
+
                         if(isset($value['idRue']))
                         {
                             $intituleRue = $this->getAdresseComplete($value['idRue'],'rue',array('miseEnForme'=>true));
                             $tableauRues->addValue("<a href='".$this->creerUrl('','adminAdresseDetail',array('tableName'=>'rue','idModification'=>$value['idRue']))."'>".$intituleRue."</a>");
                         }
-                        
-                        
+
+
                         if(isset($value['idSousQuartier']))
                         {
                             $intituleSousQuartier = $this->getAdresseComplete($value['idSousQuartier'],'sousQuartier',array('miseEnForme'=>true));
                             $tableauSousQuartiers->addValue("<a href='".$this->creerUrl('','adminAdresseDetail',array('tableName'=>'sousQuartier','idModification'=>$value['idSousQuartier']))."'>".$intituleSousQuartier."</a>");
                         }
-                        
+
                         if(isset($value['idQuartier']))
                         {
                             $intituleQuartier = $this->getAdresseComplete($value['idQuartier'],'quartier',array('miseEnForme'=>true));
                             $tableauQuartiers->addValue("<a href='".$this->creerUrl('','adminAdresseDetail',array('tableName'=>'quartier','idModification'=>$value['idQuartier']))."'>".$intituleQuartier."</a>");
-                            
+
                         }
-                        
-                        
+
+
                     }
 
                     $htmlDependances .=$tableauAdresses->createHtmlTableFromArray(2);
                     $htmlDependances .=$tableauRues->createHtmlTableFromArray(1);
                     $htmlDependances .=$tableauSousQuartiers->createHtmlTableFromArray(1);
                     $htmlDependances .=$tableauQuartiers->createHtmlTableFromArray(1);
-                    
-                    
-                    
-                break;  
+
+
+
+                break;
 
                 case 'pays':
                     $t->set_filenames((array('modificationElementAdresse'=>'modificationElementAdressePays.tpl')));
                     $idPays = $parametres['id'];
-                    
+
                     $req = "
                             SELECT p.nom as nomPays
                             FROM pays p
                             WHERE p.idPays = '".$idPays."'
                     ";
                     $res = $this->connexionBdd->requete($req);
-                    
+
                     if(mysql_num_rows($res)==1)
                     {
                         $fetch=mysql_fetch_assoc($res);
-                        
+
                         $t->assign_vars(array(
                             'intitule'=>stripslashes($fetch['nomPays']),
                             'idPays'=>$idPays
                         ));
                     }
-                    
-                    
-                    
-                    
+
+
+
+
                     // ************************************************************************************************************************
                     // affichage des dependances liées a la ville
                     // ************************************************************************************************************************
@@ -10168,50 +10168,50 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $tableauSousQuartiers = new tableau();
                     $tableauQuartiers = new tableau();
                     $tableauVilles = new tableau();
-                    
+
                     $tableauAdresses->addValue("adresses","style='font-weight:bold'");
                     $tableauAdresses->addValue("nombre d'evenements associés","style='font-weight:bold'");
-                    
+
                     $tableauRues->addValue("rues dépendantes de ce pays","style='font-weight:bold'");
-                    
+
                     $tableauSousQuartiers->addValue("sous quartiers dépendants de ce pays","style='font-weight:bold'");
-                    
+
                     $tableauQuartiers->addValue("quartiers dépendants de ce pays","style='font-weight:bold'");
-                    
+
                     $tableauVilles->addValue("villes dépendantes de ce pays","style='font-weight:bold'");
-                    
+
                     foreach($arrayDependances['arrayDependances'] as $indice => $value)
                     {
-                        
+
                         if(isset($value['idAdresse']))
                         {
                             $tableauAdresses->addValue("<a href='".$this->creerUrl('','adresseDetail',array('archiIdAdresse'=>$value['idAdresse']))."'>".$this->getIntituleAdresseFrom($value['idAdresse'],'idAdresse')."</a>");
 
                             $tableauAdresses->addValue($value['nbEvenementsAssocies']);
                         }
-                            
-                        
-                        
+
+
+
                         if(isset($value['idRue']))
                         {
                             $intituleRue = $this->getAdresseComplete($value['idRue'],'rue',array('miseEnForme'=>true));
                             $tableauRues->addValue("<a href='".$this->creerUrl('','adminAdresseDetail',array('tableName'=>'rue','idModification'=>$value['idRue']))."'>".$intituleRue."</a>");
                         }
-                        
-                        
+
+
                         if(isset($value['idSousQuartier']))
                         {
                             $intituleSousQuartier = $this->getAdresseComplete($value['idSousQuartier'],'sousQuartier',array('miseEnForme'=>true));
                             $tableauSousQuartiers->addValue("<a href='".$this->creerUrl('','adminAdresseDetail',array('tableName'=>'sousQuartier','idModification'=>$value['idSousQuartier']))."'>".$intituleSousQuartier."</a>");
                         }
-                        
+
                         if(isset($value['idQuartier']))
                         {
                             $intituleQuartier = $this->getAdresseComplete($value['idQuartier'],'quartier',array('miseEnForme'=>true));
                             $tableauQuartiers->addValue("<a href='".$this->creerUrl('','adminAdresseDetail',array('tableName'=>'quartier','idModification'=>$value['idQuartier']))."'>".$intituleQuartier."</a>");
-                            
+
                         }
-                        
+
                         if(isset($value['idVille']))
                         {
                             $intituleVille = $this->getAdresseComplete($value['idVille'],'ville',array('miseEnForme'=>true));
@@ -10224,12 +10224,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $htmlDependances .=$tableauSousQuartiers->createHtmlTableFromArray(1);
                     $htmlDependances .=$tableauQuartiers->createHtmlTableFromArray(1);
                     $htmlDependances .=$tableauVilles->createHtmlTableFromArray(1);
-                    
+
                 break;
             }
 
 
-            
+
             switch($parametres['tableName'])
             {
                 case 'ville':
@@ -10242,15 +10242,15 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $onClickButtonModifier = "document.getElementById('formModif').action='".$this->creerUrl('adminEnregistreModifAdresse','',$parametres)."';";
                 break;
             }
-            
-            
+
+
             $t->assign_vars(array(
                         'typeElement'               =>$parametres['tableName'],
                         'typeButtonModifier'        =>$typeButtonModifier,
                         'onClickBoutonModifier'     =>$onClickButtonModifier,
                         'onClickBoutonRetour'       =>"location.href='".$this->creerUrl('','adminElementAdresse',array('tableName'=>$parametres['tableName']))."';"
                         ));
-            
+
             ob_start();
             $t->pparse('modificationElementAdresse');
             $html .= ob_get_contents();
@@ -10258,15 +10258,15 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $html.="(concernant les adresses, deux evenements différents peuvent afficher la meme adresse , dans ce cas l'adresse est liée a deux groupes d'adresses différents.<br><br>";
             $html.= $htmlDependances;
             ob_end_clean();
-            
-            
+
+
             // dans le cas de la rue , on affiche un onglet pour l'historique des noms de rue
             if($parametres['tableName']=='rue')
             {
                 $d = new dateObject();
                 $reqVals = "SELECT * FROM historiqueNomsRues WHERE idRue = '".$parametres['id']."'";
                 $resVals = $this->connexionBdd->requete($reqVals);
-                
+
                 $valsIdHistoriques = array();
                 $valsIdRues = array();
                 $valsAnnees = array();
@@ -10284,7 +10284,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $valPrefixes[$i]        = $fetchVals['prefixe'];
                     $i++;
                 }
-                
+
                 if($i==0)
                 {
                     $valsIdHistoriques[$i]  = '';
@@ -10294,37 +10294,37 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $valsCommentaires[$i]   = '';
                     $valPrefixes[$i]        = '';
                 }
-            
-            
+
+
                 $configForm=array(
                         "idHistoriqueNomRue"=>array("type"=>"hidden","libelle"=>"idHistoriqueNomRue","defaultValues"=>$valsIdHistoriques,"error"=>"","default"=>""),
                         "annee"=>array("type"=>"date","libelle"=>"annee","defaultValues"=>$valsAnnees,"error"=>"","default"=>""),
                         "prefixe"=>array("type"=>"text","libelle"=>"prefixe","defaultValues"=>$valPrefixes,"error"=>"","default"=>""),
                         "nomRue"=>array("type"=>"text","libelle"=>"nomRue","defaultValues"=>$valsNomsRues,"error"=>"","default"=>""),
-                        "commentaire"=>array("type"=>"bigText","libelle"=>"commentaire","defaultValues"=>$valsCommentaires,"error"=>"","default"=>"")                   
+                        "commentaire"=>array("type"=>"bigText","libelle"=>"commentaire","defaultValues"=>$valsCommentaires,"error"=>"","default"=>"")
                 );
-                
-                
+
+
                 $f = new formGenerator();
-                
+
                 $arrayFormulaireMultiLignes = $f->getFormulaireMultiLignes(array("configForm"=>$configForm,"formAction"=>$this->creerUrl('enregistreHistoriqueNomsRues','adminAdresseDetail',array("tableName"=>'rue',"idModification"=>$parametres['id']))));
-                
+
                 $htmlHistoriqueNomRue=$arrayFormulaireMultiLignes['html'];
-                
-            
+
+
                 $onglets = new ongletObject();
                 $onglets->init(0);
                 $onglets->setStyleTable("style='margin:0px;padding:0px;'");
                 $onglets->setStyleTableEtiquettes("style='margin:0px;padding:0px;'");
                 $onglets->addContent("Modifier un élément de rue ",$html);
                 $onglets->addContent("Historique du nom de la rue",$htmlHistoriqueNomRue);
-                
+
                 $html=$onglets->getHTML();
-                
+
                 $html.=$arrayFormulaireMultiLignes['jsAfterMultiLigneArray'];
-                
+
             }
-        
+
         }
         else
         {
@@ -10332,11 +10332,11 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $erreurObj->ajouter("Vous n'avez pas les droits pour accéder à cette partie du site");
             echo $erreurObj->afficher();
         }
-        
+
         return $html;
     }
-    
-    
+
+
     // enregistrer les modification d'une adresse (rue quartier sous quartier ... ) dans la partie administration du site
     public function enregistreModificationAdresse()
     {
@@ -10353,20 +10353,20 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     if(isset($this->variablesPost['sousQuartiers']) && $this->variablesPost['sousQuartiers']!='0')
                     {
                         $req = "UPDATE rue SET idSousQuartier='".$this->variablesPost['sousQuartiers']."', nom=\"".$this->variablesPost['intitule']."\", prefixe=\"".$this->variablesPost['complement']."\" WHERE idRue = '".$this->variablesPost['idRue']."'";
-                        
-                        $idModifie = $this->variablesPost['idRue'];     
-                        
+
+                        $idModifie = $this->variablesPost['idRue'];
+
                     }
                     elseif(isset($this->variablesPost['quartiers']) && $this->variablesPost['quartiers']!='0')
                     {
                         // recherche du sous quartier 'autre' , s'il n'existe pas , on le cree
                         $reqSousQuartierAutre = "
-                                    SELECT idSousQuartier 
-                                    FROM sousQuartier 
-                                    WHERE idQuartier = '".$this->variablesPost['quartiers']."' 
+                                    SELECT idSousQuartier
+                                    FROM sousQuartier
+                                    WHERE idQuartier = '".$this->variablesPost['quartiers']."'
                                     AND nom='autre'
                                     ";
-                        
+
                         $resSousQuartierAutre = $this->connexionBdd->requete($reqSousQuartierAutre);
                         $idSousQuartierAutre = 0;
                         if(mysql_num_rows($resSousQuartierAutre)==1)
@@ -10375,12 +10375,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             $fetchSousQuartierAutre = mysql_fetch_assoc($resSousQuartierAutre);
                             $idSousQuartierAutre = $fetchSousQuartierAutre['idSousQuartier'];
                         }
-                        
+
                         if(mysql_num_rows($resSousQuartierAutre)>1)
                         {
                             $errors[]="Probleme detecté dans les sousQuartiers 'autre', merci de contacter l'administrateur.<br>";
                         }
-                        
+
                         if(mysql_num_rows($resSousQuartierAutre)==0)
                         {
                             // le sousQuartier 'autre' pour le quartier n'existe pas , il faut le creer et renvoyer son ID
@@ -10388,10 +10388,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             $resInsertNouveauSousQuartierAutre = $this->connexionBdd->requete($reqInsertNouveauSousQuartierAutre);
                             $idSousQuartierAutre = mysql_insert_id();
                         }
-                        
+
                         if($idSousQuartierAutre!=0)
                         {
-                        
+
                             $req = "UPDATE rue SET idSousQuartier='".$idSousQuartierAutre."', nom=\"".$this->variablesPost['intitule']."\", prefixe=\"".$this->variablesPost['complement']."\" WHERE idRue = '".$this->variablesPost['idRue']."'";
                             $idModifie = $this->variablesPost['idRue'];
                         }
@@ -10406,24 +10406,24 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         // recherche du quartier 'autre' de la ville s'il n'existe pas , on le cree
                         $reqQuartierAutre = "SELECT idQuartier FROM quartier WHERE idVille='".$this->variablesPost['ville']."' and nom='autre'";
                         $resQuartierAutre = $this->connexionBdd->requete($reqQuartierAutre);
-                        
+
                         $idQuartierAutre = 0;
                         if(mysql_num_rows($resQuartierAutre)==1)
                         {
                             // le quartier autre existe, on passe au sousQuartier
                             $fetchQuartierAutre = mysql_fetch_assoc($resQuartierAutre);
                             $idQuartierAutre = $fetchQuartierAutre['idQuartier'];
-                            
+
                             // on verifie que le sousQuartiers 'autre' existe pour le quartier 'autre' trouve
-                            
+
                             // recherche du sous quartier 'autre' , s'il n'existe pas , on le cree
                             $reqSousQuartierAutre = "
-                                        SELECT idSousQuartier 
-                                        FROM sousQuartier 
-                                        WHERE idQuartier = '".$idQuartierAutre."' 
+                                        SELECT idSousQuartier
+                                        FROM sousQuartier
+                                        WHERE idQuartier = '".$idQuartierAutre."'
                                         AND nom='autre'
                                         ";
-                            
+
                             $resSousQuartierAutre = $this->connexionBdd->requete($reqSousQuartierAutre);
                             $idSousQuartierAutre = 0;
                             if(mysql_num_rows($resSousQuartierAutre)==1)
@@ -10432,12 +10432,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                                 $fetchSousQuartierAutre = mysql_fetch_assoc($resSousQuartierAutre);
                                 $idSousQuartierAutre = $fetchSousQuartierAutre['idSousQuartier'];
                             }
-                            
+
                             if(mysql_num_rows($resSousQuartierAutre)>1)
                             {
                                 $errors[] = "Probleme detecté dans les sousQuartiers 'autre', merci de contacter l'administrateur.<br>";
                             }
-                            
+
                             if(mysql_num_rows($resSousQuartierAutre)==0)
                             {
                                 // le sousQuartier 'autre' pour le quartier n'existe pas , il faut le creer et renvoyer son ID
@@ -10445,17 +10445,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                                 $resInsertNouveauSousQuartierAutre = $this->connexionBdd->requete($reqInsertNouveauSousQuartierAutre);
                                 $idSousQuartierAutre = mysql_insert_id();
                             }
-                            
+
                             if($idSousQuartierAutre!=0)
                             {
-                            
+
                                 $req = "UPDATE rue SET idSousQuartier='".$idSousQuartierAutre."', nom=\"".$this->variablesPost['intitule']."\", prefixe=\"".$this->variablesPost['complement']."\" WHERE idRue = '".$this->variablesPost['idRue']."'";
                             }
                             else
                             {
                                 $errors[] = "Il y a eu un souci a la selection automatique du sous quartier, merci de contacter l'administrateur.<br>";
                             }
-                            
+
                             if(mysql_num_rows($resQuartierAutre)>1)
                             {
                                 $errors[] =  "Probleme detecté dans les quartiers 'autre', merci de contacter l'administrateur.<br>";
@@ -10467,16 +10467,16 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             $reqInsertQuartierAutre = "INSERT INTO quartier (idVille,nom) VALUES ('".$this->variablesPost['ville']."','autre')";
                             $resInsertQuartierAutre = $this->connexionBdd->requete($reqInsertQuartierAutre);
                             $idQuartierAutre = mysql_insert_id();
-                            
+
                             // on ajoute aussi le sousQuartier 'autre' pour le quartier 'autre' cree , on va quand meme regarder s'il n'existe pas un enregistrement pour etre sur qu'il n'y a pas de souci d'integrité
                                                         // recherche du sous quartier 'autre' , s'il n'existe pas , on le cree
                             $reqSousQuartierAutre = "
-                                        SELECT idSousQuartier 
-                                        FROM sousQuartier 
-                                        WHERE idQuartier = '".$idQuartierAutre."' 
+                                        SELECT idSousQuartier
+                                        FROM sousQuartier
+                                        WHERE idQuartier = '".$idQuartierAutre."'
                                         AND nom='autre'
                                         ";
-                            
+
                             $resSousQuartierAutre = $this->connexionBdd->requete($reqSousQuartierAutre);
                             $idSousQuartierAutre = 0;
                             if(mysql_num_rows($resSousQuartierAutre)==1)
@@ -10485,12 +10485,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                                 $fetchSousQuartierAutre = mysql_fetch_assoc($resSousQuartierAutre);
                                 $idSousQuartierAutre = $fetchSousQuartierAutre['idSousQuartier'];
                             }
-                            
+
                             if(mysql_num_rows($resSousQuartierAutre)>1)
                             {
                                 $errors[] =  "Probleme detecté dans les sousQuartiers 'autre', merci de contacter l'administrateur.<br>";
                             }
-                            
+
                             if(mysql_num_rows($resSousQuartierAutre)==0)
                             {
                                 // le sousQuartier 'autre' pour le quartier n'existe pas , il faut le creer et renvoyer son ID
@@ -10498,58 +10498,58 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                                 $resInsertNouveauSousQuartierAutre = $this->connexionBdd->requete($reqInsertNouveauSousQuartierAutre);
                                 $idSousQuartierAutre = mysql_insert_id();
                             }
-                            
+
                             if($idSousQuartierAutre!=0)
                             {
-                            
+
                                 $req = "UPDATE rue SET idSousQuartier='".$idSousQuartierAutre."', nom=\"".$this->variablesPost['intitule']."\", prefixe=\"".$this->variablesPost['complement']."\" WHERE idRue = '".$this->variablesPost['idRue']."'";
                             }
                             else
                             {
                                 $errors[] =  "Il y a eu un souci a la selection automatique du sous quartier, merci de contacter l'administrateur.<br>";
                             }
-                            
+
                             if(mysql_num_rows($resQuartierAutre)>1)
                             {
                                 $errors[] =  "Probleme detecté dans les quartiers 'autre', merci de contacter l'administrateur.<br>";
                             }
-                            
+
                         }
-                        
+
                     }
-                    
-                    
+
+
                     if($req!="")
                     {
                         // execution de la requete de mise a jour de la rue
                         $res = $this->connexionBdd->requete($req);
                         $idModifie = $this->variablesPost['idRue'];
-                        
+
                     }
                     else
                     {
                         $errors[] =  "erreur dans la modification de la rue<br>";
                     }
-                    
+
                 break;
                 // **********************************************************************************************************************************************************
                 // sous quartier
                 // **********************************************************************************************************************************************************
                 case 'sousQuartier':
                     // un sousQuartier appartient toujours a un quartier
-                    
+
                     //﻿array(8) { ["idRue"]=>  string(1) "5" ["pays"]=>  string(1) "1" ["ville"]=>  string(1) "1" ["quartiers"]=>  string(2) "13" ["sousQuartiers"]=>  string(1) "8" ["intitule"]=>  string(13) "Saint-Nicolas" ["complement"]=>  string(4) "quai" ["modifier"]=>  string(8) "Modifier" }
                     $req="";
                     if($this->variablesPost['quartiers']!='0' && $this->variablesPost['ville']!='0' && $this->variablesPost['pays']!='0')
                     {
                         $req = "UPDATE sousQuartier SET idQuartier = '".$this->variablesPost['quartiers']."',nom=\"".$this->variablesPost['intitule']."\" WHERE idSousQuartier = '".$this->variablesPost['idSousQuartier']."'";
-                        
+
                     }
                     else
                     {
                         $errors[] =  "Erreur : un sous quartier ne peut pas appartenir a aucun quartier.<br>";
                     }
-                
+
                     if($req!="")
                     {
                         // execution de la requete de mise a jour de la rue
@@ -10566,19 +10566,19 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 // **********************************************************************************************************************************************************
                 case 'quartier':
                     // un quartier appartient toujours a une ville
-                    
+
                     //﻿array(8) { ["idRue"]=>  string(1) "5" ["pays"]=>  string(1) "1" ["ville"]=>  string(1) "1" ["quartiers"]=>  string(2) "13" ["sousQuartiers"]=>  string(1) "8" ["intitule"]=>  string(13) "Saint-Nicolas" ["complement"]=>  string(4) "quai" ["modifier"]=>  string(8) "Modifier" }
                     $req="";
                     if($this->variablesPost['ville']!='0' && $this->variablesPost['pays']!='0')
                     {
                         $req = "UPDATE quartier SET idVille = '".$this->variablesPost['ville']."',nom=\"".$this->variablesPost['intitule']."\" WHERE idQuartier = '".$this->variablesPost['idQuartier']."'";
-                        
+
                     }
                     else
                     {
                         $errors[] =  "Erreur : un quartier ne peut pas appartenir a aucune ville.<br>";
                     }
-                
+
                     if($req!="")
                     {
                         // execution de la requete de mise a jour de du quartier
@@ -10595,19 +10595,19 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 // **********************************************************************************************************************************************************
                 case 'ville':
                     // une ville appartient toujours a un pays
-                    
+
                     //﻿array(8) { ["idRue"]=>  string(1) "5" ["pays"]=>  string(1) "1" ["ville"]=>  string(1) "1" ["quartiers"]=>  string(2) "13" ["sousQuartiers"]=>  string(1) "8" ["intitule"]=>  string(13) "Saint-Nicolas" ["complement"]=>  string(4) "quai" ["modifier"]=>  string(8) "Modifier" }
                     $req="";
                     if($this->variablesPost['pays']!='0')
                     {
                         $req = "UPDATE ville SET idPays = '".$this->variablesPost['pays']."',nom=\"".$this->variablesPost['intitule']."\",codepostal=\"".$this->variablesPost['codePostal']."\", longitude='".$this->variablesPost['longitude']."',latitude='".$this->variablesPost['latitude']."' WHERE idVille = '".$this->variablesPost['idVille']."'";
-                        
+
                     }
                     else
                     {
                         $errors[] =  "Erreur : une ville ne peut pas appartenir a aucun pays.<br>";
                     }
-                
+
                     if($req!="")
                     {
                         // execution de la requete de mise a jour de la ville
@@ -10627,33 +10627,33 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $res = $this->connexionBdd->requete($req);
                     $idModifie = $this->variablesPost['idPays'];
                 break;
-                
+
             }
-            
+
             if(isset($this->variablesGet['tableName']) && isset($req) && $req!='')
             {
-            
+
                 $mail = new mailObject();
                 $a = new archiAuthentification();
                 $u = new archiUtilisateur();
                 $arrayInfosUtilisateur = $u->getArrayInfosFromUtilisateur($a->getIdUtilisateur());
-                
+
                 $messageAdmins = "Un élément d'adresse a été modifié";
                 $messageAdmins .=" par : ".$arrayInfosUtilisateur['nom']." ".$arrayInfosUtilisateur['prenom']."<br>";
-                
+
                 $messageAdmins .= "type d'élément : ".$this->variablesGet['tableName']."<br><br>";
                 $messageAdmins.="<a href='".$this->creerUrl('','adminAdresseDetail',array('tableName'=>$this->variablesGet['tableName'],'idModification'=>$idModifie))."'>".$this->creerUrl('','adminAdresseDetail',array('tableName'=>$this->variablesGet['tableName'],'idModification'=>$idModifie))."</a>";
-                
+
                 $messageModerateur ="Un élément d'adresse a été modifié<br>";
                 $messageModerateur .="type d'élément : ".$this->variablesGet['tableName']."<br><br>";
                 $messageModerateur.="<a href='".$this->creerUrl('','adminAdresseDetail',array('tableName'=>$this->variablesGet['tableName'],'idModification'=>$idModifie))."'>".$this->creerUrl('','adminAdresseDetail',array('tableName'=>$this->variablesGet['tableName'],'idModification'=>$idModifie))."</a>";
-                
-                
+
+
                 $mail->sendMailToAdministrators($mail->getSiteMail(),"archi-strasbourg.org : un utilisateur modifié un élément d'adresse",$messageAdmins," and alerteMail='1' ",true);
-                
+
                 $u->ajouteMailEnvoiRegroupesAdministrateurs(array('contenu'=>$messageAdmins,'idTypeMailRegroupement'=>6,'criteres'=>" and alerteMail='1' "));
-                
-                
+
+
                 $tableName = $this->variablesGet['tableName'];
                 // envoi de mail aux moderateur de la ville
                 /*if(in_array($tableName,array('rue','sousQuartier','quartier')))
@@ -10671,7 +10671,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             $identifiantName='idQuartier';
                         break;
                     }
-                
+
                     $idVille = $this->getIdVilleFrom($idModifie,$identifiantName);
                     $arrayListeModerateurs = $u->getArrayIdModerateursActifsFromVille($idVille,array("sqlWhere"=>" AND alerteAdresses='1' "));
                     if(count($arrayListeModerateurs)>0)
@@ -10695,16 +10695,16 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     public function getFirstImageFromEvenement($idEvenement=0)
     {
         $fetch=array();
-        
+
         $reqVerifTri = "
                     SELECT ei.idImage
                     FROM _evenementImage ei
                     WHERE ei.idEvenement = '".$idEvenement."'
                     AND position<>0
         ";
-        
+
         $resVerifTri = $this->connexionBdd->requete($reqVerifTri);
-        
+
         if(mysql_num_rows($resVerifTri)>0)
         {
             // les images ont deja ete triés , on prend celle qui a la plus petite position <>0
@@ -10721,11 +10721,11 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 HAVING hi1.idHistoriqueImage = max(hi2.idHistoriqueImage) AND ei1.position = min(ei2.position)
                 ORDER BY ei1.position ASC
             ";
-            
+
             $res = $this->connexionBdd->requete($req);
-            
+
             $fetch = mysql_fetch_assoc($res);
-            
+
         }
         else
         {
@@ -10740,28 +10740,28 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 HAVING hi1.idHistoriqueImage = max(hi2.idHistoriqueImage)
                 ORDER BY hi1.idHistoriqueImage
             ";
-            
+
             $res = $this->connexionBdd->requete($req);
-            
+
             if(mysql_num_rows($res)==0)
             {
                 // pas d'image pour l'evenement courant, on va en chercher une pour l'adresse courante de l'evenement ( donc dans un evenement de la meme adresse)
                 $req = "
                     SELECT hi1.idHistoriqueImage as idHistoriqueImage, hi1.dateUpload as dateUpload,ei1.position as position  , hi1.idImage as idImage
                     FROM historiqueImage hi2,historiqueImage hi1
-                    
+
                     RIGHT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = '".$idEvenement."'
                     LEFT JOIN _evenementEvenement ee2 ON ee2.idEvenement = ee.idEvenement
                     RIGHT JOIN _evenementEvenement ee3 ON ee3.idEvenement = ee2.idEvenementAssocie
                     RIGHT JOIN _evenementImage ei1 ON ei1.idEvenement = ee3.idEvenementAssocie
-                    
+
                     WHERE hi1.idImage = ei1.idImage
                     AND hi2.idImage = hi1.idImage
                     GROUP BY hi1.idImage,hi1.idHistoriqueImage
                     HAVING hi1.idHistoriqueImage = max(hi2.idHistoriqueImage)
                     ORDER BY position, hi1.idHistoriqueImage
                 ";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 while($fetchImagesAdresses = mysql_fetch_assoc($res))
                 {
@@ -10775,17 +10775,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $fetch = $fetchImagesAdresses;
                     }
                 }
-                
+
             }
             else
             {
                 $fetch = mysql_fetch_assoc($res);
             }
         }
-        
+
         return $fetch;
     }
-    
+
     public function getIntituleAdresseFrom($id=0,$type='',$params=array())
     {
         switch($type)
@@ -10793,36 +10793,36 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             case 'idEvenement':
                 $req = "
                     SELECT distinct ha1.idAdresse as idAdresse, ha1.numero, ha1.idQuartier, ha1.idVille,ind.nom,
-                
+
                         r.nom as nomRue,
                         sq.nom as nomSousQuartier,
                         q.nom as nomQuartier,
                         v.nom as nomVille,
                         p.nom as nomPays,
-                        ha1.numero as numeroAdresse, 
+                        ha1.numero as numeroAdresse,
                         ha1.idRue,
                         r.prefixe as prefixeRue,
                         IF (ha1.idSousQuartier != 0, ha1.idSousQuartier, r.idSousQuartier) AS idSousQuartier,
                         IF (ha1.idQuartier != 0, ha1.idQuartier, sq.idQuartier) AS idQuartier,
                         IF (ha1.idVille != 0, ha1.idVille, q.idVille) AS idVille,
                         IF (ha1.idPays != 0, ha1.idPays, v.idPays) AS idPays,
-                        
+
                         ha1.numero as numero,
                         ha1.idHistoriqueAdresse,
                         ha1.idIndicatif as idIndicatif
                     FROM historiqueAdresse ha2, historiqueAdresse ha1
-                    
+
                     LEFT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = '".mysql_real_escape_string($id)."'
 					LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-                    
+
                     LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
-                
+
                     LEFT JOIN rue r         ON r.idRue = ha1.idRue
                     LEFT JOIN sousQuartier sq   ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' ,ha1.idSousQuartier ,r.idSousQuartier )
                     LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' ,ha1.idQuartier ,sq.idQuartier )
                     LEFT JOIN ville v       ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' ,ha1.idVille ,q.idVille )
                     LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' ,ha1.idPays ,v.idPays )
-                    
+
                     WHERE ha2.idAdresse = ha1.idAdresse
                     AND ha1.idAdresse = ae.idAdresse
                     GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
@@ -10831,45 +10831,45 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $res = $this->connexionBdd->requete($req);
 
                 $fetch = mysql_fetch_assoc($res);
-                
+
             break;
             case 'idHistoriqueEvenement':
-            
+
             break;
             case 'idEvenementGroupeAdresse':
-                
+
                 $req = "
                     SELECT distinct ha1.idAdresse as idAdresse, ha1.numero, ha1.idQuartier, ha1.idVille,ind.nom,
-                
+
                         r.nom as nomRue,
                         sq.nom as nomSousQuartier,
                         q.nom as nomQuartier,
                         v.nom as nomVille,
                         p.nom as nomPays,
-                        ha1.numero as numeroAdresse, 
+                        ha1.numero as numeroAdresse,
                         ha1.idRue,
                         r.prefixe as prefixeRue,
                         IF (ha1.idSousQuartier != 0, ha1.idSousQuartier, r.idSousQuartier) AS idSousQuartier,
                         IF (ha1.idQuartier != 0, ha1.idQuartier, sq.idQuartier) AS idQuartier,
                         IF (ha1.idVille != 0, ha1.idVille, q.idVille) AS idVille,
                         IF (ha1.idPays != 0, ha1.idPays, v.idPays) AS idPays,
-                        
+
                         ha1.numero as numero,
                         ha1.idHistoriqueAdresse,
                         ha1.idIndicatif as idIndicatif
                     FROM historiqueAdresse ha2, historiqueAdresse ha1
-                    
+
                     LEFT JOIN _evenementEvenement ee ON ee.idEvenement = '".$id."'
                     LEFT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
-                    
+
                     LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
-                
+
                     LEFT JOIN rue r         ON r.idRue = ha1.idRue
                     LEFT JOIN sousQuartier sq   ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' ,ha1.idSousQuartier ,r.idSousQuartier )
                     LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' ,ha1.idQuartier ,sq.idQuartier )
                     LEFT JOIN ville v       ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' ,ha1.idVille ,q.idVille )
                     LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' ,ha1.idPays ,v.idPays )
-                    
+
                     WHERE ha2.idAdresse = ha1.idAdresse
                     AND ha1.idAdresse = ae.idAdresse
                     GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
@@ -10878,7 +10878,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 ";
                 $res = $this->connexionBdd->requete($req);
                 $arrayFetch = array(); // liste des idAdresses dans le cas du groupe d'adresse ou il y a plusieurs adresse, fonctionne pour le moment uniquement si on fais la requete sur un groupe d'adresse
-                
+
                 while($fetch = mysql_fetch_assoc($res))
                 {
                     $arrayFetch[] = $fetch;
@@ -10894,32 +10894,32 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         q.nom as nomQuartier,
                         v.nom as nomVille,
                         p.nom as nomPays,
-                        ha1.numero as numeroAdresse, 
+                        ha1.numero as numeroAdresse,
                         ha1.idRue,
                         r.prefixe as prefixeRue,
                         IF (ha1.idSousQuartier != 0, ha1.idSousQuartier, r.idSousQuartier) AS idSousQuartier,
                         IF (ha1.idQuartier != 0, ha1.idQuartier, sq.idQuartier) AS idQuartier,
                         IF (ha1.idVille != 0, ha1.idVille, q.idVille) AS idVille,
                         IF (ha1.idPays != 0, ha1.idPays, v.idPays) AS idPays,
-                        
+
                         ha1.numero as numero,
                         ha1.idHistoriqueAdresse,
                         ha1.idIndicatif as idIndicatif
                     FROM historiqueAdresse ha2, historiqueAdresse ha1
 
                     LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
-                
+
                     LEFT JOIN rue r         ON r.idRue = ha1.idRue
                     LEFT JOIN sousQuartier sq   ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' ,ha1.idSousQuartier ,r.idSousQuartier )
                     LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' ,ha1.idQuartier ,sq.idQuartier )
                     LEFT JOIN ville v       ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' ,ha1.idVille ,q.idVille )
                     LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' ,ha1.idPays ,v.idPays )
-                    
+
                     WHERE ha2.idAdresse = ha1.idAdresse
                     AND ha1.idAdresse = '".$id."'
                     GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                     HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 $fetch = mysql_fetch_assoc($res);
             break;
@@ -10932,37 +10932,37 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         q.nom as nomQuartier,
                         v.nom as nomVille,
                         p.nom as nomPays,
-                        
+
                         ha1.idRue,
                         r.prefixe as prefixeRue,
                         IF (ha1.idSousQuartier != 0, ha1.idSousQuartier, r.idSousQuartier) AS idSousQuartier,
                         IF (ha1.idQuartier != 0, ha1.idQuartier, sq.idQuartier) AS idQuartier,
                         IF (ha1.idVille != 0, ha1.idVille, q.idVille) AS idVille,
                         IF (ha1.idPays != 0, ha1.idPays, v.idPays) AS idPays,
-                        
-                        
+
+
                         ha1.idHistoriqueAdresse,
                         ha1.idIndicatif as idIndicatif
                     FROM historiqueAdresse ha2, historiqueAdresse ha1
 
                     LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
-                
+
                     LEFT JOIN rue r         ON r.idRue = ha1.idRue
                     LEFT JOIN sousQuartier sq   ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' ,ha1.idSousQuartier ,r.idSousQuartier )
                     LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' ,ha1.idQuartier ,sq.idQuartier )
                     LEFT JOIN ville v       ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' ,ha1.idVille ,q.idVille )
                     LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' ,ha1.idPays ,v.idPays )
-                    
+
                     WHERE ha2.idAdresse = ha1.idAdresse
                     AND ha1.idRue='".$id."'
-                    AND ha1.numero<>'' 
+                    AND ha1.numero<>''
                     AND ha1.numero<>'0'
                     GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                     HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 $fetch = mysql_fetch_assoc($res);
-            
+
             break;
             case 'idRueWithNoNumeroAuthorized':
                 // selectionne les adresses d'une rue données (seulement les adresses avec un numero)
@@ -10973,39 +10973,39 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         q.nom as nomQuartier,
                         v.nom as nomVille,
                         p.nom as nomPays,
-                        
+
                         ha1.idRue,
                         r.prefixe as prefixeRue,
                         IF (ha1.idSousQuartier != 0, ha1.idSousQuartier, r.idSousQuartier) AS idSousQuartier,
                         IF (ha1.idQuartier != 0, ha1.idQuartier, sq.idQuartier) AS idQuartier,
                         IF (ha1.idVille != 0, ha1.idVille, q.idVille) AS idVille,
                         IF (ha1.idPays != 0, ha1.idPays, v.idPays) AS idPays,
-                        
-                        
+
+
                         ha1.idHistoriqueAdresse,
                         '0' as idIndicatif
                     FROM historiqueAdresse ha2, historiqueAdresse ha1
 
                     LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
-                
+
                     LEFT JOIN rue r         ON r.idRue = ha1.idRue
                     LEFT JOIN sousQuartier sq   ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' ,ha1.idSousQuartier ,r.idSousQuartier )
                     LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' ,ha1.idQuartier ,sq.idQuartier )
                     LEFT JOIN ville v       ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' ,ha1.idVille ,q.idVille )
                     LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' ,ha1.idPays ,v.idPays )
-                    
+
                     WHERE ha2.idAdresse = ha1.idAdresse
                     AND ha1.idRue='".$id."'
                     GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                     HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                     LIMIT 1
                     ";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 $fetch = mysql_fetch_assoc($res);
-            
+
             break;
-            
+
             case 'idQuartier':
                 // selectionne les adresses d'une rue données (seulement les adresses avec un numero)
                 $req = "
@@ -11013,34 +11013,34 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         q.nom as nomQuartier,
                         v.nom as nomVille,
                         p.nom as nomPays,
-                        
+
                         IF (ha1.idQuartier != 0, ha1.idQuartier, sq.idQuartier) AS idQuartier,
                         IF (ha1.idVille != 0, ha1.idVille, q.idVille) AS idVille,
                         IF (ha1.idPays != 0, ha1.idPays, v.idPays) AS idPays
-                        
-                        
+
+
                     FROM historiqueAdresse ha2, historiqueAdresse ha1
 
                     LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
-                
+
                     LEFT JOIN rue r         ON r.idRue = ha1.idRue
                     LEFT JOIN sousQuartier sq   ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' ,ha1.idSousQuartier ,r.idSousQuartier )
                     LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' ,ha1.idQuartier ,sq.idQuartier )
                     LEFT JOIN ville v       ON v.idVille = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille!='0' ,ha1.idVille ,q.idVille )
                     LEFT JOIN pays p        ON p.idPays = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier='0' and ha1.idVille='0' and ha1.idPays!='0' ,ha1.idPays ,v.idPays )
-                    
+
                     WHERE ha2.idAdresse = ha1.idAdresse
                     AND q.idQuartier='".$id."'
-                    AND ha1.numero<>'' 
+                    AND ha1.numero<>''
                     AND ha1.numero<>'0'
                     GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                     HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 $fetch = mysql_fetch_assoc($res);
-            
+
             break;
-            
+
             case 'idVille':
                 // selectionne les adresses d'une rue données (seulement les adresses avec un numero)
                 $req = "
@@ -11049,12 +11049,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     LEFT JOIN pays p ON p.idPays = v.idPays
                     WHERE idVille = '".$id."'
                     ";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 $fetch = mysql_fetch_assoc($res);
-            
+
             break;
-            
+
             case 'idImage':
                     $req = "
                     SELECT distinct ha1.idAdresse as idAdresse, ha1.numero, ha1.idQuartier, ha1.idVille,ind.nom,
@@ -11063,21 +11063,21 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         q.nom as nomQuartier,
                         v.nom as nomVille,
                         p.nom as nomPays,
-                        ha1.numero as numeroAdresse, 
+                        ha1.numero as numeroAdresse,
                         ha1.idRue,
                         r.prefixe as prefixeRue,
                         IF (ha1.idSousQuartier != 0, ha1.idSousQuartier, r.idSousQuartier) AS idSousQuartier,
                         IF (ha1.idQuartier != 0, ha1.idQuartier, sq.idQuartier) AS idQuartier,
                         IF (ha1.idVille != 0, ha1.idVille, q.idVille) AS idVille,
                         IF (ha1.idPays != 0, ha1.idPays, v.idPays) AS idPays,
-                        
+
                         ha1.numero as numero,
                         ha1.idHistoriqueAdresse,
                         ha1.idIndicatif as idIndicatif
                     FROM historiqueAdresse ha2, historiqueAdresse ha1
 
                     LEFT JOIN indicatif ind ON ind.idIndicatif = ha1.idIndicatif
-                
+
                     LEFT JOIN rue r         ON r.idRue = ha1.idRue
                     LEFT JOIN sousQuartier sq   ON sq.idSousQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier!='0' ,ha1.idSousQuartier ,r.idSousQuartier )
                     LEFT JOIN quartier q        ON q.idQuartier = IF(ha1.idRue='0' and ha1.idSousQuartier='0' and ha1.idQuartier!='0' ,ha1.idQuartier ,sq.idQuartier )
@@ -11090,36 +11090,36 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     AND ei.idImage = '".$id."'
                     GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                     HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 $fetch = mysql_fetch_assoc($res);
             break;
         }
-        
+
         return $this->getIntituleAdresse($fetch, $params);
     }
-    
-    
+
+
     // affiche la googlemap a coté des adresses sur le detail d'une adresse dans une iframe
     public function getGoogleMapIframe($params = array())
     {
-        $html='<link href="css/default.css" rel="stylesheet" type="text/css" /> 
+        $html='<link href="css/default.css" rel="stylesheet" type="text/css" />
     ';
 
         if(isset($this->variablesGet['longitude']) && $this->variablesGet['longitude']!='' && isset($this->variablesGet['latitude']) && $this->variablesGet['latitude']!='')
         {
             $ajax = new ajaxObject();
             $html.=$ajax->getAjaxFunctions();
-        
+
             $longitude = $this->variablesGet['longitude'];
             $latitude = $this->variablesGet['latitude'];
-            
+
             $listeCoords = array();
-            
+
             // si archiIdAdresse est précisé , on remplace les coordonnées par celle de l'adresse ( car celle envoyée sont celle de la premiere du groupe d'adresse)
             $isCoordonneesAdresseCouranteValide = true;
             $isCoordonneesGroupeAdresseOK = false;
-            
+
             if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='' && isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!='')
             {
                 // s'il existe des coordonnées pour le groupe d'adresse dans la table _adresseEvenement, on prend celles ci
@@ -11133,7 +11133,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $isCoordonneesGroupeAdresseOK = true;
                 }
             }
-            
+
             if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='' && $this->variablesGet['archiIdAdresse']!='0' && !$isCoordonneesGroupeAdresseOK)
             {
                 $reqCoordonnees = "
@@ -11144,9 +11144,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                     HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                 ";
-                
+
                 $resCoordonnees = $this->connexionBdd->requete($reqCoordonnees);
-                
+
                 if(mysql_num_rows($resCoordonnees)==1)
                 {
                     $fetchCoordonnees = mysql_fetch_assoc($resCoordonnees);
@@ -11161,13 +11161,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     }
                 }
             }
-            
+
             $affichageCoordonneesVille = false;
             if($longitude<0 || $latitude<0 || $longitude==0 || $latitude==0 || !$isCoordonneesAdresseCouranteValide)
             {
                 // on detection une longitude ou latitude negative : il doit y avoir eu une erreur de detection des parametres
                 // on va centrer la carte sur la ville
-                
+
                 if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!='' && $this->variablesGet['archiIdAdresse']!='0')
                 {
                     // recuperation de l'idville de l'adresse courante
@@ -11191,9 +11191,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             {
                 $rayon = 200;
             }
-            
+
             $arrayGoogleMapCoord = $this->getArrayGoogleMapConfigCoordonneesFromCenter(array('longitude'=>$longitude,'latitude'=>$latitude,'rayon'=>$rayon));
-            
+
             $listeCoords = $arrayGoogleMapCoord['arrayConfigCoordonnees'];
             // verification des droits
             $isAuthorizedToDrag = false;
@@ -11204,15 +11204,15 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 {
                     $idAdresseCentree = $this->variablesGet['archiIdAdresse'];
                     $idEvenementGroupeAdresseCentre = $this->variablesGet['archiIdEvenementGroupeAdresse'];
-                    
-                    
+
+
                     $utilisateur = new archiUtilisateur();
                     $authentification = new archiAuthentification();
-                    
+
                     // verification des droits
                     if($utilisateur->isAuthorized('googlemap_change_coordonnees',$authentification->getIdUtilisateur()))
                     {
-                        if($utilisateur->getIdProfil($authentification->getIdUtilisateur())==4 || ($utilisateur->getIdProfil($authentification->getIdUtilisateur())==3 
+                        if($utilisateur->getIdProfil($authentification->getIdUtilisateur())==4 || ($utilisateur->getIdProfil($authentification->getIdUtilisateur())==3
                             && $utilisateur->isModerateurFromVille($authentification->getIdUtilisateur(),$idAdresseCentree,'idAdresse')))
                         {
                             $isAuthorizedToDrag = true;
@@ -11221,7 +11221,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     }
                 }
             }
-            
+
             if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']=='popupDetailAdresse')
             {
                 // affichage pour la popup sur le detail d'une adresse
@@ -11249,7 +11249,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $html.=$gm->getJsFunctions();
             //$html.="<script  >".$gm->setFunctionAddPointsCallableFromChild()."</script>";
             $html.=$gm->getMap(array('listeCoordonnees'=>$listeCoords,'urlImageIcon'=>$this->getUrlImage()."pointGM.png",'pathImageIcon'=>$this->getCheminPhysique()."images/pointGM.png"));
-            
+
             // on ajoute le markeur central a la main
             $html.="<script  >
                 var iconHome = new GIcon();
@@ -11259,31 +11259,31 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 iconHome.shadowSize = new GSize(22, 20);
                 iconHome.iconAnchor = new GPoint(5, 26);
                 iconHome.infoWindowAnchor = new GPoint(5, 1);
-                
+
                 //var iconMarkerHome = new GIcon(iconHome);
                 ";
-            
+
             if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']=='popupDetailAdresse' && $isAuthorizedToDrag)
             {
                 $html.="markerHome = new GMarker(new GLatLng(".$latitude.",".$longitude."),{icon:iconHome, draggable: true});";
             }
             else
-            {           
+            {
                 $html.="markerHome = new GMarker(new GLatLng(".$latitude.",".$longitude."),{icon:iconHome});";
             }
-            
+
             $html.="map.addOverlay(markerHome);";
-            
+
             if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']=='popupDetailAdresse' && $isAuthorizedToDrag)
             {
                 $html.="markerHome.enableDragging();";
             }
-            
+
             if(isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']=='popupDetailAdresse' && $isAuthorizedToDrag)
             {
                 $html.="GEvent.addListener(markerHome,'drag',function(){parent.window.document.getElementById('latitudeUser').value=markerHome.getPoint().lat();parent.window.document.getElementById('longitudeUser').value=markerHome.getPoint().lng();parent.window.document.getElementById('validationCoordonnees').style.display='';});
                 ";
-                
+
                 $html.="GEvent.addListener(
                             map,
                             'dragend',
@@ -11298,20 +11298,20 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             function(){appelAjaxReturnJs('".html_entity_decode($this->creerUrl('','majGoogleMapNewCenter',array('noHTMLHeaderFooter'=>1,'noHeaderNoFooter'=>1,'latitudeHome'=>$latitude,'longitudeHome'=>$longitude)))."&longitudeCenter='+map.getCenter().lng()+'&latitudeCenter='+map.getCenter().lat(),'divListeAdressesAjax')}
                             );";
                     //$html.="GEvent.addListener(map,'dragend',function(){document.getElementById('iFrameMajCenter').src='".$this->creerUrl('','majGoogleMapNewCenter',array('noHeaderNoFooter'=>1,'latitudeHome'=>$latitude,'longitudeHome'=>$longitude))."&longitudeCenter='+map.getCenter().lng()+'&latitudeCenter='+map.getCenter().lat();});";
-            }           
-                
+            }
+
             //$html.=$gm->setFunctionAddPointsCallableFromChild(array());
-            
+
             $html.="</script>";
             //$html.="<div id='jsMiseAJourCenter' ><iframe id='iFrameMajCenter' src=''></iframe></div>";//style='position:absolute;left:0px;top:0px;'
         }
-        
+
         return $html;
-    
+
     }
-    
-    
-    
+
+
+
     // ******************************************************************************************************************************************************
     // cette fonction renvoi les infos pour l'affichage de la google map
     // - si on passe en parametres une latitude et longitude et un rayon , on affiche les points autour
@@ -11327,26 +11327,26 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $latitude = $params['latitude'];
             $longitude = $params['longitude'];
             $rayon = $params['rayon'];
-            
+
             $reqListeCoords = "
 
                         select * from (
                         SELECT ((acos(sin($latitude*PI()/180) * sin(ha1.latitude*PI()/180) + cos($latitude*PI()/180) * cos(ha1.latitude*PI()/180) * cos(($longitude - ha1.longitude)*PI()/180))/ pi() * 180.0)* 60 * 1.1515 * 1.609344) as distanceFromPoint,ha1.longitude as longitude,ha1.latitude as latitude,ha1.idAdresse as idAdresse
                         FROM historiqueAdresse ha1,historiqueAdresse ha2
-                        WHERE ha1.latitude<>''    
+                        WHERE ha1.latitude<>''
                         AND ha1.longitude<>''
                         AND ha2.idAdresse = ha1.idAdresse
-                        
+
                         GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse
                         HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
 
                         ) as tmp
                         WHERE tmp.distanceFromPoint*1000<$rayon
                 ";
-                
+
             $resListeCoords = $this->connexionBdd->requete($reqListeCoords);
             $nbListeCoords = mysql_num_rows($resListeCoords);
-            
+
             $fetchListeCoordsArray = array();
             $arrayIdAdresses = array();
             while($fetchListeCoordsAdresses = mysql_fetch_assoc($resListeCoords))
@@ -11354,42 +11354,42 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $fetchListeCoordsArray[] = $fetchListeCoordsAdresses;
                 $arrayIdAdresses[] = $fetchListeCoordsAdresses['idAdresse'];
             }
-            
+
             $sqlCritere = "";
             if(count($arrayIdAdresses)>0)
             {
                 $sqlCritere = " AND ae.idAdresse NOT IN (".implode(",",$arrayIdAdresses).") ";
             }
-            
+
             // on fait la requete pour une recherche sur la table _adresseEvenement
             $reqListeCoordsGA = "
-            
+
             select * from (
                         SELECT ((acos(sin($latitude*PI()/180) * sin(ae.latitudeGroupeAdresse*PI()/180) + cos($latitude*PI()/180) * cos(ae.latitudeGroupeAdresse*PI()/180) * cos(($longitude - ae.longitudeGroupeAdresse)*PI()/180))/ pi() * 180.0)* 60 * 1.1515 * 1.609344) as distanceFromPoint,ae.longitudeGroupeAdresse as longitude,ae.latitudeGroupeAdresse as latitude,ae.idAdresse as idAdresse,ae.idEvenement as idEvenementGroupeAdresse
                         FROM _adresseEvenement ae
-                        WHERE 
+                        WHERE
 
-                            ae.latitudeGroupeAdresse<>''    
-                            AND 
+                            ae.latitudeGroupeAdresse<>''
+                            AND
                             ae.longitudeGroupeAdresse<>''
-                            AND 
-                            ae.latitudeGroupeAdresse<>'0'   
-                            AND 
+                            AND
+                            ae.latitudeGroupeAdresse<>'0'
+                            AND
                             ae.longitudeGroupeAdresse<>'0'
                          $sqlCritere
                                                 ) as tmp
-                        WHERE tmp.distanceFromPoint*1000<$rayon 
-            
+                        WHERE tmp.distanceFromPoint*1000<$rayon
+
             ";
-            
-            
+
+
             $resListeCoordsGA = $this->connexionBdd->requete($reqListeCoordsGA);
             $nbListeCoords+=mysql_num_rows($resListeCoordsGA);
             while($fetchListeCoordsAdressesGA = mysql_fetch_assoc($resListeCoordsGA))
             {
                 $fetchListeCoordsArray[] = $fetchListeCoordsAdressesGA;
             }
-            
+
         }
         $i=0;
         $indiceArrayId = 0;
@@ -11417,13 +11417,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             {
                 if(!isset($params['arrayIdEvenementsGroupeAdresse'][$indiceArrayId]))
                     break;
-                    
+
                 $fetchListeCoords = $params['arrayIdEvenementsGroupeAdresse'][$indiceArrayId];
             }
-            
+
             // on verifie si un groupe d'adresse est bien rattaché a l'adresse , car on conserve les adresses , mais on ne les affiches pas quand elles ne sont pas reliées a un groupe d'adresse
             // si c'est un tableau de groupes d'adresses qui est transmis , dans ce cas on verifie bien qu'il existe , dans ce cas , cette requete est utilie pour recuperer un idAdresse du groupe d'adresse
-            
+
             if(isset($fetchListeCoords['idEvenementGroupeAdresse']))
             {
                 $reqVerifGA = "SELECT idEvenement,idAdresse, longitudeGroupeAdresse,latitudeGroupeAdresse FROM _adresseEvenement WHERE idEvenement='".$fetchListeCoords['idEvenementGroupeAdresse']."'";
@@ -11437,13 +11437,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $reqVerifGA = "SELECT 0 FROM _adresseEvenement WHERE 0=1"; // debug laurent dans le cas ou il n'y a aucun point ... cette fonction a trop ete adaptée deja, a refaire si nouvelle grande adaptation requise
             }
 
-            
+
             $resVerifGA = $this->connexionBdd->requete($reqVerifGA);
-            
+
             if(mysql_num_rows($resVerifGA)==1 || isset($fetchListeCoords['idEvenementGroupeAdresse'])) // dans le cas ou on a passé un tableau de groupe d'adresses en parametre de la fonction, vu que l'on traite le groupe d'adresse, on force le passage ici , les autres conditions traitent des idAdresses et celle ci fait ce qu'il faut
             {
                 $fetchGA = mysql_fetch_assoc($resVerifGA);
-                
+
                 //$fetchGA['idEvenement'],'idEvenementGroupeAdresse'
                 if(isset($fetchListeCoords['idEvenementGroupeAdresse']))
                 {
@@ -11453,34 +11453,34 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 {
                     $infosAdresses = $this->getIntituleAdresseFrom($fetchListeCoords['idAdresse'],'idAdresse',array('noQuartier'=>true,'noSousQuartier'=>true,'styleCSSTitreAdresse'=>'font-weight:bold;font-size:9px;','displayFirstTitreAdresse'=>true,'setSeparatorAfterTitle'=>'<br>'));
                 }
-                
+
                 // un seul groupe d'adresse , on fais une redirection vers la page du detail de l'adresse
                 $listeCoords[$i]['longitude'] = $fetchListeCoords['longitude'];
                 $listeCoords[$i]['latitude'] = $fetchListeCoords['latitude'];
                 $listeCoords[$i]['libelle'] = '';
                 $listeCoords[$i]['label'] = $infosAdresses;
-                
+
                 if(isset($fetchListeCoords['idAdresse']))
                     $listeCoords[$i]['idAdresse'] = $fetchListeCoords['idAdresse'];
                 else
                     $listeCoords[$i]['idAdresse'] = $fetchGA['idAdresse']; // dans le cas ou on passe un tableau de groupes d'adresses a la fonction
-                    
+
                 if(isset($params['urlIcon']) && $params['urlIcon']!='')
                 {
                     $listeCoords[$i]['urlIcon'] = $params['urlIcon'];
                 }
-                
+
                 if(isset($params['dimIconX']) && $params['dimIconX']!='')
                 {
                     $listeCoords[$i]['dimIconX'] = $params['dimIconX'];
                 }
-                
+
                 if(isset($params['dimIconY']) && $params['dimIconY']!='')
                 {
                     $listeCoords[$i]['dimIconY'] = $params['dimIconY'];
                 }
-                
-                
+
+
                 //$listeCoords[$i]['idEvenementGroupeAdresse'] = $fetchGA['idEvenement'];
                 if(isset($params['urlRedirectedToParent']) && $params['urlRedirectedToParent']==true) // si on appel d'une iframe dans une iframe
                 {
@@ -11503,14 +11503,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $i++;
             }
             elseif(mysql_num_rows($resVerifGA)>1)
-            { // plusieurs groupes d'adresses sur la meme adresse , en principe ce cas n'est pas possible si l'on a passé des groupes d'adresses en parametre 
+            { // plusieurs groupes d'adresses sur la meme adresse , en principe ce cas n'est pas possible si l'on a passé des groupes d'adresses en parametre
                 $infosAdresses = "";
                 $j=0;
                 $infosAdressesTitres = "";
                 $infosAdressesTitresGroupeAdresse = "";
                 while($fetchGA = mysql_fetch_assoc($resVerifGA))
                 {
-                
+
                     if($fetchGA['longitudeGroupeAdresse']!='0' && $fetchGA['latitudeGroupeAdresse']!='0')
                     {
                         // des coordonnees spécifiques pour le groupe d'adresse on été spécifiée
@@ -11545,8 +11545,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $listeCoords[$i]['jsCodeOnMouseOutMarker'] = "currentLabel.hide();";//w = window.open(); for(i in currentMarker){w.document.writeln(i+' '+currentMarker[i]+'<br>')}  // setTimeout('currentMarker.closeInfoWindow()',1000);
                         $listeCoords[$i]['jsCodeMarker'] = "";
                         $i++;
-                    
-                    
+
+
                     }
                     else
                     {
@@ -11566,7 +11566,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $j++;
                     }
                 }
-                
+
                 if($j>0) // s'il y a des adresses à regrouper
                 {
                     if($j==1) // une seule adresse
@@ -11578,7 +11578,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         if(mysql_num_rows($resGroupeAdresse0)==1)
                         {
                             $fetchGroupeAdresse0 = mysql_fetch_assoc($resGroupeAdresse0);
-                            
+
                             $listeCoords[$i]['longitude'] = $fetchListeCoords['longitude'];
                             $listeCoords[$i]['latitude'] = $fetchListeCoords['latitude'];
                             $listeCoords[$i]['libelle'] = '';
@@ -11608,7 +11608,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         }
                     }
                     else
-                    { 
+                    {
                         // plusieurs adresses dont les groupes d'adresses n'ont pas de coordonnees specifiques
                         // s'il y a plusieurs groupes d'adresses il faut proposer a l'utilisateur de choisir entre eux par le formulaire de recherche
                         $listeCoords[$i]['longitude'] = $fetchListeCoords['longitude'];
@@ -11637,19 +11637,19 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 }
             }
             $indiceArrayId++;
-            
+
         }
 
         return array('arrayConfigCoordonnees'=>$listeCoords);
     }
-    
-    
-    
+
+
+
     public function getCoordonneesFrom($id=0,$type='')
     {
         $longitude=0;
         $latitude=0;
-        
+
         switch($type)
         {
             case 'idVille':
@@ -11664,7 +11664,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         SELECT ha1.latitude as latitude, ha1.longitude as longitude
                         FROM _adresseEvenement ae
                         LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
-                        LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse                        
+                        LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
                         WHERE ha2.idAdresse = ha1.idAdresse
                         AND ha1.longitude!=''
                         AND ha1.latitude!=''
@@ -11674,7 +11674,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         AND ha1.latitude IS NOT NULL
                         AND ae.idEvenement = '".$id."'
                         GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse
-                        HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)           
+                        HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                     ";
                 $res = $this->connexionBdd->requete($req);
                 if(mysql_num_rows($res)>0)
@@ -11683,7 +11683,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $longitude = $fetch["longitude"];
                     $latitude = $fetch["latitude"];
                 }
-            
+
             break;
             case 'idAdresse':
                 $req = "
@@ -11703,21 +11703,21 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     $latitude = $fetch["latitude"];
                 }
             break;
-            
+
             case 'idHistoriqueAdresse':
-            
+
             break;
         }
-        
+
         return array("longitude"=>$longitude,"latitude"=>$latitude);
     }
-    
+
     // renvoi un tableau comportant le nombre de dependances d'un element d'adresse ainsi que la liste des adresses dependantes
     public function getDependancesFrom($id=0, $type='')
     {
         $nbDependances = '';
         $arrayDependances=array();
-        
+
         switch($type)
         {
             case 'idRue':
@@ -11725,17 +11725,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         SELECT ha1.idAdresse as idAdresse, ha1.idHistoriqueAdresse as idHistoriqueAdresse, count(ee.idEvenementAssocie) as nbEvenementsAssocies
                         FROM historiqueAdresse ha1
                         LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
-                        
-                        
+
+
                         LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
                         LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-                        
-                                                
+
+
                         WHERE ha1.idRue = '".$id."'
                         GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse,ee.idEvenement
                         HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                 ";
-                
+
                 $resDependancesAdresses = $this->connexionBdd->requete($reqDependancesAdresses);
                 $nbDependances=0;
                 if(mysql_num_rows($resDependancesAdresses)>0)
@@ -11747,23 +11747,23 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     }
                 }
             break;
-            
+
             case 'idSousQuartier':
                 $reqDependancesAdresses = "
                         SELECT ha1.idAdresse as idAdresse, ha1.idHistoriqueAdresse as idHistoriqueAdresse, count(ee.idEvenementAssocie) as nbEvenementsAssocies
                         FROM historiqueAdresse ha1
                         LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
-                        
-                        
+
+
                         LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
                         LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-                        
-                                                
+
+
                         WHERE ha1.idSousQuartier = '".$id."'
                         GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse,ee.idEvenement
                         HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                 ";
-                
+
                 $resDependancesAdresses = $this->connexionBdd->requete($reqDependancesAdresses);
                 if(mysql_num_rows($resDependancesAdresses)>0)
                 {
@@ -11774,120 +11774,120 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $arrayDependances[]=array("idAdresse"=>$fetchDependancesAdresses['idAdresse'],"nbEvenementsAssocies"=>$fetchDependancesAdresses['nbEvenementsAssocies']);
                     }
                 }
-            
+
                 $reqDependancesRues = "
-                
+
                     SELECT idRue
                     FROM rue
                     WHERE idSousQuartier = '".$id."'
-                
+
                 ";
-                
-                $resDependancesRues = $this->connexionBdd->requete($reqDependancesRues);
-                
-                if(mysql_num_rows($resDependancesRues)>0)
-                {
-                    if($nbDependances=='')
-                        $nbDependances=0;
-                    
-                    while($fetchDependancesRues = mysql_fetch_assoc($resDependancesRues))
-                    {
-                        $nbDependances++;
-                        $arrayDependances[]=array("idRue"=>$fetchDependancesRues['idRue']);
-                    }
-                }               
-            break;
-            
-            case 'idQuartier':
-            
-                $reqDependancesAdresses = "
-                        SELECT ha1.idAdresse as idAdresse, ha1.idHistoriqueAdresse as idHistoriqueAdresse, count(ee.idEvenementAssocie) as nbEvenementsAssocies
-                        FROM historiqueAdresse ha1
-                        LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
-                        
-                        
-                        LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
-                        LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-                        
-                                                
-                        WHERE ha1.idQuartier = '".$id."'
-                        GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse,ee.idEvenement
-                        HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                ";
-                
-                $resDependancesAdresses = $this->connexionBdd->requete($reqDependancesAdresses);
-                if(mysql_num_rows($resDependancesAdresses)>0)
-                {
-                    $nbDependances=0;
-                    while($fetchDependancesAdresses = mysql_fetch_assoc($resDependancesAdresses))
-                    {
-                        $nbDependances++;
-                        $arrayDependances[]=array("idAdresse"=>$fetchDependancesAdresses['idAdresse'],"nbEvenementsAssocies"=>$fetchDependancesAdresses['nbEvenementsAssocies']);
-                    }
-                }
-                
-                
-                
-                $reqDependancesRues = "
-                
-                    SELECT idRue
-                    FROM rue
-                    WHERE idSousQuartier in ( select idSousQuartier from sousQuartier WHERE idQuartier='".$id."')
-                
-                ";
-                
+
                 $resDependancesRues = $this->connexionBdd->requete($reqDependancesRues);
 
                 if(mysql_num_rows($resDependancesRues)>0)
                 {
                     if($nbDependances=='')
                         $nbDependances=0;
-                    
+
                     while($fetchDependancesRues = mysql_fetch_assoc($resDependancesRues))
                     {
                         $nbDependances++;
                         $arrayDependances[]=array("idRue"=>$fetchDependancesRues['idRue']);
                     }
                 }
-                
+            break;
+
+            case 'idQuartier':
+
+                $reqDependancesAdresses = "
+                        SELECT ha1.idAdresse as idAdresse, ha1.idHistoriqueAdresse as idHistoriqueAdresse, count(ee.idEvenementAssocie) as nbEvenementsAssocies
+                        FROM historiqueAdresse ha1
+                        LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
+
+
+                        LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
+                        LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
+
+
+                        WHERE ha1.idQuartier = '".$id."'
+                        GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse,ee.idEvenement
+                        HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
+                ";
+
+                $resDependancesAdresses = $this->connexionBdd->requete($reqDependancesAdresses);
+                if(mysql_num_rows($resDependancesAdresses)>0)
+                {
+                    $nbDependances=0;
+                    while($fetchDependancesAdresses = mysql_fetch_assoc($resDependancesAdresses))
+                    {
+                        $nbDependances++;
+                        $arrayDependances[]=array("idAdresse"=>$fetchDependancesAdresses['idAdresse'],"nbEvenementsAssocies"=>$fetchDependancesAdresses['nbEvenementsAssocies']);
+                    }
+                }
+
+
+
+                $reqDependancesRues = "
+
+                    SELECT idRue
+                    FROM rue
+                    WHERE idSousQuartier in ( select idSousQuartier from sousQuartier WHERE idQuartier='".$id."')
+
+                ";
+
+                $resDependancesRues = $this->connexionBdd->requete($reqDependancesRues);
+
+                if(mysql_num_rows($resDependancesRues)>0)
+                {
+                    if($nbDependances=='')
+                        $nbDependances=0;
+
+                    while($fetchDependancesRues = mysql_fetch_assoc($resDependancesRues))
+                    {
+                        $nbDependances++;
+                        $arrayDependances[]=array("idRue"=>$fetchDependancesRues['idRue']);
+                    }
+                }
+
                 $reqDependancesSousQuartiers = "
-                    SELECT idSousQuartier 
+                    SELECT idSousQuartier
                     FROM sousQuartier WHERE idQuartier='".$id."'
                 ";
-                
+
                 $resDependancesSousQuartiers = $this->connexionBdd->requete($reqDependancesSousQuartiers);
-                
+
                 if(mysql_num_rows($resDependancesSousQuartiers)>0)
                 {
                     if($nbDependances=='')
                         $nbDependances=0;
-                    
+
                     while($fetchDependancesSousQuartiers = mysql_fetch_assoc($resDependancesSousQuartiers))
                     {
                         $nbDependances++;
                         $arrayDependances[]=array("idSousQuartier"=>$fetchDependancesSousQuartiers['idSousQuartier']);
                     }
-                    
+
                 }
-                
+
             break;
-            
+
             case 'idVille':
                 $reqDependancesAdresses = "
                         SELECT ha1.idAdresse as idAdresse, ha1.idHistoriqueAdresse as idHistoriqueAdresse, count(ee.idEvenementAssocie) as nbEvenementsAssocies
                         FROM historiqueAdresse ha1
                         LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
-                        
-                        
+
+
                         LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
                         LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-                        
-                                                
+
+
                         WHERE ha1.idVille = '".$id."'
                         GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse,ee.idEvenement
                         HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                 ";
-                
+
                 $resDependancesAdresses = $this->connexionBdd->requete($reqDependancesAdresses);
                 if(mysql_num_rows($resDependancesAdresses)>0)
                 {
@@ -11898,94 +11898,94 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $arrayDependances[]=array("idAdresse"=>$fetchDependancesAdresses['idAdresse'],"nbEvenementsAssocies"=>$fetchDependancesAdresses['nbEvenementsAssocies']);
                     }
                 }
-                
-                
-                
+
+
+
                 $reqDependancesRues = "
-                
+
                     SELECT idRue
                     FROM rue
-                    WHERE idSousQuartier in ( 
-                        select idSousQuartier from sousQuartier WHERE idQuartier in ( 
+                    WHERE idSousQuartier in (
+                        select idSousQuartier from sousQuartier WHERE idQuartier in (
                             select idQuartier from quartier where idVille='".$id."'))
-                
+
                 ";
-                
+
                 $resDependancesRues = $this->connexionBdd->requete($reqDependancesRues);
 
                 if(mysql_num_rows($resDependancesRues)>0)
                 {
                     if($nbDependances=='')
                         $nbDependances=0;
-                    
+
                     while($fetchDependancesRues = mysql_fetch_assoc($resDependancesRues))
                     {
                         $nbDependances++;
                         $arrayDependances[]=array("idRue"=>$fetchDependancesRues['idRue']);
                     }
                 }
-                
+
                 $reqDependancesSousQuartiers = "
-                    SELECT idSousQuartier 
+                    SELECT idSousQuartier
                     FROM sousQuartier WHERE idQuartier in ( select idQuartier from quartier WHERE idVille='".$id."')
                 ";
-                
+
                 $resDependancesSousQuartiers = $this->connexionBdd->requete($reqDependancesSousQuartiers);
-                
+
                 if(mysql_num_rows($resDependancesSousQuartiers)>0)
                 {
                     if($nbDependances=='')
                         $nbDependances=0;
-                    
+
                     while($fetchDependancesSousQuartiers = mysql_fetch_assoc($resDependancesSousQuartiers))
                     {
                         $nbDependances++;
                         $arrayDependances[]=array("idSousQuartier"=>$fetchDependancesSousQuartiers['idSousQuartier']);
                     }
-                    
+
                 }
-                
-                
-                
-                
-                
+
+
+
+
+
                 $reqDependancesQuartiers = "
                     select idQuartier from quartier WHERE idVille='".$id."'
                 ";
-                
+
                 $resDependancesQuartiers = $this->connexionBdd->requete($reqDependancesQuartiers);
-                
+
                 if(mysql_num_rows($resDependancesQuartiers)>0)
                 {
                     if($nbDependances=='')
                         $nbDependances=0;
-                    
+
                     while($fetchDependancesQuartiers = mysql_fetch_assoc($resDependancesQuartiers))
                     {
                         $nbDependances++;
                         $arrayDependances[]=array("idQuartier"=>$fetchDependancesQuartiers['idQuartier']);
                     }
-                    
+
                 }
-            
-            
+
+
             break;
             case 'idPays':
                 $reqDependancesAdresses = "
                         SELECT ha1.idAdresse as idAdresse, ha1.idHistoriqueAdresse as idHistoriqueAdresse, count(ee.idEvenementAssocie) as nbEvenementsAssocies
                         FROM historiqueAdresse ha1
                         LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
-                        
-                        
+
+
                         LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
                         LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-                        
-                                                
+
+
                         WHERE ha1.idPays = '".$id."'
                         GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse,ee.idEvenement
                         HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                 ";
-                
+
                 $resDependancesAdresses = $this->connexionBdd->requete($reqDependancesAdresses);
                 if(mysql_num_rows($resDependancesAdresses)>0)
                 {
@@ -11996,112 +11996,112 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $arrayDependances[]=array("idAdresse"=>$fetchDependancesAdresses['idAdresse'],"nbEvenementsAssocies"=>$fetchDependancesAdresses['nbEvenementsAssocies']);
                     }
                 }
-                
-                
-                
+
+
+
                 $reqDependancesRues = "
-                
+
                     SELECT idRue
                     FROM rue
-                    WHERE idSousQuartier in ( 
-                        select idSousQuartier from sousQuartier WHERE idQuartier in ( 
+                    WHERE idSousQuartier in (
+                        select idSousQuartier from sousQuartier WHERE idQuartier in (
                             select idQuartier from quartier where idVille in (select idVille FROM ville WHERE idPays='".$id."'))
                     )
-                
+
                 ";
-                
+
                 $resDependancesRues = $this->connexionBdd->requete($reqDependancesRues);
 
                 if(mysql_num_rows($resDependancesRues)>0)
                 {
                     if($nbDependances=='')
                         $nbDependances=0;
-                    
+
                     while($fetchDependancesRues = mysql_fetch_assoc($resDependancesRues))
                     {
                         $nbDependances++;
                         $arrayDependances[]=array("idRue"=>$fetchDependancesRues['idRue']);
                     }
                 }
-                
+
                 $reqDependancesSousQuartiers = "
-                    SELECT idSousQuartier 
+                    SELECT idSousQuartier
                     FROM sousQuartier WHERE idQuartier in ( select idQuartier from quartier WHERE idVille in ( SELECT idVille FROM ville WHERE idPays='".$id."'))
                 ";
-                
+
                 $resDependancesSousQuartiers = $this->connexionBdd->requete($reqDependancesSousQuartiers);
-                
+
                 if(mysql_num_rows($resDependancesSousQuartiers)>0)
                 {
                     if($nbDependances=='')
                         $nbDependances=0;
-                    
+
                     while($fetchDependancesSousQuartiers = mysql_fetch_assoc($resDependancesSousQuartiers))
                     {
                         $nbDependances++;
                         $arrayDependances[]=array("idSousQuartier"=>$fetchDependancesSousQuartiers['idSousQuartier']);
                     }
-                    
+
                 }
-                
-                
-                
-                
-                
+
+
+
+
+
                 $reqDependancesQuartiers = "
                     select idQuartier from quartier WHERE idVille in (SELECT idVille FROM ville WHERE idPays = '".$id."')
                 ";
-                
+
                 $resDependancesQuartiers = $this->connexionBdd->requete($reqDependancesQuartiers);
-                
+
                 if(mysql_num_rows($resDependancesQuartiers)>0)
                 {
                     if($nbDependances=='')
                         $nbDependances=0;
-                    
+
                     while($fetchDependancesQuartiers = mysql_fetch_assoc($resDependancesQuartiers))
                     {
                         $nbDependances++;
                         $arrayDependances[]=array("idQuartier"=>$fetchDependancesQuartiers['idQuartier']);
                     }
-                    
+
                 }
-                
-                
+
+
                 $reqDependancesVilles = "SELECT idVille FROM ville WHERE idPays = '".$id."'";
                 $resDependancesVilles = $this->connexionBdd->requete($reqDependancesVilles);
-                
+
                 if(mysql_num_rows($resDependancesVilles))
                 {
                     if($nbDependances=='')
                         $nbDependances=0;
-                        
+
                     while($fetchDependancesVilles = mysql_fetch_assoc($resDependancesVilles))
                     {
                         $nbDependances++;
                         $arrayDependances[]=array("idVille"=>$fetchDependancesVilles['idVille']);
                     }
                 }
-                
-            
-            
+
+
+
             break;
-            
+
         }
-        
+
         return array('nbDependances'=>$nbDependances,'arrayDependances'=>$arrayDependances);
     }
-    
+
 
     // renvoi la ville correspondante a une adresse ou d'autres elements
     public function getIdVilleFrom($id=0, $type='')
     {
         $idVille=0;
-        
+
         switch($type)
         {
             case 'idImage':
-                
+
                 $idAdresseFromImage = "";
                 // recherche de la ville correspondante a l'image
                 $reqAdresse = "
@@ -12115,20 +12115,20 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse
                     HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                 ";
-                
+
                 $resAdresse = $this->connexionBdd->requete($reqAdresse);
                 while($fetchAdresse = mysql_fetch_assoc($resAdresse))
                 {
                     if($fetchAdresse['idVille']!='0')
                         $idVille = $fetchAdresse['idVille'];
-                    
+
                     if($fetchAdresse['idRue']!='0')
                     {
                         $reqRue="
-                                SELECT idVille 
-                                FROM quartier 
-                                WHERE idQuartier IN 
-                                    (SELECT idQuartier FROM sousQuartier WHERE idSousQuartier IN 
+                                SELECT idVille
+                                FROM quartier
+                                WHERE idQuartier IN
+                                    (SELECT idQuartier FROM sousQuartier WHERE idSousQuartier IN
                                         (SELECT idSousQuartier FROM rue WHERE idRue='".$fetchAdresse['idRue']."')
                                     )
                                 ";
@@ -12136,17 +12136,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $fetchRue = mysql_fetch_assoc($resRue);
                         $idVille = $fetchRue['idVille'];
                     }
-                    
+
                     if($fetchAdresse['idQuartier']!='0')
                     {
                         $reqQuartier="
-                            SELECT idVille FROM quartier WHERE idQuartier ='".$fetchAdresse['idQuartier']."'                        
+                            SELECT idVille FROM quartier WHERE idQuartier ='".$fetchAdresse['idQuartier']."'
                         ";
                         $resQuartier = $this->connexionBdd->requete($reqQuartier);
                         $fetchQuartier = mysql_fetch_assoc($resQuartier);
                         $idVille = $fetchQuartier['idVille'];
                     }
-                    
+
                     if($fetchAdresse['idSousQuartier']!='0')
                     {
                         $reqSousQuartier = "SELECT idVille FROM quartier WHERE idQuartier IN (SELECT idQuartier FROM sousQuartier WHERE idSousQuartier='".$fetchAdresse['idSousQuartier']."')";
@@ -12155,7 +12155,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $idVille = $fetchSousQuartier['idVille'];
                     }
                 }
-            
+
             break;
             case 'idAdresse':
                 // recherche de la ville correspondante a l'idAdresse
@@ -12167,20 +12167,20 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse
                     HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                 ";
-                
+
                 $resAdresse = $this->connexionBdd->requete($reqAdresse);
                 while($fetchAdresse = mysql_fetch_assoc($resAdresse))
                 {
                     if($fetchAdresse['idVille']!='0')
                         $idVille = $fetchAdresse['idVille'];
-                    
+
                     if($fetchAdresse['idRue']!='0')
                     {
                         $reqRue="
-                                SELECT idVille 
-                                FROM quartier 
-                                WHERE idQuartier IN 
-                                    (SELECT idQuartier FROM sousQuartier WHERE idSousQuartier IN 
+                                SELECT idVille
+                                FROM quartier
+                                WHERE idQuartier IN
+                                    (SELECT idQuartier FROM sousQuartier WHERE idSousQuartier IN
                                         (SELECT idSousQuartier FROM rue WHERE idRue='".$fetchAdresse['idRue']."')
                                     )
                                 ";
@@ -12188,17 +12188,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $fetchRue = mysql_fetch_assoc($resRue);
                         $idVille = $fetchRue['idVille'];
                     }
-                    
+
                     if($fetchAdresse['idQuartier']!='0')
                     {
                         $reqQuartier="
-                            SELECT idVille FROM quartier WHERE idQuartier ='".$fetchAdresse['idQuartier']."'                        
+                            SELECT idVille FROM quartier WHERE idQuartier ='".$fetchAdresse['idQuartier']."'
                         ";
                         $resQuartier = $this->connexionBdd->requete($reqQuartier);
                         $fetchQuartier = mysql_fetch_assoc($resQuartier);
                         $idVille = $fetchQuartier['idVille'];
                     }
-                    
+
                     if($fetchAdresse['idSousQuartier']!='0')
                     {
                         $reqSousQuartier = "SELECT idVille FROM quartier WHERE idQuartier IN (SELECT idQuartier FROM sousQuartier WHERE idSousQuartier='".$fetchAdresse['idSousQuartier']."')";
@@ -12206,18 +12206,18 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $fetchSousQuartier = mysql_fetch_assoc($resSousQuartier);
                         $idVille = $fetchSousQuartier['idVille'];
                     }
-                    
+
                 }
-                
+
             break;
             case 'idEvenementGroupeAdresse':
             case 'idEvenement':
-                
+
                 $evenement = new archiEvenement();
                 $idEvenementGroupeAdresse = $evenement->getIdEvenementGroupeAdresseFromIdEvenement($id);
-            
+
                 $idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
-                
+
                 // recherche de la ville correspondante a l'idAdresse
                 $reqAdresse = "
                     SELECT ha1.idRue as idRue,ha1.idQuartier as idQuartier,ha1.idSousQuartier as idSousQuartier,ha1.idVille as idVille
@@ -12227,20 +12227,20 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     GROUP BY ha1.idAdresse,ha1.idHistoriqueAdresse
                     HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                 ";
-                
+
                 $resAdresse = $this->connexionBdd->requete($reqAdresse);
                 while($fetchAdresse = mysql_fetch_assoc($resAdresse))
                 {
                     if($fetchAdresse['idVille']!='0')
                         $idVille = $fetchAdresse['idVille'];
-                    
+
                     if($fetchAdresse['idRue']!='0')
                     {
                         $reqRue="
-                                SELECT idVille 
-                                FROM quartier 
-                                WHERE idQuartier IN 
-                                    (SELECT idQuartier FROM sousQuartier WHERE idSousQuartier IN 
+                                SELECT idVille
+                                FROM quartier
+                                WHERE idQuartier IN
+                                    (SELECT idQuartier FROM sousQuartier WHERE idSousQuartier IN
                                         (SELECT idSousQuartier FROM rue WHERE idRue='".$fetchAdresse['idRue']."')
                                     )
                                 ";
@@ -12248,17 +12248,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $fetchRue = mysql_fetch_assoc($resRue);
                         $idVille = $fetchRue['idVille'];
                     }
-                    
+
                     if($fetchAdresse['idQuartier']!='0')
                     {
                         $reqQuartier="
-                            SELECT idVille FROM quartier WHERE idQuartier ='".$fetchAdresse['idQuartier']."'                        
+                            SELECT idVille FROM quartier WHERE idQuartier ='".$fetchAdresse['idQuartier']."'
                         ";
                         $resQuartier = $this->connexionBdd->requete($reqQuartier);
                         $fetchQuartier = mysql_fetch_assoc($resQuartier);
                         $idVille = $fetchQuartier['idVille'];
                     }
-                    
+
                     if($fetchAdresse['idSousQuartier']!='0')
                     {
                         $reqSousQuartier = "SELECT idVille FROM quartier WHERE idQuartier IN (SELECT idQuartier FROM sousQuartier WHERE idSousQuartier='".$fetchAdresse['idSousQuartier']."')";
@@ -12266,12 +12266,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         $fetchSousQuartier = mysql_fetch_assoc($resSousQuartier);
                         $idVille = $fetchSousQuartier['idVille'];
                     }
-                    
+
                 }
             break;
             case 'idRue':
                 $req = "
-                    SELECT v.idVille as idVille 
+                    SELECT v.idVille as idVille
                     FROM ville v
                     LEFT JOIN quartier q ON q.idVille = v.idVille
                     LEFT JOIN sousQuartier sq ON sq.idQuartier = q.idQuartier
@@ -12280,48 +12280,48 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     ";
                 $res = $this->connexionBdd->requete($req);
                 if(mysql_num_rows($res)==1)
-                {   
+                {
                     $fetch = mysql_fetch_assoc($res);
                     $idVille = $fetch['idVille'];
                 }
             break;
             case 'idSousQuartier':
                 $req = "
-                    SELECT v.idVille as idVille 
+                    SELECT v.idVille as idVille
                     FROM ville v
                     LEFT JOIN quartier q ON q.idVille = v.idVille
                     LEFT JOIN sousQuartier sq ON sq.idQuartier = q.idQuartier
                     WHERE sq.idSousQuartier = '".$id."'
-                
+
                 ";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 if(mysql_num_rows($res)==1)
-                {   
+                {
                     $fetch = mysql_fetch_assoc($res);
                     $idVille = $fetch['idVille'];
                 }
             break;
             case 'idQuartier':
                 $req = "
-                    SELECT v.idVille as idVille 
+                    SELECT v.idVille as idVille
                     FROM ville v
                     LEFT JOIN quartier q ON q.idVille = v.idVille
                     WHERE q.idQuartier = '".$id."'
                 ";
-                
+
                 $res = $this->connexionBdd->requete($req);
                 if(mysql_num_rows($res)==1)
-                {   
+                {
                     $fetch = mysql_fetch_assoc($res);
                     $idVille = $fetch['idVille'];
                 }
             break;
         }
-        
+
         return $idVille;
     }
-    
+
     // renvoi un tableau contenant des infos sur la ville en parametre
     public function getInfosVille($idVille=0,$params=array())
     {
@@ -12330,14 +12330,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         {
             $fieldList = $params['fieldList'];
         }
-        $req = "SELECT $fieldList 
+        $req = "SELECT $fieldList
                 FROM ville v
                 LEFT JOIN pays p ON p.idPays = v.idPays
                 WHERE v.idVille = $idVille";
         $res = $this->connexionBdd->requete($req);
         return mysql_fetch_assoc($res);
     }
-    
+
     // renvoi l'idVille a partir du nom de la ville en parametre
     public function getIdVilleFromNomVille($nomVille='')
     {
@@ -12345,25 +12345,25 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         $req = "SELECT idVille FROM ville WHERE nom LIKE \"%".$nomVille."%\"";
         $res = $this->connexionBdd->requete($req);
         if(mysql_num_rows($res)>0)
-        {   
+        {
             $fetch = mysql_fetch_assoc($res);
             $retour = $fetch['idVille'];
         }
-        
+
         return $retour;
     }
-    
-    
-    // affiche l'encars de la liste des adresses concernée par le groupe d'adresse courant sur le detail d'une adresse  
+
+
+    // affiche l'encars de la liste des adresses concernée par le groupe d'adresse courant sur le detail d'une adresse
     public function getArrayEncartAdressesImmeublesAvantApres($params = array())
     {
         $html = "";
 
-        
+
         $t = new Template('modules/archi/templates/');
         $t->set_filenames(array('encartAdresse'=>'encartAdresseDetailAdresse.tpl'));
-        
-        
+
+
         $i = new archiImage();
         if(isset($this->variablesGet['archiIdAdresse']))
         {
@@ -12386,13 +12386,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             list($w,$h) = getimagesize("images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg");
             $newWGrand = round(75*$w/100);
             $newHGrand = round(75*$h/100);
-            
+
             $newWPetit = round(35*$w/100);
             $newHPetit = round(35*$h/100);
-            
+
             $t->assign_vars(array('image2'=>"<div id='divImagePetit2' style='display:none;'><img src='".$arrayImage2['url']."' alt='' width=$newWPetit height=$newHPetit id='image2Petit'></div><div id='divImageGrand2' style='display:block;'><img src='images/moyen/".$arrayImage2['dateUpload']."/".$arrayImage2['idHistoriqueImage'].".jpg' alt=''  id='image2Grand' itemprop='image'></div>"));
-            
-            
+
+
 
         }
         else
@@ -12402,18 +12402,18 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             list($w,$h) = getimagesize($this->getUrlRacine()."resizeImage.php");
             $newWGrand = round(75*$w/100);
             $newHGrand = round(75*$h/100);
-            
+
             $newWPetit = round(35*$w/100);
             $newHPetit = round(35*$h/100);
             $t->assign_vars(array('image2'=>"<div id='divImagePetit2' style='display:none;'><img src='resizeImage.php' alt='' width=$newWPetit height=$newHPetit id='image2Petit'></div><div id='divImageGrand2' style='display:block;'><img src='resizeImage.php' alt='' width=$newWGrand height=$newHGrand id='image2Grand'></div>"));
         }
 
-        
+
         // fabrication de la liste des adresses affichées sur l'encart
         // adresse courante affichée en rouge:
         //$txtAdresseCourante = $this->getIntituleAdresseFrom($idAdresseCourante,'idAdresse',array('noSousQuartier'=>true,'noQuartier'=>true,'noVille'=>true));
-        
-        // recherche des autres adresses du groupe d'adresse courant    
+
+        // recherche des autres adresses du groupe d'adresse courant
         //$txtAutreAdressesGroupeAdresse = "";
         $txtAdresses = "";
         $reqAdresseDuGroupeAdresse = "
@@ -12423,14 +12423,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             LEFT JOIN indicatif i ON i.idIndicatif = ha1.idIndicatif
             WHERE ha2.idAdresse = ha1.idAdresse
             AND ae.idEvenement ='".$params['idEvenementGroupeAdresse']."'
-            
+
             GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
             HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
             ORDER BY ha1.numero,ha1.idRue
         ";//AND ha1.idAdresse<>'".$idAdresseCourante."'
-        
-        
-        
+
+
+
         $resAdresseDuGroupeAdresse = $this->connexionBdd->requete($reqAdresseDuGroupeAdresse);
         if(mysql_num_rows($resAdresseDuGroupeAdresse)>0)
         {
@@ -12442,14 +12442,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 {
                     $isAdresseCourante = true;
                 }
-                
+
                 if($fetchAdressesGroupeAdresse['idRue']=='0' || $fetchAdressesGroupeAdresse['idRue']=='')
                 {
                     if($fetchAdressesGroupeAdresse['idQuartier']!='' && $fetchAdressesGroupeAdresse['idQuartier']!='0')
                     {
                         $arrayNumero[$this->getIntituleAdresseFrom($fetchAdressesGroupeAdresse['idAdresse'],'idAdresse',array('noSousQuartier'=>true,'noQuartier'=>false,'noVille'=>true))][] = array('indicatif'=>$fetchAdressesGroupeAdresse['nomIndicatif'],'numero'=>$fetchAdressesGroupeAdresse['numero'],'url'=>$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$fetchAdressesGroupeAdresse['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse'])),'isAdresseCourante'=>$isAdresseCourante);
                     }
-                    
+
                     if($fetchAdressesGroupeAdresse['idSousQuartier']!='' && $fetchAdressesGroupeAdresse['idSousQuartier']!='0')
                     {
                         $arrayNumero[$this->getIntituleAdresseFrom($fetchAdressesGroupeAdresse['idAdresse'],'idAdresse',array('noSousQuartier'=>false,'noQuartier'=>true,'noVille'=>true))][] = array('indicatif'=>$fetchAdressesGroupeAdresse['nomIndicatif'],'numero'=>$fetchAdressesGroupeAdresse['numero'],'url'=>$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$fetchAdressesGroupeAdresse['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse'])),'isAdresseCourante'=>$isAdresseCourante);
@@ -12458,12 +12458,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 else
                 {
                     $arrayNumero[$this->getIntituleAdresseFrom($fetchAdressesGroupeAdresse['idRue'],'idRueWithNoNumeroAuthorized',array('noSousQuartier'=>true,'noQuartier'=>true,'noVille'=>true))][] = array('indicatif'=>$fetchAdressesGroupeAdresse['nomIndicatif'],'numero'=>$fetchAdressesGroupeAdresse['numero'],'url'=>$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$fetchAdressesGroupeAdresse['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse'])),'isAdresseCourante'=>$isAdresseCourante);
-                }   
+                }
                 //$txtAutreAdressesGroupeAdresse .= "<br><a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$fetchAutresAdressesGroupeAdresse['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'>".$this->getIntituleAdresseFrom($fetchAutresAdressesGroupeAdresse['idAdresse'],'idAdresse',array('noSousQuartier'=>true,'noQuartier'=>true,'noVille'=>true))."</a>";
-                
+
             }
         }
-        
+
         // affichage adresses regroupees
         foreach($arrayNumero as $intituleRue => $arrayInfosNumero)
         {
@@ -12473,7 +12473,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             {// s'il n'y a qu'un seul numero dans le groupe d'adresse de la rue courante , on fait le lien href sur tout le texte de l'adresse , pas seulement sur le numero
                 if($arrayInfosNumero[0]['numero']=='0')
                     $arrayInfosNumero[0]['numero'] = '';
-                
+
                 if($arrayInfosNumero[0]['isAdresseCourante']==true)
                 {
 
@@ -12515,9 +12515,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     }
                 }
             }
-            
+
             $txtAdresses = pia_substr($txtAdresses,0,-(pia_strlen("<span style='color:#4b4b4b'>-</span>")));
-            
+
             if(!$isUnSeulNumeroSurGroupeAdresse)
             {
                 if($isSelectedRue)
@@ -12534,12 +12534,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $txtAdresses.="<br>";
             }
         }
-        
+
         $txtAdresses = pia_substr($txtAdresses,0,-(pia_strlen("<br>")));
-        
+
         $t->assign_vars(array('adresse2'=>$txtAdresses));
-        
-        
+
+
         // ensuite on recherche les groupes d'adresses autour de l'adresse courante, sans afficher les adresses du meme groupe d'adresse que le courant
         $arrayIdAdresses = $this->getArrayIdAdressesNearCurrentAdresse(array('idAdresse'=>$idAdresseCourante,'idEvenementGroupeAdresseCourant'=>$params['idEvenementGroupeAdresse']));
         if(isset($arrayIdAdresses['avant']['idAdresse']))
@@ -12548,28 +12548,28 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $t->assign_vars(array('image1'=>$infosImageAvant['image']));
             $t->assign_vars(array('adresse1'=>$infosImageAvant['adresse']));
         }
-        
+
         if(isset($arrayIdAdresses['apres']['idAdresse']))
         {
             $infosImageApres = $this->getArrayInfosImageAvantOrApres(array('positionImage'=>'apres','idAdresse'=>$arrayIdAdresses['apres']['idAdresse'],'idEvenementGroupeAdresse'=>$arrayIdAdresses['apres']['idEvenementGroupeAdresse']));
             $t->assign_vars(array('image3'=>$infosImageApres['image']));
             $t->assign_vars(array('adresse3'=>$infosImageApres['adresse']));
         }
-        
-        
+
+
         // si une adresse avant ou apres n'a pas ete trouvée , on va chercher les adresses les plus proches qui ne sont pas dans cette rue (car si elles sont dans cette rue , elles sont forcement dans le parcours
         if((isset($arrayIdAdresses['apres']['idAdresse']) && !isset($arrayIdAdresses['avant']['idAdresse'])) || (!isset($arrayIdAdresses['apres']['idAdresse']) && isset($arrayIdAdresses['avant']['idAdresse'])))
         {
             $arrayCoordonnees = $this->getCoordonneesFrom($idAdresseCourante,'idAdresse');
             $arrayRue = $this->getIdRuesFrom($idAdresseCourante,'idAdresse');
             $idVilleAdresseCourante = $this->getIdVilleFrom($idAdresseCourante,'idAdresse'); // idVilleCourante pour rester dans les adresses de la ville en cours , et pas avoir en resultat une adresse d'une autre ville
-            
+
             if($arrayCoordonnees['latitude']=='')
                 $arrayCoordonnees['latitude']=0;
             if($arrayCoordonnees['longitude']=='')
                 $arrayCoordonnees['longitude']=0;
-            
-            
+
+
             $reqAdresseProche = "
                 SELECT ha1.idAdresse as idAdresse, ((acos(sin(".$arrayCoordonnees['latitude']."*PI()/180) * sin(ha1.latitude*PI()/180) + cos(".$arrayCoordonnees['latitude']."*PI()/180) * cos(ha1.latitude*PI()/180) * cos((".$arrayCoordonnees['longitude']." - ha1.longitude)*PI()/180))/ pi() * 180.0)* 60 * 1.1515 * 1.609344)*1000 as distance, ae.idEvenement as idEvenementGroupeAdresse
                 FROM historiqueAdresse ha2, historiqueAdresse ha1
@@ -12590,14 +12590,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             ";
             $resAdresseProche = $this->connexionBdd->requete($reqAdresseProche);
             $fetchAdresseProche = mysql_fetch_assoc($resAdresseProche);
-            
+
             // affichage de l'adresse
             if(!isset($arrayIdAdresses['avant']['idAdresse']))
             {
                 $infosImageAvant = $this->getArrayInfosImageAvantOrApres(array('positionImage'=>'avant','idAdresse'=>$fetchAdresseProche['idAdresse'],'idEvenementGroupeAdresse'=>$fetchAdresseProche['idEvenementGroupeAdresse']));
                 $t->assign_vars(array('image1'=>$infosImageAvant['image']));
                 $t->assign_vars(array('adresse1'=>$infosImageAvant['adresse']));
-            
+
             }
             elseif(!isset($arrayIdAdresses['apres']['idAdresse']))
             {
@@ -12605,30 +12605,30 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $t->assign_vars(array('image3'=>$infosImageAvant['image']));
                 $t->assign_vars(array('adresse3'=>$infosImageAvant['adresse']));
             }
-            
-        
+
+
         }
         elseif(!isset($arrayIdAdresses['apres']['idAdresse']) && !isset($arrayIdAdresses['avant']['idAdresse'])) // s'il n'y pas ni adresse avant ni adresse apres, on prend l'adresse la plus proche qui n'est pas dans la rue , on la met a gauche , l'adresse la plus proche suivante on la met a droite
         {
             $arrayCoordonnees = $this->getCoordonneesFrom($idAdresseCourante,'idAdresse');
             $arrayRue = $this->getIdRuesFrom($idAdresseCourante,'idAdresse');
             $idVilleAdresseCourante = $this->getIdVilleFrom($idAdresseCourante,'idAdresse'); // idVilleCourante pour rester dans les adresses de la ville en cours , et pas avoir en resultat une adresse d'une autre ville
-            
+
             if($arrayCoordonnees['latitude']=='')
                 $arrayCoordonnees['latitude']=0;
             if($arrayCoordonnees['longitude']=='')
                 $arrayCoordonnees['longitude']=0;
-            
+
             $reqAdressesProches = "
                 SELECT DISTINCT ae.idEvenement as idEvenementGroupeAdresse
                 FROM _adresseEvenement ae
                 LEFT JOIN historiqueAdresse ha1 ON ha1.idAdresse = ae.idAdresse
-                LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse 
-                LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement 
+                LEFT JOIN historiqueAdresse ha2 ON ha2.idAdresse = ha1.idAdresse
+                LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
                 LEFT JOIN rue r ON r.idRue = ha1.idRue
                 LEFT JOIN sousQuartier sq ON sq.idSousQuartier = r.idSousQuartier
                 LEFT JOIN quartier q ON q.idQuartier = sq.idQuartier
-                LEFT JOIN ville v ON v.idVille = q.idVille              
+                LEFT JOIN ville v ON v.idVille = q.idVille
                 WHERE
                     ha2.idAdresse = ha1.idAdresse
                 AND ha1.idRue<>'".$arrayRue[0]."'
@@ -12636,43 +12636,43 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse,ee.idEvenement
                 HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)  AND count(ee.idEvenement)>0
                 ORDER BY ((acos(sin(".$arrayCoordonnees['latitude']."*PI()/180) * sin(ha1.latitude*PI()/180) + cos(".$arrayCoordonnees['latitude']."*PI()/180) * cos(ha1.latitude*PI()/180) * cos((".$arrayCoordonnees['longitude']." - ha1.longitude)*PI()/180))/ pi() * 180.0)* 60 * 1.1515 * 1.609344)*1000 ASC
-                
+
             ";
-            
+
             $resAdressesProches = $this->connexionBdd->requete($reqAdressesProches);
-            
-            
+
+
             $fetchAdressesProches = mysql_fetch_assoc($resAdressesProches);
-            
+
             $idAdresseAvant = $this->getIdAdresseFromIdEvenementGroupeAdresse($fetchAdressesProches['idEvenementGroupeAdresse']);
-            
+
             $infosImageAvant = $this->getArrayInfosImageAvantOrApres(array('positionImage'=>'avant','idAdresse'=>$idAdresseAvant,'idEvenementGroupeAdresse'=>$fetchAdressesProches['idEvenementGroupeAdresse']));
             if(isset($infosImageAvant['image']))
                 $t->assign_vars(array('image1'=>$infosImageAvant['image']));
             if(isset($infosImageAvant['adresse']))
                 $t->assign_vars(array('adresse1'=>$infosImageAvant['adresse']));
-            
+
             $fetchAdressesProches = mysql_fetch_assoc($resAdressesProches);
             $idAdresseApres = $this->getIdAdresseFromIdEvenementGroupeAdresse($fetchAdressesProches['idEvenementGroupeAdresse']);
             $infosImageApres = $this->getArrayInfosImageAvantOrApres(array('positionImage'=>'apres','idAdresse'=>$idAdresseApres,'idEvenementGroupeAdresse'=>$fetchAdressesProches['idEvenementGroupeAdresse']));
             if(isset($infosImageApres['image']))
                 $t->assign_vars(array('image3'=>$infosImageApres['image']));
-            if(isset($infosImageApres['adresse']))  
+            if(isset($infosImageApres['adresse']))
             $t->assign_vars(array('adresse3'=>$infosImageApres['adresse']));
-            
+
         }
-        
+
         $titre = $this->getIntituleAdresseFrom($params['idEvenementGroupeAdresse'],'idEvenementGroupeAdresse',array('afficheTitreSiTitreSinonRien'=>true));
         if($titre!='')
         {
             $t->assign_block_vars('isTitre',array('titre'=>$titre));
         }
-        
+
         ob_start();
         $t->pparse('encartAdresse');
         $html .= ob_get_contents();
         ob_end_clean();
-        
+
         // javascript a mettre dans le header , on le retourne donc dans la fonction
         $jsHeader = "
             <script  >
@@ -12685,20 +12685,20 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         document.getElementById('divImagePetit1').style.display='none';
                         document.getElementById('divImageGrand1').style.display='block';
                     }
-                    
+
                     if(document.getElementById('divImagePetit2'))
                     {
                         document.getElementById('divImageGrand2').style.display='none';
                         document.getElementById('divImagePetit2').style.display='block';
                     }
-                    
+
                     if(document.getElementById('divImagePetit3'))
                     {
                         document.getElementById('divImageGrand3').style.display='none';
                         document.getElementById('divImagePetit3').style.display='block';
                     }
                 }
-                
+
                 if(numImage==2)
                 {
                     /*document.getElementById('divImagePetit1').style.display='none';
@@ -12708,7 +12708,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     document.getElementById('divImagePetit2').style.display='block';
                     document.getElementById('divImagePetit3').style.display='block';*/
                 }
-            
+
                 if(numImage==3)
                 {
                     if(document.getElementById('divImagePetit1'))
@@ -12716,13 +12716,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         document.getElementById('divImagePetit1').style.display='none';
                         document.getElementById('divImageGrand1').style.display='block';
                     }
-                    
+
                     if(document.getElementById('divImagePetit2'))
                     {
                         document.getElementById('divImageGrand2').style.display='none';
                         document.getElementById('divImagePetit2').style.display='block';
                     }
-                    
+
                     if(document.getElementById('divImagePetit3'))
                     {
                         document.getElementById('divImageGrand3').style.display='block';
@@ -12740,7 +12740,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         document.getElementById('divImagePetit2').style.display='block';
                         document.getElementById('divImageGrand2').style.display='none';
                     }
-                    
+
                     if(document.getElementById('divImagePetit3'))
                     {
                         document.getElementById('divImagePetit3').style.display='block';
@@ -12755,13 +12755,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         document.getElementById('divImagePetit1').style.display='block';
                         document.getElementById('divImageGrand1').style.display='none';
                     }
-                    
+
                     if(document.getElementById('divImagePetit3'))
                     {
                         document.getElementById('divImagePetit3').style.display='block';
                         document.getElementById('divImageGrand3').style.display='none';
                     }
-                
+
                 }
                 else
                 if(numImage==3)
@@ -12771,7 +12771,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         document.getElementById('divImagePetit1').style.display='block';
                         document.getElementById('divImageGrand1').style.display='none';
                     }
-                    
+
                     if(document.getElementById('divImagePetit2'))
                     {
                         document.getElementById('divImagePetit2').style.display='block';
@@ -12780,19 +12780,19 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 }
                 else
                 {
-                
+
                     if(document.getElementById('divImagePetit1'))
                     {
                         document.getElementById('divImagePetit1').style.display='block';
                         document.getElementById('divImageGrand1').style.display='none';
                     }
-                    
+
                     if(document.getElementById('divImagePetit2'))
                     {
                         document.getElementById('divImagePetit2').style.display='none';
                         document.getElementById('divImageGrand2').style.display='block';
                     }
-                    
+
                     if(document.getElementById('divImagePetit3'))
                     {
                         document.getElementById('divImagePetit3').style.display='block';
@@ -12800,38 +12800,38 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     }
                 }
 
-            
+
             }
             </script>
         ";
-        
+
         $this->addToJsHeader($jsHeader);
-        
-        
+
+
         return array('html'=>$html,'isPhotoCentrale'=>$isPhotoCentrale);
     }
-    
-    
+
+
     // renvoi l'image et l'adresse des image pour l'adresse donnees pour l'affichage dans l'encars des adresses
     // l'image du milieu est géré différement , elle est donc recuperée a part dans la fonction appelante
     public function getArrayInfosImageAvantOrApres($params = array())
     {
         $retour = array();
-        
+
         if(isset($params['idAdresse']) && $params['idAdresse']!='' && isset($params['positionImage']) && $params['positionImage']!='' && isset($params['idEvenementGroupeAdresse']) && $params['idEvenementGroupeAdresse']!='')
         {
             if($params['positionImage']=='avant')
             {
                 $numeroImage=1;
             }
-            
+
             if($params['positionImage']=='apres')
             {
                 $numeroImage=3;  // le numero 2 correspond a l'image centrale, non gerée dans cette fonction
             }
-            
+
             $arrayImage = $this->getUrlImageFromAdresse(0,'moyen',array('idEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']));
-            
+
             if($arrayImage['trouve'])
             {
             	//TODO : Change back URL for production
@@ -12839,10 +12839,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                	list($w,$h) = getimagesize($this->getCheminPhysique()."images/moyen/".$arrayImage['dateUpload']."/".$arrayImage['idHistoriqueImage'].".jpg");
                 $newWGrand = round(75*$w/100);
                 $newHGrand = round(75*$h/100);
-                    
+
                 $newWPetit = round(35*$w/100);
                 $newHPetit = round(35*$h/100);
-                
+
                 $image = "
                 		<div id='divImagePetit".$numeroImage."' style='display:block;'>
                 			<img src='".$arrayImage['url']."'  width=$newWPetit height=$newHPetit id='image".$numeroImage."Petit' alt=''>
@@ -12860,17 +12860,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $adresse = "<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdAdresse'=>$params['idAdresse'],'archiIdEvenementGroupeAdresse'=>$params['idEvenementGroupeAdresse']))."'>".$this->getIntituleAdresseFrom($params['idAdresse'],'idAdresse',array('noSousQuartier'=>true,'noQuartier'=>true,'noVille'=>true))."</a>";
             $retour = array('image'=>$image,'adresse'=>$adresse);
         }
-    
+
         return $retour;
     }
-    
-    
+
+
     // renvoi les adresses situées autour de l'adresse courante ... ex : adresse courante = 3 rue de la ziegelau , =====> on renvoi le 2 rue de la ziegelau et le 4 , ci ceux ci existents , sinon on recherche le precedent et le suivant immediat
     // contrairement a la fonction getIdAdressesAutourAdressesCourante qui se base sur l'intitule de l'adresse sous forme de chaine de caractere , ici on se base sur le groupe d'adresse , donc c'est plus rapide pour l'affichage de l'encart
     public function getArrayIdAdressesNearCurrentAdresse($params = array())
     {
         $retour = array();
-    
+
         if(isset($params['idAdresse']) && $params['idAdresse']!='' && isset($params['idEvenementGroupeAdresseCourant']) && $params['idEvenementGroupeAdresseCourant']!='')
         {
             // d'abord on va cherche l'idRue de l'adresse courante :
@@ -12878,17 +12878,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 SELECT ha1.idRue as idRue,ha1.numero as numero, ha1.idSousQuartier as idSousQuartier, ha1.idQuartier as idQuartier, ha1.idIndicatif as idIndicatif
                 FROM historiqueAdresse ha2, historiqueAdresse ha1
                 LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
-                WHERE 
+                WHERE
                     ha2.idAdresse = ha1.idAdresse
                 AND ha1.idAdresse = '".$params['idAdresse']."'
                 GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                 HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
             ";
-            
+
             $resRue = $this->connexionBdd->requete($reqRue);
-            
+
             $fetchRue = mysql_fetch_assoc($resRue);
-            
+
             $idRue = $fetchRue['idRue'];
             $idSousQuartier = $fetchRue['idSousQuartier'];
             $idQuartier = $fetchRue['idQuartier'];
@@ -12901,7 +12901,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     FROM historiqueAdresse ha
                     LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
                     LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-                    WHERE 
+                    WHERE
                         ha.idRue='$idRue'
                     AND (ha.numero<$numero OR (ha.numero='$numero' AND ha.idIndicatif<'$idIndicatif' AND ha.idIndicatif<>'') OR ('$idIndicatif'<>'' AND ha.idIndicatif='' AND ha.numero='$numero' ) )
                     AND ha.numero<>''
@@ -12929,28 +12929,28 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         AND ae.idEvenement<>'".$params['idEvenementGroupeAdresseCourant']."'
                         GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                         HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                    
+
                     ";
-                    
-                    
+
+
                     $resAvant = $this->connexionBdd->requete($reqAvant);
-                    
+
                     $fetchAvant = mysql_fetch_assoc($resAvant);
-                    
+
                     $retour['avant'] = $fetchAvant;
                 }
-                
+
                 $reqNumeroApres = "
                     SELECT ha.numero as numero,ha.idIndicatif as idIndicatif,count(ee.idEvenementAssocie)
                     FROM historiqueAdresse ha
                     LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
                     LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-                    WHERE 
+                    WHERE
                         ha.idRue='$idRue'
                     AND (
-                            ha.numero>'$numero' OR 
+                            ha.numero>'$numero' OR
                             (ha.numero='$numero' AND ha.idIndicatif>'$idIndicatif' AND ha.idIndicatif<>'')
-                            
+
                         )
                     AND ha.numero<>''
                     AND ha.numero<>'0'
@@ -12961,13 +12961,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     ORDER BY ha.numero ASC,ha.idIndicatif  ASC
                     LIMIT 1
                 ";
-                
+
                 $resNumeroApres = $this->connexionBdd->requete($reqNumeroApres);
                 $fetchNumeroApres = mysql_fetch_assoc($resNumeroApres);
                 if(isset($fetchNumeroApres['numero']))
                 {
-                    
-                    
+
+
                     $reqApres = "
                         SELECT ha1.idAdresse as idAdresse, ae.idEvenement as idEvenementGroupeAdresse
                         FROM historiqueAdresse ha2, historiqueAdresse ha1
@@ -12980,11 +12980,11 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         AND ae.idEvenement<>'".$params['idEvenementGroupeAdresseCourant']."'
                         GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                         HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                    
+
                     ";
-                    
+
                     $resApres = $this->connexionBdd->requete($reqApres);
-                    
+
                     $fetchApres = mysql_fetch_assoc($resApres);
                     $retour['apres'] = $fetchApres;
                 }
@@ -13000,7 +13000,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         FROM historiqueAdresse ha
                         LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
                         LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
-                        WHERE 
+                        WHERE
                             ha.idRue='$idRue'
                         AND ha.numero<>''
                         AND ha.numero<>'0'
@@ -13011,13 +13011,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                         ORDER BY ha.numero ASC
                         LIMIT 2
                     ";
-                    
+
                     $resPremiersNumeros = $this->connexionBdd->requete($reqPremiersNumeros);
-                    
+
                     if(mysql_num_rows($resPremiersNumeros)==1)
                     {
                         $fetchPremiersNumeros = mysql_fetch_assoc($resPremiersNumeros);
-                        
+
                         // une seule adresse trouvee pour la rue
                         $reqAvant = "
                             SELECT ha1.idAdresse as idAdresse,ae.idEvenement as idEvenementGroupeAdresse
@@ -13030,13 +13030,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             AND ae.idEvenement<>'".$params['idEvenementGroupeAdresseCourant']."'
                             GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                             HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                        
+
                         ";
-                        
+
                         $resAvant = $this->connexionBdd->requete($reqAvant);
                         $fetchAvant = mysql_fetch_assoc($resAvant);
                         $retour['avant'] = $fetchAvant;
-                        
+
                     }
                     elseif(mysql_num_rows($resPremiersNumeros)==2)
                     {
@@ -13053,13 +13053,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             AND ae.idEvenement<>'".$params['idEvenementGroupeAdresseCourant']."'
                             GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                             HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                        
+
                         ";
-                        
+
                         $resAvant = $this->connexionBdd->requete($reqAvant);
                         $fetchAvant = mysql_fetch_assoc($resAvant);
                         $retour['avant'] = $fetchAvant;
-                        
+
                         $fetchPremiersNumeros = mysql_fetch_assoc($resPremiersNumeros);
                         $reqApres = "
                             SELECT ha1.idAdresse as idAdresse,ae.idEvenement as idEvenementGroupeAdresse
@@ -13072,21 +13072,21 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             AND ae.idEvenement<>'".$params['idEvenementGroupeAdresseCourant']."'
                             GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                             HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                        
+
                         ";
-                        
+
                         $resApres = $this->connexionBdd->requete($reqApres);
                         $fetchApres = mysql_fetch_assoc($resApres);
                         $retour['apres'] = $fetchApres;
-                        
-                        
-                        
+
+
+
                     }
                     else
                     {
                         // aucune adresse trouvee pour la rue
                     }
-                    
+
                 }
                 elseif(($numero=='0' || $numero=='') && ($idRue=='' || $idRue=='0'))
                 {
@@ -13101,7 +13101,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
                             LEFT JOIN sousQuartier sq ON sq.idQuartier = '$idQuartier'
                             LEFT JOIN rue r ON r.idSousQuartier = sq.idSousQuartier
-                            WHERE 
+                            WHERE
                             ha.idRue = r.idRue
                             AND ha.numero<>''
                             AND ha.numero<>'0'
@@ -13112,13 +13112,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             ORDER BY ha.numero ASC
                             LIMIT 2
                         ";
-                        
+
                         $resPremiersNumeros = $this->connexionBdd->requete($reqPremiersNumeros);
-                        
+
                         if(mysql_num_rows($resPremiersNumeros)==1)
                         {
                             $fetchPremiersNumeros = mysql_fetch_assoc($resPremiersNumeros);
-                            
+
                             // une seule adresse trouvee pour la rue
                             $reqAvant = "
                                 SELECT ha1.idAdresse as idAdresse,ae.idEvenement as idEvenementGroupeAdresse
@@ -13131,13 +13131,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                                 AND ae.idEvenement<>'".$params['idEvenementGroupeAdresseCourant']."'
                                 GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                                 HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                            
+
                             ";
-                            
+
                             $resAvant = $this->connexionBdd->requete($reqAvant);
                             $fetchAvant = mysql_fetch_assoc($resAvant);
                             $retour['avant'] = $fetchAvant;
-                            
+
                         }
                         elseif(mysql_num_rows($resPremiersNumeros)==2)
                         {
@@ -13147,7 +13147,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                                 SELECT ha1.idAdresse as idAdresse,ae.idEvenement as idEvenementGroupeAdresse
                                 FROM historiqueAdresse ha2, historiqueAdresse ha1
                                 LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha1.idAdresse
-                                
+
                                 WHERE
                                     ha2.idAdresse = ha1.idAdresse
                                 AND ha1.idRue='".$fetchPremiersNumeros['idRue']."'
@@ -13155,13 +13155,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                                 AND ae.idEvenement<>'".$params['idEvenementGroupeAdresseCourant']."'
                                 GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                                 HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                            
+
                             ";
-                            
+
                             $resAvant = $this->connexionBdd->requete($reqAvant);
                             $fetchAvant = mysql_fetch_assoc($resAvant);
                             $retour['avant'] = $fetchAvant;
-                            
+
                             $fetchPremiersNumeros = mysql_fetch_assoc($resPremiersNumeros);
                             $reqApres = "
                                 SELECT ha1.idAdresse as idAdresse,ae.idEvenement as idEvenementGroupeAdresse
@@ -13174,15 +13174,15 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                                 AND ae.idEvenement<>'".$params['idEvenementGroupeAdresseCourant']."'
                                 GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                                 HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                            
+
                             ";
-                            
+
                             $resApres = $this->connexionBdd->requete($reqApres);
                             $fetchApres = mysql_fetch_assoc($resApres);
                             $retour['apres'] = $fetchApres;
-                            
-                            
-                            
+
+
+
                         }
                         else
                         {
@@ -13198,7 +13198,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             LEFT JOIN _adresseEvenement ae ON ae.idAdresse = ha.idAdresse
                             LEFT JOIN _evenementEvenement ee ON ee.idEvenement = ae.idEvenement
                             LEFT JOIN rue r ON r.idSousQuartier = '$idSousQuartier'
-                            WHERE 
+                            WHERE
                                 ha.idRue=r.idRue
                             AND ha.numero<>''
                             AND ha.numero<>'0'
@@ -13209,13 +13209,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                             ORDER BY ha.numero ASC
                             LIMIT 2
                         ";
-                        
+
                         $resPremiersNumeros = $this->connexionBdd->requete($reqPremiersNumeros);
-                        
+
                         if(mysql_num_rows($resPremiersNumeros)==1)
                         {
                             $fetchPremiersNumeros = mysql_fetch_assoc($resPremiersNumeros);
-                            
+
                             // une seule adresse trouvee pour la rue
                             $reqAvant = "
                                 SELECT ha1.idAdresse as idAdresse,ae.idEvenement as idEvenementGroupeAdresse
@@ -13228,13 +13228,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                                 AND ae.idEvenement<>'".$params['idEvenementGroupeAdresseCourant']."'
                                 GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                                 HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                            
+
                             ";
-                            
+
                             $resAvant = $this->connexionBdd->requete($reqAvant);
                             $fetchAvant = mysql_fetch_assoc($resAvant);
                             $retour['avant'] = $fetchAvant;
-                            
+
                         }
                         elseif(mysql_num_rows($resPremiersNumeros)==2)
                         {
@@ -13251,13 +13251,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                                 AND ae.idEvenement<>'".$params['idEvenementGroupeAdresseCourant']."'
                                 GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                                 HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                            
+
                             ";
-                            
+
                             $resAvant = $this->connexionBdd->requete($reqAvant);
                             $fetchAvant = mysql_fetch_assoc($resAvant);
                             $retour['avant'] = $fetchAvant;
-                            
+
                             $fetchPremiersNumeros = mysql_fetch_assoc($resPremiersNumeros);
                             $reqApres = "
                                 SELECT ha1.idAdresse as idAdresse,ae.idEvenement as idEvenementGroupeAdresse
@@ -13270,9 +13270,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                                 AND ae.idEvenement<>'".$params['idEvenementGroupeAdresseCourant']."'
                                 GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                                 HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
-                            
+
                             ";
-                            
+
                             $resApres = $this->connexionBdd->requete($reqApres);
                             $fetchApres = mysql_fetch_assoc($resApres);
                             $retour['apres'] = $fetchApres;
@@ -13285,23 +13285,23 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 }
             }
         }
-        
+
         return $retour;
     }
-    
+
     // enregistrement de nouvelle coordonnées googlemap provenant de la carte google map agrandie
     public function enregistreNouvellesCoordonneesAdresseGoogleMapEtVerrouillage($params = array())
     {
         $retour = true;
-        
+
         if(isset($this->variablesPost['idEvenementGroupeAdresseCourant']) && $this->variablesPost['idEvenementGroupeAdresseCourant']!=''  && $this->variablesPost['idEvenementGroupeAdresseCourant']!='0' && isset($this->variablesPost['idAdresseCourante']) && $this->variablesPost['idAdresseCourante']!='' && $this->variablesPost['idAdresseCourante']!='0' && isset($this->variablesPost['longitudeUser']) && $this->variablesPost['longitudeUser']!='' && isset($this->variablesPost['latitudeUser']) && $this->variablesPost['latitudeUser']!='')
         {
-        
+
             // s'il y a plusieurs groupes d'adresses liés a la meme adresse , on enregistre les coordonnees du groupe d'adresse courant dans la table _adresseEvenement, ainsi on aura la meme adresse affichée plusieurs fois a des endroits differents
             // exemple : pour la place de la republique , il y a 3 groupes d'adresses différents, que l'on affiche pas regroupés mais séparés
             $reqGroupesAdresse = "SELECT idEvenement FROM _adresseEvenement WHERE idAdresse = '".$this->variablesPost['idAdresseCourante']."'";
             $resGroupesAdresse = $this->connexionBdd->requete($reqGroupesAdresse);
-            
+
             if(mysql_num_rows($resGroupesAdresse)>1 && $this->variablesPost['idEvenementGroupeAdresseCourant']!='')
             {
                 // plusieurs groupes d'adresses reliés a l'adresse , on ne s'occupe que du groupe d'adresse courant
@@ -13316,22 +13316,22 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $reqHistoriqueAdresse = "
                     SELECT ha1.idHistoriqueAdresse as idHistoriqueAdresse
                     FROM historiqueAdresse ha2, historiqueAdresse ha1
-                    WHERE 
+                    WHERE
                         ha2.idAdresse = ha1.idAdresse
                     AND ha1.idAdresse = '".$this->variablesPost['idAdresseCourante']."'
                     GROUP BY ha1.idAdresse, ha1.idHistoriqueAdresse
                     HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)
                 ";
-                
+
                 $resHistoriqueAdresse = $this->connexionBdd->requete($reqHistoriqueAdresse);
                 $fetchHistoriqueAdresse = mysql_fetch_assoc($resHistoriqueAdresse);
                 $idHistoriqueAdresse = $fetchHistoriqueAdresse['idHistoriqueAdresse'];
-                
-                
-                
-                
-                
-                
+
+
+
+
+
+
                 // mise a jour des coordonnées
                 if(isset($idHistoriqueAdresse) && $idHistoriqueAdresse!='' && $idHistoriqueAdresse!='0')
                 {
@@ -13350,10 +13350,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             echo "<script  >alert(\"Paramètre manquant pour la modification. Veuillez contacter l'administrateur.\");</script>";
             $retour = false;
         }
-        
+
         return $retour;
     }
-    
+
     // renvoi du code javascript pour l'ajout de nouveaux points sur la carte google map dont le centre a changé
     public function getJsGoogleMapNewCenter($params = array())
     {
@@ -13365,22 +13365,22 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         {
             $rayon = $this->variablesGet['rayon'];
         }
-        
-        
+
+
         $arrayConfigCoordonnees = $this->getArrayGoogleMapConfigCoordonneesFromCenter(array('urlRedirectedToParent'=>true,'longitude'=>$this->variablesGet['longitudeCenter'],'latitude'=>$this->variablesGet['latitudeCenter'],'rayon'=>$rayon));
-        
-        
+
+
         if(isset($this->variablesGet['noRefresh']) && $this->variablesGet['noRefresh']=='1')
         {
-        
+
         }
         else
         {
             $retour .="map.clearOverlays();";
         }
-        
-        
-        
+
+
+
         if(isset($this->variablesGet['noRefresh']) && $this->variablesGet['noRefresh']=='1')
         {
             // pas besoin de replace le markeur central
@@ -13391,28 +13391,28 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             if(isset($this->variablesGet['latitudeHome']) && isset($this->variablesGet['longitudeHome']) && $this->variablesGet['latitudeHome']!='' && $this->variablesGet['longitudeHome']!='')
             {
                 $retour.="
-                
+
                 var iconHome = new GIcon();
-                    
+
                 iconHome.image = \"".$this->getUrlImage()."placeMarker.png\";
                 //iconHome.shadow = \"http://labs.google.com/ridefinder/images/mm_20_shadow.png\";
                 iconHome.iconSize = new GSize(19, 32);
                 iconHome.shadowSize = new GSize(22, 20);
                 iconHome.iconAnchor = new GPoint(5, 26);
                 iconHome.infoWindowAnchor = new GPoint(5, 1);
-                
+
                 markerHome = new GMarker(new GLatLng(".$this->variablesGet['latitudeHome'].",".$this->variablesGet['longitudeHome']."),{icon:iconHome});
                 map.addOverlay(markerHome);
                 ";
-                
+
             }
         }
-        
+
         $retour.="
                 var icon = new GIcon();
                 //icon.image = image;
-                
-            
+
+
                 icon.image = '".$this->getUrlImage()."pointGM.png';
                 icon.shadow = '';
                 icon.iconSize = new GSize(9, 9);
@@ -13433,25 +13433,25 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     eLabel$indice.hide();";
             $retour.="function onClickFunction$indice(overlay, point){currentMarker = marker$indice; currentLabel=eLabel$indice; ".$values['jsCodeOnClickMarker']."}";
                     $retour.="GEvent.addListener(marker$indice, 'click', onClickFunction$indice);";
-                
-                
+
+
                 if(isset($values['jsCodeOnMouseOverMarker']))
                 {
                     $retour.="function onMouseOverFunction$indice(overlay,point){currentMarker = marker$indice; currentLabel = eLabel$indice; ".$values['jsCodeOnMouseOverMarker']."}";
                     $retour.="GEvent.addListener(marker$indice,'mouseover',onMouseOverFunction$indice);";
-                
+
                 }
-                
+
                 if(isset($values['jsCodeOnMouseOutMarker']))
                 {
                     $retour.="function onMouseOutFunction$indice(overlay,point){currentMarker = marker$indice; currentLabel = eLabel$indice; ".$values['jsCodeOnMouseOutMarker']."}";
                     $retour.="GEvent.addListener(marker$indice,'mouseout',onMouseOutFunction$indice);";
                 }
         }
-        
+
         return $retour;
     }
-    
+
     // affiche la google map des parcours
     public function getGoogleMapParcours($params = array())
     {
@@ -13461,28 +13461,28 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         {
             $idParcours = $this->variablesGet['archiIdParcours'];
         }
-        
+
         if(isset($params['idParcours']) && $params['idParcours']!='')
         {
             $idParcours = $params['idParcours'];
         }
-        
+
         $width=500;
         if(isset($params['width']) && $params['width']!='')
         {
             $width = $params['width'];
         }
-        
+
         if($idParcours!=0)
         {
-        
+
             $gm = new googleMap(array('googleMapKey'=>$this->googleMapKey,'width'=>$width));
             $html.=$gm->getJsFunctions();
-            
-            
+
+
             $reqParcours = "SELECT idEtape,idEvenementGroupeAdresse,position FROM etapesParcoursArt WHERE idParcours='".$idParcours."' ORDER BY position ASC";
             $resParcours = $this->connexionBdd->requete($reqParcours);
-            
+
             $numEtape=1;
             $arrayEtapes = array();
             $i=0;
@@ -13503,7 +13503,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $numEtape++;
                 $i++;
             }
-            
+
             if(isset($params['getCoordonneesParcours']) && $params['getCoordonneesParcours']==true)
             {
                 $html.= $gm->getMap(array('idDivDisplayEtapesText'=>'parcoursDetail','travelMode'=>'walking','listeCoordonneesParcours'=>$arrayEtapes,'urlImageIcon'=>$this->getUrlImage()."pointGM.png",'pathImageIcon'=>$this->getCheminPhysique()."images/pointGM.png",'getCoordonneesParcours'=>true,'actionFormOnSubmitVertices'=>$this->creerUrl('','',array()),'noDisplayParcoursGoogleAutomaticDescription'=>true));
@@ -13514,62 +13514,62 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 
                 $html.= $gm->getMap(array('idDivDisplayEtapesText'=>'parcoursDetail','travelMode'=>'walking','listeCoordonneesParcours'=>$arrayEtapes,'urlImageIcon'=>$this->getUrlImage()."pointGM.png",'pathImageIcon'=>$this->getCheminPhysique()."images/pointGM.png", "polyline"=>$polyline->trace, "levels"=>$polyline->levels));
             }
-            
+
             if(isset($this->variablesPost['submitVertices']))
             {
                 // on recupere donc les vertices du parcours
                 // enregistrement dans la table et reperage des etapes
-                
+
                 // d'abord on supprime les valeurs precedentes
                 $reqSupprVertices = "DELETE FROM verticesParcours WHERE idParcours='".$idParcours."'";
                 $resSupprVertices = $this->connexionBdd->requete($reqSupprVertices);
                 foreach($this->variablesPost['longitudes'] as $indice => $valueLongitude)
                 {
                     $valueLatitude = $this->variablesPost['latitudes'][$indice];
-                    
+
                     $reqAddVertices = "INSERT INTO verticesParcours (idParcours,idEtape,longitude,latitude,position) VALUES ('".$idParcours."','0','".$valueLongitude."','".$valueLatitude."','".($indice+1)."')";
                     $resAddVertices = $this->connexionBdd->requete($reqAddVertices);
                 }
-                
+
                 // ensuite on affiche chacun des points avec des marqueurs deplacables
-                
+
             }
         }
-        
+
         return $html;
     }
-    
+
     public function getParcoursListe($params = array())
     {
         $html = "";
-        
+
         $page = new archiPage(9, LANG);
-        
+
         // liste des parcours
         $html.='<h2>'.$page->title.'</h2>';
-        
+
         $resParcours = $this->getMysqlParcours(array('sqlOrderBy'=>'ORDER BY dateAjoutParcours DESC, idParcours DESC'));
-        
+
         $t = new tableau();
-        
+
         if(mysql_num_rows($resParcours)==0)
         {
             $html.="Aucun parcours n'est disponible pour le moment.";
         }
-        
+
         $s = new stringObject();
-        
-        
+
+
         $html.=stripcslashes($page->content);
-        
+
         $i=0;
         while($fetchParcours = mysql_fetch_assoc($resParcours))
         {
             $photoTrouvee = false;
             $photo = "&nbsp;";
-            
+
             $urlParcours = $this->creerUrl('','detailParcours',array('archiIdParcours'=>$fetchParcours['idParcours']));
-            
+
             //if($i==0)
             //{
                 // recuperation des etapes pour afficher la premiere photo rencontree
@@ -13582,14 +13582,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                     while(!$photoTrouvee && $fetchEtapes = mysql_fetch_assoc($resEtapes))
                     {
                         $arrayPhoto = $this->getPhotoFromEtape(array('idEtape'=>$fetchEtapes['idEtape']));
-                        
+
                         if($arrayPhoto['trouve']==true)
                         {
                             $photoTrouvee = true;
-                            
+
                             $photo = "<a href='".$urlParcours."'><img src='".$arrayPhoto['url']."' border=0></a>";
                         }
-                        
+
                         if(!$isCommentaire)
                         {
                             if($fetchEtapes['commentaireEtape']!='')
@@ -13604,15 +13604,15 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 
             $t->addValue($photo);
             $t->addValue("<a href='".$urlParcours."'>".stripslashes($fetchParcours['libelleParcours'])."</a><br>".$s->coupureTexte($s->sansBalisesHtml(stripslashes($commentaire)),10)."<br>".mysql_num_rows($resEtapes)." étapes");
-            
+
             $i++;
         }
-        
+
         $html.=$t->createHtmlTableFromArray(2);
-        
+
         return $html;
     }
-    
+
     public function getParcoursDetail($params = array())
     {
         $html = "";
@@ -13621,70 +13621,70 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         {
             $idParcours = $this->variablesGet['archiIdParcours'];
         }
-        
+
         if(isset($params['idParcours']) && $params['idParcours']!='')
         {
             $idParcours = $params['idParcours'];
         }
-        
+
         if($idParcours!=0)
         {
-        	
+
             $bbCode = new bbCodeObject();
-            
+
             $resParcours = $this->getMysqlParcours(array('sqlWhere'=>"AND idParcours='".$idParcours."'"));
 
             $fetchParcours = mysql_fetch_assoc($resParcours);
-        
+
             $html.="<h1>".stripslashes($fetchParcours['libelleParcours'])."</h1>";
             $html.=$this->getGoogleMapParcours(array('idParcours'=>$idParcours,'width'=>700));
-            
+
             // affichage de la liste des etapes
             $alphaChars = 'abcdefghijklmnopqrstuvwxyz'; // on fait simple
-            
+
             $reqEtapes = "SELECT idEtape,idEvenementGroupeAdresse,commentaireEtape,position FROM etapesParcoursArt WHERE idParcours='".$idParcours."' ORDER BY position ASC";
             $resEtapes = $this->connexionBdd->requete($reqEtapes);
             $t = new tableau();
-            
+
             $i=0;
             while($fetchEtapes = mysql_fetch_assoc($resEtapes))
             {
-            
+
                 $arrayPhoto = $this->getPhotoFromEtape(array('idEtape'=>$fetchEtapes['idEtape']));
                 $photo = "&nbsp;";
                 if($arrayPhoto['trouve'])
                 {
                     $photo = "<img src='".$arrayPhoto['url']."' border=0>";
                 }
-            
+
                 $idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($fetchEtapes['idEvenementGroupeAdresse']);
-                
+
                 $intituleAdresse = $this->getIntituleAdresseFrom($fetchEtapes['idEvenementGroupeAdresse'],'idEvenementGroupeAdresse',array('setSeparatorAfterTitle'=>'<br>','displayFirstTitreAdresse'=>true,'noVille'=>true,'noQuartier'=>true,'noSousQuartier'=>true));
-                
-                
+
+
                 $marqueur = "<div style=\"font-size:10px; padding-top:3px; width:20px; height:34px; background-repeat:no-repeat; background-image:url(".$this->getUrlImage()."greenMarkerGM.gif); font-weight:bold; text-align:center;\">".($i+1)."</div>";
-            
+
                 $t->addValue($marqueur);
                 $t->addValue("<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdEvenementGroupeAdresse'=>$fetchEtapes['idEvenementGroupeAdresse'],'archiIdAdresse'=>$idAdresse))."'>$photo</a>", "align=center");
                 $t->addValue("<a href='".$this->creerUrl('','',array('archiAffichage'=>'adresseDetail','archiIdEvenementGroupeAdresse'=>$fetchEtapes['idEvenementGroupeAdresse'],'archiIdAdresse'=>$idAdresse))."'>".$intituleAdresse."</a>");
                 $t->addValue(stripslashes($bbCode->convertToDisplay(array('text'=>$fetchEtapes['commentaireEtape']))));
                 $i++;
             }
-            
+
             require_once(__DIR__.'/archiParcours.php');
             $parcours = new ArchiParcours($_GET['archiIdParcours']);
             $html.='<p>'.$parcours->desc.'</p>';
             $html.= "<br><h2>Etapes du parcours : </h2>";
             $html.= $t->createTable(4);
-            
+
         }
-        
+
         return $html;
     }
-    
-    
 
-    
+
+
+
     public function getMysqlParcours($params = array())
     {
         $sqlWhere = "";
@@ -13692,7 +13692,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
         {
             $sqlWhere = $params['sqlWhere'];
         }
-        
+
         $sqlOrderBy = "";
         if(isset($params['sqlOrderBy']) && $params['sqlOrderBy']!='')
         {
@@ -13705,18 +13705,18 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             $sqlWhere
             $sqlOrderBy
             ";
-        
+
         return $this->connexionBdd->requete($req);
     }
-    
+
     public function supprimerAdresseFromAdminRue($params = array())
     {
         if(isset($this->variablesGet['idAdresseSuppr']) && $this->variablesGet['idAdresseSuppr']!='')
         {
             $erreurObject = new objetErreur();
-            
+
             $idAdresseSuppr = $this->variablesGet['idAdresseSuppr'];
-            
+
             $reqVerifGA = "SELECT idEvenement FROM _adresseEvenement WHERE idAdresse = '".$idAdresseSuppr."'";
             $resVerifGA = $this->connexionBdd->requete($reqVerifGA);
             $tabGA = array();
@@ -13730,24 +13730,24 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $reqSuppr = "DELETE FROM historiqueAdresse WHERE idAdresse = '".$idAdresseSuppr."'";
                 $resSuppr = $this->connexionBdd->requete($reqSuppr);
             }
-            
+
             if($erreurObject->getNbErreurs()>0)
             {
                 echo $erreurObject->afficher();
             }
         }
     }
-    
+
     public function supprimerRueFromAdminRue($params = array())
     {
         if(isset($this->variablesGet['idRueSuppr']) && $this->variablesGet['idRueSuppr']!='')
         {
             $erreurObject = new objetErreur();
             $idRueSuppr = $this->variablesGet['idRueSuppr'];
-            
+
             $reqVerifAdresse = "SELECT idRue FROM historiqueAdresse WHERE idRue = '".$idRueSuppr."'";
             $resVerifAdresse = $this->connexionBdd->requete($reqVerifAdresse);
-            
+
             if(mysql_num_rows($resVerifAdresse)>0)
             {
                 $erreurObject->ajouter("Attention, des adresses sont encore liées a cette rue, veuillez contacter l'administrateur");
@@ -13756,23 +13756,23 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
             {
                 $reqDelete = "DELETE FROM rue WHERE idRue='".$idRueSuppr."'";
                 $resDelete = $this->connexionBdd->requete($reqDelete);
-                
+
             }
-            
+
             if($erreurObject->getNbErreurs()>0)
             {
                 echo $erreurObject->afficher();
             }
         }
-    
+
     }
-    
+
     // fonction qui permet de savoir s'il y a un parcours actif parmis la liste des parcours
     // si on precise un idParcours en parametre on regarde alors si ce parcours est actif
     public function isParcoursActif($params = array())
     {
         $retour = false;
-        
+
         if(isset($params['idParcours']) && $params['idParcours']!='')
         {
             $req = "SELECT isActif FROM parcoursArt WHERE idParcours = '".$params['idParcours']."'";
@@ -13796,38 +13796,38 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
                 $retour = true;
             }
         }
-        
-        
+
+
         return $retour;
     }
-    
+
     // renvoie la photo courante de l'adresse de l'etape
     public function getPhotoFromEtape($params = array())
     {
         $retour = array('trouve'=>false);
-        
+
         if(isset($params['idEtape']) && $params['idEtape']!='' && $params['idEtape']!='0')
         {
             // recuperation du groupe d'adresse de l'etape
             $req = "SELECT idEvenementGroupeAdresse FROM etapesParcoursArt WHERE idEtape='".$params['idEtape']."'";
             $res = $this->connexionBdd->requete($req);
             $fetch = mysql_fetch_assoc($res);
-            
+
             if(isset($fetch['idEvenementGroupeAdresse']))
             {
                 $i = new archiImage();
-                
+
                 $idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($fetch['idEvenementGroupeAdresse']);
                 $idEvenementGroupeAdresse = $fetch['idEvenementGroupeAdresse'];
-                
+
                 $format = 'mini';
                 if(isset($params['format']) && $params['format']!='')
                 {
                     $format = $params['format'];
                 }
-                
+
                 $illustration = $this->getUrlImageFromAdresse($idAdresse,$format,array('idEvenementGroupeAdresse'=>$idEvenementGroupeAdresse));
-                
+
                 $retour = $illustration;
             }
         }
@@ -13835,19 +13835,19 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     }
 
     /**
-     * 
+     *
      * @return multitype: return array of all the small tables required for big SQL requests
      */
     public function getLocationTables(){
-        	$req = "SELECT idRue, idSousQuartier, nom,prefixe 
+        	$req = "SELECT idRue, idSousQuartier, nom,prefixe
     			FROM rue
     			";
     	$res = $this->connexionBdd->requete($req);
     	while($line = mysql_fetch_assoc($res)){
-			$rue[$line['idRue']] = array('nom' => $line['nom'], 'idSousQuartier'=>$line['idSousQuartier'], 'prefixe' => $line['prefixe']);    		
+			$rue[$line['idRue']] = array('nom' => $line['nom'], 'idSousQuartier'=>$line['idSousQuartier'], 'prefixe' => $line['prefixe']);
     	}
-    	
-    	
+
+
     	$req = "SELECT  idSousQuartier,idQuartier, nom
     			FROM sousQuartier
     			";
@@ -13856,7 +13856,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     		$sousQuartier[$line['idSousQuartier']] = array('nom' => $line['nom'], 'idQuartier'=>$line['idQuartier']);
     	}
 
-    	
+
     	$req = "SELECT idQuartier, idVille, nom,codepostal
     			FROM quartier
     			";
@@ -13864,7 +13864,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     	while($line = mysql_fetch_assoc($res)){
     		$quartier[$line['idQuartier']] = array('nom' => $line['nom'], 'idQuartier'=>$line['idQuartier'], 'idVille' => $line['idVille']);
     	}
-    	
+
     	$req = "SELECT idVille,idPays, nom, codepostal, latitude,longitude
     			FROM ville
     			";
@@ -13872,7 +13872,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     	while($line = mysql_fetch_assoc($res)){
     		$ville[$line['idVille']] = array('nom' => $line['nom'], 'idVille'=>$line['idVille'], 'idPays' => $line['idPays'],  'codepostal' => $line['codepostal'] , 'latitude' => $line['latitude'],'longitude' => $line['longitude']);
     	}
-    	
+
     	$req = "SELECT idPays, nom
     			FROM pays
     			";
@@ -13880,18 +13880,18 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     	while($line = mysql_fetch_assoc($res)){
     		$pays[$line['idPays']] = array('nom' => $line['nom']);
     	}
-    	
+
     	return array('rue' => $rue, 'sousQuartier' => $sousQuartier,'quartier' => $quartier,'ville' => $ville,'pays' => $pays);
     }
-    
 
-    
+
+
     /**
-	 * Get the id of a sub neighborhood from the id of a street 
-	 * 
+	 * Get the id of a sub neighborhood from the id of a street
+	 *
 	 * @param string $idRue : id of the street
 	 * @return NULL|string  : id of the neighborhood
-	 */    
+	 */
     public function getIdSousQuartier($idRue = null){
    		$idSousQuartier = null;
     	if(!isset($idRue) && $idRue != ''){
@@ -13908,10 +13908,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     	}
     	return $idSousQuartier;
     }
-    
+
     /**
      * Get the id of a neighborhood from the id of a street
-     * 
+     *
      * @param int $idSousQuartier : id of the sub neighborhood
      * @return int  $idQuartier :  id of the neighborhood (or null if error occurs)
      */
@@ -13922,8 +13922,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     	}
     	else{
     		$req = "
-    				SELECT idQuartier 
-    				FROM sousQuartier 
+    				SELECT idQuartier
+    				FROM sousQuartier
     				WHERE idSousQuartier = ".$idSousQuartier."
     				";
 			$res = $this->connexionBdd->requete($req);
@@ -13932,11 +13932,11 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     	}
     	return $idQuartier;
     }
-    
+
     /**
-     * Get the id of the city from neighborhood id 
-     * 
-     * @param  $idQuartier : neighborhood id 
+     * Get the id of the city from neighborhood id
+     *
+     * @param  $idQuartier : neighborhood id
      * @return $idVille : id of the city
      */
     public function getIdVille($idQuartier){
@@ -13956,12 +13956,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     	}
     	return $idVille;
     }
-    
-    
-    
+
+
+
     /**
      * Get id of the country from city id
-     * 
+     *
      * @param  $idVille : id of the city
      * @return $idPays : id of the country
      */
@@ -13982,17 +13982,17 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
     	}
     	return $idPays;
     }
-    
+
 
     /**
      * This function display the informations related to the addresses whom idHistoriqueAdresse is given in param
-     * 
-     * @param array of idHistorique $idList : a list of idHistoriqueAdresse to display 
+     *
+     * @param array of idHistorique $idList : a list of idHistoriqueAdresse to display
      * @return $html : the list of addresses to display
      */
 	public function displayList($idList = array(),$nbResult = 0){
 		$html = "";
-		//Template loading 
+		//Template loading
 		$t=new Template('modules/archi/templates/');
 		$t->set_filenames(array('addressesList'=>'addressesList.tpl'));
 
@@ -14003,7 +14003,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			));
 			$this->messages->addWarning("Aucun résultat à afficher.");
 			$this->messages->display();
-				
+
 		}
 		else{
 			$starttime = microtime(true);
@@ -14016,7 +14016,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					'nbResultPerPage' => 10,
 					'offset'=>4
 			);
-				
+
 			//Pagination display
 			if(isset($this->variablesGet['debut']) && $this->variablesGet['debut']!=''){
 				$optionsPagination['currentPage'] = ($this->variablesGet['debut'] / $optionsPagination['nbResultPerPage']) ;
@@ -14037,14 +14037,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				else{
 					$optionsPagination['nextPage']=$optionsPagination['nbPages'];
 				}
-				
+
 				if($optionsPagination['currentPage']>1){
 					$optionsPagination['previousPage']=$optionsPagination['currentPage']-1;
 				}
 				else{
 					$optionsPagination['previousPage']=1;
 				}
-				
+
 				$url = array();
 				//Call link generation
 				$url = $this->generatePaginationLinks($optionsPagination);
@@ -14055,7 +14055,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			}
 			$t->assign_vars(array(
 					'nbReponses' => $nbReponses,
-					'titre' => 'Résultats'					
+					'titre' => 'Résultats'
 			));
 
 			// Template filling
@@ -14063,10 +14063,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			$paramsUrlAsc = $this->variablesGet;
 			$paramsUrlDesc['order'] = "desc";
 			$paramsUrlAsc['order'] = "asc";
-			
+
 			$urlAsc =$this->creerUrl('','',$paramsUrlAsc);
 			$urlDesc =$this->creerUrl('','',$paramsUrlDesc);
-				
+
 			$t->assign_block_vars(
 					'liens',
 					array(
@@ -14089,10 +14089,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 								'urlSuivant'=>$url[$siblingIndex['nextPage']]
 						)
 				);
-				
+
 				// Dirty hack for displaying strong tag on current page
-				if($indexPage == $optionsPagination['currentPage']){ 
-					
+				if($indexPage == $optionsPagination['currentPage']){
+
 					$t->assign_block_vars(
 							'nav.courant',
 							array()
@@ -14115,10 +14115,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			/*
 			 * Addresses display
 			 * Loop on each address infos
-			 * 
-			 * 
+			 *
+			 *
 			 * Structure of $info :
-			 * 
+			 *
 			 * Array
 				(
 				    [nom] => 22 rue du général castelnau
@@ -14136,12 +14136,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				        )
 				)
 			 */
-			
+
 			foreach ($addressesInfromations as $info){
 				$titreEvenements="";
 				$illustration = $this->getUrlImageFromAdresse(
-						$info['idHistoriqueAdresse'], 
-						'moyen', 
+						$info['idHistoriqueAdresse'],
+						'moyen',
 						array(
 								'idEvenementGroupeAdresse'=>$info['idEvenementGroupeAdresse'],
 								'placeholder'=> "images/placeholder.jpg"
@@ -14151,64 +14151,64 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$nom = ucfirst($info['nom']);
 				$fulladdress =  ucfirst($this->getIntituleAdresseFrom($info['idEvenementGroupeAdresse'],$type='idEvenementGroupeAdresse'));
 				$titre = $info['titre'];
-				
-				
+
+
 				$input=array(
 						'idEvenementGA'=>$info['idEvenementGroupeAdresse'],
 						'idAdresse'=>$info['idAdresse']
-						
+
 				);
 				$intituleAdresse="";
 				if(isset($titre) && !empty($titre) && $titre !='')
 					$intituleAdresse="<b>".$titre."</b> ";
-				$intituleAdresse.=$fulladdress.' '; 
+				$intituleAdresse.=$fulladdress.' ';
 				$arrayUrl = $this->generateUrlListAddresses($input,$this->variablesGet['modeAffichage'],$intituleAdresse);
-				
+
 
 
 				//Regular case
-					
+
 					//Personne case
 					if (isset ( $info['idPersonne'] ) && $info['idPersonne'] != '') {
 						$urlImageIllustration= archiPersonne::getImage($info['idPersonne'],'resized',true,array('height'=>130,'width'=>130));
-						$addressUrl = $this->creerUrl ( '', 'evenementListe', 
+						$addressUrl = $this->creerUrl ( '', 'evenementListe',
 								array (
 								'selection' => 'personne',
-								"id" => $info ['idPersonne'] 
+								"id" => $info ['idPersonne']
 						) );
 						$titre=$info['nom'];
 						$urlDetailOnClick = '';
-						
-					} 
+
+					}
 					//Adresse case
 					else {
 						$urlImageIllustration = $illustration['url'];
 						$addressUrl = $this->creerUrl ( '', '', array (
 								'archiAffichage' => 'adresseDetail',
 								"archiIdAdresse" => $info ['idAdresse'],
-								"archiIdEvenementGroupeAdresse" => $info ['idEvenementGroupeAdresse'] 
+								"archiIdEvenementGroupeAdresse" => $info ['idEvenementGroupeAdresse']
 						) );
-						
+
 						$addressUrl=$arrayUrl['urlDetailHref'];
 						$urlDetailOnClick=$arrayUrl['urlDetailOnClick'];
 					}
-					
+
 					// Event title
 					$titreEvenements = implode ( " - ", $info ['titresEvenements'] ); // Getting all the events links on one line
-				
+
 					$modeAffichage=$this->variablesGet['modeAffichage'];
-					
-				if($modeAffichage == 'calqueImage' || $modeAffichage =='calqueImageChampsMultiples' 
+
+				if($modeAffichage == 'calqueImage' || $modeAffichage =='calqueImageChampsMultiples'
 						|| $modeAffichage == 'calqueImageChampsMultiplesRetourSimple' || $modeAffichage == 'calqueEvenement'
 						|| $modeAffichage == 'popupRechercheAdressePrisDepuis' || $modeAffichage == 'popupRechercheAdresseVueSur'
 						|| $modeAffichage == "popupAjoutAdressesLieesSurEvenement" || $modeAffichage == "popupDeplacerEvenementVersGroupeAdresse"
 						|| $modeAffichage == 'popupRechercheAdresseAdminParcours'){
-						
+
 					$titreEvenements = "";
-				}	
+				}
 				else
 					$titreEvenements = implode ( " - ", $info ['titresEvenements'] ); // Getting all the events links on one line
-								
+
 				$t->assign_block_vars(
 						'adresses',
 						array(
@@ -14221,21 +14221,21 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 								'urlDetailOnClick' => $urlDetailOnClick
 						)
 				);
-				
-			}//End foreach		
+
+			}//End foreach
 		}//End else (regular display w/ errors)
-		
-		
+
+
 		//Filling template, getting content, returning it
 		ob_start();
 		$t->pparse('addressesList');
 		$html .= ob_get_contents();
 		ob_end_clean();
-		
+
 		return $html;
-	} 
-	
-	
+	}
+
+
 	/**
 	 * Get all the addresses informations from their ID
 	 * @param unknown $idList
@@ -14254,7 +14254,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					ha.idHistoriqueAdresse ,
 					ha.idAdresse ,
 					ae.idEvenement as idEvenementGroupeAdresse
-		
+
     				FROM historiqueAdresse ha
 					LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
     				WHERE ha.idAdresse =" . $id ['idAdresse'] . "
@@ -14263,16 +14263,16 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 							";
 					$res = $this->connexionBdd->requete ( $req );
 					$row = mysql_fetch_assoc ( $res );
-					
-					
-					//Sometimes addresses and goup event are strangely not linked between each other so double check 
+
+
+					//Sometimes addresses and goup event are strangely not linked between each other so double check
 					if(empty($row)){
 						$req = "
 							SELECT ha.nom ,
 							ha.idHistoriqueAdresse ,
 							ha.idAdresse ,
 							ae.idEvenement as idEvenementGroupeAdresse
-								
+
 		    				FROM historiqueAdresse ha
 							LEFT JOIN _adresseEvenement ae on ae.idAdresse = ha.idAdresse
 		    				WHERE ae.idEvenement = " . $id ['idEvenementGroupeAdresse'] . "
@@ -14281,9 +14281,9 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 						$res = $this->connexionBdd->requete ( $req );
 						$row = mysql_fetch_assoc ( $res );
 					}
-					
+
 					$arrayAdresse [] = $row;
-				} 
+				}
 				//Else it's a person
 				else {
 					$req = "
@@ -14292,13 +14292,13 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					p.idPersonne,
 					m.nom as nomMetier,
 					ep.idEvenement as idEvenementGroupeAdresse
-					
+
     				FROM personne p
 					LEFT JOIN _personneEvenement ep on ep.idPersonne = p.idPersonne
 					LEFT JOIN metier m on m.idMetier = p.idMetier
     				WHERE p.idPersonne = " . $id ['idPersonne'] . "
 							";
-					
+
 					$res = $this->connexionBdd->requete ( $req );
 					$row = mysql_fetch_assoc ( $res );
 					$nom = $row['prenom'].' ' .$row['nom'];
@@ -14310,20 +14310,20 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 					$arrayAdresse [] = $personne;
 				}
 			}
-			
-			
+
+
 			/*
 			 * Previous request
 			 */
 			//Processing all the adresses get from the request : getting address title and link to the events linked
-						
+
 			foreach ($arrayAdresse as $fetch){
 				$evenement = new archiEvenement();
 				$idTitre = $evenement->getIdEvenementTitre($fetch);
 				$requeteTitreLegacy ="SELECT titre from evenements where idEvenement = $idTitre";
 				$resTitreLegacy = $this->connexionBdd->requete($requeteTitreLegacy);
 				$arrayTitre = mysql_fetch_assoc($resTitreLegacy);
-				
+
 				if(isset($fetch['idEvenementGroupeAdresse']) &&$fetch['idEvenementGroupeAdresse']!=''){
 					if(!isset($arrayTitre['titre']) || $arrayTitre['titre'] == '' || empty($arrayTitre['titre'])){
 						$titreRequest = "
@@ -14346,10 +14346,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 								$arrayTitre = mysql_fetch_assoc($resultAutreTitre);
 							}
 						}
-							
+
 					}
 					$fetch ['titre'] = stripslashes ( $arrayTitre ['titre'] );
-					
+
 					$reqTitresEvenements ="
 						SELECT  distinct he1.titre,he1.idEvenement
 	    				FROM evenements he1
@@ -14359,30 +14359,30 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 						WHERE ee.idEvenement = ".$fetch['idEvenementGroupeAdresse']."
 						AND TRIM(he1.titre) <> ''
 							";
-					
+
 					$resTitresEvenements = $this->connexionBdd->requete($reqTitresEvenements);
 					$titresEvenements = array();
 					$positionAncre=0;
 					$defaultEventTitle= "Événement sans titre";
-					
-					//Generating all the link to the events linked to current address 
+
+					//Generating all the link to the events linked to current address
 					while ($row = mysql_fetch_assoc($resTitresEvenements)) {
 						$titre = ($row['titre']=="") ? $defaultEventTitle : ucfirst($row['titre']); //Assigning default title to event which doesn't have one
 						//Link creation with the ancre to each event
 						$titresEvenements[] =
 					 	"<a href='".
 					 	$this->creerUrl(
-					 			'', 
-					 			'adresseDetail', 
+					 			'',
+					 			'adresseDetail',
 					 			array(
-					 					'archiIdAdresse'=>$fetch['idAdresse'], 
-					 					'archiIdEvenementGroupeAdresse'=>$fetch['idEvenementGroupeAdresse'], 
+					 					'archiIdAdresse'=>$fetch['idAdresse'],
+					 					'archiIdEvenementGroupeAdresse'=>$fetch['idEvenementGroupeAdresse'],
 					 					'debut'=>'')
 					 			)
 					 	."#evenement".$row['idEvenement']."'>"
 					 	.stripslashes($titre).
 					 	"</a>";
-					 
+
 					}
 					//Putting all this in a nice array
 					if(isset($fetch['idHistoriqueAdresse']) && $fetch['idHistoriqueAdresse']!=''){
@@ -14400,10 +14400,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		}
 		return $addressesInformations;
 	}
-	
+
 	/**
-	 * Generate pagination links 
-	 * 
+	 * Generate pagination links
+	 *
 	 * @param unknown $options
 	 * @return multitype:string
 	 */
@@ -14417,8 +14417,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		$nbResultPerPage = 10;
 		$offset=4;
 		$url = array();
-		
-		// Checking if all the parameters are set 
+
+		// Checking if all the parameters are set
 		if(isset($options['nbResult'])){
 			$nbResult = $options['nbResult'];
 		}
@@ -14440,7 +14440,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		if(isset($options['offset'])){
 			$offset= $options['offset'];
 		}
-		
+
 		//Link creation
 		for($i=0;$i<$nbPages;$i++){
 			$paramCreerUrl = $this->variablesGet;
@@ -14453,15 +14453,15 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		}
 		return $url;
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Get pagination index
 	 * @param unknown $optionsPagination : array with the info of pagination (nb results, nb results per page, current page etc)
 	 * @return $indexRange = range of the index to display
-	 */	
+	 */
 	private function getPaginationIndex($optionsPagination = array()){
 		$nbResult = 0;
 		$nbPages = 0;
@@ -14471,11 +14471,11 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		$nbResultPerPage = 10;
 		$offset = 4;
 		$indexToDisplay = array();
-		
+
 		//Setting vars
 		if(isset($optionsPagination['nbResult'])){
 			$nbResult =$optionsPagination['nbResult'];
-		}		
+		}
 		if(isset($optionsPagination['nbPages'])){
 			$nbPages = $optionsPagination['nbPages'];
 		}
@@ -14494,7 +14494,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		if(isset($optionsPagination['offset'])){
 			$offset = $optionsPagination['offset'];
 		}
-		
+
 		//Processing firstpage index
 		if($nbPages<=(2*$offset+1)){
 			$indexToDisplay['firstPage'] = 0;
@@ -14507,7 +14507,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			else{
 				$indexToDisplay['firstPage'] = $currentPage - $offset - 1;
 			}
-			
+
 			//Processing lastpage index
 			if(($currentPage+$offset)>=$nbPages){
 				$indexToDisplay['lastPage'] = $nbPages-1;
@@ -14515,14 +14515,14 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			else{
 				$indexToDisplay['lastPage']=$currentPage+$offset-1;
 			}
-			
+
 			// Adjusting first page index or last page index if nb of previous pages are not balanced compared to next ones
 			// Adding the extra missing page to a side or another to really have 9 pages (aka 2*offset+1)
 			if((2*$offset+1) > ($indexToDisplay['lastPage'] - $indexToDisplay['firstPage'] )){
-				
+
 				//Calculating the offset to add to first or last page
 				$offsetAdd=(2*$offset+1) - ($indexToDisplay['lastPage'] - $indexToDisplay['firstPage'] );
-				
+
 				if($indexToDisplay['firstPage'] == 0){
 					$indexToDisplay['lastPage']+=$offsetAdd-1;
 				}
@@ -14531,7 +14531,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				}
 			}
 		}
-		
+
 		$indexRange = array();
 		for($i = $indexToDisplay['firstPage'] ; $i <= $indexToDisplay['lastPage'] ; $i++){
 			$indexRange[] = $i;
@@ -14539,7 +14539,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		$indexToDisplay['range'] = $indexRange;
 		return $indexRange;
 	}
-	
+
 	private function getNextPreviousPages($currentPage=0,$nbPages=0){
 		$nextPage=$currentPage+1;
 		$previousPage=$currentPage-1;
@@ -14547,24 +14547,24 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			$previousPage=0;
 		}
 		else{
-			//$previousPage--;			
+			//$previousPage--;
 		}
 		if($nextPage > $nbPages){
 			$nextPage = $nbPages;
 		}
 		return array('previousPage'=>$previousPage , 'nextPage'=>$nextPage) ;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	private function displayTitle($idAdresse){
 		// attention s'il y a plusieurs evenement distinct (pas associes entre eux) reliés a l'adresse on les affichera a la suite
 		if (isset($_GET["archiIdAdresse"])) {
 			$address=$this->getArrayAdresseFromIdAdresse($_GET["archiIdAdresse"]);
 		}
-		
+
 		$reqTitre = "
 				SELECT he1.titre as titre
 				FROM _adresseEvenement ae
@@ -14575,7 +14575,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				GROUP BY he1.idEvenement
 				ORDER BY he1.dateDebut
 				LIMIT 1
-		
+
 				";
 		$resTitre = $this->connexionBdd->requete($reqTitre);
 		if(mysql_num_rows($resTitre)==1)
@@ -14588,8 +14588,8 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$titre='';
 			}
 		}
-			
-		
+
+
 		//    }
 		$e=new archiEvenement();
 		$archiIdEvenementGroupeAdresse=isset($_GET['archiIdEvenementGroupeAdresse'])?$_GET['archiIdEvenementGroupeAdresse']:$e->getIdEvenementGroupeAdresseFromIdEvenement($_GET["archiIdEvenement"]);
@@ -14624,25 +14624,25 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 						<meta itemprop='addressCountry' content='".$address["nomPays"]."'/>
 						</span>";
 			}
-		
+
 		}
 		return $html;
 	}
 	public function getArrayRetourLiensVoirBatiments($idAdresse){
 		$requete ="
 				SELECT idRue,idQuartier
-				FROM historiqueAdresse 
+				FROM historiqueAdresse
 				WHERE idAdresse = ".$idAdresse."
 				";
 		$result = $this->connexionBdd->requete($requete);
 		$fetch = mysql_fetch_assoc($result);
-		
+
 		$arrayRetourLiensVoirBatiments['urlAutresBiensRue']=$this->creerUrl('', 'adresseListe', array('recherche_rue'=>$fetch['idRue']));
 		$arrayRetourLiensVoirBatiments['urlAutresBiensQuartier']=$this->creerUrl('', 'adresseListe', array('recherche_quartier'=>$fetch['idQuartier']));
 		return $arrayRetourLiensVoirBatiments;
 	}
-	
-	
+
+
 	public function deleteCommentaireEvenement(){
 		//Get id for redirection
 		if(!isset($this->variablesGet['archiIdEvenementGroupeAdresse']) || $this->variablesGet['archiIdEvenementGroupeAdresse']==''){
@@ -14660,12 +14660,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$idAdresse = $this->getIdAdresseFromIdEvenementGroupeAdresse($idEvenementGroupeAdresse);
 			}
 		}
-		
+
 		if(isset($this->variablesGet['archiIdCommentaire']) && $this->variablesGet['archiIdCommentaire']!=''){
 			$req = "DELETE FROM commentairesEvenement WHERE idCommentairesEvenement = '".$this->variablesGet['archiIdCommentaire']."'";
 			$res = $this->connexionBdd->requete($req);
 		}
-		
+
 		if(isset($this->variablesGet['archiIdAdresse']) && $this->variablesGet['archiIdAdresse']!=''){
 			$idAdresse = $this->variablesGet['archiIdAdresse'];
 			if(isset($this->variablesGet['archiIdEvenementGroupeAdresse']) && $this->variablesGet['archiIdEvenementGroupeAdresse']!=''){
@@ -14682,7 +14682,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 			}
 		}
 	}
-	
+
 	/**
 	 * Get titre of an adresse
 	 * @param unknown $idAdresse
@@ -14698,10 +14698,10 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 		$retValue = mysql_fetch_assoc($result);
 		return $retValue['titre'];
 	}
-	
-	
-	
-	
+
+
+
+
 	public function generateUrlListAddresses($input, $modeAffichage,$nomAdresse){
 		// mise en place du lien de l'adresse suivant l'affichage ou l'on est
 		switch ($modeAffichage) {
@@ -14768,12 +14768,12 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$urlNomPaysOnClick = '';
 				break;
 			case 'popupRechercheAdresseVueSur':
-		
+
 				$urlDetailHref    = "#";
 				$urlDetailOnClick = "parent.document.getElementById('listeVueSurDiv'+parent.document.getElementById('identifiantRetour').value).innerHTML+='".str_replace(array("'", "\""), array("\\'", "    &#34;"), $nomAdresse)."<a style=\'cursor:pointer;\' onclick=\' retirerVueSur(&#34;".$input['idAdresse']."_".$input['idEvenementGA']."&#34;, &#34;'+parent.document.getElementById('identifiantRetour').value+'&#34;); \'>(-)</a><br>';
-		
+
 										parent.document.getElementById('vueSur'+parent.document.getElementById('identifiantRetour').value).innerHTML+='<option value=\'".$input['idAdresse']."_".$input['idEvenementGA']."\' SELECTED>".str_replace(array("'", "\""), array("\'", "&#34;"), $nomAdresse)."</option>';";
-		
+
 				$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)));
 				$urlNomRueOnClick = '';
 				$urlNomSousQuartier = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'sousQuartier',  'id'=>$input['idSousQuartier'],  'debut'=>0)));
@@ -14786,7 +14786,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$urlNomPaysOnClick = '';
 				break;
 			case "popupAjoutAdressesLieesSurEvenement":
-		
+
 				$urlDetailHref    = "#";
 				$urlDetailOnClick = "parent.document.getElementById('listeGroupesAdressesLiees').innerHTML+='".str_replace("'", "\\'", $nomAdresse)."<a  style=\'cursor:pointer\' onclick=\'retirerGroupeAdresse(".$input['idEvenementGA'].");\'>(-)</a><br>';parent.document.getElementById('listeIdGroupesAdressesLiees').innerHTML+='<option value=\'".$input["idEvenementGA"]."\' SELECTED>".str_replace("'", "\'", $nomAdresse)."</option>';";
 				$urlNomRue        = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'rue',  'id'=>$input['idRue'],  'debut'=>0)));
@@ -14799,7 +14799,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$urlNomVilleOnClick = '';
 				$urlNomPays = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$input['idPays'],  'debut'=>0)));
 				$urlNomPaysOnClick = '';
-		
+
 				break;
 			case "popupDeplacerEvenementVersGroupeAdresse":
 				$urlDetailHref    = "#";
@@ -14843,15 +14843,15 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				$urlNomVilleOnClick = '';
 				$urlNomPays = $this->creerUrl('',  '',  array_merge($this->variablesGet,  array('selection'=>'pays',  'id'=>$input['idPays'],  'debut'=>0)));
 				$urlNomPaysOnClick = '';
-		
-		
+
+
 				// patch laurent pour gerer l'affichage de la liste des dependances d'une source dans l'admin
 				if (isset($this->variablesGet['archiAffichage']) && $this->variablesGet['archiAffichage']=='listeAdressesFromSource' && isset($this->variablesGet['source']) && $this->variablesGet['source']!='' && isset($this->variablesGet['modeAdmin']) && $this->variablesGet['modeAdmin']=='1') {
 					$urlDetailOnClick = "parent.document.location.href='".$urlDetailHref."'";
 					$urlDetailHref = "#";
 				}
-		
-		
+
+
 				break;
 		}
 		return array(
@@ -14869,7 +14869,7 @@ SELECT distinct c.idCommentairesEvenement as idCommentaire, u.mail,u.nom,u.preno
 				'urlNomPaysOnClick'=>$urlNomPaysOnClick
 		);
 	}
-	
+
 }
 
 ?>
