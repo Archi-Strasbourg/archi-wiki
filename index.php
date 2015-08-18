@@ -19,7 +19,7 @@ $countTest=0;
 error_reporting(E_ERROR);
 
 if (isset($_SERVER['HTTP_REFERER'])
-    && parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) == 'm.archi-strasbourg.org'
+    && parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) == 'm.archi-wiki.org'
 ) {
     setcookie('nomobile');
 } else if (!isset($_COOKIE['nomobile'])) {
@@ -28,12 +28,12 @@ if (isset($_SERVER['HTTP_REFERER'])
     if ($detect->isMobile() && !$detect->isTablet()) {
         if (isset($_GET['archiIdEvenementGroupeAdresse'])) {
             header(
-                'Location: http://m.archi-strasbourg.org/adresses/'.
+                'Location: http://m.archi-wiki.org/adresses/'.
                 $_GET['archiIdAdresse'].'/'.
                 $_GET['archiIdEvenementGroupeAdresse'].'.html'
             );
         } else {
-            header('Location: http://m.archi-strasbourg.org/');
+            header('Location: http://m.archi-wiki.org/');
         }
     }
 }
