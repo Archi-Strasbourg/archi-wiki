@@ -2163,14 +2163,18 @@ class archiRecherche extends config {
 
 								$i=0;
 								$nbOfCourantArchi  = count($criterias[$id[0]]);
-								//Loop on each archi style selected
-								foreach ($criterias[$id[0]] as $idCourant){
-									if(++$i == $nbOfCourantArchi){
-										$clause.=$idCourant." ) ";
+								if (is_array($criterias[$id[0]])) {
+									//Loop on each archi style selected
+									foreach ($criterias[$id[0]] as $idCourant){
+										if(++$i == $nbOfCourantArchi){
+											$clause.=$idCourant." ) ";
+										}
+										else{
+											$clause.=$idCourant." , ";
+										}
 									}
-									else{
-										$clause.=$idCourant." , ";
-									}
+								} else {
+									$clause.=$criterias[$id[0]]." ) ";
 								}
 								$sqlWhereTab[]=$clause;
 								break;
