@@ -421,7 +421,7 @@ if (isset($_GET['archiAction'])) {
             break;
 		case 'supprimerCommentaireEvenement':
             if ($authentification->estAdmin()) {
-            	$adresse = new archiAdresse();
+                $adresse = new archiEvenement();
             	$adresse->deleteCommentaireEvenement();
             }
             break;
