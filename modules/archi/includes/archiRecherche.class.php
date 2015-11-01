@@ -2202,7 +2202,7 @@ class archiRecherche extends config {
 						$motCleEscaped = str_replace(' ', ' +', $criterias[$id[0]]);
 						$motCleEscaped="+".$motCleEscaped;
 
-						$sqlWhereTab[] = "MATCH(nomRue, nomQuartier, nomSousQuartier, nomVille, nomPays, prefixeRue,numeroAdresse,  description, titre , nomPersonne, prenomPersonne, concat1, concat2, concat3, concat4, concat5) AGAINST ('".$criterias[$id[0]]."' IN BOOLEAN MODE)
+						$sqlWhereTab[] = "MATCH(nomRue, nomQuartier, nomSousQuartier, nomVille, nomPays, prefixeRue,numeroAdresse,  description, titre , nomPersonne, prenomPersonne, concat1, concat2, concat3, concat4, concat5) AGAINST ('*".$criterias[$id[0]]."*' IN BOOLEAN MODE)
 								";
 					}
 				}
