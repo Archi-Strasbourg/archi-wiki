@@ -1,9 +1,9 @@
 <?php
 /**
  * Classe Config
- * 
+ *
  * PHP Version 5.3.3
- * 
+ *
  * @category Class
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
@@ -11,18 +11,19 @@
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     https://archi-strasbourg.org/
- * 
+ *
  * */
 date_default_timezone_set('Europe/Paris');
 
 require_once "includesFramework.php";
 require_once "debug.php";
+require_once "vendor/autoload.php";
 
 /**
  * Configuration du framework
- * 
+ *
  * PHP Version 5.3.3
- * 
+ *
  * @category Class
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
@@ -30,11 +31,11 @@ require_once "debug.php";
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     https://archi-strasbourg.org/
- * 
+ *
  * */
 class Config
 {
-    
+
 
 	protected $bdd_host;
 	protected $bdd_user; //"root";
@@ -42,55 +43,55 @@ class Config
 	protected $bdd_name;
 	protected $adminPass;
 
-	
+
 	public $langs=array('fr_FR', 'de_DE', 'en_US');
-	
+
     static $default_lang = "fr_FR";
-    
+
     // Pour l'identification unique d'un utilisateur dans la session
-    public $idSite; 
-        
+    public $idSite;
+
     //Pas besoin de tout ça, on peut le détecter automatiquement
     //protected $cheminPhysique                       = '/home/pia/archiv2/';
     protected $cheminPhysique              = '/var/www/archi-strasbourg/';
     // cette variable sert au remplacement dans les descriptions
-    //qui contiennent des urls vers le site du serveur ou est le site    
-    protected $nomServeur                        
-        = 'www.archi-strasbourg.org'; 
-    protected $urlImages                         
+    //qui contiennent des urls vers le site du serveur ou est le site
+    protected $nomServeur
+        = 'www.archi-strasbourg.org';
+    protected $urlImages
         = 'http://www.archi-strasbourg.org/images/';
-    protected $urlImagesMini                     
+    protected $urlImagesMini
         = 'http://www.archi-strasbourg.org/images/mini/';
-    protected $urlImagesMoyen                    
+    protected $urlImagesMoyen
         = 'http://www.archi-strasbourg.org/images/moyen/';
-    protected $urlImagesGrand                     
+    protected $urlImagesGrand
         = 'http://www.archi-strasbourg.org/images/grand/';
-    protected $urlImagesOriginaux                
+    protected $urlImagesOriginaux
         = 'http://www.archi-strasbourg.org/images/originaux/';
 
-    /*public $cheminPhysiqueImagesMini             
+    /*public $cheminPhysiqueImagesMini
         = '/home/pia/archiv2/images/mini/';
-    public $cheminPhysiqueImagesGrand             
+    public $cheminPhysiqueImagesGrand
         = '/home/pia/archiv2/images/grand/';
-    public $cheminPhysiqueImagesMoyen             
+    public $cheminPhysiqueImagesMoyen
         = '/home/pia/archiv2/images/moyen/';
-    public $cheminPhysiqueImagesOriginaux         
+    public $cheminPhysiqueImagesOriginaux
         = '/home/pia/archiv2/images/originaux/';
-    public $cheminPhysiqueImagesUploadMultiple    
+    public $cheminPhysiqueImagesUploadMultiple
         = '/home/pia/archiv2/images/uploadMultiple/';*/
-    public $cheminPhysiqueImagesMini             
+    public $cheminPhysiqueImagesMini
         = '/home/vhosts/fabien/archi-strasbourg-v2/images/mini/';
-    public $cheminPhysiqueImagesGrand             
+    public $cheminPhysiqueImagesGrand
         = '/home/vhosts/fabien/archi-strasbourg-v2/images/grand/';
-    public $cheminPhysiqueImagesMoyen             
+    public $cheminPhysiqueImagesMoyen
         = '/home/vhosts/fabien/archi-strasbourg-v2/images/moyen/';
-    public $cheminPhysiqueImagesOriginaux         
+    public $cheminPhysiqueImagesOriginaux
         = '/home/vhosts/fabien/archi-strasbourg-v2/images/originaux/';
-    public $cheminPhysiqueImagesUploadMultiple    
+    public $cheminPhysiqueImagesUploadMultiple
         = '/home/vhosts/fabien/archi-strasbourg-v2/images/uploadMultiple/';
-    /*public $cheminUploadMultipleApplet            
+    /*public $cheminUploadMultipleApplet
         = 'archiv2/images/uploadMultiple';*/
-    public $cheminUploadMultipleApplet      
+    public $cheminUploadMultipleApplet
         = 'archi-strasbourg-v2/images/uploadMultiple';
 
     public $idTypeEvenementGroupeAdresse           ='11';
@@ -101,10 +102,10 @@ class Config
     public $siteMail = 'contact@archi-strasbourg.org';
 
 
-    
 
 
-    /*  public $cheminPhysiqueFrameWork             
+
+    /*  public $cheminPhysiqueFrameWork
          = "/home/pia/archiv2/includes/framework/";
      * */
     public $cheminPhysiqueFrameWork
@@ -116,23 +117,23 @@ class Config
     protected $variablesPost;
 
     public $date;
-    
+
     public $connexionBdd;
-    
+
     protected $verification;
     private static $_jsHeader = "";
     private static $_jsFooter = "";
     //protected $formulaire;
-    
+
     public $erreurs;
     public $messages;
     //public $mail;
-    
+
     /**
      * Constructeur de Config
-     * 
+     *
      * @param array $params Paramètres
-     * 
+     *
      * @return void
      * */
     function __construct($params=array())
@@ -148,11 +149,11 @@ class Config
         $this->session               = new objetSession();
         $this->date                   = new dateObject();
         //$this->formulaire            = new formGenerator($this->connexionBdd);
-        
+
         //$this->mail                = new mailObject($this->connexionBdd);
         /*if (!in_array('noPEAR',$params)) {
             $config                     = parse_ini_file('BBCodeParser.ini', true);
-            $options                    = 
+            $options                    =
             * &PEAR::getStaticProperty('HTML_BBCodeParser', '_options');
             $options                    = $config['HTML_BBCodeParser'];
             $this->parserBB            = new HTML_BBCodeParser($options);
@@ -161,44 +162,44 @@ class Config
         $this->erreurs             = new objetErreur();
         $this->messages = new messageCollection();
     }
-    
+
     /**
      * Ajoute quelque chose à la variable _jsFooter
-     * 
+     *
      * @param string $js Chaine à ajouter
-     * 
+     *
      * @return void
      * */
     public function addToJsFooter($js="")
     {
         self::$_jsFooter.=$js;
     }
-    
+
     /**
      * Ajoute quelque chose à la variable _jsHeader
-     * 
+     *
      * @param string $js Chaine à ajouter
-     * 
+     *
      * @return void
      * */
     public function addToJsHeader($js="")
     {
         self::$_jsHeader.=$js;
     }
-    
+
     /**
      * Obtenir la variable _jsFooter
-     * 
+     *
      * @return string
      * */
     public static function getJsFooter()
     {
         return self::$_jsFooter;
     }
-    
+
     /**
      * Obtenir la variable _jsHeader
-     * 
+     *
      * @return string
      * */
     public static function getJsHeader()
@@ -209,28 +210,28 @@ class Config
     /**
      * Renvoi l'id du typeEvenement = groupe d'adresse
      * afin que celui ci puisse etre modifié automatiquement
-     * 
+     *
      * @return int
      * */
     function getIdTypeEvenementGroupeAdresse()
     {
         return $this->idTypeEvenementGroupeAdresse;
     }
-    
+
     /**
      * Renvoi l'id du type structure = immeuble,
      * valeur par defaut dans le formulaire d'ajout d'un dossier
-     * 
+     *
      * @return int
      * */
     function getIdTypeStructureImmeuble()
     {
         return $this->idTypeStructureImmeuble;
     }
-    
+
     /**
      * Renvoit la racine de l'URL
-     * 
+     *
      * @return string
      * */
     public function getUrlRacine()
@@ -248,13 +249,13 @@ class Config
         $dirname;
         if ($dirname!="/") {
             $url.="/";
-        } 
+        }
         return $url;
     }
-    
+
     /**
      * Permet d'obtenir le nom de domaine
-     * 
+     *
      * @return string
      * */
     public function getNomServeur()
@@ -265,23 +266,23 @@ class Config
             return "archi-strasbourg.org";
         }
     }
-    
+
     /**
      * Permet d'obtenir le chemin vers le dossier du site sur le serveur
-     * 
+     *
      * @return string
      * */
     public function getCheminPhysique()
     {
         return dirname(dirname(__DIR__))."/";
     }
-    
+
     /**
      * Permet d'obtenir l'URL du dossier d'une image
-     * 
+     *
      * @param string $size Taille de l'image (mini, moyen, grand ou originaux)
      * @param string $name Nom de l'image (avec son extension)
-     * 
+     *
      * @return string
      * */
     public function getUrlImage($size="", $name="")
@@ -291,12 +292,12 @@ class Config
         }
         return $this->getUrlRacine()."images/".$size.$name;
     }
-    
+
     /**
      * Permet d'obtenir le chemin du dossier d'une image
-     * 
+     *
      * @param string $size Taille de l'image (mini, moyen, grand ou originaux)
-     * 
+     *
      * @return string
      * */
     public function getCheminPhysiqueImage($size="")
@@ -306,16 +307,16 @@ class Config
         }
         return $this->getCheminPhysique()."images/".$size;
     }
-    
+
     /**
      * Créer une URL
-     * 
+     *
      * @param string $action    Action à effectuer
      * @param string $affichage Page à afficher
      * @param array  $autre     Paramètres optionnels
      * @param bool   $keep      Keep current query
      * @param bool   $clean     Replace & with &amp;
-     * 
+     *
      * @return string
      * */
     public function creerUrl(
@@ -323,7 +324,7 @@ class Config
     ) {
         $string = new stringObject();
         $amp=$clean?"&amp;":"&";
-        
+
         if ($keep) {
             $url="?".htmlentities($_SERVER["QUERY_STRING"]).$amp;
             $url_existe = true;
@@ -335,16 +336,16 @@ class Config
             $url .= 'archiAction='.$action;
             $url_existe = true;
         }
-        
+
         if (!empty($affichage)) {
             if ($url_existe == true) {
                 $url .= $amp;
             }
-            
+
             $url .= 'archiAffichage='.$affichage;
             $url_existe = true;
         }
-        
+
         if (is_array($autre) && count($autre)>0) {
             $i = 0;
             foreach ($autre AS $nom => $val) {
@@ -389,7 +390,7 @@ class Config
         ) {
             // rewriting
             $adresse = new archiAdresse();
-            
+
             $fetchAdresse = $adresse
                 ->getArrayAdresseFromIdAdresse($autre['archiIdAdresse']);
             $intitule = $adresse->getIntituleAdresse($fetchAdresse);
@@ -406,7 +407,7 @@ class Config
         ) {
             $url = 'profil-'.$autre['archiIdUtilisateur'].'.html';
         }
-        
+
         if (isset($affichage)
             && $affichage== 'detailProfilPublique'
             && isset($autre['archiIdUtilisateur'])
@@ -428,7 +429,7 @@ class Config
         ) {
             // rewriting
             $adresse = new archiAdresse();
-            
+
             $fetchAdresse = $adresse->getArrayAdresseFromIdAdresse(
                 $autre['archiIdAdresse']
             );
@@ -441,9 +442,9 @@ class Config
                     $urlComplement.=$amp.$intitule."=".$valeur;
                 }
             }
-            
+
             $url.=$urlComplement;
-        }    
+        }
 
         if (isset($affichage)
             && $affichage=='evenementListe'
@@ -456,7 +457,7 @@ class Config
             $url = "personnalite-".$string->convertStringToUrlRewrite($nomPrenom).
             "-".$autre['id'].".html";
         }
-        
+
         if (isset($affichage)
             && $affichage=='adresseListe'
             && isset($autre['recherche_rue'])
@@ -469,7 +470,7 @@ class Config
             $url = "rue-".$string->convertStringToUrlRewrite(trim($intituleRue)).
             "-".$autre['recherche_rue'].".html";
         }
-    
+
         if (isset($affichage)
             && $affichage=='listeDossiers'
             && isset($autre['archiIdQuartier'])
@@ -505,7 +506,7 @@ class Config
             $string->convertStringToUrlRewrite(trim($intituleRue)).
             "-".$autre['recherche_quartier'].".html";
         }
-        
+
         if (isset($affichage)
             && $affichage=='adresseListe'
             && isset($autre['recherche_ville'])
@@ -518,7 +519,7 @@ class Config
             $url = "ville-".$string->convertStringToUrlRewrite(trim($intituleRue)).
             "-".$autre['recherche_ville'].".html";
         }
-        
+
         if (isset($affichage)
             && $affichage=='listeAdressesFromRue'
             && isset($autre['recherche_rue'])
@@ -574,14 +575,14 @@ class Config
                 $autre['archiIdVilleGeneral'],
                 array('fieldList'=>'v.nom as nomVille')
             );
-        
+
             $nomVilleGeneral = $stringObj
                 ->convertStringToUrlRewrite($fetchInfosVille['nomVille']);
-        
+
             $url = "dossiers-rues-quartiers-adresses-photos-".$nomVilleGeneral
             ."-".$autre['archiIdVilleGeneral'].".html";
         }
-        
+
         if (isset($autre['archiAffichage'])
             && $autre['archiAffichage']=='listeDossiers'
             && isset($autre['archiPageCouranteVille'])
@@ -596,15 +597,15 @@ class Config
                 $autre['archiIdVilleGeneral'],
                 array('fieldList'=>'v.nom as nomVille')
             );
-        
+
             $nomVilleGeneral = $stringObj
                 ->convertStringToUrlRewrite($fetchInfosVille['nomVille']);
-        
+
             $url = "dossiers-rues-quartiers-adresses-photos-".
             $nomVilleGeneral."-".$autre['archiIdVilleGeneral']."-page".
             $autre['archiPageCouranteVille'].".html";
         }
-        
+
         if (isset($autre['archiAffichage'])
             && $autre['archiAffichage']=='listeDossiers'
             && isset($autre['archiPageCouranteVille'])
@@ -619,16 +620,16 @@ class Config
                 $autre['archiIdVilleGeneral'],
                 array('fieldList'=>'v.nom as nomVille')
             );
-        
+
             $nomVilleGeneral = $stringObj
                 ->convertStringToUrlRewrite($fetchInfosVille['nomVille']);
-        
+
             $url = "dossiers-rues-quartiers-adresses-photos-".
             $nomVilleGeneral."-".$autre['archiIdVilleGeneral']."-page".
             $autre['archiPageCouranteVille']."-".
             $autre['modeAffichageListe'].".html";
         }
-        
+
         // modif lettre courante
         if (isset($autre['archiAffichage'])
             && $autre['archiAffichage']=='listeDossiers'
@@ -646,21 +647,21 @@ class Config
                     $autre['archiIdVilleGeneral'],
                     array('fieldList'=>'v.nom as nomVille')
                 );
-        
+
             $nomVilleGeneral = $stringObj
                 ->convertStringToUrlRewrite($fetchInfosVille['nomVille']);
-        
+
             $url = "dossiers-rues-quartiers-adresses-photos-".
             $nomVilleGeneral."-".$autre['archiIdVilleGeneral']."-page".
             $autre['archiPageCouranteVille']."-".
             $autre['modeAffichageListe']."-lettre".
             $autre['lettreCourante'].".html";
-            
-            
+
+
         }
-        
-        
-        
+
+
+
         if (isset($autre['archiAffichage'])
             && $autre['archiAffichage']=='listeDossiers'
             && !isset($autre['archiPageCouranteVille'])
@@ -676,19 +677,19 @@ class Config
                     $autre['archiIdVilleGeneral'],
                     array('fieldList'=>'v.nom as nomVille')
                 );
-        
+
             $nomVilleGeneral = $stringObj
                 ->convertStringToUrlRewrite($fetchInfosVille['nomVille']);
-        
+
             $url = "dossiers-rues-quartiers-adresses-photos-ville-".
             $nomVilleGeneral."-".$autre['archiIdVilleGeneral']."-".
             $autre['modeAffichageListe']."-lettre".
             $autre['lettreCourante'].".html";
         }
-        
-        
-        
-        
+
+
+
+
         if (isset($affichage)
             && $affichage=='listeDossiers'
             && !isset($autre['archiPageCouranteVille'])
@@ -704,22 +705,22 @@ class Config
                     $autre['archiIdVilleGeneral'],
                     array('fieldList'=>'v.nom as nomVille')
                 );
-        
+
             $nomVilleGeneral = $stringObj
                 ->convertStringToUrlRewrite($fetchInfosVille['nomVille']);
-        
+
             $url = "dossiers-rues-quartiers-adresses-photos-ville-".
             $nomVilleGeneral."-".$autre['archiIdVilleGeneral']."-".
             $autre['modeAffichageListe'].".html";
         }
-        
 
-        
-        
+
+
+
         // ************************************************************
-        
 
-        
+
+
         if (count($autre)==2
             && isset($autre['lettreCourante'])
             && $autre['lettreCourante']!=''
@@ -729,14 +730,14 @@ class Config
             $url = "dossiers-rues-quartiers-adresses-photos-strasbourg-lettre".
             $autre['lettreCourante'].".html";
         }
-        
+
         if (isset($affichage)
             && $affichage=='listeDossiers'
             && count($autre)==0
         ) {
             $url = "dossiers-rues-quartiers-adresses-photos-strasbourg.html";
         }
-        
+
         if (isset($autre['archiAffichage'])
             && $autre['archiAffichage']=='listeDossiers'
             && isset($autre['archiPageCouranteVille'])
@@ -753,8 +754,8 @@ class Config
 
 
 
-        
-        
+
+
         if (isset($autre['archiAffichage'])
             && $autre['archiAffichage']=='listeDossiers'
             && isset($autre['archiPageCouranteVille'])
@@ -766,14 +767,14 @@ class Config
             $url = "dossiers-rues-quartiers-adresses-photos-strasbourg-page".
             $autre['archiPageCouranteVille'].".html";
         }
-        
-        
 
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
         if (isset($autre['archiAffichage'])
             && $autre['archiAffichage']=='listeDossiers'
             && isset($autre['archiPageCouranteVille'])
@@ -785,9 +786,9 @@ class Config
             $autre['archiPageCouranteVille']."-".
             $autre['modeAffichageListe'].".html";
         }
-        
-        
-        
+
+
+
         if (isset($affichage)
             && $affichage=='listeDossiers'
             && !isset($autre['archiPageCouranteVille'])
@@ -799,16 +800,16 @@ class Config
         ) {
             $url = "dossiers-rues-quartiers-adresses-photos-strasbourg-ville-".
             $autre['modeAffichageListe'].".html";
-        }    
-        
-        
+        }
+
+
         if (isset($affichage)
             && $affichage=='toutesLesDemolitions'
             && count($autre)==0
         ) {
             $url = "demolitions-toutes-adresses-strasbourg-archi.html";
         }
-        
+
         if (isset($affichage)
             && $affichage=='toutesLesDemolitions'
             && isset($autre['archiIdVilleGeneral'])
@@ -820,8 +821,8 @@ class Config
             $autre['archiIdVilleGeneral']."-".
             $autre['archiIdPaysGeneral'].".html";
         }
-        
-        
+
+
         if (isset($affichage)
             && $affichage=='tousLesTravaux'
             && isset($autre['archiIdVilleGeneral'])
@@ -833,15 +834,15 @@ class Config
             $autre['archiIdVilleGeneral']."-".
             $autre['archiIdPaysGeneral'].".html";
         }
-        
-        
+
+
         if (isset($affichage)
             && $affichage=='tousLesTravaux'
             && count($autre)==0
         ) {
             $url = "travaux-tous-adresses-strasbourg-archi.html";
         }
-        
+
 
         if (isset($affichage)
             && $affichage=='tousLesEvenementsCulturels'
@@ -861,9 +862,9 @@ class Config
         ) {
             $url = "culture-evenements-culturels-adresses-strasbourg-archi.html";
         }
-        
-        
-        
+
+
+
         if (isset($affichage)
             && $affichage=='recherche'
             && isset($autre['archiIdVilleGeneral'])
@@ -880,7 +881,7 @@ class Config
             $autre['archiIdVilleGeneral']."-".
             $autre['archiIdPaysGeneral'].".html";
         }
-        
+
         if (isset($affichage)
             && $affichage=='recherche'
             && !isset($autre['archiIdVilleGeneral'])
@@ -893,14 +894,14 @@ class Config
             $url = "adresses-nouvelles-toutes-rues-villes-quartiers".
             "-strasbourg-archi.html";
         }
-        
+
         if (isset($affichage)
             && $affichage=='tousLesArchitectesClasses'
             && count($autre)==0
         ) {
             $url = "architectes-strasbourg-photos-classes.html";
         }
-        
+
         if (isset($affichage)
             && $affichage=='toutesLesRuesCompletesClassees'
             && count($autre)==0
@@ -915,7 +916,7 @@ class Config
             $url="rues-strasbourg-photos-classees-".
             $autre['archiPageCouranteRue'].".html";
         }
-        
+
         if (isset($autre['archiAffichage'])
             && $autre['archiAffichage']=='tousLesArchitectesClasses'
             && isset($autre['archiPageCouranteArchitectes'])
@@ -923,7 +924,7 @@ class Config
             $url="architectes-strasbourg-photos-classes-".
             $autre['archiPageCouranteArchitectes'].".html";
         }
-        
+
 
 
         if (isset($affichage)
@@ -939,8 +940,8 @@ class Config
             $autre['archiRetourAffichage']."-".$autre['archiRetourIdName'].
             "-".$autre['archiRetourIdValue'].".html";
         }
-        
-        
+
+
         if (isset($affichage)
             && $affichage=='imageDetail'
             && isset($autre['archiIdImage'])
@@ -955,7 +956,7 @@ class Config
             $autre['archiRetourAffichage']."-".$autre['archiRetourIdName'].
             "-".$autre['archiRetourIdValue']."-".
             $autre['formatPhoto'].".html";
-        }    
+        }
 
         if (isset($affichage)
             && $affichage=='imageDetail'
@@ -978,7 +979,7 @@ class Config
             && isset($autre['archiRetourIdName'])
             && isset($autre['archiIdAdresse'])
         ) {
-        
+
             $libelleAdresse = "";
             if ($autre['archiIdAdresse']!='') {
                 $adresse = new archiAdresse();
@@ -988,9 +989,9 @@ class Config
                     ->getIntituleAdresse($fetchAdresse);
                 $libelleAdresse = $string
                     ->convertStringToUrlRewrite($libelleAdresse);
-                
+
             }
-            
+
             if ($libelleAdresse != '') {
                 $url="photo-detail-".$libelleAdresse."-".
                 $autre['archiIdImage']."-".$autre['archiRetourAffichage'].
@@ -1005,29 +1006,29 @@ class Config
         }
 
 
-        
+
         if (isset($affichage)
             && $affichage=='tousLesCommentaires'
             && count($autre)==0
         ) {
             $url = "commentaires-archi-strasbourg.html";
         }
-        
+
         if (isset($affichage)
             && $affichage=='tousLesCommentaires'
             && isset($autre['pageCourante'])
         ) {
             $url = "commentaires-archi-strasbourg-".$autre['pageCourante'].".html";
         }
-        
+
         if (isset($affichage)
             && $affichage=='publiciteArticlesPresse'
             && count($autre)==0
         ) {
             $url = "archi-strasbourg-media-presse-publicite.html";
         }
-        
-        if (isset($affichage) 
+
+        if (isset($affichage)
             && $affichage=="afficheAccueil"
             && isset($autre['archiIdVilleGeneral'])
             && isset($autre['archiIdPaysGeneral'])
@@ -1037,7 +1038,7 @@ class Config
                 $autre['archiIdVilleGeneral'],
                 array("fieldList"=>"v.nom as nomVille")
             );
-            
+
             $url = "accueil-ville-photos-immeubles-".$infosVille['nomVille'].
             "-".$autre['archiIdVilleGeneral']."-".
             $autre['archiIdPaysGeneral'].".html";
@@ -1051,33 +1052,33 @@ class Config
             $url = "sondage-financement-archi-strasbourg.html";
         }
 
-        if (isset($affichage) 
-            && $affichage=="afficheSondageResultatGrand" 
+        if (isset($affichage)
+            && $affichage=="afficheSondageResultatGrand"
             && count($autre)==0
         ) {
             $url = "sondage-financement-archi-strasbourg-statistiques.html";
         }
 
-        if (isset($affichage) 
+        if (isset($affichage)
             && $affichage=="afficherActualite"
             && isset($autre['archiIdActualite'])
         ) {
             $url = "actualites-archi-strasbourg-".$autre['archiIdActualite'].".html";
         }
-        
-        if (isset($affichage) 
-            && $affichage=="toutesLesActualites" 
+
+        if (isset($affichage)
+            && $affichage=="toutesLesActualites"
             && count($autre)==0
         ) {
             $url = "actualites-archi-strasbourg-liste.html";
         }
-        
+
         if (isset($affichage) && $affichage=="toutesLesVues" && count($autre)==0) {
             $url = "vues-photos-archi-strasbourg.html";
         }
 
-        if (isset($affichage) 
-            && $affichage=="adresseListe" 
+        if (isset($affichage)
+            && $affichage=="adresseListe"
             && isset($autre['recherche_sousQuartier'])
             && $autre['recherche_sousQuartier']!=''
         ) {
@@ -1098,9 +1099,9 @@ class Config
         }
 
 
-        
+
         return $this->getUrlRacine().$url;
-    }    
+    }
     /*public function BBversHTML ($string = '')
     {
         $this->parserBB->setText($string);
@@ -1108,7 +1109,7 @@ class Config
         return $this->parserBB->getParsed();
     }
     */
-    /* sert a afficher les descriptions sur les listes pour 
+    /* sert a afficher les descriptions sur les listes pour
      * eviter d'avoir des balises bb coupées en deux
      * */
     /*public function sansBalises ($string = '')
@@ -1116,40 +1117,40 @@ class Config
         return preg_replace('#\[(.*)\](.*)\[\/(.*)\]#', '$2', $string);
     }
     */
-    
+
     /**
      * Obtenir le format d'image mini
-     * 
+     *
      * @return int
      * */
     public function getFormatImageMini()
     {
         return 80;
     }
-    
+
     /**
      * Obtenir le format d'image moyen
-     * 
+     *
      * @return int
      * */
     public function getFormatImageMoyen()
     {
         return 200;
     }
-    
+
     /**
      * Obtenir le format d'image grand
-     * 
+     *
      * @return int
      * */
     public function getFormatImageGrand()
     {
         return 500;
     }
-    
+
     /**
      * Obtenir le message de désabonnement à l'alerte mail
-     * 
+     *
      * @return string
      * */
     public function getMessageDesabonnerAlerteMail()
@@ -1157,14 +1158,14 @@ class Config
         return "<br><small>Pour ne plus recevoir les alertes mail, ".
         "il vous suffit de vous connecter à <a href='".$this->creerUrl('', 'afficheAccueil&modeAffichage=profil')."'>votre profil archi-strasbourg.org".
         "</a>.</small>";
-    }    
+    }
 
     /**
      * Fonction permettant d'afficher la pagination
      * en fonction de la requete courante et de la page courante
-     * 
+     *
      * @param array $parametres Paramètres
-     * 
+     *
      * @return array
      * */
     public function pagination($parametres=array())
@@ -1172,24 +1173,24 @@ class Config
         $html = '';
         $t=new Template($this->getCheminPhysique().$this->cheminTemplates);
         $t->set_filenames((array('pagination'=>'pagination.tpl')));
-        
+
         $nbEnregistrementsTotaux = 0;
         if (isset($parametres['nbEnregistrementsTotaux'])) {
             $nbEnregistrementsTotaux = $parametres['nbEnregistrementsTotaux'];
         }
-        
+
         $typeLiens="default";
         if (isset($parametres['typeLiens'])) {
             $typeLiens = $parametres['typeLiens'];
         }
-        
+
         $nomParamPageCourante = '';
         if (isset($parametres['nomParamPageCourante'])) {
             $nomParamPageCourante = $parametres['nomParamPageCourante'];
         }
-        
+
         $pageCourante=1;
-        if (isset($this->variablesGet[$nomParamPageCourante]) 
+        if (isset($this->variablesGet[$nomParamPageCourante])
             && $this->variablesGet[$nomParamPageCourante]!=''
         ) {
             $pageCourante = $this->variablesGet[$nomParamPageCourante];
@@ -1198,13 +1199,13 @@ class Config
         ) {
             $pageCourante = $this->variablesPost[$nomParamPageCourante];
         }
-    
+
         $nbEnregistrementsParPage = 0;
         if (isset($parametres['nbEnregistrementsParPage'])) {
             $nbEnregistrementsParPage = $parametres['nbEnregistrementsParPage'];
-            
+
             $premierePage =1;
-            // calcul du nombre de pages 
+            // calcul du nombre de pages
             if (($nbEnregistrementsTotaux/$nbEnregistrementsParPage)>1) {
                 if ($nbEnregistrementsTotaux%$nbEnregistrementsParPage==0) {
                     $nbPages = $nbEnregistrementsTotaux/$nbEnregistrementsParPage;
@@ -1217,7 +1218,7 @@ class Config
                 // il n'y a qu'une page
                 $nbPages = 1;
             }
-            
+
             $nbPagesAffichees=$nbPages;
             if ($nbPages > 20) {
                 if ($pageCourante > 10) {
@@ -1283,7 +1284,7 @@ class Config
                                 "').submit();",
                             )
                         );
-                        
+
                         if ($pageCourante>1) {
                             $t->assign_vars(
                                 array(
@@ -1309,8 +1310,8 @@ class Config
                                 )
                             );
                         }
-                        
-                        
+
+
                         if ($pageCourante<$nbPagesAffichees) {
                             $t->assign_vars(
                                 array(
@@ -1334,9 +1335,9 @@ class Config
                                 )
                             );
                         }
-                        break;        
-                    
-                    
+                        break;
+
+
                     case "noformulaire":
                         /* on ne valide pas de formulaire,
                          * on fabrique simplement l'url
@@ -1351,12 +1352,12 @@ class Config
                                         array($nomParamPageCourante=>$i)
                                     )
                                 ),
-                                'onClick'=>""                            
+                                'onClick'=>""
                             )
                         );
-                        
-                        
-                        
+
+
+
                         $t->assign_vars(
                             array(
                                 'urlPremier'=>$this->creerUrl(
@@ -1377,7 +1378,7 @@ class Config
                                 'onClickDernier'=>"",
                             )
                         );
-                        
+
                         if ($pageCourante>1) {
                             $t->assign_vars(
                                 array(
@@ -1400,8 +1401,8 @@ class Config
                                 )
                             );
                         }
-                        
-                        
+
+
                         if ($pageCourante<$nbPagesAffichees) {
                             $t->assign_vars(
                                 array(
@@ -1428,7 +1429,7 @@ class Config
                         break;
                     default:
                         /* Dans ce cas le click sur un numero de page
-                         * renvoi simplement 
+                         * renvoi simplement
                          * vers la meme page avec le numero de page
                          * clicqué en parametres
                          * */
@@ -1443,8 +1444,8 @@ class Config
                             'onClick'=>''
                             )
                         );
-                        
-                        
+
+
                         $t->assign_vars(
                             array(
                                 'urlPremier'=>$this->creerUrl(
@@ -1464,7 +1465,7 @@ class Config
                                 'onClickDernier'=>"",
                             )
                         );
-                        
+
                         if ($pageCourante>1) {
                             $t->assign_vars(
                                 array(
@@ -1486,8 +1487,8 @@ class Config
                                 )
                             );
                         }
-                        
-                        
+
+
                         if ($pageCourante<$nbPagesAffichees) {
                             $t->assign_vars(
                                 array(
@@ -1519,21 +1520,21 @@ class Config
         } else {
             echo "Erreur : le nombre d'enregistrements par page est de 0.";
         }
-        
-        
+
+
         $limitSqlDebut = $nbEnregistrementsParPage * ($pageCourante-1);
-        
+
         ob_start();
         $t->pparse('pagination');
         $html=ob_get_contents();
         ob_end_clean();
-        
+
         return array('html'=>$html,'limitSqlDebut'=>$limitSqlDebut);
-    }    
-    
+    }
+
     /**
      * Affiche le calendrier
-     * 
+     *
      * @return string
      * */
     public function getPopupCalendrier()
@@ -1541,24 +1542,24 @@ class Config
         $html = '';
         $t=new Template('modules/archi/templates/');
         $t->set_filenames((array('popupDate'=>'popupChoixDate.tpl')));
-        
+
         $t->assign_vars(
             array('iframeSrc'=>$this->creerUrl(
                 '', 'afficheCalendrier', array('noHeaderNoFooter'=>'1')
             ))
         );
-                
+
         ob_start();
         $t->pparse('popupDate');
         $html=ob_get_contents();
         ob_end_clean();
-        
+
         return $html;
     }
 
     /**
      * Affiche le popup d'attente
-     * 
+     *
      * @return string
      * */
     public function getPopupAttente()
@@ -1571,24 +1572,24 @@ class Config
         $this->creerUrl('', 'affichePopupAttente', array('noHeaderNoFooter'=>1)).
         "'></iframe>";
         $divAttente.="</div>";
-        
-        
+
+
         return $divAttente;
     }
 
     /**
      * Cette fonction recense les messages d'aide par page
-     * 
+     *
      * @param string $modeAffichage Le module à afficher
-     * 
+     *
      * @return array
-     * 
+     *
      * */
     public function getHelpMessages($modeAffichage)
     {
         $help=array();
-        
-        
+
+
         switch($modeAffichage) {
         case 'helpEvenement':
             $help['msgButtonAddAdresse'] = _(
@@ -1744,7 +1745,7 @@ class Config
         default:
             break;
         }
-        
+
         return $help;
     }
 }
@@ -1755,14 +1756,14 @@ if (!function_exists('pia_mail')) {
 
     /**
      * Alias vers mail
-     * 
+     *
      * @param string $to                    Le ou les destinataires du mail
      * @param string $subject               Sujet du mail à envoyer
      * @param string $message               Message à envoyer
      * @param string $additional_headers    Chaîne à insérer à la fin
      * des en-têtes du mail
      * @param string $additional_parameters Paramètres additionnels pour la commande
-     * 
+     *
      * @return bool
      * */
     function Pia_mail (
@@ -1776,9 +1777,9 @@ if (!function_exists('pia_mail')) {
 
     /**
      * Alias vers mb_strlen
-     * 
+     *
      * @param string $str La chaîne à analyser
-     * 
+     *
      * @return int
      * */
     function Pia_strlen($str)
@@ -1788,12 +1789,12 @@ if (!function_exists('pia_mail')) {
 
     /**
      * Alias vers mb_strpos
-     * 
+     *
      * @param string $haystack La chaîne à analyser
      * @param string $needle   La chaîne à chercher dans la chaîne haystack
      * @param string $offset   Doit être spécifié pour commencer à rechercher
      * un nombre arbitraire de nombre de caractères dans une chaîne
-     * 
+     *
      * @return int
      * */
     function Pia_strpos($haystack, $needle, $offset = null)
@@ -1804,15 +1805,15 @@ if (!function_exists('pia_mail')) {
             return mb_strpos($haystack, $needle, $offset);
         }
     }
-    
+
     /**
      * Alias vers mb_strrpos
-     * 
+     *
      * @param string $haystack La chaîne à analyser
      * @param string $needle   La chaîne à chercher dans la chaîne haystack
      * @param string $offset   Doit être spécifié pour commencer à rechercher
      * un nombre arbitraire de nombre de caractères dans une chaîne
-     * 
+     *
      * @return int
      * */
     function Pia_strrpos ($haystack, $needle, $offset = null)
@@ -1826,11 +1827,11 @@ if (!function_exists('pia_mail')) {
 
     /**
      * Alias vers mb_substr
-     * 
+     *
      * @param string $string La chaîne à extraire depuis la sous-chaîne
      * @param int    $start  Position du premier caractère à utiliser depuis str
      * @param int    $length Nombre maximal de caractères à utiliser depuis str
-     * 
+     *
      * @return string
      * */
     function Pia_substr ($string, $start, $length = null)
@@ -1844,9 +1845,9 @@ if (!function_exists('pia_mail')) {
 
     /**
      * Alias vers mb_strtolower
-     * 
+     *
      * @param string $str La chaîne à mettre en minuscule
-     * 
+     *
      * @return string
      * */
     function Pia_strtolower($str)
@@ -1856,24 +1857,24 @@ if (!function_exists('pia_mail')) {
 
     /**
      * Alias vers mb_strtoupper
-     * 
+     *
      * @param string $str La chaîne à mettre en majuscule
-     * 
+     *
      * @return string
      * */
     function Pia_strtoupper($str)
     {
         return mb_strtoupper($str);
     }
-    
+
     /**
      * Alias vers mb_substr_count
-     * 
+     *
      * @param string $haystack La chaîne à analyser
      * @param string $needle   La chaîne à chercher
      * @param string $offset   ?
      * @param string $length   ?
-     * 
+     *
      * @return int
      * */
     function Pia_substrcount ($haystack, $needle, $offset = null, $length = null)
@@ -1891,11 +1892,11 @@ if (!function_exists('pia_mail')) {
 
     /**
      * Alias vers mb_ereg
-     * 
+     *
      * @param string $pattern L'expression rationnelle
      * @param string $string  La chaîne recherchée
      * @param string &$regs   Contient une sous-chaîne à chercher
-     * 
+     *
      * @return int
      * */
     function Pia_ereg ($pattern, $string, &$regs = null)
@@ -1909,11 +1910,11 @@ if (!function_exists('pia_mail')) {
 
     /**
      * Alias vers mb_eregi
-     * 
+     *
      * @param string $pattern L'expression rationnelle
      * @param string $string  La chaîne recherchée
      * @param string &$regs   Contient une sous-chaîne à chercher
-     * 
+     *
      * @return int
      * */
     function Pia_eregi ($pattern, $string, &$regs = null)
@@ -1922,30 +1923,30 @@ if (!function_exists('pia_mail')) {
             return mb_eregi($pattern, $string);
         } else {
             return mb_eregi($pattern, $string, $regs);
-        }  
+        }
     }
-    
+
     /**
      * Alias vers mb_ereg_replace
-     * 
+     *
      * @param string $pattern     L'expression rationnelle
      * @param string $replacement Le texte de substitution
      * @param string $string      La chaîne recherchée
-     * 
+     *
      * @return string
      * */
     function Pia_eregreplace($pattern, $replacement, $string)
     {
         return mb_ereg_replace($pattern, $replacement, $string);
     }
-    
+
     /**
      * Alias vers mb_eregi_replace
-     * 
+     *
      * @param string $pattern     L'expression rationnelle
      * @param string $replacement Le texte de substitution
      * @param string $string      La chaîne recherchée
-     * 
+     *
      * @return string
      * */
     function Pia_eregireplace($pattern, $replacement, $string)
@@ -1955,12 +1956,12 @@ if (!function_exists('pia_mail')) {
 
     /**
      * Alias vers mb_split
-     * 
+     *
      * @param string $pattern Le masque de l'expression rationnelle
      * @param string $string  La chaîne à scinder
      * @param int    $limit   Si le paramètre optionnel limit est spécifié,
      * la chaîne sera scindée en limit éléments au plus.
-     * 
+     *
      * @return array
      * */
     function Pia_split($pattern, $string, $limit=null)
@@ -1972,10 +1973,10 @@ if (!function_exists('pia_mail')) {
             return mb_split($pattern, $string, $limit);
         }
     }
-    
-    
+
+
     /**
-     * Print debug variable content 
+     * Print debug variable content
      * @param $variable : variable to print
      */
     function debug($variable){
