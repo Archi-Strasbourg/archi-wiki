@@ -17,7 +17,7 @@ date_default_timezone_set('Europe/Paris');
 
 require_once "includesFramework.php";
 require_once "debug.php";
-require_once "vendor/autoload.php";
+require_once __DIR__."/../../vendor/autoload.php";
 
 /**
  * Configuration du framework
