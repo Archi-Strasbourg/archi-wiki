@@ -10,7 +10,6 @@
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     https://archi-strasbourg.org/
  * */
-require_once "includes/framework/config.class.php";
 require_once 'vendor/autoload.php';
 $config = new Config();
 $path="images/placeholder.jpg";
