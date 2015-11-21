@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f0489c5e6738e96c7a6be62b1e375424",
-    "content-hash": "d2d089fee30dadb4c7f73696f31ffbff",
+    "hash": "dd0c975adb98008c31f9b57ba2f6eb44",
+    "content-hash": "27c183699bb78d797e6af0f78ab779a3",
     "packages": [
         {
             "name": "eventviva/php-image-resize",
