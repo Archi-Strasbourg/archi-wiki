@@ -137,7 +137,11 @@ class Config
      * */
     function __construct($params=array())
     {
-        include __DIR__."/config.php";
+		if (defined('CONFIG_FILE')) {
+			include CONFIG_FILE;
+		} else {
+			include __DIR__."/config.php";
+		}
         $this->variablesGet        = $_GET;
         $this->variablesPost    = $_POST;
 
