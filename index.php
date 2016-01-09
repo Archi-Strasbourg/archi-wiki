@@ -1,17 +1,17 @@
 <?php
 /**
  * Fichier d'index
- * 
+ *
  * Appelle les autres fichiers
- * 
+ *
  * PHP Version 5.3.3
- * 
+ *
  * @category General
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     https://archi-strasbourg.org/
- * 
+ *
  * */
 $countTest=0;
 
@@ -45,7 +45,7 @@ require_once 'includes/securimage/securimage.php'; // gestion du captcha
 /* 'noHeaderNoFooter' permet de ne pas retourner
  * et inclure les fichiers qui sont inutiles lors d'un appel ajax
  * */
- 
+
 session_start();
 date_default_timezone_set('Europe/Paris');
 $microstart=microtime(true);
@@ -53,10 +53,10 @@ $microstart=microtime(true);
 /*a l'appel des différentes fonctions qui retourne du javascript,
  * on va placer ce javascript dans le header ou le footer suivant les cas,
  * ce qui évite d'en avoir trop en plein milieu de la page
- * et encourage la creation de fonctions javascript 
+ * et encourage la creation de fonctions javascript
  * plutot que de mettre beaucoup de code dans les tags onclick ou onmouseover etc
  * */
-$jsHeader=""; 
+$jsHeader="";
 $jsFooter="";
 $ajaxObj = new ajaxObject();
 $config = new config();
@@ -87,7 +87,7 @@ if (!isset($_GET['noHTMLHeaderFooter'])) {
         }
         include 'modules/header/index.php';
         $footerAndHeader['header']=$header;
-    } 
+    }
     else {
     	$footerAndHeader['header']='<html>
     			<head>
@@ -116,7 +116,7 @@ if (!isset($_GET['noHTMLHeaderFooter'])) {
         }
         include 'modules/footer/index.php';
         $footerAndHeader['footer']=$footer;
-    } 
+    }
     else {
         $footerJS = "";
         if (config::getJsFooter()!='') {
