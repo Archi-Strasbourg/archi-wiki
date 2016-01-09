@@ -38,7 +38,7 @@ if (isset($_SERVER['HTTP_REFERER'])
     }
 }
 require_once "includes/framework/autoload.php";
-require 'includes/framework/config.class.php';
+require_once(__DIR__.'/vendor/autoload.php');
 require 'includes/framework/localization.php';//Traduction
 require_once 'includes/securimage/securimage.php'; // gestion du captcha
 
