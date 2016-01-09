@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "eventviva/php-image-resize",
-            "version": "1.5.0",
+            "version": "1.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eventviva/php-image-resize.git",
-                "reference": "cd5ba51c2bdd924d7c99aff6f7f1bdd7a79eb959"
+                "reference": "683a80e76908fd1c53cd2fd7f638df39d6ebfcb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eventviva/php-image-resize/zipball/cd5ba51c2bdd924d7c99aff6f7f1bdd7a79eb959",
-                "reference": "cd5ba51c2bdd924d7c99aff6f7f1bdd7a79eb959",
+                "url": "https://api.github.com/repos/eventviva/php-image-resize/zipball/683a80e76908fd1c53cd2fd7f638df39d6ebfcb5",
+                "reference": "683a80e76908fd1c53cd2fd7f638df39d6ebfcb5",
                 "shasum": ""
             },
             "require": {
@@ -49,7 +49,7 @@
                 "resize",
                 "scale"
             ],
-            "time": "2015-06-22 23:28:21"
+            "time": "2016-01-06 18:04:49"
         }
     ],
     "packages-dev": [
