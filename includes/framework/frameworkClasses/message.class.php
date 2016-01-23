@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-require_once 'includes/framework/frameworkClasses/Template.class.php';
+require_once __DIR__.'/Template.class.php';
 
 class message{
 	private $template  ;
