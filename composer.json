@@ -3,10 +3,10 @@
     "license": "GPL-3.0",
     "description": "Source code for http://archi-strasbourg.org/",
     "require": {
-        "eventviva/php-image-resize": "~1.5"
+        "eventviva/php-image-resize": "~1.5.2"
     },
     "require-dev": {
-        "symfony/var-dumper": "~2.7.5"
+        "symfony/var-dumper": "~3.0.1"
     },
     "autoload": {
         "classmap": [
