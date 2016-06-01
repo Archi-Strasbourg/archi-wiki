@@ -7,8 +7,8 @@
  * @category Script
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  Inconnue https://archi-strasbourg.org/?archiAffichage=faq
- * @link     https://archi-strasbourg.org/
+ * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
+ * @link     http://archi-wiki.org/
  * */
 require_once __DIR__.'/../includes/framework/config.class.php';
 require_once __DIR__.'/../modules/archi/includes/archiUtilisateur.class.php';

@@ -10,7 +10,7 @@
  * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  * 
  * */
  
@@ -32,7 +32,7 @@ une table de profil (administrateur, modéteur, utilisateur, internaute etc)
  * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  * 
  * */
 

@@ -10,7 +10,7 @@
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  * 
  * */
 
@@ -35,7 +35,7 @@ require_once "stringDiff/filediff.class.php";
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  * 
  * */
 

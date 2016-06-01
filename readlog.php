@@ -9,7 +9,7 @@
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  * */
 $labels = array('Date', 'Emails', 'Sujet', 'Contenu');
 if ($logfile = fopen($argv[1], 'r')) {

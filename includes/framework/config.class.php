@@ -10,7 +10,7 @@
  * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  *
  * */
 date_default_timezone_set('Europe/Paris');
@@ -29,7 +29,7 @@ require_once "debug.php";
  * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  *
  * */
 class Config

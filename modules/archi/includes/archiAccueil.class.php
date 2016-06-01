@@ -9,7 +9,7 @@
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  *
  * */
 
@@ -23,7 +23,7 @@
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  *
  * */
 class ArchiAccueil extends config

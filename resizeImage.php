@@ -7,7 +7,7 @@
  * @category General
  * @package  ArchiWiki
  * @author   Antoine Rota Graziosi - InApps / InPeople
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  * 
  * */
 require_once "includes/framework/config.class.php";

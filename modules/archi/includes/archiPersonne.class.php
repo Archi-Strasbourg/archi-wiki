@@ -8,7 +8,7 @@
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  *
  * */
 require_once __DIR__."/ArchiContenu.class.php";
@@ -22,7 +22,7 @@ require_once __DIR__."/ArchiContenu.class.php";
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  *
  * */
 class ArchiPersonne extends ArchiContenu

@@ -7,8 +7,8 @@
  * @category Script
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  Inconnue https://archi-strasbourg.org/?archiAffichage=faq
- * @link     https://archi-strasbourg.org/
+ * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
+ * @link     http://archi-wiki.org/
  *
  * */
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1

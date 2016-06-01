@@ -10,7 +10,7 @@
  * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  *
  * */
 require_once "PEAR.php";
@@ -26,7 +26,7 @@ require_once "HTML/BBCodeParser2.php";
  * @author   Laurent Dorer <laurent_dorer@yahoo.fr>
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @link     http://archi-wiki.org/
  *
  * */
 class BBCodeObject extends config

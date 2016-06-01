@@ -9,7 +9,7 @@
  * @category Script
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  Inconnue http://archi-wiki.org/?archiAffichage=faq
+ * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     http://archi-wiki.org/
  *
  * */

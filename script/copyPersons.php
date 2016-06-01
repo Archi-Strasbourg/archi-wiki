@@ -7,8 +7,8 @@
  * @category General
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license GNU GPL v3 https://www.gnu.org/licenses/gpl.html
- * @link     https://archi-strasbourg.org/
+ * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
+ * @link     http://archi-wiki.org/
  *
  * */
 require_once "includes/framework/config.class.php";

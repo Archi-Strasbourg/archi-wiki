@@ -7,8 +7,8 @@
  * @category Admin
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  Inconnue https://archi-strasbourg.org/?archiAffichage=faq
- * @link     https://archi-strasbourg.org/
+ * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
+ * @link     http://archi-wiki.org/
  * 
  * */
 echo "<h2>"._("Gestion des pages")."</h2>";
