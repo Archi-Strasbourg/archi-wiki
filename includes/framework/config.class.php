@@ -36,14 +36,14 @@ class Config
 {
 
 
-	protected $bdd_host;
-	protected $bdd_user; //"root";
-	protected $bdd_password;
-	protected $bdd_name;
-	protected $adminPass;
+    protected $bdd_host;
+    protected $bdd_user; //"root";
+    protected $bdd_password;
+    protected $bdd_name;
+    protected $adminPass;
 
 
-	public $langs=array('fr_FR', 'de_DE', 'en_US');
+    public $langs=array('fr_FR', 'de_DE', 'en_US');
 
     static $default_lang = "fr_FR";
 
@@ -135,19 +135,21 @@ class Config
      *
      * @return void
      * */
-    function __construct($params=array())
+    function __construct($params = array())
     {
-		if (defined('CONFIG_FILE')) {
-			include CONFIG_FILE;
-		} else {
-			include __DIR__."/config.php";
-		}
+        if (defined('CONFIG_FILE')) {
+            include CONFIG_FILE;
+        } else {
+            include __DIR__."/config.php";
+        }
         $this->variablesGet        = $_GET;
         $this->variablesPost    = $_POST;
 
         $this->connexionBdd = new connexionBdd(
-            $this->bdd_name, $this->bdd_host,
-            $this->bdd_user, $this->bdd_password
+            $this->bdd_name,
+            $this->bdd_host,
+            $this->bdd_user,
+            $this->bdd_password
         );
         $this->session               = new objetSession();
         $this->date                   = new dateObject();
@@ -173,7 +175,7 @@ class Config
      *
      * @return void
      * */
-    public function addToJsFooter($js="")
+    public function addToJsFooter($js = "")
     {
         self::$_jsFooter.=$js;
     }
@@ -185,7 +187,7 @@ class Config
      *
      * @return void
      * */
-    public function addToJsHeader($js="")
+    public function addToJsHeader($js = "")
     {
         self::$_jsHeader.=$js;
     }
@@ -288,7 +290,7 @@ class Config
      *
      * @return string
      * */
-    public function getUrlImage($size="", $name="")
+    public function getUrlImage($size = "", $name = "")
     {
         if (!empty($size)) {
             $size.="/";
@@ -303,7 +305,7 @@ class Config
      *
      * @return string
      * */
-    public function getCheminPhysiqueImage($size="")
+    public function getCheminPhysiqueImage($size = "")
     {
         if (!empty($size)) {
             $size.="/";
@@ -323,7 +325,11 @@ class Config
      * @return string
      * */
     public function creerUrl(
-        $action= null, $affichage = null, $autre = array(), $keep=false, $clean=true
+        $action = null,
+        $affichage = null,
+        $autre = array(),
+        $keep = false,
+        $clean = true
     ) {
         $string = new stringObject();
         $amp=$clean?"&amp;":"&";
@@ -351,9 +357,9 @@ class Config
 
         if (is_array($autre) && count($autre)>0) {
             $i = 0;
-            foreach ($autre AS $nom => $val) {
+            foreach ($autre as $nom => $val) {
                 if (is_array($val)) {
-                    foreach ($val AS $case) {
+                    foreach ($val as $case) {
                         if ($url_existe == true) {
                             $url .= $amp;
                         }
@@ -468,7 +474,8 @@ class Config
         ) {
             $adresse = new archiAdresse();
             $intituleRue = $adresse->getIntituleAdresseFrom(
-                $autre['recherche_rue'], 'idRue'
+                $autre['recherche_rue'],
+                'idRue'
             );
             $url = "rue-".$string->convertStringToUrlRewrite(trim($intituleRue)).
             "-".$autre['recherche_rue'].".html";
@@ -485,7 +492,8 @@ class Config
         ) {
             $adresse = new archiAdresse();
             $intituleRue = $adresse->getIntituleAdresseFrom(
-                $autre['archiIdQuartier'], 'idQuartier'
+                $autre['archiIdQuartier'],
+                'idQuartier'
             );
             $url = "quartier-".
             $string->convertStringToUrlRewrite(trim($intituleRue)).
@@ -503,7 +511,8 @@ class Config
         ) {
             $adresse = new archiAdresse();
             $intituleRue = $adresse->getIntituleAdresseFrom(
-                $autre['recherche_quartier'], 'idQuartier'
+                $autre['recherche_quartier'],
+                'idQuartier'
             );
             $url = "quartier-".
             $string->convertStringToUrlRewrite(trim($intituleRue)).
@@ -517,7 +526,8 @@ class Config
         ) {
             $adresse = new archiAdresse();
             $intituleRue = $adresse->getIntituleAdresseFrom(
-                $autre['recherche_ville'], 'idVille'
+                $autre['recherche_ville'],
+                'idVille'
             );
             $url = "ville-".$string->convertStringToUrlRewrite(trim($intituleRue)).
             "-".$autre['recherche_ville'].".html";
@@ -532,7 +542,8 @@ class Config
         ) {
             $adresse = new archiAdresse();
             $intituleRue = $adresse->getIntituleAdresseFrom(
-                $autre['recherche_rue'], 'idRue'
+                $autre['recherche_rue'],
+                'idRue'
             );
             $url = "rue-adresses-".
             $string->convertStringToUrlRewrite(trim($intituleRue)).
@@ -545,7 +556,8 @@ class Config
         ) {
             $adresse = new archiAdresse();
             $intituleRue = $adresse->getIntituleAdresseFrom(
-                $autre['recherche_rue'], 'idRue'
+                $autre['recherche_rue'],
+                'idRue'
             );
             $url = "rue-".$string
                 ->convertStringToUrlRewrite(trim($intituleRue)).
@@ -659,8 +671,6 @@ class Config
             $autre['archiPageCouranteVille']."-".
             $autre['modeAffichageListe']."-lettre".
             $autre['lettreCourante'].".html";
-
-
         }
 
 
@@ -982,7 +992,6 @@ class Config
             && isset($autre['archiRetourIdName'])
             && isset($autre['archiIdAdresse'])
         ) {
-
             $libelleAdresse = "";
             if ($autre['archiIdAdresse']!='') {
                 $adresse = new archiAdresse();
@@ -992,7 +1001,6 @@ class Config
                     ->getIntituleAdresse($fetchAdresse);
                 $libelleAdresse = $string
                     ->convertStringToUrlRewrite($libelleAdresse);
-
             }
 
             if ($libelleAdresse != '') {
@@ -1171,7 +1179,7 @@ class Config
      *
      * @return array
      * */
-    public function pagination($parametres=array())
+    public function pagination($parametres = array())
     {
         $html = '';
         $t=new Template($this->getCheminPhysique().$this->cheminTemplates);
@@ -1234,20 +1242,21 @@ class Config
                 }
             }
 
-            for ($i=$premierePage ; $i<=$nbPagesAffichees ; $i++) {
+            for ($i=$premierePage; $i<=$nbPagesAffichees; $i++) {
                 $t->assign_block_vars('pages', array('numero'=>$i));
                 if ($i!=$pageCourante) {
-                    switch($typeLiens) {
-                    case "formulaire":
-                        /* Dans ce cas, on valide le formulaire dont l'ID
-                         * est passé en parametres et on passe l'id
-                         * dans un champs a cet effet
-                         * */
-                         /*$this->creerUrl('','', array_merge($this->variablesGet,
-                          * array('archiPageSource'=>$i))),
-                          * */
-                        $t->assign_block_vars(
-                            'pages.isNotPageCourante', array(
+                    switch ($typeLiens) {
+                        case "formulaire":
+                            /* Dans ce cas, on valide le formulaire dont l'ID
+                             * est passé en parametres et on passe l'id
+                             * dans un champs a cet effet
+                             * */
+                             /*$this->creerUrl('','', array_merge($this->variablesGet,
+                              * array('archiPageSource'=>$i))),
+                              * */
+                            $t->assign_block_vars(
+                                'pages.isNotPageCourante',
+                                array(
                                 'url'=>"#",
                                 'onClick'=>"document.getElementById('".
                                 $parametres['champPageCourante'].
@@ -1259,10 +1268,10 @@ class Config
                                 "';document.getElementById('".
                                 $parametres['idFormulaire'].
                                 "').submit();"
-                            )
-                        );
-                        $t->assign_vars(
-                            array(
+                                )
+                            );
+                            $t->assign_vars(
+                                array(
                                 'urlPremier'=>'#',
                                 'onClickPremier'=>"document.getElementById('".
                                 $parametres['champPageCourante'].
@@ -1285,12 +1294,12 @@ class Config
                                 "';document.getElementById('".
                                 $parametres['idFormulaire'].
                                 "').submit();",
-                            )
-                        );
+                                )
+                            );
 
-                        if ($pageCourante>1) {
-                            $t->assign_vars(
-                                array(
+                            if ($pageCourante>1) {
+                                $t->assign_vars(
+                                    array(
                                     'urlPrecedent'=>'#',
                                     'onClickPrecedent'=>"document.getElementById('".
                                     $parametres['champPageCourante'].
@@ -1303,21 +1312,21 @@ class Config
                                     "';document.getElementById('".
                                     $parametres['idFormulaire'].
                                     "').submit();"
-                                )
-                            );
-                        } else {
-                            $t->assign_vars(
-                                array(
+                                    )
+                                );
+                            } else {
+                                $t->assign_vars(
+                                    array(
                                     'urlPrecedent'=>'#',
                                     'onClickPrecedent'=>''
-                                )
-                            );
-                        }
+                                    )
+                                );
+                            }
 
 
-                        if ($pageCourante<$nbPagesAffichees) {
-                            $t->assign_vars(
-                                array(
+                            if ($pageCourante<$nbPagesAffichees) {
+                                $t->assign_vars(
+                                    array(
                                     'urlSuivant'=>'#',
                                     'onClickSuivant'=>"document.getElementById('".
                                     $parametres['champPageCourante']."').value='".
@@ -1328,43 +1337,45 @@ class Config
                                     "';document.getElementById('".
                                     $parametres['idFormulaire'].
                                     "').submit();"
-                                )
-                            );
-                        } else {
-                            $t->assign_vars(
-                                array(
+                                    )
+                                );
+                            } else {
+                                $t->assign_vars(
+                                    array(
                                     'urlSuivant'=>'#',
                                     'onClickSuivant'=>''
-                                )
-                            );
-                        }
-                        break;
+                                    )
+                                );
+                            }
+                            break;
 
 
-                    case "noformulaire":
-                        /* on ne valide pas de formulaire,
-                         * on fabrique simplement l'url
-                         * */
-                        $t->assign_block_vars(
-                            'pages.isNotPageCourante',
-                            array(
+                        case "noformulaire":
+                            /* on ne valide pas de formulaire,
+                             * on fabrique simplement l'url
+                             * */
+                            $t->assign_block_vars(
+                                'pages.isNotPageCourante',
+                                array(
                                 'url'=>$this->creerUrl(
-                                    '', '',
+                                    '',
+                                    '',
                                     array_merge(
                                         $this->variablesGet,
                                         array($nomParamPageCourante=>$i)
                                     )
                                 ),
                                 'onClick'=>""
-                            )
-                        );
+                                )
+                            );
 
 
 
-                        $t->assign_vars(
-                            array(
+                            $t->assign_vars(
+                                array(
                                 'urlPremier'=>$this->creerUrl(
-                                    '', '',
+                                    '',
+                                    '',
                                     array_merge(
                                         $this->variablesGet,
                                         array($nomParamPageCourante=>'1')
@@ -1372,21 +1383,23 @@ class Config
                                 ),
                                 'onClickPremier'=>'',
                                 'urlDernier'=>$this->creerUrl(
-                                    '', '',
+                                    '',
+                                    '',
                                     array_merge(
                                         $this->variablesGet,
                                         array($nomParamPageCourante=>$nbPages)
                                     )
                                 ),
                                 'onClickDernier'=>"",
-                            )
-                        );
+                                )
+                            );
 
-                        if ($pageCourante>1) {
-                            $t->assign_vars(
-                                array(
+                            if ($pageCourante>1) {
+                                $t->assign_vars(
+                                    array(
                                     'urlPrecedent'=>$this->creerUrl(
-                                        '', '',
+                                        '',
+                                        '',
                                         array_merge(
                                             $this->variablesGet,
                                             array($nomParamPageCourante=>
@@ -1394,86 +1407,96 @@ class Config
                                         )
                                     ),
                                     'onClickPrecedent'=>""
-                                )
-                            );
-                        } else {
-                            $t->assign_vars(
-                                array(
+                                    )
+                                );
+                            } else {
+                                $t->assign_vars(
+                                    array(
                                     'urlPrecedent'=>'#',
                                     'onClickPrecedent'=>''
-                                )
-                            );
-                        }
+                                    )
+                                );
+                            }
 
 
-                        if ($pageCourante<$nbPagesAffichees) {
-                            $t->assign_vars(
-                                array(
+                            if ($pageCourante<$nbPagesAffichees) {
+                                $t->assign_vars(
+                                    array(
                                     'urlSuivant'=>$this->creerUrl(
-                                        '', '', array_merge(
+                                        '',
+                                        '',
+                                        array_merge(
                                             $this->variablesGet,
                                             array(
-                                                $nomParamPageCourante=>
-                                                ($pageCourante+1)
+                                            $nomParamPageCourante=>
+                                            ($pageCourante+1)
                                             )
                                         )
                                     ),
                                     'onClickSuivant'=>""
-                                )
-                            );
-                        } else {
-                            $t->assign_vars(
-                                array(
+                                    )
+                                );
+                            } else {
+                                $t->assign_vars(
+                                    array(
                                     'urlSuivant'=>'#',
                                     'onClickSuivant'=>''
+                                    )
+                                );
+                            }
+                            break;
+                        default:
+                            /* Dans ce cas le click sur un numero de page
+                             * renvoi simplement
+                             * vers la meme page avec le numero de page
+                             * clicqué en parametres
+                             * */
+                            $t->assign_block_vars(
+                                'pages.isNotPageCourante',
+                                array(
+                                'url'=>$this->creerUrl(
+                                    '',
+                                    '',
+                                    array_merge(
+                                        $this->variablesGet,
+                                        array('archiPageSource'=>$i)
+                                    )
+                                ),
+                                'onClick'=>''
                                 )
                             );
-                        }
-                        break;
-                    default:
-                        /* Dans ce cas le click sur un numero de page
-                         * renvoi simplement
-                         * vers la meme page avec le numero de page
-                         * clicqué en parametres
-                         * */
-                        $t->assign_block_vars(
-                            'pages.isNotPageCourante',
-                            array(
-                            'url'=>$this->creerUrl(
-                                '', '', array_merge(
-                                    $this->variablesGet, array('archiPageSource'=>$i)
-                                )
-                            ),
-                            'onClick'=>''
-                            )
-                        );
 
 
-                        $t->assign_vars(
-                            array(
+                            $t->assign_vars(
+                                array(
                                 'urlPremier'=>$this->creerUrl(
-                                    '', '', array_merge(
+                                    '',
+                                    '',
+                                    array_merge(
                                         $this->variablesGet,
                                         array('archiPageSource'=>'1')
                                     )
                                 ),
                                 'onClickPremier'=>'',
                                 'urlDernier'=>$this->creerUrl(
-                                    '', '',
+                                    '',
+                                    '',
                                     array_merge(
                                         $this->variablesGet,
                                         array('archiPageSource'=>$nbPages)
                                     )
                                 ),
                                 'onClickDernier'=>"",
-                            )
-                        );
+                                )
+                            );
 
-                        if ($pageCourante>1) {
-                            $t->assign_vars(
-                                array(
+                            if ($pageCourante>1) {
+                                $t->assign_vars(
+                                    array(
                                     'urlPrecedent'=>$this->creerUrl(
-                                        '', '', array_merge(
+                                        '',
+                                        '',
+                                        array_merge(
                                             $this->variablesGet,
                                             array(
                                                 'archiPageSource'=>($pageCourante-1)
@@ -1481,40 +1504,42 @@ class Config
                                         )
                                     ),
                                     'onClickPrecedent'=>"")
-                            );
-                        } else {
-                            $t->assign_vars(
-                                array(
+                                );
+                            } else {
+                                $t->assign_vars(
+                                    array(
                                     'urlPrecedent'=>'#',
                                     'onClickPrecedent'=>''
-                                )
-                            );
-                        }
+                                    )
+                                );
+                            }
 
 
-                        if ($pageCourante<$nbPagesAffichees) {
-                            $t->assign_vars(
-                                array(
+                            if ($pageCourante<$nbPagesAffichees) {
+                                $t->assign_vars(
+                                    array(
                                     'urlSuivant'=>$this->creerUrl(
-                                        '', '', array_merge(
+                                        '',
+                                        '',
+                                        array_merge(
                                             $this->variablesGet,
                                             array(
-                                                'archiPageSource'=>($pageCourante+1)
+                                            'archiPageSource'=>($pageCourante+1)
                                             )
                                         )
                                     ),
                                     'onClickSuivant'=>""
-                                )
-                            );
-                        } else {
-                            $t->assign_vars(
-                                array(
+                                    )
+                                );
+                            } else {
+                                $t->assign_vars(
+                                    array(
                                     'urlSuivant'=>'#',
                                     'onClickSuivant'=>''
-                                )
-                            );
-                        }
-                        break;
+                                    )
+                                );
+                            }
+                            break;
                     }
                 } else {
                     $t->assign_block_vars('pages.isPageCourante', array());
@@ -1548,7 +1573,9 @@ class Config
 
         $t->assign_vars(
             array('iframeSrc'=>$this->creerUrl(
-                '', 'afficheCalendrier', array('noHeaderNoFooter'=>'1')
+                '',
+                'afficheCalendrier',
+                array('noHeaderNoFooter'=>'1')
             ))
         );
 
@@ -1593,160 +1620,160 @@ class Config
         $help=array();
 
 
-        switch($modeAffichage) {
-        case 'helpEvenement':
-            $help['msgButtonAddAdresse'] = _(
-                "Ajouter une adresse"
-            );
-            $help['msgButtonDeleteAdresse'] = _(
-                "Retirer la dernière adresse"
-            );
-            $help['msgVille'] = _(
-                "Choisissez la ville"
-            );
-            $help['msgQuartier'] = _(
-                "Choisissez un quartier appartenant à la ville selectionnée"
-            );
-            $help['msgSousQuartier'] = _(
-                "Vous pouvez affiner en choisissant un sous quartier"
-            );
-            $help['msgRue'] = _(
-                "Choisissez la rue et le numéro de l’adresse ".
-                "dont vous voulez parler"
-            );
-            $help['msgLibelle'] = _(
-                "Vous pouvez préciser un titre pour votre article"
-            );
-            $help['msgGras'] = _(
-                "Selectionnez une partie de votre texte et cliquez ".
-                "sur ce bouton pour mettre le texte en gras"
-            );
-            $help['msgItalic'] = _(
-                "Selectionnez une partie de votre texte et cliquez ".
-                "sur ce bouton pour mettre le texte en italique"
-            );
-            $help['msgUnderline'] = _(
-                "Selectionnez une partie de votre texte et cliquez ".
-                "sur ce bouton pour souligner le texte selectionné"
-            );
-            $help['msgQuotes'] = _(
-                "Sélectionnez une partie de texte à mettre entre cotes ".
-                "et cliquez sur ce bouton"
-            );
-            $help['msgCode'] = _(
-                "Vous pouvez utiliser ce bouton pour insérer du code"
-            );
-            $help['msgUrl'] = _(
-                "Insérer une adresse WEB"
-            );
-            $help['msgIFrame'] = _(
-                "Insérer une adresse WEB (exemple : vidéo)"
-            );
-            $help['msgDescription'] = _(
-                "Texte de votre article"
-            );
-            $help['msgDateDebut'] = _(
-                "Datez votre article : vous pouvez préciser ".
-                "une date de plusieurs manières.".PHP_EOL."Exemple : ".
-                "Une année 1900".PHP_EOL."Un mois et une année 03/2008".
-                PHP_EOL."Avec le jour 02/08/2008"
-            );
-            $help['msgDateFin'] = _(
-                "Datez votre article : vous pouvez préciser ".
-                "une date de plusieurs manières".
-                PHP_EOL."Exemple : ".PHP_EOL."Une année 1900".PHP_EOL.
-                "Un mois et une année 03/2008".PHP_EOL."Avec le jour 02/08/2008"
-            );
-            $help['msgSource'] = _(
-                "Vous pouvez préciser une source à partir de laquelle ".
-                "vous vous êtes inspiré pour écrire votre article"
-            );
-            $help['msgStructure'] = _(
-                "Précisez le type de structure dont vous parlez"
-            );
-            $help['msgTypeEvenement'] = _(
-                "Précisez quel est le type de l’évènement lié à votre article"
-            );
-            $help['msgISMH'] = _(
-                "Le bâtiment est-il inscrit à l’Inventaire ".
-                "Supplémentaire des Monuments Historiques"
-            );
-            $help['msgMH'] = _(
-                "Le bâtiment est-il inscrit au Monuments Historiques"
-            );
-            $help['msgNbEtages'] = _(
-                "Nombre d’étages du bâtiment"
-            );
-            $help['msgCourantArchitectural'] = _(
-                "Vous pouvez préciser le courant architectural du bâtiment"
-            );
-            $help['msgPersonne'] = _(
-                "Précisez si une personnalité est liée à l’évènement ".
-                "en cliquant sur choisir".PHP_EOL.
-                "Cliquez sur une personne de la liste ".
-                "pour la retirer de la liste."
-            );
-            $help['msgValidation'] = _(
-                "Validez votre article"
-            );
-            $help['msgNumeroArchive'] = _(
-                "Renseignez dans cette case le numéro d’archive ".
-                "fourni par les archives municipales si vous le connaissez. ".
-                "Exemple : 44W250"
-            );
-            break;
-        case 'helpAdresse':
-            $help['msgButtonAddAdresse'] = _(
-                "Ajouter une adresse"
-            );
-            $help['msgButtonDeleteAdresse'] = _(
-                "Retirer la dernière adresse"
-            );
-            $help['msgVille'] = _(
-                "Choisissez la ville"
-            );
-            $help['msgQuartier'] = _(
-                "Choisissez un quartier appartenant à la ville selectionnée"
-            );
-            $help['msgSousQuartier'] = _(
-                "Vous pouvez affiner en choisissant un sous quartier"
-            );
-            $help['msgRue'] = _(
-                "Choisissez la rue ".
-                "et le numéro de l’adresse dont vous voulez parler"
-            );
-            $help['msgValidation'] = _(
-                "Validez votre saisie"
-            );
-            break;
-        case 'helpImage':
-            $help['msgButtonNom'] = _(
-                "Donnez un intitulé à la photo"
-            );
-            $help['msgButtonDescription'] = _(
-                "Donnez une description de l’image"
-            );
-            $help['msgButtonDatePriseDeVue'] = _(
-                "Précisez la date de la prise de vue de la photo"
-            );
-            $help['msgButtonDateUpload'] = _(
-                "Date à laquelle la photo à été chargé sur le site"
-            );
-            $help['msgButtonSource'] = _(
-                "Vous pouvez préciser la source de la photo"
-            );
-            $help['msgEvenementsLies'] = _(
-                "Voici la liste des évènements auxquels est liée l’image"
-            );
-            $help['msgButtonRemplacer'] = _(
-                "Vous pouvez charger une autre image pour remplacer celle-ci"
-            );
-            $help['msgButtonNumeroArchive'] = _(
-                "Vous pouvez préciser le numéro d’archive sur la photo courante."
-            );
-            break;
-        default:
-            break;
+        switch ($modeAffichage) {
+            case 'helpEvenement':
+                $help['msgButtonAddAdresse'] = _(
+                    "Ajouter une adresse"
+                );
+                $help['msgButtonDeleteAdresse'] = _(
+                    "Retirer la dernière adresse"
+                );
+                $help['msgVille'] = _(
+                    "Choisissez la ville"
+                );
+                $help['msgQuartier'] = _(
+                    "Choisissez un quartier appartenant à la ville selectionnée"
+                );
+                $help['msgSousQuartier'] = _(
+                    "Vous pouvez affiner en choisissant un sous quartier"
+                );
+                $help['msgRue'] = _(
+                    "Choisissez la rue et le numéro de l’adresse ".
+                    "dont vous voulez parler"
+                );
+                $help['msgLibelle'] = _(
+                    "Vous pouvez préciser un titre pour votre article"
+                );
+                $help['msgGras'] = _(
+                    "Selectionnez une partie de votre texte et cliquez ".
+                    "sur ce bouton pour mettre le texte en gras"
+                );
+                $help['msgItalic'] = _(
+                    "Selectionnez une partie de votre texte et cliquez ".
+                    "sur ce bouton pour mettre le texte en italique"
+                );
+                $help['msgUnderline'] = _(
+                    "Selectionnez une partie de votre texte et cliquez ".
+                    "sur ce bouton pour souligner le texte selectionné"
+                );
+                $help['msgQuotes'] = _(
+                    "Sélectionnez une partie de texte à mettre entre cotes ".
+                    "et cliquez sur ce bouton"
+                );
+                $help['msgCode'] = _(
+                    "Vous pouvez utiliser ce bouton pour insérer du code"
+                );
+                $help['msgUrl'] = _(
+                    "Insérer une adresse WEB"
+                );
+                $help['msgIFrame'] = _(
+                    "Insérer une adresse WEB (exemple : vidéo)"
+                );
+                $help['msgDescription'] = _(
+                    "Texte de votre article"
+                );
+                $help['msgDateDebut'] = _(
+                    "Datez votre article : vous pouvez préciser ".
+                    "une date de plusieurs manières.".PHP_EOL."Exemple : ".
+                    "Une année 1900".PHP_EOL."Un mois et une année 03/2008".
+                    PHP_EOL."Avec le jour 02/08/2008"
+                );
+                $help['msgDateFin'] = _(
+                    "Datez votre article : vous pouvez préciser ".
+                    "une date de plusieurs manières".
+                    PHP_EOL."Exemple : ".PHP_EOL."Une année 1900".PHP_EOL.
+                    "Un mois et une année 03/2008".PHP_EOL."Avec le jour 02/08/2008"
+                );
+                $help['msgSource'] = _(
+                    "Vous pouvez préciser une source à partir de laquelle ".
+                    "vous vous êtes inspiré pour écrire votre article"
+                );
+                $help['msgStructure'] = _(
+                    "Précisez le type de structure dont vous parlez"
+                );
+                $help['msgTypeEvenement'] = _(
+                    "Précisez quel est le type de l’évènement lié à votre article"
+                );
+                $help['msgISMH'] = _(
+                    "Le bâtiment est-il inscrit à l’Inventaire ".
+                    "Supplémentaire des Monuments Historiques"
+                );
+                $help['msgMH'] = _(
+                    "Le bâtiment est-il inscrit au Monuments Historiques"
+                );
+                $help['msgNbEtages'] = _(
+                    "Nombre d’étages du bâtiment"
+                );
+                $help['msgCourantArchitectural'] = _(
+                    "Vous pouvez préciser le courant architectural du bâtiment"
+                );
+                $help['msgPersonne'] = _(
+                    "Précisez si une personnalité est liée à l’évènement ".
+                    "en cliquant sur choisir".PHP_EOL.
+                    "Cliquez sur une personne de la liste ".
+                    "pour la retirer de la liste."
+                );
+                $help['msgValidation'] = _(
+                    "Validez votre article"
+                );
+                $help['msgNumeroArchive'] = _(
+                    "Renseignez dans cette case le numéro d’archive ".
+                    "fourni par les archives municipales si vous le connaissez. ".
+                    "Exemple : 44W250"
+                );
+                break;
+            case 'helpAdresse':
+                $help['msgButtonAddAdresse'] = _(
+                    "Ajouter une adresse"
+                );
+                $help['msgButtonDeleteAdresse'] = _(
+                    "Retirer la dernière adresse"
+                );
+                $help['msgVille'] = _(
+                    "Choisissez la ville"
+                );
+                $help['msgQuartier'] = _(
+                    "Choisissez un quartier appartenant à la ville selectionnée"
+                );
+                $help['msgSousQuartier'] = _(
+                    "Vous pouvez affiner en choisissant un sous quartier"
+                );
+                $help['msgRue'] = _(
+                    "Choisissez la rue ".
+                    "et le numéro de l’adresse dont vous voulez parler"
+                );
+                $help['msgValidation'] = _(
+                    "Validez votre saisie"
+                );
+                break;
+            case 'helpImage':
+                $help['msgButtonNom'] = _(
+                    "Donnez un intitulé à la photo"
+                );
+                $help['msgButtonDescription'] = _(
+                    "Donnez une description de l’image"
+                );
+                $help['msgButtonDatePriseDeVue'] = _(
+                    "Précisez la date de la prise de vue de la photo"
+                );
+                $help['msgButtonDateUpload'] = _(
+                    "Date à laquelle la photo à été chargé sur le site"
+                );
+                $help['msgButtonSource'] = _(
+                    "Vous pouvez préciser la source de la photo"
+                );
+                $help['msgEvenementsLies'] = _(
+                    "Voici la liste des évènements auxquels est liée l’image"
+                );
+                $help['msgButtonRemplacer'] = _(
+                    "Vous pouvez charger une autre image pour remplacer celle-ci"
+                );
+                $help['msgButtonNumeroArchive'] = _(
+                    "Vous pouvez préciser le numéro d’archive sur la photo courante."
+                );
+                break;
+            default:
+                break;
         }
 
         return $help;
@@ -1769,12 +1796,19 @@ if (!function_exists('pia_mail')) {
      *
      * @return bool
      * */
-    function Pia_mail (
-        $to, $subject, $message,
-        $additional_headers = null, $additional_parameters = null
+    function Pia_mail(
+        $to,
+        $subject,
+        $message,
+        $additional_headers = null,
+        $additional_parameters = null
     ) {
         return mail(
-            $to, $subject, $message, $additional_headers, $additional_parameters
+            $to,
+            $subject,
+            $message,
+            $additional_headers,
+            $additional_parameters
         );
     }
 
@@ -1819,7 +1853,7 @@ if (!function_exists('pia_mail')) {
      *
      * @return int
      * */
-    function Pia_strrpos ($haystack, $needle, $offset = null)
+    function Pia_strrpos($haystack, $needle, $offset = null)
     {
         if (!isset($offset)) {
             return mb_strrpos($haystack, $needle);
@@ -1837,7 +1871,7 @@ if (!function_exists('pia_mail')) {
      *
      * @return string
      * */
-    function Pia_substr ($string, $start, $length = null)
+    function Pia_substr($string, $start, $length = null)
     {
         if (!isset($length)) {
             return mb_substr($string, $start);
@@ -1880,7 +1914,7 @@ if (!function_exists('pia_mail')) {
      *
      * @return int
      * */
-    function Pia_substrcount ($haystack, $needle, $offset = null, $length = null)
+    function Pia_substrcount($haystack, $needle, $offset = null, $length = null)
     {
         if (!isset($offset)) {
             return mb_substr_count($haystack, $needle);
@@ -1902,7 +1936,7 @@ if (!function_exists('pia_mail')) {
      *
      * @return int
      * */
-    function Pia_ereg ($pattern, $string, &$regs = null)
+    function Pia_ereg($pattern, $string, &$regs = null)
     {
         if (!isset($regs)) {
             return mb_ereg($pattern, $string);
@@ -1920,7 +1954,7 @@ if (!function_exists('pia_mail')) {
      *
      * @return int
      * */
-    function Pia_eregi ($pattern, $string, &$regs = null)
+    function Pia_eregi($pattern, $string, &$regs = null)
     {
         if (!isset($regs)) {
             return mb_eregi($pattern, $string);
@@ -1967,7 +2001,7 @@ if (!function_exists('pia_mail')) {
      *
      * @return array
      * */
-    function Pia_split($pattern, $string, $limit=null)
+    function Pia_split($pattern, $string, $limit = null)
     {
         //array mb_split ( string $pattern , string $string [, int $limit = -1 ] )
         if (!isset($limit)) {
@@ -1982,12 +2016,12 @@ if (!function_exists('pia_mail')) {
      * Print debug variable content
      * @param $variable : variable to print
      */
-    function debug($variable){
-    	$backtrace = debug_backtrace();
-    	print_r("Line <strong>".$backtrace[0]['line']."</strong> on file : " . $backtrace[0]['file']);
-    	echo "<pre>";
-    	print_r($variable);
-    	echo "</pre>";
+    function debug($variable)
+    {
+        $backtrace = debug_backtrace();
+        print_r("Line <strong>".$backtrace[0]['line']."</strong> on file : " . $backtrace[0]['file']);
+        echo "<pre>";
+        print_r($variable);
+        echo "</pre>";
     }
 }
-?>
