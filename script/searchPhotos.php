@@ -11,7 +11,7 @@ class connex extends config
 	public $connex;
 	function __construct()
 	{
-		parent::__construct();	
+		parent::__construct();
 		$this->connex = $this->connexionBdd;
 	}
 }
@@ -29,7 +29,7 @@ $req ="
 		GROUP BY hi1.idImage, hi1.idHistoriqueImage
 		HAVING hi1.idHistoriqueImage = max(hi2.idHistoriqueImage)
 		";
-		
+
 $res = $connexionBdd->connex->requete($req);
 $nbImageManquante=0;
 while($fetch = mysql_fetch_assoc($res))

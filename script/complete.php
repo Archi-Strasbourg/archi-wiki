@@ -1,7 +1,7 @@
 <?php
-// recuperation du fichier a partir de la liste et du repertoire identifié par iddossier
+// recuperation du fichier a partir de la liste et du repertoire identifiÃ© par iddossier
 // recherche de la date dans la base de donnee archiv2, enregistrements dans les repertoires en redimensionnant avec
-// comme nom idHistoriqueImage 
+// comme nom idHistoriqueImage
 
 ini_set ('max_execution_time', 0);
 include('PEAR.php');
@@ -14,10 +14,10 @@ class connex extends config
 	public $connex;
 	public $connectOld;
 	public $connectNEW;
-	
+
 	function __construct()
 	{
-		parent::__construct();	
+		parent::__construct();
 		//$this->connex = $this->connexionBdd;
 		$connect0 = mysql_connect("localhost","archiv2","fd89ind") or die("probleme connexion0");
 		$connect = mysql_connect("localhost","archiv2","fd89ind",true) or die("probleme connexion");
@@ -25,20 +25,20 @@ class connex extends config
 		mysql_select_db("archi_old", $connect) or die("select db archiold");
 		$this->connectOLD = $connect;
 		$this->connectNEW = $connect0;
-		
+
 	}
-	
+
 	function requeteNew($req)
 	{
 		return mysql_query($req, $this->connectNEW);
 	}
-	
+
 	function requeteOld($req)
 	{
 		return mysql_query($req, $this->connectOLD);
 	}
-	
-	
+
+
 }
 /*
 $cheminImagesArchiv1 = '/home/laurent/public_html/archilaurent/photos/originaux/';
@@ -63,11 +63,11 @@ if(isset($_POST["iddossier"]) && isset($_POST["lister"]))
 {
 	$Directory = $cheminImagesArchiv1.$_POST["iddossier"]."/";
 
-	if (is_dir($Directory) && is_readable($Directory)) 
+	if (is_dir($Directory) && is_readable($Directory))
 	{
-		if($MyDirectory = opendir($Directory)) 
+		if($MyDirectory = opendir($Directory))
 		{
-			while($Entry = readdir($MyDirectory)) 
+			while($Entry = readdir($MyDirectory))
 			{
 				if($Entry!='.' && $Entry!='..')
 				{
@@ -102,19 +102,19 @@ $connex = new connex();
 				if(isset($_POST["nomFichier"]) && $_POST["nomFichier"]!="")
 				{
 					echo "nomFichier a transferer : ".$_POST["nomFichier"]."<br>";
-					
+
 					$fichierSource = $cheminImagesArchiv1.$_POST['iddossier']."/".$_POST['nomFichier'];
-					
+
 					$dateUpload = $fetchDate["dateUpload"];
 					$typeFichier = pia_substr(strtolower($fichierSource),-3);
 					$idHistoriqueImage = $_POST["idHistoriqueImage"];
-					
-					
+
+
 					echo "fichierSource = ".$fichierSource."<br>";
 					echo "destination = ".$i->cheminPhysiqueImagesMini.$dateUpload.'/'.$idHistoriqueImage.".jpg<br>";
 					echo "typeFichier = ".$typeFichier."<br>";
-					
-					
+
+
 					//$i->redimension( $fichierSource, $typeFichier, $i->cheminPhysiqueImagesOriginaux.$dateUpload.'/'.$idHistoriqueImage.".jpg",0);
 					//echo 'ok|';
 					//$i->redimension( $fichierSource, $typeFichier, $i->cheminPhysiqueImagesMini.$dateUpload.'/'.$idHistoriqueImage.".jpg",80);
@@ -131,12 +131,12 @@ $connex = new connex();
 		}
 	}
 	*/
-	
-	
+
+
 	$connex = new connex();
-	
+
 	$res = $connex->requeteNew("
-	
+
 			SELECT DISTINCT ee.idEvenement AS evenementGroupeAdresseSansAdresse
 			FROM historiqueEvenement he2, historiqueEvenement he1
 			RIGHT JOIN _evenementEvenement ee ON ee.idEvenementAssocie = he1.idEvenement
@@ -145,9 +145,9 @@ $connex = new connex();
 			AND ae.idEvenement IS NULL
 			GROUP BY he1.idEvenement, he1.idHistoriqueEvenement
 			HAVING he1.idHistoriqueEvenement = max( he2.idHistoriqueEvenement)
-	
+
 	");
-	
+
 	while($fetch = mysql_fetch_assoc($res))
 	{
 		$resPremier = $connex->requeteNew("
@@ -161,16 +161,16 @@ $connex = new connex();
 			HAVING he1.idHistoriqueEvenement = max(he2.idHistoriqueEvenement)
 			LIMIT 1
 		");
-		
+
 		while($fetchPremier = mysql_fetch_assoc($resPremier))
 		{
 			echo $fetchPremier['titre'].' '.$fetchPremier['idEvenement'].' '.$fetchPremier['idEvenementGroupeAdresse'].'<br>';
-			
+
 			$resCorrespondance = $connex->requeteOld("
-					SELECT v.codepostal as cp,d.iddossier as iddossier,d.titredossier as titredossier, d.idville as idville,d.idquartier as idquartier,v.nomville 
-					FROM dossier d 
-					LEFT JOIN ville v ON v.idville = d.idville 
-					WHERE d.titredossier = \"".$fetchPremier['titre']."\" 
+					SELECT v.codepostal as cp,d.iddossier as iddossier,d.titredossier as titredossier, d.idville as idville,d.idquartier as idquartier,v.nomville
+					FROM dossier d
+					LEFT JOIN ville v ON v.idville = d.idville
+					WHERE d.titredossier = \"".$fetchPremier['titre']."\"
 					and d.idquartier = '0'
 					and substr(v.codepostal,1,2) ='67'
 			");
@@ -178,9 +178,9 @@ $connex = new connex();
 			while($fetchCorrespondance = mysql_fetch_assoc($resCorrespondance))
 			{
 				echo "=>".$fetchCorrespondance['titredossier']." ".$fetchCorrespondance['nomville']." ".$fetchCorrespondance['cp'].' '.$fetchCorrespondance['idquartier']."<br>";
-				
-				// le dossier a ete trouve 
-				
+
+				// le dossier a ete trouve
+
 				// verif si l'adresse existe dans archiv2
 				//$resArchiv2 = $connex->requeteNew("");
 				// recuperation de la ville dans archiv2
@@ -188,11 +188,11 @@ $connex = new connex();
 				while($fetchNewVille = mysql_fetch_assoc($resNewVille))
 				{
 					echo "Ajouter ?=====>".$fetchNewVille['idVille'].' '.$fetchNewVille['nom']."<br>";
-					
+
 					$resNewAdresse = $connex->requeteNew("
 							SELECT ha1.idAdresse
 							FROM historiqueAdresse ha2, historiqueAdresse ha1
-							WHERE 
+							WHERE
 							ha1.idVille = '".$fetchNewVille['idVille']."'
 							AND ha1.idQuartier='0'
 							AND ha1.idSousQuartier='0'
@@ -203,7 +203,7 @@ $connex = new connex();
 							HAVING ha1.idHistoriqueAdresse = max(ha2.idHistoriqueAdresse)");
 					echo "SELECT ha1.idAdresse
 							FROM historiqueAdresse ha2, historiqueAdresse ha1
-							WHERE 
+							WHERE
 							ha1.idVille = '".$fetchNewVille['idVille']."'
 							AND ha1.idQuartier='0'
 							AND ha1.idSousQuartier='0'
@@ -222,7 +222,7 @@ $connex = new connex();
 					else
 					{
 						echo "<br><br>======creation de l'adresse=========<br><br>";
-						
+
 						$reqNewIdAdresse = "select max(idAdresse) as idAdresseMAX from historiqueAdresse";
 						$resNewIdAdresse = $connex->requeteNew($reqNewIdAdresse);
 						$fetchNewIdAdresse = mysql_fetch_assoc($resNewIdAdresse);
@@ -236,7 +236,7 @@ $connex = new connex();
 					if($idAdresseLiaison!=0)
 					{
 						// insertion de la nouvelle liaison
-						$reqLiaison = "insert into _adresseEvenement (idAdresse,idEvenement) 
+						$reqLiaison = "insert into _adresseEvenement (idAdresse,idEvenement)
 						values ('".$idAdresseLiaison."','".$fetch['evenementGroupeAdresseSansAdresse']."')";
 						echo $reqLiaison."<br><br><br><br><br>";
 						$connex->requeteNew($reqLiaison);
@@ -245,8 +245,5 @@ $connex = new connex();
 			}
 		}
 	}
-	
+
 ?>
-
-
-

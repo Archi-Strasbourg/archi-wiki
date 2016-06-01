@@ -1,15 +1,15 @@
 <?php
 /**
  * Script pour copier des personnes de l'ancien systèmes vers le nouveau
- * 
+ *
  * PHP Version 5.3.3
- * 
+ *
  * @category General
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     https://archi-strasbourg.org/
- * 
+ *
  * */
 require_once "includes/framework/config.class.php";
 require_once "modules/archi/includes/archiEvenement.class.php";
@@ -60,7 +60,7 @@ while ($person=mysql_fetch_object($res)) {
         )";
         $config->connexionBdd->requete($req3);
         $req3 = "
-            insert into _evenementEvenement (idEvenement,idEvenementAssocie) 
+            insert into _evenementEvenement (idEvenement,idEvenementAssocie)
             values ('".$idEvenement."','".$idSousEvenement."');
         ";
         $config->connexionBdd->requete($req3);

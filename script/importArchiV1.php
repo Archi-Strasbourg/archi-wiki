@@ -10,7 +10,7 @@ include('../modules/archi/includes/archiImage.class.php');
 echo '<h1>Connexion</h1>';
 $mysqliNew = new mysqli("localhost", "archiv2", "fd89ind", "ARCHI_V2");
 
-// Vérification de la connexion 
+// Vérification de la connexion
 if (mysqli_connect_errno()) {
 	printf("Échec de la connexion : %s\n", mysqli_connect_error());
 	exit();
@@ -82,7 +82,7 @@ if ($resOld = $mysqliOld->query('SELECT * FROM pays where idPays=1 or idPays=3')
 		$tabPays[$nom] = $mysqliNew->insert_id;
 	}
 	$stmt->close();
-	//* Libère de résultat 
+	//* Libère de résultat
 	$resOld->close();
 }
 echo 'ok';
@@ -96,11 +96,11 @@ echo 'ok';
 echo '<h2>Ville</h2>';
 $tabVille = array();
 if ($resOld = $mysqliOld->query("
-						SELECT v.idville, v.nomville, v.codepostal,p.nompays 
-						FROM ville v 
+						SELECT v.idville, v.nomville, v.codepostal,p.nompays
+						FROM ville v
 						LEFT JOIN pays p ON v.idpays=p.idpays
 						WHERE substring(v.codePostal,1,2)='67'
-						or v.nomVille = 'Kehl' 
+						or v.nomVille = 'Kehl'
 						"))  // on ne rapatrie que les villes du 67 et kehl
 {
 	$mysqliNew->query('TRUNCATE TABLE `ville`');
@@ -142,11 +142,11 @@ echo '<h2>Quartiers</h2>';
 $tabQuartier= array();
 $tabQuartierId = array();
 if ($resOld = $mysqliOld->query("
-						SELECT q.idquartier, q.nomquartier, v.nomville 
-						FROM quartier q 
+						SELECT q.idquartier, q.nomquartier, v.nomville
+						FROM quartier q
 						LEFT JOIN ville v ON v.idville=q.idville
 						WHERE substring(v.codePostal,1,2)='67' or v.nomVille = 'Kehl'
-						")) 
+						"))
 {
 	$mysqliNew->query('TRUNCATE TABLE `quartier`');
 	$stmt  = $mysqliNew->prepare("INSERT INTO quartier (idQuartier, nom, idVille, codePostal) VALUES ('',?, ?, '')");
@@ -180,12 +180,12 @@ echo '<h2>Sous-Quartiers</h2>';
 $tabSousQuartier= array();
 $tabSousQuartierId = array();
 if ($resOld = $mysqliOld->query("
-						SELECT sq.idsousquartier, q.nomquartier, sq.nomsousquartier 
-						FROM sousquartier sq 
+						SELECT sq.idsousquartier, q.nomquartier, sq.nomsousquartier
+						FROM sousquartier sq
 						LEFT JOIN quartier q ON sq.idquartier=q.idquartier
 						LEFT JOIN ville v ON v.idville=q.idville
 						WHERE substring(v.codePostal,1,2)='67' or v.nomVille = 'Kehl'
-						")) 
+						"))
 {
 	$mysqliNew->query('TRUNCATE TABLE `sousQuartier`');
 	$stmt  = $mysqliNew->prepare("INSERT INTO sousQuartier (idSousQuartier, nom, idQuartier) VALUES ('',?, ?)");
@@ -267,49 +267,49 @@ echo '<h2>Rues</h2>';
 $tabAdresseId = array();
 
 if ($resOld = $mysqliOld->query("
-				SELECT a.nomadresse, a.complement, a.idadresse , v.nomville, q.nomquartier, sq.nomsousquartier  
-				FROM adresse a 
-				LEFT JOIN ville v ON v.idville = a.idville 
+				SELECT a.nomadresse, a.complement, a.idadresse , v.nomville, q.nomquartier, sq.nomsousquartier
+				FROM adresse a
+				LEFT JOIN ville v ON v.idville = a.idville
 				LEFT JOIN quartier q ON q.idquartier = a.idquartier
 				LEFT JOIN sousquartier sq ON sq.idsousquartier = a.idsousquartier
 				WHERE substring(v.codePostal,1,2)='67' or v.nomVille = 'Kehl'
 				ORDER BY a.idadresse ASC
-				")) 
+				"))
 {
 	$mysqliNew->query('TRUNCATE TABLE `rue`');
 	$mysqliNew->query('TRUNCATE TABLE `historiqueAdresse`');
 
 	$stmt  = $mysqliNew->prepare("INSERT INTO rue (idRue, idSousQuartier, nom, prefixe) VALUES ('',?, ?, ?)");
 	$stmt->bind_param("iss", $idSousQuartier, $nom, $prefixe); // modif laurent pour ajout du prefixe
-	
+
 	$stmtTrouveIdSousQuartier  = $mysqliNew->prepare("SELECT sq.idSousQuartier FROM sousQuartier sq WHERE nom=? LIMIT 1");
 	$stmtTrouveIdSousQuartier->bind_param("s", $nomSousQuartier);
-	
+
 	$stmtTrouveIdQuartier  = $mysqliNew->prepare("SELECT q.idQuartier FROM quartier q WHERE nom=? LIMIT 1");
 	$stmtTrouveIdQuartier->bind_param("s", $nomQuartier);
-	
+
 	$stmtTrouveIdVille  = $mysqliNew->prepare("SELECT v.idVille FROM ville v WHERE nom=? LIMIT 1");
 	$stmtTrouveIdVille->bind_param("s", $nomVille);
 	$nbrue = 0;
 	$nbadresse = 0;
-	while ($rep = $resOld->fetch_object()) 
+	while ($rep = $resOld->fetch_object())
 	{
 		$complement = nettoyeChaine($rep->complement);
 		$nom        = nettoyeChaine(nettoyeChaine($rep->nomadresse));//$complement.' '. modif laurent
 		$prefixe	= $complement;
-		
-		if(!empty( $rep->nomsousquartier)) 
+
+		if(!empty( $rep->nomsousquartier))
 		{
 			$nomSousQuartier = nettoyeChaine($rep->nomsousquartier);
 			$stmtTrouveIdSousQuartier->execute() or die($stmt->error);
 			$stmtTrouveIdSousQuartier->bind_result($idSousQuartier);
-			if ($stmtTrouveIdSousQuartier->fetch()) 
+			if ($stmtTrouveIdSousQuartier->fetch())
 			{
 				$stmtTrouveIdSousQuartier->free_result();
 				$stmt->execute() or die($stmt->error);
 				$tabAdresseId[$rep->idadresse] = array('rue', $mysqliNew->insert_id);
 			}
-			else 
+			else
 			{
 				echo '<p>aucun sous quartier correspondant à '.$nomSousQuartier.'</p>';
 				$tabAdresseId[$rep->idadresse] = array('erreur', $mysqliNew->insert_id);
@@ -320,7 +320,7 @@ if ($resOld = $mysqliOld->query("
 			$nomQuartier = nettoyeChaine($rep->nomquartier);
 			$stmtTrouveIdQuartier->execute() or die($stmt->error);
 			$stmtTrouveIdQuartier->bind_result($idQuartier);
-			if ($stmtTrouveIdQuartier->fetch()) 
+			if ($stmtTrouveIdQuartier->fetch())
 			{
 				$stmtTrouveIdQuartier->free_result();
 				$result = $mysqliNew->query('SELECT idSousQuartier FROM sousQuartier sq WHERE idQuartier='.$idQuartier.' AND nom="autre"');
@@ -329,7 +329,7 @@ if ($resOld = $mysqliOld->query("
 				$stmt->execute() or die($stmt->error);
 				$tabAdresseId[$rep->idadresse] = array('rue', $mysqliNew->insert_id);
 			}
-			else 
+			else
 			{
 				echo '<p>aucun quartier correspondant à '.$nomQuartier.'</p>';
 				$tabAdresseId[$rep->idadresse] = array('erreur', $mysqliNew->insert_id);
@@ -337,12 +337,12 @@ if ($resOld = $mysqliOld->query("
 		}
 
 		// la ville est définie, c'est une nouvelle adresse
-		else if (!empty( $rep->nomville)) 
+		else if (!empty( $rep->nomville))
 		{
 			$nomVille  = nettoyeChaine($rep->nomville);
 			$stmtTrouveIdVille->execute() or die($stmt->error);
 			$stmtTrouveIdVille->bind_result($idVille);
-			if ($stmtTrouveIdVille->fetch()) 
+			if ($stmtTrouveIdVille->fetch())
 			{
 				$stmtTrouveIdVille->free_result();
 				$result = $mysqliNew->query('SELECT idSousQuartier FROM sousQuartier sq WHERE idQuartier=(SELECT idQuartier FROM quartier sq WHERE idVille='.$idVille.' AND nom="autre") AND nom="autre"');
@@ -353,13 +353,13 @@ if ($resOld = $mysqliOld->query("
 				$stmt->execute() or die($stmt->error);
 				$tabAdresseId[$rep->idadresse] = array('rue', $mysqliNew->insert_id);
 			}
-			else 
+			else
 			{
 				echo '<p>aucun quartier correspondant à '.$nomQuartier.'</p>';
 				$tabAdresseId[$rep->idadresse] = array('erreur', $mysqliNew->insert_id);
 			}
 		}
-		else 
+		else
 		{
 			echo '<p>PERTE : idadresse = '.$rep->idadresse.'</p>';
 			$tabAdresseId[$rep->idadresse] = array('erreur', $mysqliNew->insert_id);
@@ -384,7 +384,7 @@ if ($resOld = $mysqliOld->query('SELECT tp.libelle as metier, p.nompersonne, p.p
 	$mysqliNew->query('TRUNCATE TABLE `personne`');
 	$mysqliNew->query('TRUNCATE TABLE `metier`');
 	$mysqliNew->query('INSERT INTO metier (nom) VALUES (\'architecte\')');
-	while ($rep = $resOld->fetch_object()) 
+	while ($rep = $resOld->fetch_object())
 	{
 		$idMetier      = 1;
 		$nom           = $mysqliNew->escape_string(nettoyeChaine($rep->nompersonne));
@@ -392,11 +392,11 @@ if ($resOld = $mysqliOld->query('SELECT tp.libelle as metier, p.nompersonne, p.p
 		$dateNaissance = $mysqliNew->escape_string(nettoyeDate(  $rep->datenaissance));
 		$dateDeces     = $mysqliNew->escape_string(nettoyeDate(  $rep->datedeces));
 		$description   = $mysqliNew->escape_string(nettoyeChaine($rep->commentairesPersonne));
-		$sql = "INSERT INTO personne (idMetier, nom, prenom, dateNaissance, dateDeces, description)  
+		$sql = "INSERT INTO personne (idMetier, nom, prenom, dateNaissance, dateDeces, description)
 			VALUES (".$idMetier.",'".$nom."','".$prenom."','".$dateNaissance."','".$dateDeces."','".$description."')";
 		$mysqliNew->query($sql) or die ($mysqliNew->error);
 	}
-	// Libère de résultat 
+	// Libère de résultat
 	$resOld->close();
 }
 echo 'ok';
@@ -414,7 +414,7 @@ if ($resOld = $mysqliOld->query('SELECT tca.idtypecourantarchitecture, tca.libel
 	$mysqliNew->query('TRUNCATE TABLE `courantArchitectural`');
 	while ($rep = $resOld->fetch_object()) {
 		$nom   = $mysqliNew->escape_string(nettoyeChaine($rep->libelle));
-		$sql = "INSERT INTO courantArchitectural (idCourantArchitectural, nom)  
+		$sql = "INSERT INTO courantArchitectural (idCourantArchitectural, nom)
 			VALUES ('','".$nom."')";
 		$mysqliNew->query($sql) or die ($mysqliNew->error);
 		$tabCourantArchitectural[$rep->idtypecourantarchitecture] = $mysqliNew->insert_id;
@@ -433,7 +433,7 @@ echo 'ok';
 
 echo '<h2>Utilisateur</h2>
 <p>PERTE : pas de tel, pas de redimension auto, uniquement Fabien est ajouté</p>';
-//$sql = "INSERT INTO utilisateur (idUtilisateur, nom, prenom, mail, motDePasse, estAdmin, alerteMail) 
+//$sql = "INSERT INTO utilisateur (idUtilisateur, nom, prenom, mail, motDePasse, estAdmin, alerteMail)
 //	VALUES ('','Romary','Fabien', 'fabien.romary@partenaireimmo.com', 'test', 1, 1)";
 //$mysqliNew->query($sql) or die ($mysqliNew->error);
 //$idUtilisateurFabien = $mysqliNew->insert_id;
@@ -453,7 +453,7 @@ if ($resOld = $mysqliOld->query('SELECT ti.idtypeimage, ti.nomtypeimage FROM typ
 	$mysqliNew->query('TRUNCATE TABLE `typeStructure`');
 	while ($rep = $resOld->fetch_object()) {
 		$nom   = $mysqliNew->escape_string(nettoyeChaine($rep->nomtypeimage));
-		$sql = "INSERT INTO typeStructure (idTypeStructure, nom)  
+		$sql = "INSERT INTO typeStructure (idTypeStructure, nom)
 			VALUES ('', '".$nom."')";
 		$mysqliNew->query($sql) or die ($mysqliNew->error);
 		$tabStructureId[ $rep->idtypeimage ] = $mysqliNew->insert_id;
@@ -461,11 +461,11 @@ if ($resOld = $mysqliOld->query('SELECT ti.idtypeimage, ti.nomtypeimage FROM typ
 
 	// structure par défaut :
 	$nom = 'autre';
-	$sql = "INSERT INTO typeStructure (idTypeStructure, nom)  
+	$sql = "INSERT INTO typeStructure (idTypeStructure, nom)
 		VALUES ('', '".$nom."')";
 	$mysqliNew->query($sql) or die ($mysqliNew->error);
 	$tabStructureId['defaut'] = $mysqliNew->insert_id;
-	// Libère de résultat 
+	// Libère de résultat
 	$resOld->close();
 }
 echo 'ok';
@@ -476,35 +476,35 @@ echo 'ok';
 //	ÉVÈNEMENTS
 
 //**************
- 
+
 echo '<h2>Évènements</h2>';
 $tabEvenementId = array();
 if ($resOld = $mysqliOld->query("
-				SELECT d.idtypecourantarchitecture, 
+				SELECT d.idtypecourantarchitecture,
 				d.anneeconstruction,
-				d.iddossierpere, 
-				d.idsousquartier, 
-				d.idquartier, 
-				d.idville, 
-				d.numerovoie, 
-				d.idadresse, 
-				d.iddossier, 
-				d.idtypeimage, 
-				d.datedossier, 
-				d.titredossier, 
-				c.textecommentaire, 
+				d.iddossierpere,
+				d.idsousquartier,
+				d.idquartier,
+				d.idville,
+				d.numerovoie,
+				d.idadresse,
+				d.iddossier,
+				d.idtypeimage,
+				d.datedossier,
+				d.titredossier,
+				c.textecommentaire,
 				d.commentaires AS description,
 				CONCAT(a.complement,' ', a.nomadresse) AS nomAdresse
-				
+
 				FROM dossier d
 				LEFT JOIN commentaire c ON c.iddossier = d.iddossier
 				LEFT JOIN adresse a ON  a.idAdresse = d.idAdresse
 				WHERE d.idtypedossier=1"
-		
+
 		) OR die($mysqliOld->error)
-	) 
+	)
 {
-	
+
 	$mysqliNew->query('TRUNCATE TABLE `historiqueEvenement`');
 	$mysqliNew->query('TRUNCATE TABLE `historiqueAdresse`');
 	$mysqliNew->query('TRUNCATE TABLE `_adresseEvenement`');
@@ -513,36 +513,36 @@ if ($resOld = $mysqliOld->query("
 	$mysqliNew->query('TRUNCATE TABLE `_evenementCourantArchitectural`');
 	$mysqliNew->query('TRUNCATE TABLE `source`');
 	//$mysqliNew->query('TRUNCATE TABLE `typeSource`'); // modif laurent : on ne vide pas la table type de source
-	
-	$stmt  = $mysqliNew->prepare("INSERT INTO historiqueEvenement (idHistoriqueEvenement, idEvenement, dateDebut, dateFin, idTypeEvenement, idTypeStructure, titre, idUtilisateur, description, idSource, dateCreationEvenement )  
+
+	$stmt  = $mysqliNew->prepare("INSERT INTO historiqueEvenement (idHistoriqueEvenement, idEvenement, dateDebut, dateFin, idTypeEvenement, idTypeStructure, titre, idUtilisateur, description, idSource, dateCreationEvenement )
 	                        VALUES ('', ?, ?, ?,1, ?, ?, ?, ?, 0, ?)") or die('*'.$mysqliNew->error);
 	$stmt->bind_param('issisiss', $idEvenement, $dateDebut, $dateFin, $idTypeStructure, $titre, $idUtilisateur, $description, $dateCreationEvenement ) or die($mysqliNew->error);
-	
-	
-	$stmtHistoriqueAdresse  = $mysqliNew->prepare("INSERT INTO historiqueAdresse (idHistoriqueAdresse, idAdresse, date, description, nom, numero,  idRue, idSousQuartier, idQuartier, idPays, idVille, idIndicatif ) 
+
+
+	$stmtHistoriqueAdresse  = $mysqliNew->prepare("INSERT INTO historiqueAdresse (idHistoriqueAdresse, idAdresse, date, description, nom, numero,  idRue, idSousQuartier, idQuartier, idPays, idVille, idIndicatif )
 	                        VALUES ('', ?, NOW(), '', ?, ?, ?, ?, ?, ?, ?, ?)") or die('*'.$mysqliNew->error);
 	$stmtHistoriqueAdresse->bind_param('isiiiiiii', $idAdresse, $nom, $numero, $idRue, $idSousQuartier, $idQuartier, $idPays, $idVille,$idIndicatif ) or die($mysqliNew->error);
-	
+
 	$stmtLienEvenementAdresse = $mysqliNew->prepare("INSERT INTO _adresseEvenement (idEvenement, idAdresse) VALUES (?, ?)") or die ($mysqliNew->error);
 	$stmtLienEvenementAdresse->bind_param('ii', $idEvenement, $idAdresseLien);
-	
+
 	$stmtLienEvenementCourant = $mysqliNew->prepare("INSERT INTO _evenementCourantArchitectural (idEvenement, idCourantArchitectural) VALUES (?, ?)") or die ($mysqliNew->error);
 	$stmtLienEvenementCourant->bind_param('ii', $idEvenement, $idCourantArchitectural);
-	
-	
+
+
 	//$mysqliNew->query('INSERT INTO typeSource (nom) VALUES ("Sans type")')  or die ($mysqliNew->error);
 	//$mysqliNew->query('INSERT INTO source (nom, idTypeSource, description) VALUES ("Source à définir", 1, "Sans source pour l\'instant !")') or die ($mysqliNew->error); // modif laurent : pas besoin d'un element 'sans type'
 
 	$idEvenement   = 0;
 	$idUtilisateur = $idUtilisateurFabien;
 	$idAdresse     = 0;
-	while ($rep = $resOld->fetch_object()) 
+	while ($rep = $resOld->fetch_object())
 	{
 		echo "dossier:".$rep->iddossier."<br>";
 		//
 		// informations génériques
 		$idEvenement += 1;
-		
+
 		if($rep->anneeconstruction!='')
 		{
 			$dateDebut = $rep->anneeconstruction."-00-00";  // modif laurent
@@ -551,15 +551,15 @@ if ($resOld = $mysqliOld->query("
 		{
 			$dateDebut    = $rep->datedossier;
 		}
-		
+
 		$dateCreationEvenement = $rep->datedossier;
 		$dateFin      = '';
-		
+
 		if (isset($tabStructureId[$rep->idtypeimage]))
 			$idTypeStructure = $tabStructureId[$rep->idtypeimage];
 		else
 			$idTypeStructure = $tabStructureId['defaut'];
-		
+
 
 		// nom dossier
 		if (empty($rep->titredossier))
@@ -581,12 +581,12 @@ if ($resOld = $mysqliOld->query("
 			$idCourantArchitectural = $tabCourantArchitectural[$idCourantArchitectural];
 			$stmtLienEvenementCourant->execute() or die ($mysqliNew->error);
 		}
-		
+
 		//
 		// ENREGISTREMENT DU DOSSIER
-		// 
+		//
 		$stmt->execute() or die ($mysqliNew->error);
-		
+
 
 		// enregistrement dans la table de correspondance
 		$tabEvenementId[$rep->iddossier] = $mysqliNew->insert_id;
@@ -597,11 +597,11 @@ if ($resOld = $mysqliOld->query("
 		{
 			$tabEvenementALier[] = array($rep->iddossierpere,$rep->iddossier);
 		}
-		
 
-		
-		
-		
+
+
+
+
 		/////////
 		/////////    ADRESSES
 		/////////
@@ -624,13 +624,13 @@ if ($resOld = $mysqliOld->query("
 				{
 					// modif laurent : on separe la partie numerique de ce qui doit etre l'information supplémentaire derriere le numero => l'indicatif
 					$arraySplitIndicatifNumero = splitIndicatifFromNumero($rep->numerovoie,$mysqliNew);
-					
+
 					$numero = $arraySplitIndicatifNumero['numero'];
 					$idIndicatif = $arraySplitIndicatifNumero['idIndicatif'];
-					
+
 				}
 			}
-				
+
 			$idRue = $tabAdresseId[$rep->idadresse][1];
 			$idSousQuartier = 0;
 			$idQuartier = 0;
@@ -639,7 +639,7 @@ if ($resOld = $mysqliOld->query("
 			$idAdresseLien = $idAdresse;
 			$stmtHistoriqueAdresse->execute() or die ($mysqliNew->error);
 			$stmtLienEvenementAdresse->execute() or die ($mysqliNew->error);
-			
+
 		}
 		elseif (isset($rep->idville)) {
 //			echo '<p>ville : '.$rep->iddossier.' - '.$rep->idville.'</p>';
@@ -663,19 +663,19 @@ if ($resOld = $mysqliOld->query("
 					$stmtHistoriqueAdresse->execute() or die ($mysqliNew->error);
 					$idAdresseLien = $idAdresse;
 				}
-				
+
 				$stmtLienEvenementAdresse->execute() or die ($mysqliNew->error);
 			}
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
+
+
 		/*
 		if (!empty($rep->idsousquartier))
 		{
@@ -699,7 +699,7 @@ if ($resOld = $mysqliOld->query("
 				$stmtHistoriqueAdresse->execute() or die ($mysqliNew->error);
 				$idAdresseLien = $idAdresse;
 			}
-			
+
 			$stmtLienEvenementAdresse->execute() or die ($mysqliNew->error);
 		}
 
@@ -723,10 +723,10 @@ if ($resOld = $mysqliOld->query("
 				$stmtHistoriqueAdresse->execute()  or die ($mysqliNew->error);
 				$idAdresseLien = $idAdresse;
 			}
-			
+
 			$stmtLienEvenementAdresse->execute() or die ($mysqliNew->error);
 		}
-		
+
 		if (isset($rep->idville)) {
 //			echo '<p>ville : '.$rep->iddossier.' - '.$rep->idville.'</p>';
 			$sql = 'SELECT idAdresse FROM historiqueAdresse WHERE idRue="" AND idSousQuartier="" AND  idQuartier="" AND idVille="'.$tabVilleId[$rep->idville].'" AND idPays="" LIMIT 1';
@@ -747,17 +747,17 @@ if ($resOld = $mysqliOld->query("
 				$stmtHistoriqueAdresse->execute() or die ($mysqliNew->error);
 				$idAdresseLien = $idAdresse;
 			}
-			
+
 			$stmtLienEvenementAdresse->execute() or die ($mysqliNew->error);
 		}
 		*/
 	}
-	
+
 
 	////////////////
 	////////////////     CRÉATION DES GROUPE D'ADRESSES
 	////////////////
-	
+
 	$tableauDossiersPere = array();
 	$tableauDateDossierPere = array(); // ajout laurent pour recuperer la date de creation du dossier pere
 	$sql = 'SELECT iddossier,datedossier FROM dossier WHERE idtypedossier = 1 AND (iddossierpere="" OR iddossierpere IS NULL)';
@@ -770,12 +770,12 @@ if ($resOld = $mysqliOld->query("
 		$i++;
 	}
 
-	
+
 	// création des dossiers de groupe d'adresse
 
 	// Le tableau tabIdDossierGroupeAdresse servira à lier les évènements liés à ce dossier à l'évènement groupe d'adresse
 	/*
-	
+
 	On veux passer de ça :
 
 	A   -	GA
@@ -786,7 +786,7 @@ if ($resOld = $mysqliOld->query("
 		   	    -	Dossier fils
 
 	À :
-		
+
 	A   -	GA
 		   -	Dossier père
 		   -	Dossier fils
@@ -823,16 +823,16 @@ if ($resOld = $mysqliOld->query("
 			$tabIdDossierGroupeAdresse[$idEvenementAssocie] = $idEvenement;
 		}
 	}
-	
-	
+
+
 	// création de la table de liaison entre évènements _evenementEvenement
-	
+
 	$stmtLienEvenementEvenement = $mysqliNew->prepare("INSERT INTO _evenementEvenement (idEvenement, idEvenementAssocie) VALUES (?, ?)") or die ($mysqliNew->error);
 	$stmtLienEvenementEvenement->bind_param('ii', $idEvenementEvenement, $idEvenementEvenementAssocie);
 	foreach ($tabEvenementALier AS $value)
 	{
 		list($idDossier,$idLien)=$value;  // idDossier = idDossierPere    idLien = idDossierFils
-		
+
 		// on vérifie si le dossier père n'a pas été enregistré
 		if (!isset($tabEvenementId[$idDossier]))
 		{
@@ -852,7 +852,7 @@ if ($resOld = $mysqliOld->query("
 			$stmtLienEvenementEvenement->execute() or die ($mysqliNew->error);
 		}
 	}
-	
+
 	// Libère de résultat
 	$resOld->close();
 }
@@ -886,20 +886,20 @@ $tabImageId= array();
 $tabImage= array();
 if ($resOld = $mysqliOld->query("SELECT i.iddossier, i.idimage, i.urlimage, i.libelleimage, i.dateimage, d.datedossier FROM image i
 				LEFT JOIN dossier d ON d.iddossier=i.iddossier WHERE (urlimage LIKE '%jpg' OR urlimage LIKE '%png') AND d.idtypedossier=1 ")) {
-	echo "sleep";sleep(2);echo "finsleep<br>";	
-	$stmt  = $mysqliNew->prepare("INSERT INTO historiqueImage (idHistoriqueImage, idImage, nom, dateUpload, dateCliche, description, idUtilisateur)  
+	echo "sleep";sleep(2);echo "finsleep<br>";
+	$stmt  = $mysqliNew->prepare("INSERT INTO historiqueImage (idHistoriqueImage, idImage, nom, dateUpload, dateCliche, description, idUtilisateur)
 	                        VALUES ('', ?, ?, ?, ?, '', ?)");
 	$stmt->bind_param("isssi", $idImage, $nom, $dateUpload, $dateCliche, $idUtilisateurFabien );
-	
+
 	$stmtLienEvenementImage = $mysqliNew->prepare("INSERT INTO _evenementImage (idEvenement, idImage) VALUES (?, ?)");
 	$stmtLienEvenementImage->bind_param('ii', $idEvenement, $idImage);
-	
+
 	$mysqliNew->query('TRUNCATE TABLE `historiqueImage`');
 	$mysqliNew->query('TRUNCATE TABLE `_evenementImage`');
 	$idImage = 0;
 	while ($rep = $resOld->fetch_object()) {
 		$nom   = $mysqliNew->escape_string(nettoyeChaine($rep->libelleimage));
-		
+
 		$dateCliche = '0000-00-00';
 		if (preg_match_all('#[0-9]{8}#', $rep->urlimage, $match))
 		{
@@ -928,7 +928,7 @@ if ($resOld = $mysqliOld->query("SELECT i.iddossier, i.idimage, i.urlimage, i.li
 			}
 		}
 		$urlImage = nettoyeChaine($rep->urlimage);
-		
+
 		// si l'image n'existe pas alors on fait notre enregistrement
 		// ET si le dossier est bien migré
 		if (!isset($tabImage[nettoyeChaine($rep->urlimage)]))
@@ -941,13 +941,13 @@ if ($resOld = $mysqliOld->query("SELECT i.iddossier, i.idimage, i.urlimage, i.li
 				//echo '<p>Image '.nettoyeChaine($rep->urlimage).' - '.$idImage.' : ';
 				$tabImageId[$rep->idimage] = $idImage;
 				$tabImage[nettoyeChaine($rep->urlimage)] = $idImage;
-				
-				
+
+
 				$dossier = $cheminImagesArchiv1.$rep->iddossier.'/';
 				//$nomFichierOld = iconv("ISO-8859-1", "UTF-8", $dossier.$rep->urlimage);
 				$nomFichierOld = $dossier.$rep->urlimage;
 				$nomFichier = $dossier.'temp.jpg';
-				
+
 				$reponseCommande1 = '';
 				$reponseCommande2 = '';
 				if (!is_file($nomFichierOld))
@@ -978,7 +978,7 @@ if ($resOld = $mysqliOld->query("SELECT i.iddossier, i.idimage, i.urlimage, i.li
 				else
 				{
 					$nePasSauvegarder = false;
-					
+
 					//
 					//  ENREGISTREMENT de l'historiqueImage
 					//
@@ -986,14 +986,14 @@ if ($resOld = $mysqliOld->query("SELECT i.iddossier, i.idimage, i.urlimage, i.li
 					$stmt->execute() or die($mysqliNew->error);
 					$idHistoriqueImage = $mysqliNew->insert_id;
 					$evementIdImage = $idImage;
-					
+
 					//
-					//  copie de l'ancien fichier, 
+					//  copie de l'ancien fichier,
 					//  suppression des mauvais noms du dossier (espaces et apostrophes)
 					//
-					
+
 					$reponseCommandes = array();
-					// laurent : pas de copie pour les test , les images sont deja sur le serveur 
+					// laurent : pas de copie pour les test , les images sont deja sur le serveur
 					exec('cp '.escapeshellcmd($nomFichierOld).' '.$nomFichier, $reponseCommandes);
 					echo "cp ".escapeshellcmd($nomFichierOld).' '.$nomFichier;
 					echo "sleep copy";sleep(2);echo "finsleep copy<br>";
@@ -1005,13 +1005,13 @@ if ($resOld = $mysqliOld->query("SELECT i.iddossier, i.idimage, i.urlimage, i.li
 						echo '<br />';
 						//echo '<br />C1 : '.$reponseCommande1.' <br />C2 : '.$reponseCommande2.'<br />';
 					}
-					
+
 					$i = new archiImage();
-					
+
 					$typeFichier = pia_substr(strtolower($nomFichierOld),-3);
-					
-		
-					
+
+
+
 					if(!is_dir($i->cheminPhysiqueImagesOriginaux.$dateUpload)) {
 						mkdir($i->cheminPhysiqueImagesOriginaux.$dateUpload)       or die('erreur création : '.$i->cheminPhysiqueImagesOriginaux.$dateUpload);
 						chmod($i->cheminPhysiqueImagesOriginaux.$dateUpload, 0777) or die('erreur chmod : '.$i->cheminPhysiqueImagesOriginaux.$dateUpload);
@@ -1028,8 +1028,8 @@ if ($resOld = $mysqliOld->query("SELECT i.iddossier, i.idimage, i.urlimage, i.li
 						mkdir($i->cheminPhysiqueImagesGrand.$dateUpload)       or die('erreur création : '.$i->cheminPhysiqueImagesGrand.$dateUpload);
 						chmod($i->cheminPhysiqueImagesGrand.$dateUpload, 0777) or die('erreur chmod : '.$i->cheminPhysiqueImagesGrand.$dateUpload);
 					}
-					
-			
+
+
 					$i->redimension( $nomFichier, $typeFichier, $i->cheminPhysiqueImagesOriginaux.$dateUpload.'/'.$idHistoriqueImage.".jpg",0);
 					echo 'ok|';echo "sleep"; sleep(1);echo "finsleep<br>";
 					$i->redimension( $nomFichier, $typeFichier, $i->cheminPhysiqueImagesMini.$dateUpload.'/'.$idHistoriqueImage.".jpg",80);
@@ -1037,10 +1037,10 @@ if ($resOld = $mysqliOld->query("SELECT i.iddossier, i.idimage, i.urlimage, i.li
 					$i->redimension( $nomFichier, $typeFichier, $i->cheminPhysiqueImagesMoyen.$dateUpload.'/'.$idHistoriqueImage.".jpg",200);
 					echo 'ok|';echo "speep";sleep(1);echo "finsleep<br>";
 					$i->redimension( $nomFichier, $typeFichier, $i->cheminPhysiqueImagesGrand.$dateUpload.'/'.$idHistoriqueImage.".jpg",500);
-					
+
 					echo 'ok</p>';
 					passthru('rm '.$nomFichier, $reponseCommande3);
-					
+
 				}
 			}
 
@@ -1054,7 +1054,7 @@ if ($resOld = $mysqliOld->query("SELECT i.iddossier, i.idimage, i.urlimage, i.li
 
 		// on s'occupe de la table de liaison _evenementImage
 		if ($nePasSauvegarder == false)
-		{	
+		{
 			$idEvenement = $tabEvenementId[$rep->iddossier];
 			$stmtLienEvenementImage->execute() or die($mysqliNew->error);
 		}
@@ -1065,7 +1065,7 @@ if ($resOld = $mysqliOld->query("SELECT i.iddossier, i.idimage, i.urlimage, i.li
 
 echo 'ok';
 
-// Fermeture de la connexion 
+// Fermeture de la connexion
 $mysqliNew->close();
 $mysqliOld->close();
 
@@ -1085,7 +1085,7 @@ function splitIndicatifFromNumero($num='',$mysqli)
 			$continue = false;
 		}
 	}
-	
+
 	if($continue == true)
 	{
 		// aucun caractere non numerique n'a ete trouvé
@@ -1094,19 +1094,19 @@ function splitIndicatifFromNumero($num='',$mysqli)
 	else
 	{
 		$reqIndicatif = $mysqli->prepare("select idIndicatif from indicatif where nom = ?");
-		
+
 		$numero = pia_substr($num , 0, $i-1);
 		$longueurRestante = pia_strlen($num) - ($i-1);
 		$indicatif = trim(pia_substr($num ,$i-1 , $longueurRestante));
 		// requete pour trouver l'idIndicatif
 		//$reqIndicatif = "select * from indicatif where nom = '".$indicatif."'";
-		
+
 		$reqIndicatif->bind_param('s', $indicatif ) or die($mysqli->error);
 		$reqIndicatif->execute() or die($mysqli->error);
 		$reqIndicatif->bind_result($idIndicatif);
 		$fetchIndicatif = $reqIndicatif->fetch();
 	}
-	
+
 
 	return array('numero'=>$numero,'idIndicatif'=>$idIndicatif);
 }

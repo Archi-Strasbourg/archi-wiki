@@ -52,7 +52,7 @@ if ($resOld = $mysqliOld->query("SELECT iddossier,titredossier, commentaires, te
 		{
 			echo '<p>'.html2bb($rep->textecommentaire).'</p>';
 		}
-			
+
 	}
 }
 ?>

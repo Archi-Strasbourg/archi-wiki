@@ -1,8 +1,8 @@
 <?php
 /**
  * Récuperation du fichier a partir de la liste et du repertoire identifié par iddossier
- * Recherche de la date dans la base de donnee archiv2,  enregistrements dans les repertoires en redimensionnant avec comme nom idHistoriqueImage 
- * 
+ * Recherche de la date dans la base de donnee archiv2,  enregistrements dans les repertoires en redimensionnant avec comme nom idHistoriqueImage
+ *
  * PHP Version 5.3.3
  * 
  * @category Script
@@ -30,7 +30,7 @@ require_once 'HTML/BBCodeParser.php';
 require_once __DIR__.'/../includes/framework/config.class.php';
 require_once __DIR__.'/../modules/archi/includes/archiAdresse.class.php';
 require_once __DIR__.'/../modules/archi/includes/archiEvenement.class.php';
-    
+
 
 
 $config = new config();
@@ -43,8 +43,8 @@ if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['id
         $idPeriode = trim($argv[1]);
     if(isset($_GET['idPeriode']) && $_GET['idPeriode']!='' && $_GET['idPeriode']!='0' && $_GET['idPeriode']!='1')
         $idPeriode = $_GET['idPeriode'];
-    
-    
+
+
     // recuperation des mails
     // on envoi aussi au personnes qui ont une periode immediate 0 ou 1,  car s'ils y a des messages regroupés en attente pour eux ,  ca veut dire qu'ils on changé la periode entre temps (cela sert de purge)
     $req = "
@@ -55,31 +55,31 @@ if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['id
         (u.idPeriodeEnvoiMailsRegroupes = '".$idPeriode."'
         OR u.idPeriodeEnvoiMailsRegroupes='1'
         OR u.idPeriodeEnvoiMailsRegroupes='0')
-        
+
     ORDER BY m.dateHeure DESC
     ";//AND u.idUtilisateur='30'
-    
-    
+
+
     $res = $config->connexionBdd->requete($req);
     $arrayRegroupementTypeMail = array();
     // regroupement pas utilisateur et par type de mail (nouvelle image ,  modif evenement etc)
     while ($fetch = mysql_fetch_assoc($res)) {
         if(!isset($arrayRegroupementTypeMail[$fetch['idUtilisateur']]))
             $arrayRegroupementTypeMail[$fetch['idUtilisateur']] = array();
-        
+
         if(!isset($arrayRegroupementTypeMail[$fetch['idUtilisateur']][$fetch['idTypeMailRegroupement']]))
             $arrayRegroupementTypeMail[$fetch['idUtilisateur']][$fetch['idTypeMailRegroupement']] = array();
-        
+
         $arrayRegroupementTypeMail[$fetch['idUtilisateur']][$fetch['idTypeMailRegroupement']][] = array(
-            'idUtilisateur'=>$fetch['idUtilisateur'], 
-            'contenu'=>$fetch['contenu'], 
-            'dateHeure'=>$fetch['dateHeure'], 
-            'idTypeMailRegroupement'=>$fetch['idTypeMailRegroupement'], 
+            'idUtilisateur'=>$fetch['idUtilisateur'],
+            'contenu'=>$fetch['contenu'],
+            'dateHeure'=>$fetch['dateHeure'],
+            'idTypeMailRegroupement'=>$fetch['idTypeMailRegroupement'],
             'idMail'=>$fetch['idMail']
         );
     }
-    
-    
+
+
     foreach (
         $arrayRegroupementTypeMail as $idUtilisateur => $valueTypeMailRegroupement
     ) {
@@ -90,7 +90,7 @@ if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['id
             $valueTypeMailRegroupement as $idTypeMailRegroupement => $valueMail
         ) {
             // recup de l'intitule de la rubrique de mail regroupee
-            $reqIntituleRegroupement 
+            $reqIntituleRegroupement
                 = "SELECT intitule FROM typesMailsEnvoiMailsRegroupes".
                     " WHERE idTypeMail = '"
                     .$idTypeMailRegroupement."'";
@@ -98,7 +98,7 @@ if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['id
                 = $config->connexionBdd->requete($reqIntituleRegroupement);
             $fetchIntituleRegroupement = mysql_fetch_assoc($resIntituleRegroupement);
             $message.="<b>".$fetchIntituleRegroupement['intitule']."</b> : <br>";
-            
+
             foreach ($valueMail as $indice => $value) {
                 $message.=" - <i>".$d->toFrenchAffichage($value['dateHeure']).
                     " :</i> ".$value['contenu']."<br>";
@@ -124,24 +124,24 @@ if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['id
         .trim($fetchMail['mail'])."', \"".mysql_real_escape_string($sujet)."\", \""
         .mysql_real_escape_string($message)."\", now())";
         $resStock = $config->connexionBdd->requete($reqStock);*/
-        
-        // On supprime les mail regroupés 
+
+        // On supprime les mail regroupés
         if (count($arrayMailsASupprimer)>0) {
             $reqMails = "DELETE FROM mailsEnvoiMailsRegroupes WHERE idMail IN ("
                 .implode(", ", $arrayMailsASupprimer).")";
             $resMails = $config->connexionBdd->requete($reqMails);
-            
+
         } else {
             $mail->sendMail(
                 $mail->getSiteMail(), "fabien.romary@gmail.com",
                 "maintenance archiv2 probleme", "mail vide envoyé ?"
             );
         }
-        
-        
-        
+
+
+
     }
-    
+
 }
 
 ?>

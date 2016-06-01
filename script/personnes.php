@@ -1,7 +1,7 @@
 <?php
 // recuperation du fichier a partir de la liste et du repertoire identifié par iddossier
 // recherche de la date dans la base de donnee archiv2, enregistrements dans les repertoires en redimensionnant avec
-// comme nom idHistoriqueImage 
+// comme nom idHistoriqueImage
 
 ini_set ('max_execution_time', 0);
 include('PEAR.php');
@@ -14,35 +14,35 @@ class connex extends config
 	public $connex;
 	public $connectOld;
 	public $connectNEW;
-	
+
 	function __construct()
 	{
-		parent::__construct();	
+		parent::__construct();
 		//$this->connex = $this->connexionBdd;
 		$connect0 = mysql_connect("localhost","archiv2","fd89ind") or die("probleme connexion0");
 		$connect = mysql_connect("localhost","archiv2","fd89ind",true) or die("probleme connexion");
 		mysql_select_db("ARCHI_V2",$connect0) or die("select db archiv2");
 		mysql_select_db("archi_old", $connect) or die("select db archiold");
-		
+
 		$this->connectOLD = $connect;
 		$this->connectNEW = $connect0;
-		
+
 		$this->requeteNew("set names 'utf8'");
 		$this->requeteOld("set names 'utf8'");
-		
+
 	}
-	
+
 	function requeteNew($req)
 	{
 		return mysql_query($req, $this->connectNEW);
 	}
-	
+
 	function requeteOld($req)
 	{
 		return mysql_query($req, $this->connectOLD);
 	}
-	
-	
+
+
 }
 /*
 $cheminImagesArchiv1 = '/home/laurent/public_html/archilaurent/photos/originaux/';
@@ -67,11 +67,11 @@ if(isset($_POST["iddossier"]) && isset($_POST["lister"]))
 {
 	$Directory = $cheminImagesArchiv1.$_POST["iddossier"]."/";
 
-	if (is_dir($Directory) && is_readable($Directory)) 
+	if (is_dir($Directory) && is_readable($Directory))
 	{
-		if($MyDirectory = opendir($Directory)) 
+		if($MyDirectory = opendir($Directory))
 		{
-			while($Entry = readdir($MyDirectory)) 
+			while($Entry = readdir($MyDirectory))
 			{
 				if($Entry!='.' && $Entry!='..')
 				{
@@ -106,19 +106,19 @@ $connex = new connex();
 				if(isset($_POST["nomFichier"]) && $_POST["nomFichier"]!="")
 				{
 					echo "nomFichier a transferer : ".$_POST["nomFichier"]."<br>";
-					
+
 					$fichierSource = $cheminImagesArchiv1.$_POST['iddossier']."/".$_POST['nomFichier'];
-					
+
 					$dateUpload = $fetchDate["dateUpload"];
 					$typeFichier = pia_substr(strtolower($fichierSource),-3);
 					$idHistoriqueImage = $_POST["idHistoriqueImage"];
-					
-					
+
+
 					echo "fichierSource = ".$fichierSource."<br>";
 					echo "destination = ".$i->cheminPhysiqueImagesMini.$dateUpload.'/'.$idHistoriqueImage.".jpg<br>";
 					echo "typeFichier = ".$typeFichier."<br>";
-					
-					
+
+
 					//$i->redimension( $fichierSource, $typeFichier, $i->cheminPhysiqueImagesOriginaux.$dateUpload.'/'.$idHistoriqueImage.".jpg",0);
 					//echo 'ok|';
 					//$i->redimension( $fichierSource, $typeFichier, $i->cheminPhysiqueImagesMini.$dateUpload.'/'.$idHistoriqueImage.".jpg",80);
@@ -139,19 +139,19 @@ $connex = new connex();
 	<html>
 	<body>
 	<?php
-	
-	
+
+
 	$connex = new connex();
-	// iddossier 	idetat 	idutilisateur 	idadresse 	idville 	numerovoie 	idquartier 	idsousquartier 	idtypecourantarchitecture 	iddossierpere 	idpersonne 	anneeconstruction 	datedossier 	commentaires 	
+	// iddossier 	idetat 	idutilisateur 	idadresse 	idville 	numerovoie 	idquartier 	idsousquartier 	idtypecourantarchitecture 	iddossierpere 	idpersonne 	anneeconstruction 	datedossier 	commentaires
 	// idtypeimage 	idtypedossier 	titredossier 	trifils 	estvide 	indicatif
 	$res = $connex->requeteOld("
 		SELECT iddossier, idpersonne, anneeconstruction, datedossier, commentaires, titredossier
 		FROM dossier
 		WHERE idpersonne IS NOT NULL and idpersonne<>'0'
 	");
-	
+
 	echo "nombre de dossiers qui sont reliés a une personne : ".mysql_num_rows($res)."<br>";
-	
+
 	$tabiddossierCorrespondancesNonTrouvees = array();
 	$tabiddossierCorrespondancesMultiples = array();
 	$tabiddossierCorrespondancesSansTitreSansCommentaire = array();
@@ -176,21 +176,21 @@ $connex = new connex();
 											GROUP BY he1.idEvenement, he1.idHistoriqueEvenement
 											HAVING he1.idHistoriqueEvenement = max(he2.idHistoriqueEvenement)
 			";
-			
+
 			$resRechercheCorrespondance = $connex->requeteNew($reqRechercheCorrespondance);
-			
+
 			if(mysql_num_rows($resRechercheCorrespondance)==0)
 			{
 				echo "<font color='red'>pas de correspondance trouvee pour le titre</font><br>";
 				$tabiddossierCorrespondancesNonTrouvees[] = $fetch['iddossier'];
-				
+
 			}
 			elseif(mysql_num_rows($resRechercheCorrespondance)==1)
 			{
 				echo "<font color='green'>Une correspondance trouvee</font><br>";
 				$fetchRechercheCorrespondance = mysql_fetch_assoc($resRechercheCorrespondance);
 				echo $fetchRechercheCorrespondance['titre']."<br>";
-				
+
 				if(in_array($fetch['iddossier'],$tabCorrespondancesOK))
 				{
 					echo "Correspondance deja effectuee : attention<br>";
@@ -200,35 +200,35 @@ $connex = new connex();
 				{
 					echo "Correspondance ajoutée<br>";
 					$tabCorrespondancesOK[]=$fetch['iddossier'];
-					
-					
+
+
 					$reqPersonneOld = "
 									SELECT idpersonne,prenompersonne,nompersonne,datenaissance,datedeces
 									FROM personne
 									WHERE idpersonne = '".$fetch['idpersonne']."'
 					";
-					
+
 					$resPersonneOld = $connex->requeteOld($reqPersonneOld);
-					
+
 					while($fetchPersonneOld = mysql_fetch_assoc($resPersonneOld))
 					{
 						echo "<br><br>iddossier = ".$fetch['iddossier'].' '.$fetchPersonneOld['prenompersonne'].' '.$fetchPersonneOld['nompersonne']."<br><br>";
-						
+
 						// recherche de la personne dans archiv2
 						$reqPersonneNew = "select idPersonne,nom,prenom from personne where replace(nom,'&amp;','&') = '".$fetchPersonneOld['nompersonne']."' and replace(prenom,'&amp;','&')='".$fetchPersonneOld['prenompersonne']."' and dateNaissance = '".$fetchPersonneOld['datenaissance']."' and dateDeces = '".$fetchPersonneOld['datedeces']."'";
-						
+
 						$resPersonneNew = $connex->requeteNew($reqPersonneNew);
-						
+
 						if(mysql_num_rows($resPersonneNew)==1)
 						{
 							if(!in_array($fetchPersonneOld['idpersonne'],$tabCorrespondancesConfirmees))
 							{
 								echo "<font color='green'>**** une correspondance sur le nom && prenom trouvée , OK ****</font><br>";
 								$tabCorrespondancesConfirmees[]=$fetchPersonneOld['idpersonne'];
-								
+
 								$fetchPersonneNew = mysql_fetch_assoc($resPersonneNew);
 								$tabCorrespondances[$fetchRechercheCorrespondance['idEvenement']] = $fetchPersonneNew['idPersonne'];
-								
+
 							}
 						}
 						elseif(mysql_num_rows($resPersonneNew)==0)
@@ -237,7 +237,7 @@ $connex = new connex();
 							$tabPersonnesPastrouvee[] = $fetchPersonneOld['idpersonne'];
 						}
 						else
-						{	
+						{
 							echo "<font color='red'>**** Plusieurs correspondances trouvee pour la personne, abandon ****</font>";
 						}
 					}
@@ -255,7 +255,7 @@ $connex = new connex();
 			$tabiddossierCorrespondancesSansTitreSansCommentaire[]=$fetch['iddossier'];
 		}
 	}
-	
+
 	echo "nombre de correspondances non trouvees : ".count($tabiddossierCorrespondancesNonTrouvees)."<br>";
 	echo "nombre de correspondances multiples :".count($tabiddossierCorrespondancesMultiples)."<br>";
 	echo "nombre de correspondances impossibles (pas de titre ni de commentaire): ".count($tabiddossierCorrespondancesSansTitreSansCommentaire)."<br>";
@@ -268,19 +268,16 @@ $connex = new connex();
 	$listePersonnesPasTrouvees = implode(",",$tabPersonnesPastrouvee);
 	echo $listePersonnesPasTrouvees."<br>";
 	echo "correspondances ok avec les personnes : ".count($tabCorrespondancesConfirmees)."<br>";
-	
+
 	echo "requetes a copier coller : <br>";
-	
+
 	foreach($tabCorrespondances as $idEvenement => $idPersonne)
 	{
 		echo "insert into _evenementPersonne (idEvenement,idPersonne) values ('".$idEvenement."','".$idPersonne."');<br>";
 	}
-	
+
 	?>
 	</body>
 	</html>
 	<?php
 ?>
-
-
-

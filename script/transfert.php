@@ -1,7 +1,7 @@
 <?php
 // recuperation du fichier a partir de la liste et du repertoire identifié par iddossier
 // recherche de la date dans la base de donnee archiv2, enregistrements dans les repertoires en redimensionnant avec
-// comme nom idHistoriqueImage 
+// comme nom idHistoriqueImage
 
 ini_set ('max_execution_time', 0);
 include('PEAR.php');
@@ -14,7 +14,7 @@ class connex extends config
 	public $connex;
 	function __construct()
 	{
-		parent::__construct();	
+		parent::__construct();
 		$this->connex = $this->connexionBdd;
 	}
 }
@@ -43,11 +43,11 @@ if(isset($_POST["iddossier"]) && isset($_POST["lister"]))
 {
 	$Directory = $cheminImagesArchiv1.$_POST["iddossier"]."/";
 
-	if (is_dir($Directory) && is_readable($Directory)) 
+	if (is_dir($Directory) && is_readable($Directory))
 	{
-		if($MyDirectory = opendir($Directory)) 
+		if($MyDirectory = opendir($Directory))
 		{
-			while($Entry = readdir($MyDirectory)) 
+			while($Entry = readdir($MyDirectory))
 			{
 				if($Entry!='.' && $Entry!='..')
 				{
@@ -82,18 +82,18 @@ $connex = new connex();
 				if(isset($_POST["nomFichier"]) && $_POST["nomFichier"]!="")
 				{
 					echo "nomFichier a transferer : ".$_POST["nomFichier"]."<br>";
-					
+
 					$fichierSource = $cheminImagesArchiv1.$_POST['iddossier']."/".$_POST['nomFichier'];
-					
+
 					$dateUpload = $fetchDate["dateUpload"];
 					$typeFichier = pia_substr(strtolower($fichierSource),-3);
 					$idHistoriqueImage = $fetchDate['idHistoriqueImage'];
-					
-					
+
+
 					echo "fichierSource = ".$fichierSource."<br>";
 					echo "destination = ".$i->cheminPhysiqueImagesMini.$dateUpload.'/'.$idHistoriqueImage.".jpg<br>";
 					echo "typeFichier = ".$typeFichier."<br>";
-					
+
 					$i->redimension( $fichierSource, $typeFichier, $i->cheminPhysiqueImagesOriginaux.$dateUpload.'/'.$idHistoriqueImage.".jpg",0);
 					echo 'ok|';
 					$i->redimension( $fichierSource, $typeFichier, $i->cheminPhysiqueImagesMini.$dateUpload.'/'.$idHistoriqueImage.".jpg",80);
@@ -101,8 +101,8 @@ $connex = new connex();
 					$i->redimension( $fichierSource, $typeFichier, $i->cheminPhysiqueImagesMoyen.$dateUpload.'/'.$idHistoriqueImage.".jpg",200);
 					echo 'ok|';
 					$i->redimension( $fichierSource, $typeFichier, $i->cheminPhysiqueImagesGrand.$dateUpload.'/'.$idHistoriqueImage.".jpg",500);
-					echo "fintransfert";	
-					
+					echo "fintransfert";
+
 				}
 			}
 			else
@@ -112,6 +112,3 @@ $connex = new connex();
 		}
 	}
 ?>
-
-
-

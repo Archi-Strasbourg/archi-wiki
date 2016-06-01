@@ -63,7 +63,7 @@ if(isset($_GET['ajout']))
 	foreach($_POST['latitude_arret'] as $idTable => $valueLatitude )
 	{
 		$reqInsert = "UPDATE $tableAMettreAJour SET latitude='".$valueLatitude."' ,longitude='".$_POST['longitude_arret'][$idTable]."' WHERE $identifiant='".$idTable."'";
-		$resInsert = $config->connexionBdd->requete($reqInsert);	
+		$resInsert = $config->connexionBdd->requete($reqInsert);
 	}
 	$idSuivant = $idTable+1; // on recupere la valeur suivant a traiter
 }
@@ -97,7 +97,7 @@ switch($typeTable)
 			LEFT JOIN ville v ON v.idVille = obd.idVille
 			$paramReq
 			ORDER BY obd.idDescription
-			LIMIT 10		 
+			LIMIT 10
 		 ";
 	break;
 	case "historiqueAdresse":
@@ -108,7 +108,7 @@ switch($typeTable)
 			ORDER BY ha.idHistoriqueAdresse
 			LIMIT 10
 		";
-		
+
 	break;
 	case "ville":
 		$req = "
@@ -118,7 +118,7 @@ switch($typeTable)
 			$paramReq
 			AND v.nom!='autre'
 			ORDER BY v.idVille
-			LIMIT 10		
+			LIMIT 10
 		";
 	break;
 	default:
@@ -130,8 +130,8 @@ switch($typeTable)
 echo $req;
 
 
-echo "<h1>Recuperation des coordonnées de latitudes et longitudes</h1>";  
-  
+echo "<h1>Recuperation des coordonnées de latitudes et longitudes</h1>";
+
 $paramsGoogleMap = array('googleMapKey'=>$config->googleMapKey);
 
 $googleMap = new googleMap($paramsGoogleMap);
@@ -173,8 +173,8 @@ while($fetch = mysql_fetch_assoc($res))
 	{
 		$adresse = $fetch['libelleAdresse'];
 	}
-	
-	
+
+
 	echo "
 	$adresse
 	<input type='text' name='latitude_arret[".$fetch[$identifiant]."]' id='latitude_arret_".$fetch[$identifiant]."' value=''>
@@ -191,7 +191,7 @@ while($fetch = mysql_fetch_assoc($res))
 	if($typeTable!='ville')
 	{
 		$adresse=$a->getIntituleAdresseFrom($fetch['idAdresse'],'idAdresse',array("noQuartier"=>true,"noSousQuartier"=>true));
-		
+
 		if(!$str->isUTF8($adresse))
 			$adresse = utf8_encode($adresse);
 	}
@@ -199,7 +199,7 @@ while($fetch = mysql_fetch_assoc($res))
 	{
 		$adresse = $fetch['libelleAdresse'];
 	}
-	
+
 	echo "
 	<script language='javascript'>
 
@@ -207,19 +207,19 @@ while($fetch = mysql_fetch_assoc($res))
 
 		function getPoint1_".$fetch[$identifiant]."(response)
 		{
-			if (response.Status.code != 200) 
+			if (response.Status.code != 200)
 			{
 				document.getElementById('debug').innerHTML+=\"erreur adresse = $adresse <br>\";
-		   	} 
-			else 
+		   	}
+			else
 			{
 			        place = response.Placemark[0];
 			        document.getElementById('latitude_arret_".$fetch[$identifiant]."').value = place.Point.coordinates[1];
 					document.getElementById('longitude_arret_".$fetch[$identifiant]."').value = place.Point.coordinates[0];
-					
+
 			}
 		}
-		
+
 		geocoder.getLocations(\"".$adresse."\", getPoint1_".$fetch[$identifiant].");
 	</script>
 	<br>
@@ -246,7 +246,7 @@ if($i>0)
 		{
 			document.getElementById('formAdresses').submit();
 		}
-		
+
 		setTimeout('lasuite()',4000);
 	</script>
 	";

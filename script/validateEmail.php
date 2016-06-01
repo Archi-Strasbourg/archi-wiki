@@ -1,9 +1,9 @@
 <?php
 /**
  * Valide les commentaires grace à un identifiant unique
- * 
+ *
  * PHP Version 5.3.3
- * 
+ *
  * @category Script
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>

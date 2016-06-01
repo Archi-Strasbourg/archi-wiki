@@ -1,7 +1,7 @@
 <?php
 // recuperation du fichier a partir de la liste et du repertoire identifié par iddossier
 // recherche de la date dans la base de donnee archiv2, enregistrements dans les repertoires en redimensionnant avec
-// comme nom idHistoriqueImage 
+// comme nom idHistoriqueImage
 
 ini_set ('max_execution_time', 0);
 include('PEAR.php');

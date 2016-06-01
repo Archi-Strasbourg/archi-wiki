@@ -23,7 +23,7 @@ while($fetch = mysql_fetch_assoc($res))
 	{
 		$reqUpdate = "update utilisateur set idProfil=4 where idUtilisateur = '".$fetch['idUtilisateur']."'";
 		$resUpdate = $config->connexionBdd->requete($reqUpdate);
-		
+
 	}
 }
 

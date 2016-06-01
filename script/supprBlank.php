@@ -1,7 +1,7 @@
 ï»¿<?php
-// recuperation du fichier a partir de la liste et du repertoire identifié par iddossier
+// recuperation du fichier a partir de la liste et du repertoire identifiï¿½ par iddossier
 // recherche de la date dans la base de donnee archiv2, enregistrements dans les repertoires en redimensionnant avec
-// comme nom idHistoriqueImage 
+// comme nom idHistoriqueImage
 
 ini_set ('max_execution_time', 0);
 include('PEAR.php');
@@ -42,7 +42,7 @@ function html2bb($html= '')
 class connexionBD extends config
 {
 	public $connexion;
-	
+
 	function __construct()
 	{
 		parent::__construct();
@@ -73,16 +73,16 @@ $regExp[2] = array( "regle"=>"\\<a\ href\=\\'(.+)\\'\\>(.+)\\</a\\>", "remplacem
 $regExp[0] = array("regle"=>"\\[url");
 $regExp[1] = array("regle"=>"\\<a");
 
-$req = "	
+$req = "
 		SELECT he1.idHistoriqueEvenement as idHistoriqueEvenement,he1.description as description
 		FROM historiqueEvenement he2,historiqueEvenement he1
 		WHERE he2.idEvenement = he1.idEvenement
 		GROUP BY he1.idEvenement,he1.idHistoriqueEvenement
 		HAVING he1.idHistoriqueEvenement = max(he2.idHistoriqueEvenement)
 		";
-		
-		
-		
+
+
+
 
 $res = $connex->connexion->requete($req);
 
@@ -102,7 +102,7 @@ while($fetch = mysql_fetch_assoc($res))
 		//echo $expReg['regle']."<br>";
 		if(eregi($expReg['regle'],$description,$retourAdr))
 		{
-			
+
 			$tableau->addValue($indice."<br>".$expReg['regle']);
 			$tableau->addValue($fetch['idHistoriqueEvenement']);
 			$tableau->addValue("<textarea cols='70' rows='10' name='desc-".$fetch['idHistoriqueEvenement']."'>".$description."</textarea>");
@@ -117,5 +117,3 @@ echo "</form>";
 ?>
 </body>
 </html>
-
-

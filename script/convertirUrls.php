@@ -1,7 +1,7 @@
 ﻿<?php
-// recuperation du fichier a partir de la liste et du repertoire identifi� par iddossier
+// recuperation du fichier a partir de la liste et du repertoire identifié par iddossier
 // recherche de la date dans la base de donnee archiv2, enregistrements dans les repertoires en redimensionnant avec
-// comme nom idHistoriqueImage 
+// comme nom idHistoriqueImage
 
 ini_set ('max_execution_time', 0);
 include('PEAR.php');
@@ -42,29 +42,29 @@ class connex extends config
 	public $connex;
 	public $connectOld;
 	public $connectNEW;
-	
+
 	function __construct()
 	{
-		parent::__construct();	
+		parent::__construct();
 		//$this->connex = $this->connexionBdd;
 		$connect0 = mysql_connect("localhost","archiv2","fd89ind") or die("probleme connexion0");
 		$connect = mysql_connect("localhost","archiv2","fd89ind",true) or die("probleme connexion");
 		mysql_select_db("ARCHI_V2",$connect0) or die("select db archiv2");
 		mysql_select_db("archi_old", $connect) or die("select db archiold");
-		
+
 		$this->connectOLD = $connect;
 		$this->connectNEW = $connect0;
-		
+
 		$this->requeteNew("set names 'utf8'");
 		$this->requeteOld("set names 'utf8'");
-		
+
 	}
-	
+
 	function requeteNew($req)
 	{
 		return mysql_query($req, $this->connectNEW);
 	}
-	
+
 	function requeteOld($req)
 	{
 		return mysql_query($req, $this->connectOLD);
@@ -99,16 +99,16 @@ $tabReg = array(
 $connex = new connex();
 echo "<b>Convertisseur d'url a la chaine</b><br>";
 $resRechercheDescription = $connex->requeteNew("
-						SELECT idHistoriqueEvenement,titre,description 
+						SELECT idHistoriqueEvenement,titre,description
 						FROM historiqueEvenement
-						WHERE 
+						WHERE
 							description like \"%www.archi-strasbourg.org%\"
 						OR
 							description like \"%<a%\"
-					
+
 					");
 
-					
+
 echo "Nombre de résultats avec des url : ".mysql_num_rows($resRechercheDescription)."<br>";
 $nbUrl=0;
 $nbidentDossier=0;
@@ -129,17 +129,17 @@ while($fetchRechercheDescription = mysql_fetch_assoc($resRechercheDescription))
 		var_dump($retourAdr);
 		if(count($retourAdr[0])>1)
 			echo "<font color='orange'>Plusieurs adresses dans le commentaire !!!!!!!</font><br>";
-		
+
 		// si plusieurs adresses : $retour[0][0] = adresses
-		// 
-		
-		
+		//
+
+
 			/*for($i=0 ; $i<count($retourAdr[1]) ; $i++)
 			{
 				echo "<br>URL : ".$retourAdr[1][$i]."<br>";
 			}*/
 			$url = $retourAdr[1];
-			
+
 			$iddossier="";
 			if(eregi("ident=([0-9]+)$",$retourAdr[1],$retourAdrIdent) && substr_count($fetchRechercheDescription["description"],'[url')==1)
 			{
@@ -147,36 +147,36 @@ while($fetchRechercheDescription = mysql_fetch_assoc($resRechercheDescription))
 				$nbidentDossier++;
 				echo "<br>iddossier = ".$retourAdrIdent[1]."<br>";
 				$iddossier = $retourAdrIdent[1];
-				
+
 				// recuperation du titre dans la version archiv1 a partir de l'iddossier trouvé
 				$resTitreV1 = $connex->requeteOld("SELECT titredossier, commentaires FROM dossier WHERE iddossier='".$iddossier."'");
-				
+
 				if(mysql_num_rows($resTitreV1)==1)
 				{
-					
+
 					$fetchTitreV1 = mysql_fetch_assoc($resTitreV1);
-					
+
 					$titre = $fetchTitreV1['titredossier'];
-					
+
 					echo "dossier a recherche : ".$titre."<br>";
-					
+
 					if($titre !='')
 					{
 						// recherche d'une correspondance dans la v2
 						$queryV2Titre = $connex->requeteNew("
-															SELECT idHistoriqueEvenement 
+															SELECT idHistoriqueEvenement
 															FROM historiqueEvenement
 															WHERE titre = \"".$titre."\"
-													
+
 													");
 						if(mysql_num_rows($queryV2Titre)==1)
 						{
 							echo "<font color='green'>=>Evenement trouvé!!! </font><br>";
-							
+
 							$fetchV2Titre = mysql_fetch_assoc($queryV2Titre);
-							
+
 							$tabCorrespondances[]=array("adr"=>$retourAdr,"iddossier"=>$iddossier,"idHistoriqueEvenementText"=>$fetchRechercheDescription["idHistoriqueEvenement"],"idHistoriqueEvenementUrl"=>$fetchV2Titre['idHistoriqueEvenement'],"description"=>$fetchRechercheDescription['description']);
-							
+
 							$ok++;
 						}
 						elseif(mysql_num_rows($queryV2Titre)>1)
@@ -187,15 +187,15 @@ while($fetchRechercheDescription = mysql_fetch_assoc($resRechercheDescription))
 						{
 							echo "<font color='red'>=>pas de correpondance trouvee par le titre!!! </font><br>";
 						}
-						
+
 					}
 					else
 					{
 						// recherche a partir du debut du texte dans commentaires
 						$debutCommentaire = pia_substr(strtolower($fetchTitreV1['commentaires']),0,70);
 						echo "<font color='green'>reconnaissance par debut commentaire : </font>".$debutCommentaire."<br>";
-						
-						
+
+
 						// recherche d'une correspondance dans la v2
 						$queryV2Commentaire = $connex->requeteNew("
 															SELECT he1.idHistoriqueEvenement as idHistoriqueEvenement
@@ -211,10 +211,10 @@ while($fetchRechercheDescription = mysql_fetch_assoc($resRechercheDescription))
 							echo "<font color='green'>=>Evenement trouvé!!! </font><br>";
 							// MISE A JOUR
 							$resQueryV2Commentaire = mysql_fetch_assoc($queryV2Commentaire);
-							
+
 							$tabCorrespondances[]=array("adr"=>$retourAdr,"iddossier"=>$iddossier,"idHistoriqueEvenementText"=>$fetchRechercheDescription["idHistoriqueEvenement"],"idHistoriqueEvenementUrl"=>$resQueryV2Commentaire['idHistoriqueEvenement'],"description"=>$fetchRechercheDescription['description']);
-							
-							
+
+
 						}
 						elseif(mysql_num_rows($queryV2Commentaire)>1)
 						{
@@ -224,7 +224,7 @@ while($fetchRechercheDescription = mysql_fetch_assoc($resRechercheDescription))
 						{
 							echo "<font color='red'>=>Aucune correspondance trouvees :( </font><br>";
 						}
-						
+
 					}
 				}
 				else
@@ -236,12 +236,12 @@ while($fetchRechercheDescription = mysql_fetch_assoc($resRechercheDescription))
 			{
 				echo "<font color='red'>iddossier non trouve</font><br>";
 			}
-		
+
 	}
-	
+
 	echo "</td><td><input type='submit' value='valider'></td></tr></table>";
 	echo "</form>";
-	
+
 }
 
 echo "<br><br>nbUrl trouvees = ".$nbUrl."<br>";
@@ -256,7 +256,7 @@ foreach($tabCorrespondances as $indice => $correspond)
 	echo $correspond["adr"][0]." ".$correspond["adr"][1]." ".$correspond["iddossier"]." ".$correspond["idHistoriqueEvenementUrl"]."<br>";
 	echo "<br>******************************************************************************************************************************************************<br>";
 	// recherche de l'idAdresse correspondant a l'idHistoriqueEvenement => groupe d'adresse
-	
+
 	$reqAdresse = "
 					SELECT ee.idEvenement as idEvenementGroupeAdresse, ae.idAdresse as idAdresse
 					FROM historiqueEvenement he1
@@ -264,40 +264,40 @@ foreach($tabCorrespondances as $indice => $correspond)
 					RIGHT JOIN _adresseEvenement ae ON ae.idEvenement = ee.idEvenement
 					WHERE he1.idHistoriqueEvenement = '".$correspond["idHistoriqueEvenementUrl"]."'
 				";
-	
-	
+
+
 	echo $reqAdresse;
 	$resAdresse = $connex->requeteNew($reqAdresse);
-	
+
 	if(mysql_num_rows($resAdresse)==1)
 	{
 		$fetchAdresse = mysql_fetch_assoc($resAdresse);
-		
+
 		$str = $correspond['description'];
 		if($str2 = str_replace($correspond['adr'][1],"http://###serveur###/?archiAffichage=adresseDetail&archiIdAdresse=".$fetchAdresse['idAdresse'],$str));
 		{
-		
+
 			if($str2 != $str)
 			{
 				$nbRemplacements++;
-				
+
 				echo "<br><br>-------------------------------------------------------------------------------------------------------<br>";
-				
+
 				echo "recherche = ".$correspond['adr'][1]."<br><br>";
-				
-				
+
+
 				echo $str."<br>";
 				echo "<br>=><br>";
 				echo $str2."<br>";
 				echo "<br><br>";
-				
+
 				echo "depart = <a href='".$correspond['adr'][1]."'>".$correspond['adr'][1]."</a><br>";
 				echo "conversion = <a target='_blank' href='http://strasbourg.pia.com.fr/~laurent/a/?archiAffichage=adresseDetail&archiIdAdresse=".$fetchAdresse['idAdresse']."'>http://###serveur###/?archiAffichage=adresseDetail&archiIdAdresse=".$fetchAdresse['idAdresse']."</a><br>";
-				
+
 				// ********************
 				// * requete de mise a jour:  *
 				// ********************
-				
+
 				$reqMaj = "update historiqueEvenement set description = \"".addslashes($str2)."\" where idHistoriqueEvenement='".$correspond["idHistoriqueEvenementText"]."'";
 				echo "<br><br>";
 				echo $reqMaj;
@@ -317,5 +317,3 @@ echo "nombre de remplacement : ".$nbRemplacements."<br>";
 ?>
 </body>
 </html>
-
-
