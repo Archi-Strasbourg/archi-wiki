@@ -56,17 +56,17 @@ class Config
     // cette variable sert au remplacement dans les descriptions
     //qui contiennent des urls vers le site du serveur ou est le site
     protected $nomServeur
-        = 'www.archi-strasbourg.org';
+        = 'www.archi-wiki.org';
     protected $urlImages
-        = 'http://www.archi-strasbourg.org/images/';
+        = 'http://www.archi-wiki.org/images/';
     protected $urlImagesMini
-        = 'http://www.archi-strasbourg.org/images/mini/';
+        = 'http://www.archi-wiki.org/images/mini/';
     protected $urlImagesMoyen
-        = 'http://www.archi-strasbourg.org/images/moyen/';
+        = 'http://www.archi-wiki.org/images/moyen/';
     protected $urlImagesGrand
-        = 'http://www.archi-strasbourg.org/images/grand/';
+        = 'http://www.archi-wiki.org/images/grand/';
     protected $urlImagesOriginaux
-        = 'http://www.archi-strasbourg.org/images/originaux/';
+        = 'http://www.archi-wiki.org/images/originaux/';
 
     /*public $cheminPhysiqueImagesMini
         = '/home/pia/archiv2/images/mini/';
@@ -110,7 +110,7 @@ class Config
     public $cheminPhysiqueFrameWork
         = "/var/www/archi-strasbourg/includes/framework/";
     public $urlFrameworkFromRoot
-        = "http://www.archi-strasbourg.org/includes/framework/";
+        = "http://www.archi-wiki.org/includes/framework/";
 
     protected $variablesGet;
     protected $variablesPost;
@@ -268,7 +268,7 @@ class Config
         if (isset($_SERVER["SERVER_NAME"])) {
             return $_SERVER["SERVER_NAME"];
         } else {
-            return "archi-strasbourg.org";
+            return "archi-wiki.org";
         }
     }
 
@@ -1167,7 +1167,7 @@ class Config
     public function getMessageDesabonnerAlerteMail()
     {
         return "<br><small>Pour ne plus recevoir les alertes mail, ".
-        "il vous suffit de vous connecter à <a href='".$this->creerUrl('', 'afficheAccueil&modeAffichage=profil')."'>votre profil archi-strasbourg.org".
+        "il vous suffit de vous connecter à <a href='".$this->creerUrl('', 'afficheAccueil&modeAffichage=profil')."'>votre profil archi-wiki.org".
         "</a>.</small>";
     }
 
