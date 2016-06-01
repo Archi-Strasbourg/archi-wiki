@@ -4,7 +4,7 @@
  * Recherche de la date dans la base de donnee archiv2,  enregistrements dans les repertoires en redimensionnant avec comme nom idHistoriqueImage
  *
  * PHP Version 5.3.3
- * 
+ *
  * @category Script
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
@@ -15,7 +15,7 @@
 mb_internal_encoding("UTF-8");
 mb_regex_encoding("UTF-8");
 
-ini_set('max_execution_time',  0);
+ini_set('max_execution_time', 0);
 require_once 'PEAR.php';
 require_once 'HTML/BBCodeParser.php';
 //include('/home/pia/archiv2/includes/framework/config.class.php');
@@ -39,10 +39,12 @@ $mail = new mailObject();
 
 $idPeriode = "";
 if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['idPeriode']!='')) {
-    if(isset($argv[1]) && $argv[1]!='' && $argv[1]!='0' && $argv[1]!='1')
+    if (isset($argv[1]) && $argv[1]!='' && $argv[1]!='0' && $argv[1]!='1') {
         $idPeriode = trim($argv[1]);
-    if(isset($_GET['idPeriode']) && $_GET['idPeriode']!='' && $_GET['idPeriode']!='0' && $_GET['idPeriode']!='1')
+    }
+    if (isset($_GET['idPeriode']) && $_GET['idPeriode']!='' && $_GET['idPeriode']!='0' && $_GET['idPeriode']!='1') {
         $idPeriode = $_GET['idPeriode'];
+    }
 
 
     // recuperation des mails
@@ -64,11 +66,13 @@ if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['id
     $arrayRegroupementTypeMail = array();
     // regroupement pas utilisateur et par type de mail (nouvelle image ,  modif evenement etc)
     while ($fetch = mysql_fetch_assoc($res)) {
-        if(!isset($arrayRegroupementTypeMail[$fetch['idUtilisateur']]))
+        if (!isset($arrayRegroupementTypeMail[$fetch['idUtilisateur']])) {
             $arrayRegroupementTypeMail[$fetch['idUtilisateur']] = array();
+        }
 
-        if(!isset($arrayRegroupementTypeMail[$fetch['idUtilisateur']][$fetch['idTypeMailRegroupement']]))
+        if (!isset($arrayRegroupementTypeMail[$fetch['idUtilisateur']][$fetch['idTypeMailRegroupement']])) {
             $arrayRegroupementTypeMail[$fetch['idUtilisateur']][$fetch['idTypeMailRegroupement']] = array();
+        }
 
         $arrayRegroupementTypeMail[$fetch['idUtilisateur']][$fetch['idTypeMailRegroupement']][] = array(
             'idUtilisateur'=>$fetch['idUtilisateur'],
@@ -80,15 +84,11 @@ if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['id
     }
 
 
-    foreach (
-        $arrayRegroupementTypeMail as $idUtilisateur => $valueTypeMailRegroupement
-    ) {
+    foreach ($arrayRegroupementTypeMail as $idUtilisateur => $valueTypeMailRegroupement) {
         $arrayMailsASupprimer= array();
         $message= "<b>Modifications apportées sur le site archi-strasbourg.org".
             "</b><br><br>";
-        foreach (
-            $valueTypeMailRegroupement as $idTypeMailRegroupement => $valueMail
-        ) {
+        foreach ($valueTypeMailRegroupement as $idTypeMailRegroupement => $valueMail) {
             // recup de l'intitule de la rubrique de mail regroupee
             $reqIntituleRegroupement
                 = "SELECT intitule FROM typesMailsEnvoiMailsRegroupes".
@@ -113,8 +113,13 @@ if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['id
         $fetchMail = mysql_fetch_assoc($resMail);
         $sujet = "archi-strasbourg.org : Modifications sur le site";
         $mail->sendMail(
-            $mail->getSiteMail(), trim($fetchMail['mail']),
-            $sujet, $message, true, null, 'daily.log'
+            $mail->getSiteMail(),
+            trim($fetchMail['mail']),
+            $sujet,
+            $message,
+            true,
+            null,
+            'daily.log'
         );
 
         // Stockage du mail dans les logs
@@ -130,18 +135,13 @@ if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['id
             $reqMails = "DELETE FROM mailsEnvoiMailsRegroupes WHERE idMail IN ("
                 .implode(", ", $arrayMailsASupprimer).")";
             $resMails = $config->connexionBdd->requete($reqMails);
-
         } else {
             $mail->sendMail(
-                $mail->getSiteMail(), "fabien.romary@gmail.com",
-                "maintenance archiv2 probleme", "mail vide envoyé ?"
+                $mail->getSiteMail(),
+                "fabien.romary@gmail.com",
+                "maintenance archiv2 probleme",
+                "mail vide envoyé ?"
             );
         }
-
-
-
     }
-
 }
-
-?>

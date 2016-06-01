@@ -103,7 +103,6 @@ while ($fetchEvenementsCrees = mysql_fetch_assoc($resEvenementsCrees)) {
     $reqVerif = "SELECT idHistoriqueEvenement FROM historiqueEvenement WHERE idEvenement = '".$fetchEvenementsCrees['idEvenement']."'";
     $resVerif = $config->connexionBdd->requete($reqVerif);
     if (mysql_num_rows($resVerif)>1) {
-
         // il y a eu au moins une mise a jour et celle ci a ete effectuée cette semaine
         $arrayEvenementsCrees[] = $fetchEvenementsCrees['idEvenement'];
     }
@@ -164,7 +163,6 @@ if (count($arrayEvenementsCrees)>0) {
     $arrayListeEvGA            = array();
     while ($fetchAdresseEvenementsCrees = mysql_fetch_assoc($resAdresseEvenementsCrees)) {
         if (!in_array($fetchAdresseEvenementsCrees['idEvenementGroupeAdresse'], $arrayListeEvGA)) {
-
             //!in_array($fetchAdresseEvenementsCrees['idAdresse'],$arrayListeAdresses) && {
                 $arrayListeEvGA[] = $fetchAdresseEvenementsCrees['idEvenementGroupeAdresse'];
         }
@@ -255,13 +253,13 @@ if (count($arrayAdresses)>0 || count($arrayAdressesModifiees)>0) {
     $iv1 = 0;
     $iv2 = 0;
     $iv3 = 0;
-    foreach ($arrayAdresses as $indiceVille=>$valueVille) {
+    foreach ($arrayAdresses as $indiceVille => $valueVille) {
         if (!in_array($indiceVille, $adressesModifieesVillesAffichees)) {
             $adressesModifieesVillesAffichees[] = $indiceVille;
         }
         if ($indiceVille=='Strasbourg') {
             $message = "<b>".$indiceVille."</b><br>";
-            foreach ($valueVille as $indiceAdresse=>$valueAdresse) {
+            foreach ($valueVille as $indiceAdresse => $valueAdresse) {
                 if (!in_array($valueAdresse['idEvenementGroupeAdresse'], $adressesModifieesAffichees)) {
                     if ($is1==0) {
                         $message .= "Nouvelles Adresses : <br>";
@@ -275,7 +273,7 @@ if (count($arrayAdresses)>0 || count($arrayAdressesModifiees)>0) {
             $messageStrasbourg .= $message;
             if (isset($arrayAdressesModifiees[$indiceVille]) && count($arrayAdressesModifiees[$indiceVille])>0) {
                 $message = "";
-                foreach ($arrayAdressesModifiees[$indiceVille] as $indiceAdresse=>$valueAdresse) {
+                foreach ($arrayAdressesModifiees[$indiceVille] as $indiceAdresse => $valueAdresse) {
                     if (!in_array($valueAdresse['idEvenementGroupeAdresse'], $adressesModifieesAffichees)) {
                         if ($is2==0) {
                             $messageStrasbourg .= "<br>Adresses modifiées :<br>";
@@ -293,7 +291,7 @@ if (count($arrayAdresses)>0 || count($arrayAdressesModifiees)>0) {
             }
         } else {
             $message = "<br><b>".$indiceVille."</b><br>";
-            foreach ($valueVille as $indiceAdresse=>$valueAdresse) {
+            foreach ($valueVille as $indiceAdresse => $valueAdresse) {
                 if (!in_array($valueAdresse['idEvenementGroupeAdresse'], $adressesModifieesAffichees)) {
                     if ($iv1==0) {
                         $message .= "Nouvelles Adresses : <br>";
@@ -307,7 +305,7 @@ if (count($arrayAdresses)>0 || count($arrayAdressesModifiees)>0) {
             $messageAutres .= $message;
             if (isset($arrayAdressesModifiees[$indiceVille]) && count($arrayAdressesModifiees[$indiceVille])>0) {
                 $message = "";
-                foreach ($arrayAdressesModifiees[$indiceVille] as $indiceAdresse=>$valueAdresse) {
+                foreach ($arrayAdressesModifiees[$indiceVille] as $indiceAdresse => $valueAdresse) {
                     if (!in_array($valueAdresse['idEvenementGroupeAdresse'], $adressesModifieesAffichees)) {
                         if ($iv2==0) {
                             $messageAutres .= "<br>Adresses modifiées :<br>";
@@ -334,11 +332,11 @@ if (count($arrayAdresses)>0 || count($arrayAdressesModifiees)>0) {
     }
 
     // on affiche encore les adresses des villes qui n'ont pas ete affichees ci dessus ( adresses non ajoutées cette semaine, mais modifiées)
-    foreach ($arrayAdressesModifiees as $indiceVille=>$valueVille) {
+    foreach ($arrayAdressesModifiees as $indiceVille => $valueVille) {
         if (!in_array($indiceVille, $adressesModifieesVillesAffichees)) {
             if ($indiceVille=="Strasbourg") {
                 // la ville n'a pas de nouvelles adresses , mais des adresses modifiees
-                foreach ($valueVille as $indiceAdresse=>$valueAdresse) {
+                foreach ($valueVille as $indiceAdresse => $valueAdresse) {
                     if (!in_array($valueAdresse['idEvenementGroupeAdresse'], $adressesModifieesAffichees)) {
                         if ($is3==0) {
                             $messageStrasModif .= "<br><b>Strasbourg</b><br>Adresses modifiées : <br>";
@@ -361,7 +359,7 @@ if (count($arrayAdresses)>0 || count($arrayAdressesModifiees)>0) {
                 $is3 = 0;
             } else {
                 // la ville n'a pas de nouvelles adresses, mais des adresses modifiees
-                foreach ($valueVille as $indiceAdresse=>$valueAdresse) {
+                foreach ($valueVille as $indiceAdresse => $valueAdresse) {
                     if (!in_array($valueAdresse['idEvenementGroupeAdresse'], $adressesModifieesAffichees)) {
                         if ($iv3==0) {
                             $messageAutresModif .= "<br><b>$indiceVille</b><br>Adresses modifiées : <br>";
@@ -506,4 +504,3 @@ if (count($arrayAdresses)>0 || count($arrayAdressesModifiees)>0) {
         }
     }
 }
-?>
