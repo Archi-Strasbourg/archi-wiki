@@ -8,8 +8,8 @@
  * @category Script
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  Inconnue https://archi-strasbourg.org/?archiAffichage=faq
- * @link     https://archi-strasbourg.org/
+ * @license  Inconnue http://archi-wiki.org/?archiAffichage=faq
+ * @link     http://archi-wiki.org/
  * */
 
 mb_internal_encoding("UTF-8");
@@ -86,7 +86,7 @@ if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['id
 
     foreach ($arrayRegroupementTypeMail as $idUtilisateur => $valueTypeMailRegroupement) {
         $arrayMailsASupprimer= array();
-        $message= "<b>Modifications apportées sur le site archi-strasbourg.org".
+        $message= "<b>Modifications apportées sur le site archi-wiki.org".
             "</b><br><br>";
         foreach ($valueTypeMailRegroupement as $idTypeMailRegroupement => $valueMail) {
             // recup de l'intitule de la rubrique de mail regroupee
@@ -111,7 +111,7 @@ if ((isset($argv[1]) && $argv[1]!='') || (isset($_GET['idPeriode']) && $_GET['id
             $idUtilisateur."'";
         $resMail = $config->connexionBdd->requete($reqMail);
         $fetchMail = mysql_fetch_assoc($resMail);
-        $sujet = "archi-strasbourg.org : Modifications sur le site";
+        $sujet = "archi-wiki.org : Modifications sur le site";
         $mail->sendMail(
             $mail->getSiteMail(),
             trim($fetchMail['mail']),

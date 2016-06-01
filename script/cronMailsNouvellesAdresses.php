@@ -9,8 +9,8 @@
  * @category Script
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
- * @license  Inconnue https://archi-strasbourg.org/?archiAffichage=faq
- * @link     https://archi-strasbourg.org/
+ * @license  Inconnue http://archi-wiki.org/?archiAffichage=faq
+ * @link     http://archi-wiki.org/
  *
  * */
 
@@ -222,7 +222,7 @@ if (mysql_num_rows($resComplement)==1) {
     //$messageComplement=str_replace("###cheminRacine###",$config->getUrlRacine(),$messageComplement)."<br><br>";
     $messageComplement .= str_replace("<img src=\"images/actualites", "<img src=\"".$config->getUrlRacine()."images/actualites", stripslashes($fetchComplement['texteMailHebdomadaire']))."<br>";
     if (!isset($_GET["modePrevisualisationAdmin"])) {
-        $messageComplement .= "<a href='http://www.archi-strasbourg.org/actualites-archi-strasbourg-".$fetchComplement['idActualite'].".html' target='_blank'>lire la suite</a>";
+        $messageComplement .= "<a href='http://www.archi-wiki.org/actualites-archi-strasbourg-".$fetchComplement['idActualite'].".html' target='_blank'>lire la suite</a>";
     }
     $messageComplement .= "<br><br>";
 }
@@ -235,7 +235,7 @@ if (count($arrayAdresses)>0 || count($arrayAdressesModifiees)>0) {
     $messageIntro               = "Bonjour,<br><br>";
     $messageIntro              .= $messageComplement;
     if (!isset($_GET["modePrevisualisationAdmin"])) {
-        $messageIntro .= "Voici les adresses qui ont été créées ou modifiées cette semaine sur <a href='http://www.archi-strasbourg.org'>http://www.archi-strasbourg.org</a> :<br><br>";
+        $messageIntro .= "Voici les adresses qui ont été créées ou modifiées cette semaine sur <a href='http://www.archi-wiki.org'>http://www.archi-wiki.org</a> :<br><br>";
     }
     $messageStrasbourg = "";
     $messageAutres     = "";
@@ -383,7 +383,7 @@ if (count($arrayAdresses)>0 || count($arrayAdressesModifiees)>0) {
             }
         }
     }
-    $messageFin = "<br>L'équipe archi-strasbourg.org<br>";
+    $messageFin = "<br>L'équipe archi-wiki.org<br>";
     $messageFin .= $config->getMessageDesabonnerAlerteMail();
 
     $reqNewPeople = "
@@ -452,7 +452,7 @@ if (count($arrayAdresses)>0 || count($arrayAdressesModifiees)>0) {
     if (isset($fetchComplement['titre'])) {
         $sujet = $fetchComplement['titre'];
     } else {
-        $sujet = "Nouvelles adresses et adresses modifiées sur archi-strasbourg.org.";
+        $sujet = "Nouvelles adresses et adresses modifiées sur archi-wiki.org.";
     }
     $messageHTML = "<!Doctype HTML>
     <html>
