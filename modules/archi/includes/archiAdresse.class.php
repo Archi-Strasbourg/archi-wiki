@@ -5826,8 +5826,7 @@ class archiAdresse extends ArchiContenu
                     $reqEvent = "
 							SELECT idEvenement
 							FROM _personneEvenement
-							WHERE idPersonne = ".$this->variablesGet['id']."
-									";
+							WHERE idPersonne = '".mysql_real_escape_string($this->variablesGet['id'])."';";
                     $resEvent = $this->connexionBdd->requete($reqEvent);
                     if (mysql_num_rows($resEvent)>0) {
                         $fetchEvent = mysql_fetch_assoc($resEvent);

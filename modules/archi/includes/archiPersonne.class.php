@@ -680,7 +680,7 @@ class ArchiPersonne extends ArchiContenu
             SELECT idPersonne, p.nom as nom, p.prenom as prenom, m.nom as nomMetier , p.dateNaissance dateNaissance, p.dateDeces as dateDeces, p.description as description
             FROM personne p
             LEFT JOIN metier m ON m.idMetier = p.idMetier
-            WHERE p.idPersonne = '".$id."'
+            WHERE p.idPersonne = '".mysql_real_escape_string($id)."'
         ";
 
 
@@ -730,7 +730,7 @@ class ArchiPersonne extends ArchiContenu
         $req = "
             SELECT nom, prenom
             FROM personne
-            WHERE idPersonne = '".$id."'
+            WHERE idPersonne = '".mysql_real_escape_string($id)."'
         ";
 
 
@@ -794,7 +794,7 @@ class ArchiPersonne extends ArchiContenu
         $req = "
             SELECT idImage
             FROM _personneImage
-            WHERE idPersonne = '".$id."'
+            WHERE idPersonne = '".mysql_real_escape_string($id)."'
         ";
 
         $res = $config->connexionBdd->requete($req);
@@ -1121,7 +1121,7 @@ class ArchiPersonne extends ArchiContenu
         global $config;
         $req="SELECT idEvenement
             FROM `_evenementPersonne`
-            WHERE `idPersonne` =".$id;
+            WHERE `idPersonne` = '".mysql_real_escape_string($id)."';";
         $res = $config->connexionBdd->requete($req);
         $return = array();
         while ($event=mysql_fetch_object($res)) {
