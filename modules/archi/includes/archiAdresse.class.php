@@ -5781,6 +5781,11 @@ class archiAdresse extends ArchiContenu
                     // on affiche un titre et une description
                     $personneObj = new archiPersonne();
                     $infosPersonne = $personneObj->getInfosPersonne($this->variablesGet['id']);
+                    if (empty($infosPersonne['nom']) && empty($infosPersonne['prenom'])) {
+                        http_response_code(404);
+                        echo '<p>Erreur&nbsp;: Personne introuvable</p>';
+                        return;
+                    }
                     $titre="";
                     if (isset($infosPersonne['nomMetier']) && $infosPersonne['nomMetier']!="") {
                         $titre = "<span itemprop='jobTitle'>".ucfirst(stripslashes($infosPersonne['nomMetier']))."</span> : ";
