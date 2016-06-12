@@ -1,8 +1,8 @@
 ﻿{divBegin}
 <h1>{titre}</h1>
 {description}
-<!-- BEGIN t -->	
-	
+<!-- BEGIN t -->
+
 	{t.nbReponses}
 	<a href="{t.urlPrecedent}" onclick="{t.urlPrecedentOnClick}">&lt;</a>
 	<!-- BEGIN nav -->

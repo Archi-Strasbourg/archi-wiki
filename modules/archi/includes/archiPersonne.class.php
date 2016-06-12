@@ -40,7 +40,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return void
      * */
-    function __construct($id)
+    public function __construct($id)
     {
         global $config;
         parent::__construct();
@@ -48,7 +48,7 @@ class ArchiPersonne extends ArchiContenu
             "SELECT * FROM `personne` WHERE idPersonne='".
             mysql_real_escape_string($id)."'"
         );
-        foreach (mysql_fetch_object($resPerson) as $key=>$value) {
+        foreach (mysql_fetch_object($resPerson) as $key => $value) {
             $this->$key=stripslashes($value);
         }
     }
@@ -64,15 +64,15 @@ class ArchiPersonne extends ArchiContenu
         $formulaire = new formGenerator();
         if (isset($this->variablesPost['submit'])) {
             $modeAffichage='';
-            if (isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']!='')
+            if (isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']!='') {
                 $modeAffichage = $this->variablesGet['modeAffichage'];
+            }
 
 
-            switch ($modeAffichage)
-            {
-            case 'nouveauDossier':
-            case "modifEvenement":
-                $tabForm = array(
+            switch ($modeAffichage) {
+                case 'nouveauDossier':
+                case "modifEvenement":
+                    $tabForm = array(
                     'prenom'    => array('default'=> '',  'value' => '',  'required'=>false, 'error'=>'', 'type'=>'text'),
                     'nom'        => array('default'=> '',  'value' => '',  'required'=>true, 'error'=>'', 'type'=>'text'),
                     'description'    => array('default'=> '',  'value' => '',  'required'=>false, 'error'=>'', 'type'=>'text'),
@@ -81,10 +81,10 @@ class ArchiPersonne extends ArchiContenu
                     'metier'    => array('default'=> 'aucune' ,  'value' => '',  'required'=>false , 'error'=>'', 'type'=>'numeric',  'checkExist'=>
                                     array('table'=> 'metier',  'primaryKey'=> 'idMetier')));
 
-                break;
+                    break;
 
-            default:
-                $tabForm = array(
+                default:
+                    $tabForm = array(
                     'prenom'    => array('default'=> '',  'value' => '',  'required'=>false, 'error'=>'', 'type'=>'text'),
                     'nom'        => array('default'=> '',  'value' => '',  'required'=>true, 'error'=>'', 'type'=>'text'),
                     'description'    => array('default'=> '',  'value' => '',  'required'=>false, 'error'=>'', 'type'=>'text'),
@@ -94,7 +94,7 @@ class ArchiPersonne extends ArchiContenu
                     'metier'    => array('default'=> 'aucune' ,  'value' => '',  'required'=>false , 'error'=>'', 'type'=>'numeric',  'checkExist'=>
                                     array('table'=> 'metier',  'primaryKey'=> 'idMetier')));
 
-                break;
+                    break;
             }
             $erreur = $formulaire->getArrayFromPost($tabForm);
 
@@ -165,35 +165,36 @@ class ArchiPersonne extends ArchiContenu
         $t->set_filenames(array('formulaire'=>'personneFormulaire.tpl'));
 
         $modeAffichage='';
-        if (isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']!='')
+        if (isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']!='') {
             $modeAffichage = $this->variablesGet['modeAffichage'];
+        }
 
 
-        switch ($modeAffichage)
-        {
-        case 'nouveauDossier':
-        case "modifEvenement":
-            $t->assign_vars(array('urlAction'=>$this->creerUrl('ajouterPersonne', '',  array('noHeaderNoFooter'=>1, 'modeAffichage'=>$modeAffichage))));
-            $t->assign_vars(array('boutonAnnulation'=>"location.href='".$this->creerUrl('', 'personneListe',  array('noHeaderNoFooter'=>1, 'modeAffichage'=>$modeAffichage))."';"));
-            break;
-        default:
-            $t->assign_block_vars('allowAjouterMetier',  array());
-            break;
+        switch ($modeAffichage) {
+            case 'nouveauDossier':
+            case "modifEvenement":
+                $t->assign_vars(array('urlAction'=>$this->creerUrl('ajouterPersonne', '', array('noHeaderNoFooter'=>1, 'modeAffichage'=>$modeAffichage))));
+                $t->assign_vars(array('boutonAnnulation'=>"location.href='".$this->creerUrl('', 'personneListe', array('noHeaderNoFooter'=>1, 'modeAffichage'=>$modeAffichage))."';"));
+                break;
+            default:
+                $t->assign_block_vars('allowAjouterMetier', array());
+                break;
         }
 
         // récupération des métiers
         $sql = "SELECT nom,  idMetier FROM metier";
         $rep = $this->connexionBdd->requete($sql);
         while ($res = mysql_fetch_object($rep)) {
-            $t->assign_block_vars('metier',  array('valeur'=>$res->idMetier,  'nom'=>$res->nom));
+            $t->assign_block_vars('metier', array('valeur'=>$res->idMetier,  'nom'=>$res->nom));
         }
 
         if ($this->erreurs->tabFormExiste()) {
-            foreach ($this->erreurs->getErreursFromFormulaire() AS $name => $value) {
-                if ($value['type']=='date')
+            foreach ($this->erreurs->getErreursFromFormulaire() as $name => $value) {
+                if ($value['type']=='date') {
                      $val = $this->date->toFrench($this->date->toBdd($value['value']));
-                else
+                } else {
                     $val = htmlspecialchars(stripslashes($value["value"]));
+                }
 
                 $t->assign_vars(array( $name => $val));
                 if ($value["error"]!='') {
@@ -249,9 +250,12 @@ class ArchiPersonne extends ArchiContenu
         $res = $this->connexionBdd->requete(
             sprintf(
                 file_get_contents("sql/editPerson.sql"),
-                mysql_escape_string($firstname), mysql_escape_string($name),
-                $job, $this->date->toBdd($this->date->convertYears($birth)),
-                $this->date->toBdd($this->date->convertYears($death)), $id
+                mysql_escape_string($firstname),
+                mysql_escape_string($name),
+                $job,
+                $this->date->toBdd($this->date->convertYears($birth)),
+                $this->date->toBdd($this->date->convertYears($death)),
+                $id
             )
         );
     }
@@ -315,7 +319,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return string HTML
      * */
-    public function afficherListe($criteres=array(), $modeAffichage='')
+    public function afficherListe($criteres = array(), $modeAffichage = '')
     {
         $html="";
 
@@ -351,32 +355,28 @@ class ArchiPersonne extends ArchiContenu
         $t->set_filenames((array('personnesListe'=>'listePersonnes.tpl')));
 
 
-        if (isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']!="")
+        if (isset($this->variablesGet['modeAffichage']) && $this->variablesGet['modeAffichage']!="") {
             $modeAffichage = $this->variablesGet['modeAffichage'];
+        }
 
 
         //newIdPersonneAdded
-        switch ($modeAffichage)
-        {
-        case "nouveauDossier":
-        case "modifEvenement":
-            // si c'est un affichage apres un ajout ,  on renvoi le nouvel element au formulaire
-            if (isset($criteres['newIdPersonneAdded']) && $criteres['newIdPersonneAdded']!='0') {
-                /*$t->assign_vars(array('codeJavascriptReturnNewElementAjoute'=>"
+        switch ($modeAffichage) {
+            case "nouveauDossier":
+            case "modifEvenement":
+                // si c'est un affichage apres un ajout ,  on renvoi le nouvel element au formulaire
+                if (isset($criteres['newIdPersonneAdded']) && $criteres['newIdPersonneAdded']!='0') {
+                    /*$t->assign_vars(array('codeJavascriptReturnNewElementAjoute'=>"
                     parent.document.getElementById(parent.document.getElementById('paramChampsAppelantPersonne').value).innerHTML+='<option value=".$criteres['newIdPersonneAdded']." selected>".$this->getPersonneLibelle($criteres['newIdPersonneAdded'])."</option>';
-                "));
-                */
+                    "));
+                    */
 
-                $t->assign_vars(array('codeJavascriptReturnNewElementAjoute'=>"insertOptionInSelect(parent.document.getElementById(parent.document.getElementById('paramChampsAppelantPersonne').value), '".$criteres['newIdPersonneAdded']."', '".str_replace("'", "\'", $this->getPersonneLibelle($criteres['newIdPersonneAdded']))."')"));
+                    $t->assign_vars(array('codeJavascriptReturnNewElementAjoute'=>"insertOptionInSelect(parent.document.getElementById(parent.document.getElementById('paramChampsAppelantPersonne').value), '".$criteres['newIdPersonneAdded']."', '".str_replace("'", "\'", $this->getPersonneLibelle($criteres['newIdPersonneAdded']))."')"));
+                }
+                break;
 
-
-            }
-            break;
-
-        default:
-
-            break;
-
+            default:
+                break;
         }
 
 
@@ -393,14 +393,16 @@ class ArchiPersonne extends ArchiContenu
         $sqlComptageResultat = 'SELECT LOWER(SUBSTRING(p.nom,  1, 1)) AS lettre FROM personne p
             WHERE 1 GROUP BY LOWER(SUBSTRING(p.nom,  1, 1))';
         $rep = $this->connexionBdd->requete($sqlComptageResultat);
-        while ($res = mysql_fetch_object($rep))
+        while ($res = mysql_fetch_object($rep)) {
             $tabLettres[] = $res->lettre;
+        }
 
         // si aucune lettre n'est précisée,  on indique la première lettre ayant des résultats
         // si le tableau de lettres est défini
         // et que la première lettre n'existe pas ou que la première lettre n'existe pas dans le tableau
-        if (count($tabLettres) > 0 AND  (!isset($criteres['alphaPersonne']) OR (!in_array($criteres['alphaPersonne'],  $tabLettres))))
+        if (count($tabLettres) > 0 and  (!isset($criteres['alphaPersonne']) or (!in_array($criteres['alphaPersonne'], $tabLettres)))) {
             $criteres['alphaPersonne'] = $tabLettres[0];
+        }
 
         if (isset($criteres['alphaPersonne']) && !$isResultatRecherche) {
             $sqlLettreCourante = " AND LOWER(SUBSTRING(p.nom, 1, 1)) = '".$criteres['alphaPersonne']."' ";
@@ -418,13 +420,13 @@ class ArchiPersonne extends ArchiContenu
 
 
 
-        if (!$isResultatRecherche)
-            $t->assign_vars(array('listeAlphabetique' => $this->afficherListeAlphabetique('personneListe',  '',  $tabLettres))); // 'personneListe' correspond au cas d'affichage de index.php
-
+        if (!$isResultatRecherche) {
+            $t->assign_vars(array('listeAlphabetique' => $this->afficherListeAlphabetique('personneListe', '', $tabLettres))); // 'personneListe' correspond au cas d'affichage de index.php
+        }
 
         $t->assign_vars(
             array(
-                'urlAjout'=> $this->creerUrl('', 'afficherAjouterPersonne',  array('noHeaderNoFooter'=>1, 'modeAffichage'=>$modeAffichage)),
+                'urlAjout'=> $this->creerUrl('', 'afficherAjouterPersonne', array('noHeaderNoFooter'=>1, 'modeAffichage'=>$modeAffichage)),
                 'urlRecherchePersonne' => $this->creerUrl('', 'personneListe'),
                 'modeAffichage'=>$modeAffichage,
                 'archiAffichage'=>'personneListe'
@@ -486,29 +488,29 @@ class ArchiPersonne extends ArchiContenu
                 $nbPages = $nbEnregistrements/$nbEnregistrementsParPage;
             }
 
-            for ($i=1 ; $i<=$nbPages; $i++) {
-
-                switch ($modeAffichage)
-                {
-                case "nouveauDossier":
-                case "modifEvenement":
-                    $t->assign_block_vars(
-                        'pages',  array(
+            for ($i=1; $i<=$nbPages; $i++) {
+                switch ($modeAffichage) {
+                    case "nouveauDossier":
+                    case "modifEvenement":
+                        $t->assign_block_vars(
+                            'pages',
+                            array(
                             'page'=>$i,
-                            'url'=>$this->creerUrl('', '',  array_merge($this->variablesGet,  array('archiPagePersonne'=>$i, 'archiAffichage'=>'afficheRecherchePersonnePopup'))),
+                            'url'=>$this->creerUrl('', '', array_merge($this->variablesGet, array('archiPagePersonne'=>$i, 'archiAffichage'=>'afficheRecherchePersonnePopup'))),
                             'onclick'=>""
-                        )
-                    );
-                    break;
-                default:
-                    $t->assign_block_vars(
-                        'pages',  array(
+                            )
+                        );
+                        break;
+                    default:
+                        $t->assign_block_vars(
+                            'pages',
+                            array(
                             'page'=>$i,
-                            'url'=>$this->creerUrl('', '',  array_merge($this->variablesGet,  array('archiPagePersonne'=>$i, 'archiAffichage'=>'personneListe'))),
+                            'url'=>$this->creerUrl('', '', array_merge($this->variablesGet, array('archiPagePersonne'=>$i, 'archiAffichage'=>'personneListe'))),
                             'onclick'=>""
-                        )
-                    );
-                    break;
+                            )
+                        );
+                        break;
                 }
             }
         } else {
@@ -517,42 +519,43 @@ class ArchiPersonne extends ArchiContenu
 
 
         if ($nbEnregistrements>0) {
-            mysql_data_seek($resPersonnes,  $debutEnregistrement);
+            mysql_data_seek($resPersonnes, $debutEnregistrement);
             $i=0;
             while ($i<$nbEnregistrementsParPage) {
                 $fetchPersonne=mysql_fetch_assoc($resPersonnes);
 
 
-                switch ($modeAffichage)
-                {
-                case "nouveauDossier":
-                case "modifEvenement":
-                    $t->assign_block_vars(
-                        'personne',  array(
+                switch ($modeAffichage) {
+                    case "nouveauDossier":
+                    case "modifEvenement":
+                        $t->assign_block_vars(
+                            'personne',
+                            array(
                             'nom'=>stripslashes($fetchPersonne['nom']),
                             'prenom'=>stripslashes($fetchPersonne['prenom']),
                             'metier'=>stripslashes($fetchPersonne['metier']),
                             'url'=>'#',
                             'onclick'=>"insertOptionInSelect(parent.document.getElementById('personnes'), '".str_replace("'", "\'", $fetchPersonne['idPersonne'])."', '".str_replace("'", "\'", $fetchPersonne['nom'])." ".str_replace("'", "\'", $fetchPersonne['prenom'])."')"
-                        )
-                    );
-                    break;
-                default:
-                    $t->assign_block_vars(
-                        'personne',  array(
-                            'url'=>$this->creerUrl('',  'personne',  array('idPersonne'=>$fetchPersonne['idPersonne'])),
+                            )
+                        );
+                        break;
+                    default:
+                        $t->assign_block_vars(
+                            'personne',
+                            array(
+                            'url'=>$this->creerUrl('', 'personne', array('idPersonne'=>$fetchPersonne['idPersonne'])),
                             'nom'=>stripslashes($fetchPersonne['nom']),
                             'prenom'=>stripslashes($fetchPersonne['prenom']),
                             'metier'=>stripslashes($fetchPersonne['metier'])
-                        )
-                    );
-                    break;
+                            )
+                        );
+                        break;
                 }
 
                 $i++;
             }
         } else {
-            $t->assign_block_vars('noPersonne',  array());
+            $t->assign_block_vars('noPersonne', array());
         }
 
         ob_start();
@@ -572,7 +575,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return string HTML
      * */
-    public function afficherListeAlphabetique($affichage='', $lettreCourante='a' ,  $tableauLettres = array())
+    public function afficherListeAlphabetique($affichage = '', $lettreCourante = 'a', $tableauLettres = array())
     {
         $html="";
         $t = new Template('modules/archi/templates/');
@@ -582,7 +585,7 @@ class ArchiPersonne extends ArchiContenu
         $liste = $tableauLettres;
 
         foreach ($liste as $indice => $value) {
-            $t->assign_block_vars('lettres',  array('url'=>$this->creerUrl('', '',  array_merge($this->variablesGet,  array('archiAction'=>'',  'alphaPersonne'=>$value, 'archiPagePersonne'=>'1', 'archiAffichage'=>$affichage))), 'lettre'=>$value));
+            $t->assign_block_vars('lettres', array('url'=>$this->creerUrl('', '', array_merge($this->variablesGet, array('archiAction'=>'',  'alphaPersonne'=>$value, 'archiPagePersonne'=>'1', 'archiAffichage'=>$affichage))), 'lettre'=>$value));
         }
 
         ob_start();
@@ -601,7 +604,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return string Nom et prénom
      * */
-    public function getPersonneLibelle($idPersonne=0)
+    public function getPersonneLibelle($idPersonne = 0)
     {
         $req = "SELECT nom, prenom FROM personne WHERE idPersonne = '".$idPersonne."'";
         $res = $this->connexionBdd->requete($req);
@@ -637,16 +640,15 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return void
      * */
-    public function enregistreLiaisonEvenement($idEvenementALier=0, $nomChampPersonneFormulaire='personnes')
+    public function enregistreLiaisonEvenement($idEvenementALier = 0, $nomChampPersonneFormulaire = 'personnes')
     {
 
         if (isset($this->variablesPost[$nomChampPersonneFormulaire]) && is_array($this->variablesPost[$nomChampPersonneFormulaire]) && count($this->variablesPost[$nomChampPersonneFormulaire])>0) {
-
             // on supprime les anciennes liaison
             $resDelete = $this->connexionBdd->requete("delete from _evenementPersonne where idEvenement = '".$idEvenementALier."'");
 
             // on ajoute les nouvelles liaisons vers l'evenement
-            foreach ($this->variablesPost[$nomChampPersonneFormulaire] as $indice =>$value) {
+            foreach ($this->variablesPost[$nomChampPersonneFormulaire] as $indice => $value) {
                 $resInsert=$this->connexionBdd->requete("insert into _evenementPersonne (idPersonne,  idEvenement) values ('".$value."', '".$idEvenementALier."')");
             }
         }
@@ -659,7 +661,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return void
      * */
-    public function deleteLiaisonsPersonneFromIdEvenement($idEvenement=0)
+    public function deleteLiaisonsPersonneFromIdEvenement($idEvenement = 0)
     {
         $req = "delete from _evenementPersonne where idEvenement = '".$idEvenement."'";
         $res = $this->connexionBdd->requete($req);
@@ -672,13 +674,13 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return array
      * */
-    public function getInfosPersonne($id=0)
+    public function getInfosPersonne($id = 0)
     {
         $req = "
             SELECT idPersonne, p.nom as nom, p.prenom as prenom, m.nom as nomMetier , p.dateNaissance dateNaissance, p.dateDeces as dateDeces, p.description as description
             FROM personne p
             LEFT JOIN metier m ON m.idMetier = p.idMetier
-            WHERE p.idPersonne = '".$id."'
+            WHERE p.idPersonne = '".mysql_real_escape_string($id)."'
         ";
 
 
@@ -698,7 +700,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return mixed (ID personne ou false)
      * */
-    static function isPerson ($id)
+    public static function isPerson($id)
     {
         global $config;
         $req = "
@@ -722,13 +724,13 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return array
      * */
-    static function getName ($id)
+    public static function getName($id)
     {
         global $config;
         $req = "
             SELECT nom, prenom
             FROM personne
-            WHERE idPersonne = '".$id."'
+            WHERE idPersonne = '".mysql_real_escape_string($id)."'
         ";
 
 
@@ -746,7 +748,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return array
      * */
-    static function getEvenementsLies($id, $date, $date2)
+    public static function getEvenementsLies($id, $date, $date2)
     {
         global $config;
         $req = "
@@ -786,13 +788,13 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return string URL
      * */
-    static function getImage($id, $size="moyen", $showDefault=true,$dimension=array('height'=>200,'width'=>200))
+    public static function getImage($id, $size = "moyen", $showDefault = true, $dimension = array('height'=>200,'width'=>200))
     {
         global $config;
         $req = "
             SELECT idImage
             FROM _personneImage
-            WHERE idPersonne = '".$id."'
+            WHERE idPersonne = '".mysql_real_escape_string($id)."'
         ";
 
         $res = $config->connexionBdd->requete($req);
@@ -805,9 +807,9 @@ class ArchiPersonne extends ArchiContenu
             $res = $config->connexionBdd->requete($req);
             $fetch = mysql_fetch_object($res);
             if (isset($fetch->idHistoriqueImage)) {
-            	if($size=="resized"){
-            		return "resizeImage.php?id=".$fetch->idHistoriqueImage."&height=".$dimension['height']."&width=".$dimension['width']."";
-            	}
+                if ($size=="resized") {
+                    return "resizeImage.php?id=".$fetch->idHistoriqueImage."&height=".$dimension['height']."&width=".$dimension['width']."";
+                }
                 return $config->getUrlImage($size).$fetch->dateUpload.'/'.$fetch->idHistoriqueImage.'.jpg';
             }
         }
@@ -825,7 +827,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return array
      * */
-    static function getEvents($id)
+    public static function getEvents($id)
     {
         global $config;
         $req = "
@@ -846,7 +848,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return array
      * */
-    static function getImages($id)
+    public static function getImages($id)
     {
         global $config;
         $events=self::getEvents($id);
@@ -870,7 +872,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return bool
      * */
-    static function setImage($idPerson, $idImage)
+    public static function setImage($idPerson, $idImage)
     {
         global $config;
         $req = "
@@ -914,7 +916,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return  string HTML
      * */
-    static function displayEvenementsLies($idPerson, $dateDebut, $date2)
+    public static function displayEvenementsLies($idPerson, $dateDebut, $date2)
     {
         global $config;
         $linkedEvents=archiPersonne::getEvenementsLies($idPerson, $dateDebut, $date2);
@@ -1016,7 +1018,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return string HTML
      * */
-    static function search($keyword, $pos=1)
+    public static function search($keyword, $pos = 1)
     {
         global $config;
         $html="<h1 id='personSearch'>"._("Personnes")."</h1>";
@@ -1057,7 +1059,8 @@ class ArchiPersonne extends ArchiContenu
         $t=new Template('modules/archi/templates/');
         $t->set_filenames(array('listeAdresses'=>'listeAdresses.tpl'));
         $t->assign_block_vars(
-            't',  array(
+            't',
+            array(
                 'urlPrecedent'         => $config->creerUrl("", "recherche", array("motcle"=>$_GET["motcle"], "pos"=>$prevPos, "submit"=>"Rechercher"))."#personSearch",
                 'urlPrecedentOnClick'    => "",
                 'urlSuivant'           => $config->creerUrl("", "recherche", array("motcle"=>$_GET["motcle"], "pos"=>$nextPos, "submit"=>"Rechercher"))."#personSearch",
@@ -1067,7 +1070,8 @@ class ArchiPersonne extends ArchiContenu
         );
         for ($i=$minPos; $i<=$maxPos; $i++) {
             $t->assign_block_vars(
-                "t.nav",  array(
+                "t.nav",
+                array(
                     "nb"=>$i,
                     "urlNb"=>$config->creerUrl("", "recherche", array("motcle"=>$_GET["motcle"], "pos"=>$i, "submit"=>"Rechercher"))."#personSearch"
                 )
@@ -1084,10 +1088,13 @@ class ArchiPersonne extends ArchiContenu
                 $res = $config->connexionBdd->requete($req);
                 $job=mysql_fetch_object($res)->nom;
                 $t->assign_block_vars(
-                    "t.adresses", array(
+                    "t.adresses",
+                    array(
                         "nom"=>stripslashes($person->prenom." ".$person->nom),
                         "urlDetailHref"=>$config->creerUrl(
-                            "", "evenementListe", array("selection"=>"personne", "id"=>$person->idPersonne)
+                            "",
+                            "evenementListe",
+                            array("selection"=>"personne", "id"=>$person->idPersonne)
                         ),
                         "urlImageIllustration"=>archiPersonne::getImage($person->idPersonne, "mini", false),
                         "titresEvenements"=>$job
@@ -1109,12 +1116,12 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return array
      * */
-    static function getRelatedPeople($id)
+    public static function getRelatedPeople($id)
     {
         global $config;
         $req="SELECT idEvenement
             FROM `_evenementPersonne`
-            WHERE `idPersonne` =".$id;
+            WHERE `idPersonne` = '".mysql_real_escape_string($id)."';";
         $res = $config->connexionBdd->requete($req);
         $return = array();
         while ($event=mysql_fetch_object($res)) {
@@ -1138,7 +1145,7 @@ class ArchiPersonne extends ArchiContenu
      *
      * @return void
      * */
-    static function getPersonsFromSource($idSource)
+    public static function getPersonsFromSource($idSource)
     {
         global $config;
         $req="SELECT idEvenement
@@ -1164,9 +1171,13 @@ class ArchiPersonne extends ArchiContenu
                     print('<tr class="listAddressItem">
                     <td><a href="'.
                     $config->creerUrl(
-                        "", "evenementListe", array("selection"=>"personne", "id"=>$person['idPersonne'])
+                        "",
+                        "evenementListe",
+                        array("selection"=>"personne", "id"=>$person['idPersonne'])
                     ).'"><img src="'.archiPersonne::getImage($person['idPersonne'], "mini", false).'" border=0 alt=""></a> <span><br/><a href="'.$config->creerUrl(
-                        "", "evenementListe", array("selection"=>"personne", "id"=>$person['idPersonne'])
+                        "",
+                        "evenementListe",
+                        array("selection"=>"personne", "id"=>$person['idPersonne'])
                     ).'" >'.stripslashes($person['prenom']." ".$person['nom']).'</a></span><br/><span style="font-size:11px;">'.$person['nomMetier'].'</span></td>
                     </tr>');
                 }
@@ -1174,6 +1185,4 @@ class ArchiPersonne extends ArchiContenu
             print('</table>');
         }
     }
-
 }
-?>
