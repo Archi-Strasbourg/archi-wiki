@@ -9,19 +9,20 @@
     "packages": [
         {
             "name": "eventviva/php-image-resize",
-            "version": "1.5.4",
+            "version": "1.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eventviva/php-image-resize.git",
-                "reference": "41e2bbc8dbbf43b9a78bf56095e33d5398eeb056"
+                "reference": "87e7200ad2e24beb9ec9862f6f2c11d93dee8838"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eventviva/php-image-resize/zipball/41e2bbc8dbbf43b9a78bf56095e33d5398eeb056",
-                "reference": "41e2bbc8dbbf43b9a78bf56095e33d5398eeb056",
+                "url": "https://api.github.com/repos/eventviva/php-image-resize/zipball/87e7200ad2e24beb9ec9862f6f2c11d93dee8838",
+                "reference": "87e7200ad2e24beb9ec9862f6f2c11d93dee8838",
                 "shasum": ""
             },
             "require": {
+                "ext-exif": "*",
                 "ext-gd": "*",
                 "php": ">=5.3.0"
             },
@@ -49,7 +50,7 @@
                 "resize",
                 "scale"
             ],
-            "time": "2016-05-06 08:00:50"
+            "time": "2016-08-17 17:41:24"
         }
     ],
     "packages-dev": [
@@ -114,16 +115,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v3.1.0",
+            "version": "v3.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "436195b421e8c0493ca3e390c1fbecd8ee08c546"
+                "reference": "70bfe927b86ba9999aeebd829715b0bb2cd39a10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/436195b421e8c0493ca3e390c1fbecd8ee08c546",
-                "reference": "436195b421e8c0493ca3e390c1fbecd8ee08c546",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/70bfe927b86ba9999aeebd829715b0bb2cd39a10",
+                "reference": "70bfe927b86ba9999aeebd829715b0bb2cd39a10",
                 "shasum": ""
             },
             "require": {
@@ -173,7 +174,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2016-05-24 10:06:56"
+            "time": "2016-09-29 14:13:09"
         }
     ],
     "aliases": [],
