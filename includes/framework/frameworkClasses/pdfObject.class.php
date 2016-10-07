@@ -10,7 +10,7 @@
 // version 1.1 --- 28/04/2010 - nouvelle version du convertisseur (php5 utf8)
 
 include_once("pdf/html2pdf.class.php");
-class pdfObject extends config
+class pdfObject extends ArchiConfig
 {
 	var $objetPdf;
 	

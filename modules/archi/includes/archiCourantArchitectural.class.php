@@ -1,6 +1,6 @@
 <?php
 
-class archiCourantArchitectural extends config {
+class archiCourantArchitectural extends ArchiConfig {
 	private $idCourantArchitectural;
 	private $nom;
 

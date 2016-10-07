@@ -29,7 +29,7 @@ require_once "HTML/BBCodeParser2.php";
  * @link     http://archi-wiki.org/
  *
  * */
-class BBCodeObject extends config
+class BBCodeObject extends ArchiConfig
 {
     /**
      * Constructeur de bbCodeObject

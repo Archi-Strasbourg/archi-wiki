@@ -9,7 +9,7 @@ include("../modules/archi/includes/archiAdresse.class.php");
 <body>
 <?php
 
-$config = new config();
+$config = new ArchiConfig();
 
 $typeTable = "ville";
 

@@ -8,7 +8,7 @@
  *
  */
 
-class archiInterest extends config{
+class archiInterest extends ArchiConfig{
 	protected $userId;
 
 	function __construct(){

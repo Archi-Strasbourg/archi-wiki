@@ -56,7 +56,7 @@ putenv('GDFONTPATH=.');
 //$imgfile = $cheminphoto.$file;
 //$imgsize = $_SESSION['dim_img'];
 //$imgsize = array($imglargeur,$imghauteur);
-//$config = new config();
+//$config = new ArchiConfig();
 if (is_file($photoOriginale)) {
     resizeImg($photoOriginale, $dimX, $dimX);
 } else {

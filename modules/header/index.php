@@ -19,7 +19,7 @@ $authentification = new archiAuthentification();
 
 $recherche = new archiRecherche();
 
-$config = new config();
+$config = new ArchiConfig();
 
 $adresse = new archiAdresse();
 

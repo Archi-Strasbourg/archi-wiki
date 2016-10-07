@@ -59,7 +59,7 @@ $microstart=microtime(true);
 $jsHeader="";
 $jsFooter="";
 $ajaxObj = new ajaxObject();
-$config = new config();
+$config = new ArchiConfig();
 
 $footerAndHeader =array();
 
@@ -82,8 +82,8 @@ ob_start();
 if (!isset($_GET['noHTMLHeaderFooter'])) {
     if (!isset($_GET["noHeaderNoFooter"]) && !isset($_POST["noHeaderNoFooter"])) {
         $headerJS = "";
-        if (config::getJsHeader()!='') {
-            $headerJS = config::getJsHeader();
+        if (ArchiConfig::getJsHeader()!='') {
+            $headerJS = ArchiConfig::getJsHeader();
         }
         include 'modules/header/index.php';
         $footerAndHeader['header']=$header;
@@ -100,8 +100,8 @@ if (!isset($_GET['noHTMLHeaderFooter'])) {
     			</head>
     			<body>';
         $headerJS = "";
-        if (config::getJsHeader()!='') {
-        	$headerJS = config::getJsHeader();
+        if (ArchiConfig::getJsHeader()!='') {
+        	$headerJS = ArchiConfig::getJsHeader();
         }
 
     }
@@ -111,16 +111,16 @@ ob_end_clean();
 
 if (!isset($_GET['noHTMLHeaderFooter'])) {
     if (!isset($_GET["noHeaderNoFooter"]) && !isset($_POST["noHeaderNoFooter"])) {
-        if (config::getJsFooter()!='') {
-            $footerJS = config::getJsFooter();
+        if (ArchiConfig::getJsFooter()!='') {
+            $footerJS = ArchiConfig::getJsFooter();
         }
         include 'modules/footer/index.php';
         $footerAndHeader['footer']=$footer;
     }
     else {
         $footerJS = "";
-        if (config::getJsFooter()!='') {
-            $footerJS = config::getJsFooter();
+        if (ArchiConfig::getJsFooter()!='') {
+            $footerJS = ArchiConfig::getJsFooter();
         }
         if (!isset($config->isSiteLocal) || $config->isSiteLocal==false) {
 			$analyticsJSvar =  "<script type='text/javascript' src='js/analytics.js'></script>";

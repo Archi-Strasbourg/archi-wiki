@@ -1,6 +1,6 @@
 <?php
 
-class archiImage extends config
+class archiImage extends ArchiConfig
 {
     private $nom;
     private $dateUpload;

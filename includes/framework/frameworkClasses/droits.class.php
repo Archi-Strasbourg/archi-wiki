@@ -36,7 +36,7 @@ une table de profil (administrateur, modéteur, utilisateur, internaute etc)
  * 
  * */
 
-class DroitsObject extends config
+class DroitsObject extends ArchiConfig
 {
     
     /**

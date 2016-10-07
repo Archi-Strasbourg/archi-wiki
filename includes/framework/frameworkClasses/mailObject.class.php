@@ -32,7 +32,7 @@
  * @link     http://archi-wiki.org/
 * */
 
-class MailObject extends config
+class MailObject extends ArchiConfig
 {
     
     /**

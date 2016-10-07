@@ -39,7 +39,7 @@ require_once "stringDiff/filediff.class.php";
  * 
  * */
 
-class StringObject extends config
+class StringObject extends ArchiConfig
 {
     
     /**

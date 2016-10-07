@@ -33,7 +33,7 @@ require_once __DIR__.'/../modules/archi/includes/archiEvenement.class.php';
 
 
 
-$config = new config();
+$config = new ArchiConfig();
 $d = new dateObject();
 $mail = new mailObject();
 

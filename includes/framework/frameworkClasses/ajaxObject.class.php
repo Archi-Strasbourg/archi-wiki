@@ -4,7 +4,7 @@
 // appel a la fonction ajax en javascript : 
 //  appelAjax(chemin vers la page que l'on appelle , id de l'element que l'on met a jour , est ce que le retour se fait dans la fenetre parent ?)
 
-class ajaxObject extends config
+class ajaxObject extends ArchiConfig
 {
 
 	function __construct()

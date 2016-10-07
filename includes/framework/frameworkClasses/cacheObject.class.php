@@ -26,7 +26,7 @@
 // pour que le cache fonctionne bien , il est préférable que les parametres transmis a la page qui doit s'afficher soient des parametres transmis en GET , le POST n'est pas géré pour le moment
 
 
-class cacheObject extends config
+class cacheObject extends ArchiConfig
 {
 	protected $repertoire;
 	protected $fichierCourant;

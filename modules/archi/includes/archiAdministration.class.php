@@ -28,7 +28,7 @@
  * @link     http://archi-wiki.org/
  * 
  * */
-class ArchiAdministration extends config
+class ArchiAdministration extends ArchiConfig
 {
     /**
      * Constructeur d'archiAdministration

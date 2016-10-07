@@ -39,7 +39,7 @@ function html2bb($html= '')
 }
 
 
-class connexionBD extends config
+class connexionBD extends ArchiConfig
 {
 	public $connexion;
 

@@ -32,7 +32,7 @@ require_once "debug.php";
  * @link     http://archi-wiki.org/
  *
  * */
-class Config
+class ArchiConfig
 {
 
 

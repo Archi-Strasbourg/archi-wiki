@@ -3,7 +3,7 @@
 // 1.0 class permettant de tester des elements du navigateur
 
 
-class checkBrowserObject extends config
+class checkBrowserObject extends ArchiConfig
 {
 	
 	

@@ -11,7 +11,7 @@
  * @link     http://archi-wiki.org/
  * */
 require_once 'vendor/autoload.php';
-$config = new Config();
+$config = new ArchiConfig();
 $path="images/placeholder.jpg";
 if (isset($_GET["id"]) && !empty($_GET["id"])) {
     $req = "

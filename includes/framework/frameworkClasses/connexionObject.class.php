@@ -31,7 +31,7 @@
  * @link     http://archi-wiki.org/
  * 
  * */
-class ConnexionBdd extends config
+class ConnexionBdd extends ArchiConfig
 {
     protected $ressource;
     /**

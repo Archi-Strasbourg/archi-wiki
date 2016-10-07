@@ -18,7 +18,7 @@ if (function_exists("bindtextdomain")) {
     } else if (isset($_COOKIE["lang"])) {
         define("LANG", $_COOKIE["lang"]);
     } else {
-        define("LANG", Config::$default_lang);
+        define("LANG", ArchiConfig::$default_lang);
     }
     setcookie("lang", LANG);
     $resultPutenv = putenv("LC_ALL=".LANG);

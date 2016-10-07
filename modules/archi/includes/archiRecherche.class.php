@@ -1,6 +1,6 @@
 <?php
 
-class archiRecherche extends config {
+class archiRecherche extends ArchiConfig {
 
 	function __construct() {
 		parent::__construct();

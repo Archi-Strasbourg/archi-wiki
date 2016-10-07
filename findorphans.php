@@ -24,7 +24,7 @@
 <?php
 require_once "includes/framework/config.class.php";
 require_once "modules/archi/includes/archiEvenement.class.php";
-$config=new Config();
+$config=new ArchiConfig();
 $req = "
 SELECT idEvenement, titre
 FROM historiqueEvenement

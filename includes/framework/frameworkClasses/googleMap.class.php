@@ -27,7 +27,7 @@
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     http://archi-wiki.org/
  * */
-class GoogleMap extends config
+class GoogleMap extends ArchiConfig
 {
     var $googleMapNameId;
     var $googleMapKeyProperty;

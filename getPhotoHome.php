@@ -11,7 +11,7 @@
  * @link     http://archi-wiki.org/
  * */
 require_once 'vendor/autoload.php';
-$config = new Config();
+$config = new ArchiConfig();
 $req = "
         SELECT dateUpload
         FROM  historiqueImage

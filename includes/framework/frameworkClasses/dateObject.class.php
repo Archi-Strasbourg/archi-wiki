@@ -5,7 +5,7 @@
 // historique des versions
 // version 1.1 --- 11/06/2008 - separation de la classe de date de l'objet config
 
-class dateObject extends config
+class dateObject extends ArchiConfig
 {
 		var $tabToSort; // tableau servant pour faire des tris de date associes
 	

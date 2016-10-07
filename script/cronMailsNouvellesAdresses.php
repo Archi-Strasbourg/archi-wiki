@@ -40,7 +40,7 @@ require_once __DIR__.'/../modules/archi/includes/archiAdresse.class.php';
 require_once __DIR__.'/../modules/archi/includes/archiEvenement.class.php';
 require_once __DIR__.'/../modules/archi/includes/archiPersonne.class.php';
 
-$config = new config();
+$config = new ArchiConfig();
 
 // on recherche que les adresses un evenement est associe
 $reqNouvellesAdressesDeLaSemaine = "

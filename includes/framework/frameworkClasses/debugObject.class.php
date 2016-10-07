@@ -5,7 +5,7 @@
 // historique des versions
 // version 1.0
 
-class debugObject extends config
+class debugObject extends ArchiConfig
 {
 	
 	var $microTime;

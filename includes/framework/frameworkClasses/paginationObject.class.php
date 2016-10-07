@@ -32,7 +32,7 @@ UTILISATION
 
 
 
-class paginationObject extends config
+class paginationObject extends ArchiConfig
 {
 	private $limitSqlDebut;
 	private $nbEnregistrementsParPage;

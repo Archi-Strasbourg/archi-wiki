@@ -13,7 +13,7 @@
  * */
 $page=new archiPage($_GET["idPage"], LANG);
 if (empty($page->title)) { 
-    $page=new archiPage($_GET["idPage"], Config::$default_lang);
+    $page=new archiPage($_GET["idPage"], ArchiConfig::$default_lang);
 }
 echo "<article itemscope itemtype='http://schema.org/WebPage'>";
 echo "<meta itemprop='inLanguage' content='".substr($page->lang, 0, 2)."' />";

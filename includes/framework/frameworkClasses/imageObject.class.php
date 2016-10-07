@@ -5,7 +5,7 @@
 // historique des versions
 // version 1.1 --- 15-09-2008 - ajout de la fonction de redimensionnement des images
 
-class imageObject extends config
+class imageObject extends ArchiConfig
 {
     protected $tabImages;
     

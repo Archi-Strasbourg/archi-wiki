@@ -25,7 +25,7 @@
  * @link     http://archi-wiki.org/
  * 
  * */
-abstract class ArchiContenu extends config
+abstract class ArchiContenu extends ArchiConfig
 {
     
     

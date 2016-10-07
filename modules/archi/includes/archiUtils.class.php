@@ -9,7 +9,7 @@
  *
  */
 
-class archiUtils extends config{
+class archiUtils extends ArchiConfig{
 
 	function __construct(){
 		parent::__construct();

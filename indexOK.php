@@ -16,7 +16,7 @@ include('PEAR.php');
 include('HTML/BBCodeParser.php');
 
 include('includes/framework/config.class.php');
-$config = new config();
+$config = new ArchiConfig();
 include_once('includes/securimage/securimage.php'); // gestion du captcha
 
 // principe modulaire : chacun des fichiers appel고cidessous devraient etre chargés en fonction du parametre 'moduleName'
@@ -61,18 +61,18 @@ if(!isset($_GET['noHTMLHeaderFooter']))
 	if(!isset($_GET["noHeaderNoFooter"]) && !isset($_POST["noHeaderNoFooter"]))
 	{
 		$headerJS = "";
-		if(config::getJsHeader()!='')
+		if(ArchiConfig::getJsHeader()!='')
 		{
-			$headerJS = config::getJsHeader();
+			$headerJS = ArchiConfig::getJsHeader();
 		}
 		include('modules/header/index.php');
 	}
 	else
 	{
 		$headerJS = "";
-		if(config::getJsHeader()!='')
+		if(ArchiConfig::getJsHeader()!='')
 		{
-			$headerJS = config::getJsHeader();
+			$headerJS = ArchiConfig::getJsHeader();
 		}
 		$ajaxObj = new ajaxObject();
 		?><html>
@@ -97,18 +97,18 @@ if(!isset($_GET['noHTMLHeaderFooter']))
 	if(!isset($_GET["noHeaderNoFooter"]) && !isset($_POST["noHeaderNoFooter"]))
 	{
 		$footerJS = "";
-		if(config::getJsFooter()!='')
+		if(ArchiConfig::getJsFooter()!='')
 		{
-			$footerJS = config::getJsFooter();
+			$footerJS = ArchiConfig::getJsFooter();
 		}
 		include('modules/footer/index.php');
 	}
 	else
 	{
 		$footerJS = "";
-		if(config::getJsFooter()!='')
+		if(ArchiConfig::getJsFooter()!='')
 		{
-			$footerJS = config::getJsFooter();
+			$footerJS = ArchiConfig::getJsFooter();
 		}
 		?>
 		<?php echo $footerJS; 

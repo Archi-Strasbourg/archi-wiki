@@ -37,7 +37,7 @@ function html2bb($html= '')
 	$html = str_replace('</p>', "", $html);
 	return $html;
 }
-class connex extends config
+class connex extends ArchiConfig
 {
 	public $connex;
 	public $connectOld;

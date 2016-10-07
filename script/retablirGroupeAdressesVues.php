@@ -13,7 +13,7 @@ mb_regex_encoding("UTF-8");
 include("../includes/framework/config.class.php");
 
 
-$config = new config();
+$config = new ArchiConfig();
 
 
 echo "<h1>Moulinette recherche de groupe d'adresse sur image vueSur et prisDepuis</h1>";

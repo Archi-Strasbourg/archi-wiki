@@ -15,7 +15,7 @@ require_once __DIR__.'/../modules/archi/includes/archiUtilisateur.class.php';
 require_once __DIR__.'/../modules/archi/includes/archiAdresse.class.php';
 require_once __DIR__.'/../modules/archi/includes/archiAuthentification.class.php';
 
-$config = new config();
+$config = new ArchiConfig();
 $req = "UPDATE commentaires SET CommentaireValide=1 WHERE uniqid='".
     mysql_real_escape_string($_GET['uniqid'])."';";
 $res = $config->connexionBdd->requete($req);

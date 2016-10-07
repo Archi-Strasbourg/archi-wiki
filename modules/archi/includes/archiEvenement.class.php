@@ -1,6 +1,6 @@
 <?php
 
-class archiEvenement extends config
+class archiEvenement extends ArchiConfig
 {
     private $intitule;
     private $dateDebut;

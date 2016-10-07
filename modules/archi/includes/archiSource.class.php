@@ -24,7 +24,7 @@
  * @link     http://archi-wiki.org/
  * 
  * */
-class ArchiSource extends config
+class ArchiSource extends ArchiConfig
 {
 
     public $idSource;

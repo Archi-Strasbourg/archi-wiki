@@ -27,7 +27,7 @@
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     http://archi-wiki.org/
  * */
-class ArchiStatic extends config
+class ArchiStatic extends ArchiConfig
 {
 	 public $arrayUrlVersion=array();
     /**

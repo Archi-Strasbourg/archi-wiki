@@ -1,6 +1,6 @@
 <?php
 
-class archiUtilisateur extends config {
+class archiUtilisateur extends ArchiConfig {
     private $nom;
     private $prenom;
     private $idUtilisateur;

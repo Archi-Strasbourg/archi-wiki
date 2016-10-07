@@ -5,7 +5,7 @@
 // historique des versions
 // version 1.1 --- 11/06/2008 - separation de la classe de date de l'objet config
 
-class fileObject extends config
+class fileObject extends ArchiConfig
 {
 	function __construct()
 	{

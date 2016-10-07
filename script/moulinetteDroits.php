@@ -9,7 +9,7 @@ include("../includes/framework/config.class.php");
 <body>
 <?php
 
-$config = new config();
+$config = new ArchiConfig();
 
 
 

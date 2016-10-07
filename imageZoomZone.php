@@ -4,7 +4,7 @@
 
 include("includes/framework/config.class.php");
 
-$config = new config();
+$config = new ArchiConfig();
 
 $idImage 					= $_GET['idImage'];
 $idEvenementGroupeAdresse 	= $_GET['idEvenementGroupeAdresse'];
@@ -230,7 +230,7 @@ putenv('GDFONTPATH=.');
 //$imgfile = $cheminphoto.$file;
 //$imgsize = $_SESSION['dim_img'];
 //$imgsize = array($imglargeur,$imghauteur);
-//$config = new config();
+//$config = new ArchiConfig();
 //resizeImg($photoOriginale, $dimX, $dimX);
 
 ?>

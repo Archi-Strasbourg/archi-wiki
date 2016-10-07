@@ -16,7 +16,7 @@ include_once('/home/vhosts/fabien/archi-strasbourg-v2/modules/archi/includes/arc
 include_once('/home/vhosts/fabien/archi-strasbourg-v2/modules/archi/includes/archiAdresse.class.php');
 include_once('/home/vhosts/fabien/archi-strasbourg-v2/modules/archi/includes/archiImage.class.php');
 
-$config = new config();
+$config = new ArchiConfig();
 
 $cache = new cacheObject();
 $cache->resetCache();

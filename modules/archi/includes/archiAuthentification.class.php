@@ -24,7 +24,7 @@
  * @link     http://archi-wiki.org/
  * 
  * */
-class ArchiAuthentification extends config
+class ArchiAuthentification extends ArchiConfig
 {
     private $_login;
     private $_motDePasse;

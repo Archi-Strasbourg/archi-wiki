@@ -6,7 +6,7 @@
 // version 1.0 --- 08/10/2008 -
 
 // objet permettant de manipuler la session
-class calqueObject extends config
+class calqueObject extends ArchiConfig
 {
 		private $idPopup;
 		private $urlImageIllustration;

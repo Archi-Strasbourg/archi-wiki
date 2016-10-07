@@ -9,7 +9,7 @@ include('../includes/framework/config.class.php');
 
 
 
-class moulinette extends config
+class moulinette extends ArchiConfig
 {
 	function __construct()
 	{

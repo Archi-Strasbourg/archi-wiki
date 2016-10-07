@@ -7,7 +7,7 @@
 // version 1.0 --- 
 
 
-class menuObject extends config
+class menuObject extends ArchiConfig
 {
 	var $listeElems;
 	var $identifiantUniqueMenu;

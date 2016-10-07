@@ -24,7 +24,7 @@
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     http://archi-wiki.org/
  * */
-class OngletObject extends config
+class OngletObject extends ArchiConfig
 {
     var $ongletsArray;
     var $typeOngletsArray;

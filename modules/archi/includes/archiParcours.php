@@ -39,7 +39,7 @@ class ArchiParcours
      * */
     function __construct ($id)
     {
-        $config = new config();
+        $config = new ArchiConfig();
         $query = 'SELECT commentaireParcours FROM parcoursArt WHERE idParcours="'.
         $config->connexionBdd->quote($id).'";';
         $result = $config->connexionBdd->requete($query);

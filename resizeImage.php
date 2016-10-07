@@ -11,7 +11,7 @@
  * 
  * */
 require_once "includes/framework/config.class.php";
-$config = new Config();
+$config = new ArchiConfig();
 
 $path="images/placeholder.jpg";
 if (isset($_GET["id"]) && !empty($_GET["id"])) {

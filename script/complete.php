@@ -9,7 +9,7 @@ include('HTML/BBCodeParser.php');
 include('../includes/config.class.php');
 include('../modules/archi/includes/archiImage.class.php');
 
-class connex extends config
+class connex extends ArchiConfig
 {
 	public $connex;
 	public $connectOld;

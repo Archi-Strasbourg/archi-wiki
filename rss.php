@@ -14,7 +14,7 @@
 header("Content-Type: application/rss+xml");
 require_once "includes/framework/config.class.php";
 require_once "includes/framework/localization.php";
-$config = new Config();
+$config = new ArchiConfig();
 echo "<?xml version='1.0' encoding='utf-8'?>".PHP_EOL;
 ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">

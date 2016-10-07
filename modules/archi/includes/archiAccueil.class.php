@@ -26,7 +26,7 @@
  * @link     http://archi-wiki.org/
  *
  * */
-class ArchiAccueil extends config
+class ArchiAccueil extends ArchiConfig
 {
 
 	/**

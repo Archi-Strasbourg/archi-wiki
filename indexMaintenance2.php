@@ -2,7 +2,7 @@
 
 
 //include("include/framework/config.class.php");
-//$config = new config();
+//$config = new ArchiConfig();
 
 echo "
 

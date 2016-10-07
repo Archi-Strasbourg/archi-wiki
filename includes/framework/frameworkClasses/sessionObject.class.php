@@ -7,7 +7,7 @@
 
 // objet permettant de manipuler la session
 
-class objetSession extends config
+class objetSession extends ArchiConfig
 {
 		function __construct()
 		{

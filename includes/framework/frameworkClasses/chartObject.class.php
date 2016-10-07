@@ -7,7 +7,7 @@
 // version 1.0 --- 
 // version 1.1 --- multigraphe (plusieurs valeurs sur une meme barre
 
-class chartObject extends config
+class chartObject extends ArchiConfig
 {
 	var $listeValues;
 	var $listeLibelles;

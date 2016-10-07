@@ -5,7 +5,7 @@
 // historique des versions
 // version 1.1 --- 11/06/2008 - ajout de la fonction getArrayFromPost
 
-class formGenerator extends config
+class formGenerator extends ArchiConfig
 {
     var $fields;
     private static $instancesObject=0; // identifiant d'instance de l'objet ,  on incremente des qu'un nouvel objet formGenerator est creer ,  on obtient donc un identifiant unique que l'on recupere en meme temps

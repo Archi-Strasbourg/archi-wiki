@@ -22,7 +22,7 @@ function displayForm ()
     $defaultAmount = 20;
     $page=new archiPage(10, LANG);
     if (empty($page->title)) { 
-        $page=new archiPage(10, Config::$default_lang);
+        $page=new archiPage(10, ArchiConfig::$default_lang);
     }
 
     echo '<h1>'.stripslashes($page->title).'</h1>';
@@ -168,7 +168,7 @@ if (isset($_POST['email'])) {
         
         $page=new archiPage(11, LANG);
         if (empty($page->title)) { 
-            $page=new archiPage(11, Config::$default_lang);
+            $page=new archiPage(11, ArchiConfig::$default_lang);
         }
 
         echo '<h1>'.stripslashes($page->title).'</h1>';
