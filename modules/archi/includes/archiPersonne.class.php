@@ -29,6 +29,9 @@ class ArchiPersonne extends ArchiContenu
 {
     public $nom;
     public $prenom;
+    public $dateNaissance;
+    public $dateDeces;
+    public $idMetier;
 
     /**
      * Constructeur d'archiPersonne
