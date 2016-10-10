@@ -27,11 +27,8 @@ require_once __DIR__."/ArchiContenu.class.php";
  * */
 class ArchiPersonne extends ArchiContenu
 {
-    private $_nom;
-    private $_prenom;
-    private $_dateNaissance;
-    private $_metier;
-    private $_description;
+    public $nom;
+    public $prenom;
 
     /**
      * Constructeur d'archiPersonne
