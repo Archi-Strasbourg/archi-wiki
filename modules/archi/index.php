@@ -875,11 +875,6 @@ if (isset($_GET['archiAffichage'])) {
                 $a = new archiAdresse();
                 echo $a->display();
                 break;
-            case 'adresseListe':
-                $a = new archiAdresse();
-                $retourAdresse = $a->afficherListe();
-                echo $retourAdresse['html'];
-                break;
             case 'evenement':
                 $a = new archiEvenement();
                 $retour = $a->afficher($_GET['idEvenement']);
