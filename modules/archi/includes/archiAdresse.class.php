@@ -5334,8 +5334,8 @@ class archiAdresse extends ArchiContenu
 
     /**
      * Affiche la liste des adresses suivant criteres et modeAffichage ,  modeAffichage permet de préciser ou sera affiché la liste (calque ou non,  et lieu du calque)
-     // afin de changer le comportement des liens et limiter certains affichages,  non utiles dans la popup par exemple
-     // cette fonction ,  permet maintenant aussi de renvoyer les resultats dans un tableau ,  sans forcement les affichers (utile dans la recherche ...)
+     * afin de changer le comportement des liens et limiter certains affichages,  non utiles dans la popup par exemple
+     * cette fonction ,  permet maintenant aussi de renvoyer les resultats dans un tableau ,  sans forcement les affichers (utile dans la recherche ...)
      *
      * InPeople n'est pas responsable de cette fonction sortie des enfers
      *
