@@ -1317,23 +1317,6 @@ if (isset($_GET['archiAffichage'])) {
                 echo "</div>";
                 break;
 
-            case 'toutesLesDemolitions':
-                $a = new archiAdresse();
-                $retour = $a->afficherListe(array('toutesLesDemolitions'=>1));
-                echo $retour['html'];
-                break;
-
-            case 'tousLesTravaux':
-                $a = new archiAdresse();
-                $retour = $a->afficherListe(array('tousLesTravaux'=>1));
-                echo $retour['html'];
-                break;
-
-            case 'tousLesEvenementsCulturels':
-                $a = new archiAdresse();
-                $retour = $a->afficherListe(array('tousLesEvenementsCulturels'=>1));
-                echo $retour['html'];
-                break;
             case 'afficherListeRelative':
                 $a = new archiAdresse();
                 echo $a->getAdressesMemeLocalite(
