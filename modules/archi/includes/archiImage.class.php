@@ -918,12 +918,19 @@ class archiImage extends ArchiConfig
             }
 
             $reqImages = "
-            SELECT (SELECT idHistoriqueImage from historiqueImage  WHERE _evenementImage.idImage = historiqueImage.idImage ORDER BY idHistoriqueImage DESC LIMIT 1), (SELECT dateUpload from historiqueImage WHERE _evenementImage.idImage = historiqueImage.idImage ORDER BY idHistoriqueImage DESC LIMIT 1), (SELECT description from historiqueImage WHERE _evenementImage.idImage = historiqueImage.idImage ORDER BY idHistoriqueImage DESC LIMIT 1), idImage FROM _evenementImage  WHERE idEvenement = ".mysql_real_escape_string($_GET['archiRetourIdValue'])." ORDER BY position
+            SELECT idImage FROM _evenementImage  WHERE idEvenement = ".mysql_real_escape_string($_GET['archiRetourIdValue'])." ORDER BY position
             ";
             $resImages = $this->connexionBdd->requete($reqImages);
             $imgList = array();
             while ($row = mysql_fetch_row($resImages)) {
-                $imgList[] = $row;
+                $reqImage = '
+                SELECT idHistoriqueImage, dateUpload, description, idImage
+                FROM historiqueImage
+                WHERE idImage = '.mysql_real_escape_string($row[0]).'
+                ORDER BY idHistoriqueImage DESC
+                LIMIT 1';
+                $resImage = $this->connexionBdd->requete($reqImage);
+                $imgList[] = mysql_fetch_row($resImage);
             }
 
             $intituleAdresseNoQuartierNoVille = $adresse->getIntituleAdresse($fetch,  array('noQuartier'=>true,  'noSousQuartier'=>true,  'noVille'=>true));
