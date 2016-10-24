@@ -1738,12 +1738,8 @@ hr.classic{
 	top: 50%;
 }
 
-.prevPic {
-	left: -25px;
-}
-
 .nextPic {
-	right: -25px;
+	right: -75px;
 }
 
 .imgResultGrp {
