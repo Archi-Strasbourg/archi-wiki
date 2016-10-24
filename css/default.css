@@ -21,13 +21,13 @@
 
 body {
 	background-position: center center;
-	background-repeat: no-repeat; 
-	background-attachment: fixed; 
-	background-size: cover; 
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
 	-moz-background-size: 100% 100%;     /* Gecko 1.9.2 (Firefox 3.6) */
 	-o-background-size: 100% 100%;        /* Opera 9.5 */
 	-webkit-background-size: 100% 100%;   /* Safari 3.0 */
-	background-size: 100% 100%;           /* Gecko 2.0 (Firefox 4.0) > CSS3 */ 
+	background-size: 100% 100%;           /* Gecko 2.0 (Firefox 4.0) > CSS3 */
 	background-image: url("../images/Advisa/fond.jpg");
 }
 
@@ -212,7 +212,7 @@ a:hover {
 .languageSwitch li a{
 	padding-left: 5px;
 	padding-right: 5px;
-	
+
 }
 
 
@@ -223,7 +223,7 @@ a:hover {
 }
 
 .left-buttons-header div.label-menu-buttons-left {
-	font-size: 14px;	
+	font-size: 14px;
 }
 
 .left-buttons-header img{
@@ -239,11 +239,11 @@ a:hover {
 .stats-wrap{
 	//display: table;
 	height: 100px;
-	//width: 150px;	
+	//width: 150px;
 }
 .stats a{
 	display: table-cell;
-	vertical-align: middle; 	
+	vertical-align: middle;
 	color: white;
 }
 
@@ -286,7 +286,7 @@ a:hover {
 .authLinkOneClass{
 	margin-top: 20px;
 	margin-right: 30px;
-	
+
 }
 
 .authLinkOneClass,.authLinkTwoClass{
@@ -333,7 +333,7 @@ a.subscribeLabel{
 
 .fastConnect{
 	width: 100px;
-	float: left;	
+	float: left;
 	margin-left: 20px;
 	margin-top: 20px;
 }
@@ -419,7 +419,7 @@ nav.menu-new{
     -moz-transition: all 0.3s;
     -ms-transition: all 0.3s;
     -o-transition: all 0.3s;
-    transition: all 0.3s;	
+    transition: all 0.3s;
 /*     left:s -300px; */
 }
 
@@ -431,14 +431,14 @@ nav.menu-new ul{
 
 nav.menu-new a{
     font-weight: 300;
-    color: #fff;	
+    color: #fff;
 }
 
 /*
-	Push left menu classes 
+	Push left menu classes
 	Hacked from http://callmenick.com/2014/03/26/slide-and-push-menus-with-css3-transitions/
 	Modification from example : Menu pop in a container, and push container's content
-	Displaying now work 
+	Displaying now work
 */
 
 nav.push-menu-left {
@@ -483,7 +483,7 @@ body.pml-open nav.push-menu-left {
 	top: 120px;
 	height: 100%;
 	z-index: 20;
-	
+
 }
 body.pml-open #primaryContentContainer {
 	display: inline-block;
@@ -580,7 +580,7 @@ body .primaryContent{
 
 img.box{
 	border: none;
-	
+
 }
 
 /** Content **/
@@ -957,7 +957,7 @@ img {
 
 
 .subbox.paypal{
-	width: 100%;	
+	width: 100%;
 }
 
 .box {
@@ -1492,7 +1492,7 @@ li:empty {
 .boxVertArrondie{
 	background-color: #99ACB0;
 	border-radius: 5px;
-	margin-bottom: 10px;	
+	margin-bottom: 10px;
 }
 
 .encart a img {
@@ -1536,25 +1536,25 @@ li:empty {
 HR style
 */
 hr.plain{
-	 border: 0; 
+	 border: 0;
 	 height: 1px;
 }
 
-hr.edgeFade { 
-	border: 0; 
-	height: 1px; 
-    background-image: -webkit-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));       
-    background-image: -moz-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));       
-    background-image: -ms-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));       
-    background-image: -o-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));       
-    background-image: linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));      
+hr.edgeFade {
+	border: 0;
+	height: 1px;
+    background-image: -webkit-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));
+    background-image: -moz-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));
+    background-image: -ms-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));
+    background-image: -o-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));
+    background-image: linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.6), rgba(255,255,255,0));
 }
 
 hr.classic{
-	height: 2px; 
-	color: #839D2D; 
-	background-color: #839D2D; 
-	width: 50%; 
+	height: 2px;
+	color: #839D2D;
+	background-color: #839D2D;
+	width: 50%;
 	border: none;
 }
 
@@ -1608,7 +1608,7 @@ hr.classic{
 }
 
 #primaryContentContainer,.header2 {
- 	width: 1200px; 
+ 	width: 1200px;
  	/*max-width: 98%;*/
 	vertical-align:top;
 }
@@ -1846,7 +1846,7 @@ hr.classic{
 	width: 75%;
 	padding: 5px 10px;
 	margin-bottom: 20px;
-	
+
 }
 
 /*WARNING MESSAGE*/
@@ -1859,19 +1859,19 @@ hr.classic{
 .error-message{
 	background: url('images/failure.png') no-repeat scroll 10px center #FFDADA;
 	background-color: #ffdada;
-	border: 1px solid red; 
+	border: 1px solid red;
 }
 
 .warning-message{
 	background: url('images/notice.png') no-repeat scroll 10px center #FFDADA;
 	background-color: #ffffc3;
-	border: 1px solid yellow; 
+	border: 1px solid yellow;
 }
 
 .confirmation-message{
 	background: url('images/success.png') no-repeat scroll 10px center #FFDADA;
 	background-color: #c3f2c3;
-	border: 1px solid green; 
+	border: 1px solid green;
 }
 
 .warning-div{
@@ -1955,7 +1955,7 @@ hr.classic{
 .logo_header > a{
 	height: 100px;
 	margin-left: 20px;
-	margin-top: 20px; 
+	margin-top: 20px;
 }
 .logo_header , .logo_header > a{
 	width: 600px;
@@ -1964,7 +1964,7 @@ hr.classic{
 .logo_header{
 	position:relative;
 	height: 120px;
-	
+
 }
 .logo_header > a{
 	position: absolute;
@@ -1988,7 +1988,7 @@ hr.classic{
 	PUB
 */
 .emplacementPub{
-	background-color: grey;	
+	background-color: grey;
 }
 .pubSecondaryContent{
 	height: 240px;
@@ -1999,7 +1999,7 @@ hr.classic{
 	margin-top: 20px;
 }
 .pubPrimaryOne{
-	width: 728px;	
+	width: 728px;
 }
 .pubPrimaryTwo{
 	width: 120px;
@@ -2011,7 +2011,7 @@ hr.classic{
 
 body.pmt-open-search .push-menu-top-search,
 body.pmt-open-connexion .push-menu-top-connexion{
-	display: block;	
+	display: block;
 }
 
 .push-menu-top-search,
@@ -2019,20 +2019,20 @@ body.pmt-open-connexion .push-menu-top-connexion{
 	display: none;
 }
 
-#logoMenu , 
-body.pml-open #crossMenu, 
+#logoMenu ,
+body.pml-open #crossMenu,
 #logoSearch,
-body.pmt-open-search #crossSearch, 
-#logoConnexion , 
+body.pmt-open-search #crossSearch,
+#logoConnexion ,
 body.pmt-open-connexion #crossConnexion
 {
 	visibility: visible;
 	display: initial;
 }
 
-#crossMenu , 
-body.pml-open #logoMenu, 
-body.pmt-open-search #logoSearch, 
+#crossMenu ,
+body.pml-open #logoMenu,
+body.pmt-open-search #logoSearch,
 #crossSearch,
 body.pmt-open-connexion #logoConnexion ,
 #crossConnexion
@@ -2081,13 +2081,13 @@ Page d'accueil
 }
 
 .commentairesAccueil h2{
-	margin-top: 0; 
+	margin-top: 0;
 	font-size: 16px;
 	border-bottom: none;
 }
 .commentDate , .commentAuthor{
 	/*
-	color: white;	
+	color: white;
 	font-size: 13px;
 	font-weight: bold;
 	*/
@@ -2098,7 +2098,7 @@ Page d'accueil
 	color: #EC951E;
 	font-size: 12px;
 	font-weight: bold;
-	*/ 
+	*/
 }
 .commentBody{
 	color:#2E3D40;
@@ -2152,7 +2152,7 @@ Page d'accueil
 	width: 490px;
 }
 .descriptionNews{
-	height: 64px;	
+	height: 64px;
 }
 .textNews > div:first-child,.textNews > div:last-child{
 	height: 16px;
@@ -2160,7 +2160,7 @@ Page d'accueil
 
 .readMore a{
 	color: black !important;
-	text-decoration: underline;	
+	text-decoration: underline;
 }
 .textNews > div{
 	line-height: 16px;
@@ -2170,7 +2170,7 @@ Page d'accueil
   	word-space: nowarp;
 }
 
-.titreNews a{ 
+.titreNews a{
 	color: #273638;
 	font-weight: bold;
 	font-size: 15px;
@@ -2209,7 +2209,7 @@ Page d'accueil
 	bottom: -100%;
 	left: -100%;
 	right: -100%;
-	margin: auto;	
+	margin: auto;
 	min
 	/*
 	width: 100%;
@@ -2221,21 +2221,21 @@ Page d'accueil
 	min-width: 200px;
 	min-height: 200px;
 	height: 200px;
-	
+
 }
 
 .lastVisitElement img{
 	min-width: 100px;
 	min-height: 100px;
 	height: 100px;
-	
+
 }
 
 .newsMiniature img{
 	max-width: 150px;
 	min-height: 150px;
 	height: 150px;
-	
+
 }
 
 .addrListImageWrapper{
@@ -2287,7 +2287,7 @@ Page d'accueil
 	visibility: hidden;
 }
 .miniatureLabel .miniatureLabelRight{
-	float: right;	
+	float: right;
 	background-color: #2A3335;
 }
 
@@ -2295,7 +2295,7 @@ Page d'accueil
 	display: inline-block;
 	vertical-align: top;
 	margin-right: 20px;
-	margin-bottom: 20px; 
+	margin-bottom: 20px;
 }
 
 .textLastModif , .textLastVisit{
@@ -2322,7 +2322,7 @@ Page d'accueil
 .favorisTextWrapper , .favorisMiniatureWrapper {
 	display: block;
 	float: left;
-	
+
 }
 
 .listeFavoris > div:first-child  , .lastVisitMessage{
@@ -2339,7 +2339,7 @@ Page d'accueil
 
 .lastVisitElement{
 	margin-top: 10px;
-	margin-bottom: 10px;	
+	margin-bottom: 10px;
 }
 
 .lastVisitElement >div:first-child , .textLastVisit{
@@ -2362,7 +2362,7 @@ Page d'accueil
 }
 
 .push-menu-top-search form{
-	margin-top: 30px;	
+	margin-top: 30px;
 }
 
 .push-menu-top-search .switchSearch {
@@ -2382,7 +2382,7 @@ Page d'accueil
 	border: none;
 	background-color: white;
 	color: #AAA;
-	width: 500px;	
+	width: 500px;
 }
 
 .rechercheBottomElements {
@@ -2398,7 +2398,7 @@ Page d'accueil
 
 .rechercheBlock.noHeaderNoFooter{
 	text-align:center;
-} 
+}
 
 .rechercheBottomElements>span:nth-child(1) {
 	float: left;
@@ -2414,7 +2414,7 @@ Page d'accueil
 
 
 .lienRechercheAvancee,.lienRechercheAvancee:hover {
-	color: #FC802C;	
+	color: #FC802C;
 }
 
 
@@ -2436,7 +2436,7 @@ Page d'accueil
 
 .opendataLink{
 	background-repeat: no-repeat;
-    background-position: center left; 
+    background-position: center left;
 }
 
 .formAjoutCommentaireEvenement h1{
@@ -2487,30 +2487,30 @@ del{
 
 .ellipsis {
   	overflow: hidden;
-	max-height: 64px; 
+	max-height: 64px;
 	line-height: 16px;
 }
 
 .ellipsis:before {
 	content:"";
 	float: left;
-	width: 5px; 
-	max-height: 72px; 
+	width: 5px;
+	max-height: 72px;
 }
 
 .ellipsis > *:first-child {
 	float: right;
 	width: 100%;
-	margin-left: -5px; 
-}		
+	margin-left: -5px;
+}
 
 .ellipsis:after {
-	content: "\02026";  
+	content: "\02026";
 	box-sizing: content-box;
 	-webkit-box-sizing: content-box;
 	-moz-box-sizing: content-box;
 	float: right; position: relative;
-	top: -25px; left: 100%; 
+	top: -25px; left: 100%;
 	width: 3em; margin-left: -3em;
 	padding-right: 5px;
 	text-align: right;
@@ -2530,7 +2530,7 @@ del{
 }
 
 .adresseLastModif{
-	overflow: hidden;	
+	overflow: hidden;
 }
 
 .formComment {
@@ -2630,7 +2630,7 @@ del{
 	height: 40px;
 }
 .commentFormWrapper img , .profilePicWrapper img{
-	border: none;	
+	border: none;
 }
 
 
@@ -2692,11 +2692,11 @@ Evenement block
 }
 
 .eventHeader,.eventBody{
-	padding: 10px;	
+	padding: 10px;
 }
 
 .eventPoster img{
-	height: 20px;	
+	height: 20px;
 	vertical-align: bottom;
 	margin-right: 10px;
 }
