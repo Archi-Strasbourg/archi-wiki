@@ -1536,7 +1536,7 @@ class archiRecherche extends ArchiConfig {
 						'libelle'=>'NomVille',
 						'longitude'=>$value['longitude'],
 						'latitude'=>$value['latitude'],
-						'jsCodeOnClickMarker'=>"location.href='".$this->creerUrl('','afficheAccueil',array())."';"
+						'jsCodeOnClickMarker'=>"location.href='".html_entity_decode($this->creerUrl('','listByVille',array('recherche_ville'=>$idVille)))."';"
 				);
 			}
 		}
