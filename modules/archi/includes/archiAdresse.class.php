@@ -1101,7 +1101,7 @@ class archiAdresse extends ArchiContenu
                 }
             }
 
-            if (!$trouve) {
+            if (!$trouve && !isset($params["noFallbackTitle"])) {
                 // avec ce parametre , on va aller chercher le premier titre rencontré sur la liste des evenements du groupe d'adresse de l'adresse
 
                 $reqTitre = "
