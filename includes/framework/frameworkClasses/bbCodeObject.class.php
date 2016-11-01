@@ -210,6 +210,7 @@ class BBCodeObject extends ArchiConfig
             $description = str_replace("###serveur###",  $this->getNomServeur(),  $description);
 
             $description = preg_replace("#\\[url=\"http\\://(.+)\"\\](.+)\\[/url\\]#isU", "<a href=\"http://\\1\">\\2</a>", $description);
+            $description = preg_replace("#\\[url=&quot;http\\://(.+)&quot;\\](.+)\\[/url\\]#isU", "<a href=\"http://\\1\">\\2</a>", $description);
             $description = preg_replace("#\\[url=\\'http\\://(.+)\\'\\](.+)\\[/url\\]#isU", "<a href=\"http://\\1\">\\2</a>", $description);
             $description = preg_replace("#\\[url\=http\\://(.+)\\](.+)\\[/url\\]#isU", "<a href=\"http://\\1\">\\2</a>", $description);
 
