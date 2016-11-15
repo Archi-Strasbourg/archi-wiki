@@ -1,9 +1,9 @@
 <?php
 /**
  * Classe ArchiPage
- * 
+ *
  * PHP Version 5.3.3
- * 
+ *
  * @category Class
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
@@ -11,7 +11,7 @@
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     http://archi-wiki.org/
- * 
+ *
  * */
 
 /**
@@ -21,7 +21,7 @@
 // historique des versions
 // version 1.1 --- 11/06/2008 -
 * separation de la classe de connexion de l'objet config
- * 
+ *
  * @category General
  * @package  ArchiWiki
  * @author   Pierre Rudloff <contact@rudloff.pro>
@@ -29,19 +29,19 @@
  * @author   Partenaire Immobilier <contact@partenaireimmo.com>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     http://archi-wiki.org/
- * 
+ *
  * */
 class ConnexionBdd extends ArchiConfig
 {
     protected $ressource;
     /**
      * Constructeur de connexionBdd
-     * 
+     *
      * @param string $bddName Base de donn�es
      * @param string $host    H�te
      * @param string $user    Utilisateur
      * @param string $pass    Mot de passe
-     * 
+     *
      * @return void
      * */
     function __construct($bddName, $host, $user, $pass)
@@ -49,49 +49,49 @@ class ConnexionBdd extends ArchiConfig
         $this->ressource = mysql_connect($host, $user, $pass)
             or die(file_get_contents(__DIR__.'/../../../maintenance.html'));
         mysql_select_db($bddName) or die(mysql_error());
-        mysql_query('SET NAMES "utf8"') or die (mysql_error());    
+        mysql_query('SET NAMES "utf8"') or die (mysql_error());
     }
-    
+
     /**
      * Se connecter � une base de donn�e
-     * 
+     *
      * @param string $host     H�te
      * @param string $user     Utilisateur
      * @param string $password Mot de passe
      * @param string $bdd      Base de donn�es
-     * 
+     *
      * @return void
      * */
     function connectTo($host='',$user='',$password='',$bdd='')
     {
-        $this->ressource 
+        $this->ressource
             = mysql_connect($host, $user, $password) or die(mysql_error());
         mysql_select_db($bdd) or die(mysql_error());
         mysql_query('SET NAMES "utf8"') or die (mysql_error());
     }
-    
+
     /**
      * Ex�cute une requ�te SQL
-     * 
+     *
      * @param string $requete    Requ�te
      * @param bool   $silencieux Afficher une erreur ?
-     * 
+     *
      * @return object
      * */
     function requete($requete="",$silencieux=false)
     {
         if ($silencieux==false) {
-            $res = mysql_query($requete) 
-            or 
+            $res = mysql_query($requete)
+            or
             die($requete.' -- '.mysql_error().' -- <br/> Request in file : <b>'.debug_backtrace()[0]['file'].'</b><br/> on line <b>'.debug_backtrace()[0]['line']).'</b>';
-            
-            
+
+
         } else {
             $res = mysql_query($requete);
         }
         return $res;
     }
-    
+
     /**
     * Chaque fois qu'on appelle un getLock,
     * il faut d'abord que l'utilisateur precedent ai fait un freeLock
@@ -102,10 +102,10 @@ class ConnexionBdd extends ArchiConfig
     * pas au blocage lors de l'enregistrement dans une table)
     * Cette fonction sert donc aussi �
     * bloquer l'edition d'un element grace a isLocked
-    * 
+    *
     * @param array $tableName Nom de la table
     * @param array $config    Param�tres
-    * 
+    *
     * @return void
     * */
     public function getLock($tableName = array(), $config=array())
@@ -116,7 +116,7 @@ class ConnexionBdd extends ArchiConfig
             $minutes = 1;
         }
         if (isset($config['idUtilisateur'])) {
-            $idUtilisateur = $config['idUtilisateur']; 
+            $idUtilisateur = $config['idUtilisateur'];
             /**
              * Un utilisateur a ete pr�cis�,
              * c'est donc que l'on tente de mettre a jour un element
@@ -126,11 +126,11 @@ class ConnexionBdd extends ArchiConfig
         } else {
             $idUtilisateur = 0;
         }
-        
+
         $timeOut = $minutes*60;
         $timeOutMaj = false;
         foreach ($tableName AS $nomTable) {
-            
+
             if ($idUtilisateur != 0) {
                 $qid_delete=$this->requete(
                     "DELETE FROM verrouTable WHERE verrouName='".
@@ -155,7 +155,7 @@ class ConnexionBdd extends ArchiConfig
                     $resMaj = $this->requete($reqMaj);
                 }
             }
-            
+
             if (!$timeOutMaj) {
                 do {
                     $qid_delete=$this->requete(
@@ -179,13 +179,13 @@ class ConnexionBdd extends ArchiConfig
             }
         }
     }
-    
+
     /**
      * ???
-     * 
+     *
      * @param array $tableName Nom de la table
      * @param array $config    Param�tres
-     * 
+     *
      * @return void
      * */
     public function freeLock($tableName = array(),$config=array())
@@ -195,23 +195,23 @@ class ConnexionBdd extends ArchiConfig
         } else {
             $idUtilisateur = 0;
         }
-            
+
         foreach ($tableName AS $nomTable) {
             $qid_delete=$this->requete(
                 "DELETE FROM verrouTable WHERE verrouName='".$nomTable.
                 "' and idUtilisateur='".$idUtilisateur."'"
             );
         }
-    
+
     }
-    
+
     /**
      * Fonction qui permet de voir si une table
      * ou un element est bloqu�, par un utilisateur ou non
-     * 
+     *
      * @param string $tableName     Nom de la table
      * @param int    $idUtilisateur Utilisateur
-     * 
+     *
      * @return bool
      * */
     public function isLocked($tableName='',$idUtilisateur=0)
@@ -231,12 +231,12 @@ class ConnexionBdd extends ArchiConfig
 
         return $retour;
     }
-    
+
     /**
      * Renvoi la liste des champs d'une table
-     * 
+     *
      * @param string $tableName Nom de la table
-     * 
+     *
      * @return array
      * */
     public function getFieldsFromTable($tableName='')
@@ -250,29 +250,29 @@ class ConnexionBdd extends ArchiConfig
         }
         return $retour;
     }
-    
+
     /**
      * Obtenir toutes les tables de la base de donn�es
-     * 
+     *
      * @return array
      * */
     public function getTablesFromCurrentDatabase()
     {
         $retour = array();
-        
+
         $res = $this->requete("show tables;");
         $currentDatabaseName = $this->getCurrentDatabaseName();
-        
+
         while ($fetch = mysql_fetch_assoc($res)) {
             $retour[] = $fetch['Tables_in_'.$currentDatabaseName];
         }
-        
+
         return $retour;
     }
-    
+
     /**
      * Obtenir le nom de la base de donn�es
-     * 
+     *
      * @return string
      * */
     public function getCurrentDatabaseName()
@@ -282,12 +282,12 @@ class ConnexionBdd extends ArchiConfig
         $fetch = mysql_fetch_assoc($res);
         return $fetch['DATABASE()'];
     }
-    
+
     /**
      * Obtenir la clef PRIMARY d'une table
-     * 
+     *
      * @param string $nomTable Nom de la table
-     * 
+     *
      * @return string
      * */
     public function getPrimaryKeyFieldNameFromTable($nomTable='')
@@ -305,12 +305,12 @@ class ConnexionBdd extends ArchiConfig
         }
         return $retour;
     }
-    
+
     /**
      * Obtenir un tableau associatif depuis une requ�te contenue dans un fichier SQL
-     * 
+     *
      * @param string $file SQL file
-     * 
+     *
      * @return array
      * */
     static function getResultFromFile ($file)
@@ -320,33 +320,33 @@ class ConnexionBdd extends ArchiConfig
         $list=array();
         $result=$config->connexionBdd->requete($req);
         while (($list[] = mysql_fetch_assoc($result)) || array_pop($list)) {
-            
+
         }
         return $list;
     }
-    
+
     /**
      * Permet de s�curiser les variables utilis�es dans les requ�tes.
      * Attention : la fonction mysql_real_escape_string est obsol�te !
-     * 
+     *
      * @param mixed $var La variable � s�curiser
-     * 
+     *
      * @return string Variable s�curis�e
      * */
     function quote ($var)
     {
         return mysql_real_escape_string($var, $this->ressource);
     }
-    
+
     /**
      * Get the last id inserted
-     * 
+     *
      * @return last id inserted
      */
     public function getLastId(){
     	return mysql_insert_id($this->ressource);
     }
-    
+
 }
 
 ?>
