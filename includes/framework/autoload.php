@@ -24,7 +24,7 @@
  * @link     http://archi-wiki.org/
  *
  * */
-class Autoload
+class ArchiAutoload
 {
     /**
      * Essaie de charger une classe
@@ -46,5 +46,5 @@ class Autoload
         }
     }
 }
-spl_autoload_register("Autoload::load");
+spl_autoload_register("ArchiAutoload::load");
 ?>
