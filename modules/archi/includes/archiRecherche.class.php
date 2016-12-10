@@ -2153,10 +2153,12 @@ class archiRecherche extends ArchiConfig {
 					if($criterias[$id[0]]!=0){
 						switch($id[0]){
 							case 'anneeDebut' :
-								$sqlWhereTab[] = $id[1].' >= '.$criterias[$id[0]].'';
+								$sqlWhereTab[] = 'dateDebut >= "'.mysql_real_escape_string($criterias[$id[0]]).'"';
+								$sqlWhereTab[] = '(dateFin >= "'.mysql_real_escape_string($criterias[$id[0]]).'" OR dateFin = "0000-00-00")';
 								break;
 							case 'anneeFin':
-								$sqlWhereTab[] = $id[1].' <= '.$criterias[$id[0]].'';
+								$sqlWhereTab[] = 'dateDebut <= "'.mysql_real_escape_string($criterias[$id[0]]).'"';
+								$sqlWhereTab[] = '(dateFin <= "'.mysql_real_escape_string($criterias[$id[0]]).'" OR dateFin = "0000-00-00")';
 								break;
 							case 'courant' :
 								$clause =  $id[1]." IN (";
