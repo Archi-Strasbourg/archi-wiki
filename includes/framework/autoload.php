@@ -1,36 +1,36 @@
 <?php
 /**
  * Autoload class
- * 
+ *
  * PHP Version 5.3.3
- * 
+ *
  * @category Class
  * @package  ArchiStrasbourg
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     http://archi-wiki.org/
- * 
+ *
  * */
- 
+
  /**
  * Charge uniquement les classes nécessaires
- * 
+ *
  * PHP Version 5.3.3
- * 
+ *
  * @category Class
  * @package  ArchiStrasbourg
  * @author   Pierre Rudloff <contact@rudloff.pro>
  * @license  GNU GPL v3 https://www.gnu.org/licenses/gpl.html
  * @link     http://archi-wiki.org/
- * 
+ *
  * */
-class Autoload
+class ArchiAutoload
 {
     /**
      * Essaie de charger une classe
-     * 
+     *
      * @param string $class_name Nom de la classe
-     * 
+     *
      * @return void
      * */
     static function load($class_name)
@@ -46,5 +46,5 @@ class Autoload
         }
     }
 }
-spl_autoload_register("Autoload::load");
+spl_autoload_register("ArchiAutoload::load");
 ?>
