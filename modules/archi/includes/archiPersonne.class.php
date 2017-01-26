@@ -1073,7 +1073,7 @@ class ArchiPersonne extends ArchiContenu
                 }
                 $linkedEventUrl=$config->creerUrl("", "adresseDetail", array("archiIdAdresse"=>$linkedEventIdAddress, "archiIdEvenementGroupeAdresse"=>$linkedEvent));
                 $linkedEventsHTML.="<li class='linkedEvents'><img src='".
-                $linkedEventImg["url"]."' alt='' /> <div style='display:inline-block;'><a href='$linkedEventUrl'>".$txtAdresses;
+                $linkedEventImg["url"]."' alt='' /> <div><a href='$linkedEventUrl'>".$txtAdresses;
                 $res=$e->getInfosEvenementsLiesForAncres($e->getIdEvenementGroupeAdresseFromIdEvenement($linkedEvent));
                 $i=0;
                 while ($rep=mysql_fetch_object($res)) {

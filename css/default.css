@@ -1120,6 +1120,12 @@ img {
 	list-style-type: square;
 }
 
+.linkedEvents > div {
+	display: inline-block;
+	max-width: 600px;
+	vertical-align: middle;
+}
+
 .menu input:focus,.searchInput:focus {
 	outline: none;
 	border-color: #111;
