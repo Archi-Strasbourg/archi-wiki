@@ -564,7 +564,8 @@ if (isset($_GET['archiAffichage'])) {
          * par une 'action' requerant une connexion ?
          * */
         if (!$afficheAuthentificationAction) {
-            echo $authentification->afficheFormulaireAuthentification();
+            echo "Le site est en cours de mise à jour.
+                La connexion n'est donc plus possible pour l'instant. Veuillez nous en excuser.";
         }
     } else {
         $u = new archiUtilisateur();
@@ -893,8 +894,8 @@ if (isset($_GET['archiAffichage'])) {
                 echo $i->afficheHistoriqueImage($_GET['archiIdImage']);
                 break;
             case 'inscription':
-                $auth = new archiAuthentification();
-                echo $auth->afficheFormulaireInscription();
+                echo "Le site est en cours de mise à jour.
+                    L'inscription n'est donc plus possible pour l'instant. Veuillez nous en excuser.";
                 break;
             case 'historiqueEvenement':
                 $evenement = new archiEvenement();

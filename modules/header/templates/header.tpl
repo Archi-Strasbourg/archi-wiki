@@ -88,32 +88,23 @@
 					<div><span><img id="logoSearch" alt="" src="images/logo_loupe.png"></span><span id="crossSearch">&#x2715;</span></div>
 					<div class="label-menu-buttons-left"><?_("Recherche")?></div>
 				</div>
-				<div id="connexionButton" class="left-buttons-header menu-button">
-					<div><span id="logoConnexion"><img alt="" src="{imageConnexion}"></span><span id="crossConnexion">&#x2715;</span></div>
-					<div class="label-menu-buttons-left">{labelConnexion}</div>
-				</div>
+                <div id="connexionButton" class="left-buttons-header menu-button">
+                    <div><span id="logoConnexion"><img alt="" src="{imageConnexion}"></span><span id="crossConnexion">&#x2715;</span></div>
+                    <div class="label-menu-buttons-left">{labelConnexion}</div>
+                </div>
 			</div>
 		</div>
 	</div>
 		<div class="push-menu-top-search">
 		{formulaireRecherche}
 		</div>
-		<div class="push-menu-top-connexion">
-			<div>
-				<div class="formConnexion">
-
-					<div class="classicConnexion">
-					{formulaireConnexion}
-					<div class="linksConnexion {classAuthLinkWrapper}">
-					<!-- BEGIN linkConnected -->
-						<a class="authLinkOneClass {linkConnected.authLinkClass}" href="{linkConnected.authLinkUrl}">{linkConnected.authLinkLabel}</a>
-					<!-- END linkConnected -->
-					</div>
-					</div>
-				</div>
-
-			</div>
-		</div>
+        <div class="push-menu-top-connexion">
+            <div class="formConnexion">
+                <br/><br/>
+                Le site fait l'objet d'une importante mise à jour. La connexion n'est donc plus possible pour l'instant. Veuillez nous en excuser.﻿<br/><br/>
+                Le site reste consultable. Le nouveau site sera accessible le 4 septembre 2017.
+            </div>
+        </div>
     <div id="content" class="content">
     	<nav  class="menu-new push-menu-left inline-block">
 			<ul>
