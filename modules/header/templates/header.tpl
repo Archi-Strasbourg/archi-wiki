@@ -6,7 +6,7 @@
 <meta name="description" content="{descriptionPage}" />
 <meta name="robots" content="index follow, all" />
 <meta name="keywords" content="<?_("architectures,architecture,neudorf,contades,centre,strasbourg,photos,immeubles,monuments,immobilier,alsace")?>{motsCle}" />
-<link href="css/default.css" rel="stylesheet" type="text/css" /> 
+<link href="css/default.css" rel="stylesheet" type="text/css" />
 <link href="css/persona-buttons.css" rel="stylesheet" type="text/css" />
 <link rel="author" href="index.php?archiAffichage=contact" />
 <link rel="author" href="mailto:{mailContact}" />
@@ -26,7 +26,7 @@
 <script src="js/utils.js"></script>
 
 <script src='includes/common.js'></script>
-<script src="js/analytics.js" type="text/javascript"></script> 
+<script src="js/analytics.js" type="text/javascript"></script>
 <script src="js/jquery-ui/js/jquery-1.7.2.min.js"></script>
 <script src="js/jquery-ui/js/jquery-ui-1.8.21.custom.min.js"></script>
 <link href="js/jquery-ui/themes/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" type="text/css" />
@@ -49,7 +49,7 @@
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 <div class="outer">
-	
+
 	<div id="header">
 		<div class="menu-button-div inline-block">
 			<button id="menu-button" class="toggle-push-left menu-button"><div><span id="logoMenu" class="visible">&#9776;</span><span id="crossMenu" class="hidden">&#x2715;</span></div><div>Menu</div></button>
@@ -59,12 +59,12 @@
 			<img alt="Archi-Wiki" src="images/logo_archi_wiki.png">
 			<div class="text-lien-header inline-block">
 				<div>Tous architectes !</div>
-				<div>Partageons la ville, ses bâtiments, ses lieux</div>		
+				<div>Partageons la ville, ses bâtiments, ses lieux</div>
 			</div>
 			</a>
 		</div>
 		<div class="left-div-header">
-			
+
 			<div>
 				<ul class="languageSwitch">
 					<li><a href="{urlFr}" title="Français">FR</a>/</li>
@@ -72,7 +72,7 @@
 					<li><a href="{urlDe}" title="Deutsch">DE</a></li>
 				</ul>
 			</div>
-			
+
 			<div>
 				<!-- BEGIN informations -->
 				<div class="stats ">
@@ -83,7 +83,7 @@
 						</a>
 				</div>
 				<!-- END informations -->
-		
+
 				<div id="searchButton" class="left-buttons-header menu-button">
 					<div><span><img id="logoSearch" alt="" src="images/logo_loupe.png"></span><span id="crossSearch">&#x2715;</span></div>
 					<div class="label-menu-buttons-left"><?_("Recherche")?></div>
@@ -91,7 +91,7 @@
 				<div id="connexionButton" class="left-buttons-header menu-button">
 					<div><span id="logoConnexion"><img alt="" src="{imageConnexion}"></span><span id="crossConnexion">&#x2715;</span></div>
 					<div class="label-menu-buttons-left">{labelConnexion}</div>
-				</div>			
+				</div>
 			</div>
 		</div>
 	</div>
@@ -101,7 +101,7 @@
 		<div class="push-menu-top-connexion">
 			<div>
 				<div class="formConnexion">
-				
+
 					<div class="classicConnexion">
 					{formulaireConnexion}
 					<div class="linksConnexion {classAuthLinkWrapper}">
@@ -111,7 +111,7 @@
 					</div>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
     <div id="content" class="content">
@@ -152,7 +152,7 @@
                 <div class="emplacementPub pubSecondaryContent">
                 	<a href="http://m.archi-strasbourg.org"><img alt="" src="images/pub/pub_mobile.png"></a>
                 </div>
-                
+
                 <div class="fb-like-box reseauSocial" data-href="https://www.facebook.com/pages/Association-Archi-Strasbourg/215793091822502" data-width="240" data-stream="false" data-header="true"></div>
                 <br/>
                 <div class="reseauSocial">
@@ -164,7 +164,7 @@
                 <div class="box boxB">
 					{derniersCommentaires}
                 </div>
-                
+
                 <!-- ajout fabien du 03/04/2012 nouveau bandeau de pub-->
                 <div class="box licenceLogo">
 	                <a href="http://www.data.gouv.fr/Licence-Ouverte-Open-Licence" title="<?_("Le texte de ce site est disponible selon les termes de la Licence ouverte.")?>"><img src="images/Advisa/openlicence.png" alt="Licence ouverte"/>
@@ -173,20 +173,20 @@
                 <div>
                 <a href="{urlOpendata}"><img class="box" alt="" src="images/opendata.png"></a>
                 </div>
-                
+
                 </div>
             </div>
             <div id="primaryContent" class="primaryContent inline-block" {microdata}>
             <div class="pubPrimaryContent">
             	<div class="emplacementPub pubPrimaryOne inline-block">
 					<img alt="" src="images/pub/bandeau_merci_bleu.jpg">
-            	
+
             	</div>
             	<div class="emplacementPub pubPrimaryTwo inline-block">
 					 <a href="{urlOpendata}"><img alt="" src="images/pub/bandeau_open_data_bleu.jpg"></a>
-            	
+
             	</div>
-            	
+
             </div>
             {GeoCoordinates}
             {bandeauPublicite}
