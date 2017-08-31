@@ -101,8 +101,8 @@
         <div class="push-menu-top-connexion">
             <div class="formConnexion">
                 <br/><br/>
-                Le site fait l'objet d'une importante mise à jour. La connexion n'est donc plus possible pour l'instant. Veuillez nous en excuser.﻿<br/><br/>
-                Le site reste consultable. Le nouveau site sera accessible le 4 septembre 2017.
+                Le site fait l'objet d'une importante mise à jour. La connexion n'est donc plus possible pour l'instant. Veuillez nous en excuser.<br/><br/>
+                Le site reste consultable. Le nouveau site sera accessible le 7 septembre 2017.
             </div>
         </div>
     <div id="content" class="content">
