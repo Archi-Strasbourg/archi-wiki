@@ -170,7 +170,7 @@
             <div id="primaryContent" class="primaryContent inline-block" {microdata}>
             <div class="pubPrimaryContent">
             	<div class="emplacementPub pubPrimaryOne inline-block">
-					<img alt="" src="images/pub/bandeau_merci_bleu.jpg">
+					<img alt="C'est la rentrée : migration en cours d'Archi-Wiki" src="images/pub/bandeau_migration.jpg">
 
             	</div>
             	<div class="emplacementPub pubPrimaryTwo inline-block">
